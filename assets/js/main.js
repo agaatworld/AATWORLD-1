@@ -11,7 +11,7 @@
   function initPrefs() {
     var th = A.store.get("theme", null) || (W.matchMedia && W.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     applyTheme(th);
-    A.setLang(A.store.get("lang", null) || A.detectLang(navigator.language));
+    A.setLang(A.store.get("lang", null) || "ar");
   }
   function chrome() {
     root.lang = A.state.lang; root.dir = A.dir();

@@ -79,7 +79,7 @@
     var d = A.parseDate(e.start), days = A.daysUntil(e, new Date());
     var mon; try { mon = new Intl.DateTimeFormat(A.state.lang === "ar" ? "ar-u-nu-latn" : A.state.lang, { month: "short" }).format(d); } catch (x) { mon = d.getMonth() + 1; }
     var cn = (A.D.countries || {})[e.country];
-    return '<a class="er rv" data-c="' + (e.country || "") + '" href="#exhibition-' + e.id + '"><span class="er-d"><b>' + d.getDate() + "</b><small>" + esc(mon) + '</small></span><span class="er-b"><b>' + esc(e.name) + "</b><small>" + esc(A.fmtRange(e.start, e.end)) + " · " + esc(L(e.venue)) + (cn ? " · " + esc(L(cn)) : "") + '</small></span><span class="er-n">' + (days > 0 ? t("days_to_go", { n: days }) : t("on_now")) + "</span></a>";
+    return '<a class="er rv" data-c="' + (e.country || "") + '" href="#exhibition-' + e.id + '"><span class="er-d"><b>' + d.getDate() + "</b><small>" + esc(mon) + '</small></span><span class="er-b"><b>' + esc((A.state.lang === "ar" && e.nameAr || e.name)) + "</b><small>" + esc(A.fmtRange(e.start, e.end)) + " · " + esc(L(e.venue)) + (cn ? " · " + esc(L(cn)) : "") + '</small></span><span class="er-n">' + (days > 0 ? t("days_to_go", { n: days }) : t("on_now")) + "</span></a>";
   }
 
   /* Live view: dotted map, glowing two-way trade lines between Asia, the Arab region and Africa (general, no single country) */

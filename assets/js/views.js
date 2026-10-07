@@ -226,7 +226,7 @@
   function exhibition(id) {
     var e = A.eventById(id); if (!e) return notFound();
     var url = A.safeUrl(e.url), themes = LA(e.themes);
-    return { title: e.name, html: U.pageHead([[t("home"), "home"], [t("nav_exhibitions"), "exhibitions"], [e.name]], e.name, L(e.summary)) +
+    return { title: (A.state.lang === "ar" && e.nameAr || e.name), html: U.pageHead([[t("home"), "home"], [t("nav_exhibitions"), "exhibitions"], [(A.state.lang === "ar" && e.nameAr || e.name)]], (A.state.lang === "ar" && e.nameAr || e.name), L(e.summary)) +
       sec("", '<div class="cod"><dl class="spec"><dt>' + t("x_ex_dates") + "</dt><dd>" + esc(A.fmtRange(e.start, e.end)) + "</dd><dt>" + t("x_ex_venue") + "</dt><dd>" + esc(L(e.venue)) + "</dd><dt>" + t("x_ex_org") + "</dt><dd>" + esc(e.organizer) + "</dd></dl>" +
         "<div>" + (themes.length ? '<h2 class="h3">' + t("x_ex_themes") + '</h2><ul class="ticks">' + themes.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
         '<div class="row">' + (url ? '<a class="btn btn-red" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + ic("link", 18) + t("x_ex_site") + "</a>" : "") + '<a class="btn btn-line" href="#exhibitions">' + t("nav_exhibitions") + "</a></div></div></div>") };
