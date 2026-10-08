@@ -834,3 +834,7 @@ body:has(.fbx) #hdr { position: relative; transform: none !important; transition
 body:has(.fbx) #hdr, body:has(.fbx) #hdr * { transition: none !important; animation: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 body:has(.fbx) #ftr, body:has(.fbx) #progress, body:has(.fbx)::before, body:has(.fbx)::after { display: none !important; }
 .fbx iframe { height: calc(100vh - 58px) !important; height: calc(100dvh - 58px) !important; min-height: 0 !important; }
+/* Magazine view: site bar pinned to the very top */
+body:has(.fbx) #hdr { position: fixed !important; top: 0; left: 0; right: 0; padding: 4px 8px !important; z-index: 80; }
+body:has(.fbx) .fbx { padding-top: 52px !important; }
+.fbx iframe { height: calc(100vh - 52px) !important; height: calc(100dvh - 52px) !important; }
