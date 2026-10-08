@@ -251,27 +251,94 @@
   /* ---------- pages ---------- */
   /* ===== 8. Brand pages: each advertiser opens as its own small site, in its own colours, words and menu ===== */
   var BR = W.AAT_BRAND || {}, FONTS = { machinery: "'Barlow Condensed'", tools: "'Barlow Condensed'", auto: "'Barlow Condensed'", hardware: "'Archivo'", plastics: "'Archivo'", food: "'Fraunces'", consumer: "'Fraunces'", fitness: "'Sora'", medical: "'Sora'", instruments: "'Space Grotesk'", chemicals: "'Space Grotesk'", services: "'Space Grotesk'", event: "'Sora'" };
+  /* brand data is keyed by page number; when an issue changes a page's advertiser, only use an entry that really names this company */
+  function brOf(x) {
+    var ws = String(x.company || "").toLowerCase().split(/[^a-z0-9]+/).filter(function (w) { return w && !/^(and|the|co|ltd|inc|corp|company|engineering|industry|industrial|international|machinery|factory|group|for)$/.test(w); }), key = ws.slice(0, 2).join(" "), dom = String(x.web || "").replace(/^https?:\/\/(www\.)?/, "").split(/[\/.]/)[0].toLowerCase();
+    function mine(e) { var s = JSON.stringify(e).toLowerCase(), flat = s.replace(/[^a-z0-9]+/g, " "); return (key.length > 4 && flat.indexOf(key) > -1) || (dom.length > 3 && s.indexOf(dom) > -1); }
+    var e = BR[x.page]; if (e) return !e.m || mine(e) ? e : { a: e.a, b: e.b, on: e.on };
+    for (var k in BR) if (BR[k].m && mine(BR[k])) return BR[k];
+    return null;
+  }
   function brandSlide(x, o) {
-    o = o || {}; var b = BR[x.page] || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x), ln = lines(x), ar = A.state.lang === "ar", T = b.t || {};
+    o = o || {}; var b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x), ln = lines(x), ar = A.state.lang === "ar";
     var lay = b.dk ? 2 : [0, 1, 3, 4, 1, 0, 4, 3][x.page % 8];
-    var head = (!ar && b.h) || L(x.tagline) || x.company, slo = (b.s || []).concat(b.s ? [] : ln.slice(0, 4));
-    var tabs = (b.m || []).map(function (o2) { return { n: o2.n, k: o2.k, tx: o2.s || "", it: o2.i || [] }; });
-    function chips(arr) { return arr && arr.length ? '<div class="mz-bch">' + arr.map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + "</div>" : ""; }
-    function grid(n) { return ps.length ? '<div class="mz-bgrid">' + ps.slice(0, n).map(function (p) { return '<span class="mz-bp"><img src="' + img(p.img) + '" alt="" loading="lazy"><b>' + esc(clip(p.n, 26)) + "</b></span>"; }).join("") + "</div>" : '<div class="mz-bch mz-bnum">' + ln.map(function (n2, j) { return "<span><em>" + (j < 9 ? "0" : "") + (j + 1) + "</em>" + esc(clip(n2, 34)) + "</span>"; }).join("") + "</div>"; }
-    function more() { return "<h5>" + t(ps.length ? "products" : "lines") + "</h5>" + grid(6); }
-    function con() { return '<div class="mz-bcon">' + (x.tel ? '<a href="tel:' + esc(String(x.tel).replace(/[^+\d]/g, "")) + '"><small>Tel</small>' + esc(x.tel) + "</a>" : "") + (x.email ? '<a href="mailto:' + esc(x.email) + '"><small>Email</small>' + esc(x.email) + "</a>" : "") + "</div>"; }
-    function pane(tb) {
-      var h = (tb.tx ? "<p>" + esc(tb.tx) + "</p>" : "") + chips(tb.it), empty = !tb.tx && !tb.it.length;
-      if (tb.k === "p") return h + (ps.length || empty ? grid(6) : "");
-      if (tb.k === "a") return h + (empty ? "<p>" + esc(L(x.about)) + "</p>" : "") + more();
-      if (tb.k === "c") return h + con();
-      return (empty ? '<p class="mz-bnone">' + t("onsite") + "</p>" : h) + more();
+    var head = (!ar && b.h) || L(x.tagline) || b.h || x.company, slo = (b.s || []).concat(b.s ? [] : ln.slice(0, 4));
+    function tr(en, a2) { return ar ? a2 : en; }
+    function au(s, tag, c2) { return "<" + tag + (c2 ? ' class="' + c2 + '"' : "") + ' dir="auto">' + esc(s) + "</" + tag + ">"; }
+    /* what kind of line is this: phone, fax, email, address, founding year, opening hours */
+    function kindOf(s) {
+      if (/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(s)) return "em";
+      if (/\d{3}/.test(s) && /(tel|phone|mobile|fax|whatsapp|line id)/i.test(s)) return /fax/i.test(s) ? "fx" : "tl";
+      if (/^(founded|established|since)\b/i.test(s)) return "yr";
+      if (/^(mon|tue|office hours|opening|hours)\b/i.test(s)) return "hr";
+      if (s.length > 22 && /\d/.test(s) && !/booth|hall\s?\d|expo|exhibit/i.test(s) && /(no\.\s?\d|\brd\.|\broad\b|\bst\.|street|\bdist\b|district|\bsec\.|jalan|\dF,)/i.test(s)) return "ad";
+      return "";
     }
+    /* the advertiser's own menu, folded into at most five pages: about, products, applications, news, contact */
+    function group(m) { if (m.k === "a" || m.k === "p" || m.k === "c") return m.k; if (/news|event|insight|edm|exhibition/i.test(m.n)) return "n"; if (/applic|solution|equipment|custom|portfolio|service|industr/i.test(m.n)) return "x"; return ""; }
+    var G = {}, order = [];
+    (b.m || []).forEach(function (m) { var g = group(m), it = m.i || []; if (!g || (!m.s && !it.length)) return;
+      if (!G[g]) { G[g] = { k: g, n: m.n, tx: m.s || "", it: [] }; order.push(g); } it.forEach(function (s) { if (G[g].it.indexOf(s) < 0) G[g].it.push(s); }); });
+    if (!G.a) { G.a = { k: "a", n: "About", tx: "", it: [] }; order.unshift("a"); }
+    if (!G.p && (ps.length || ln.length)) { G.p = { k: "p", n: "Products", tx: "", it: [] }; order.splice(1, 0, "p"); }
+    if (!G.c && (x.tel || x.email || web(x))) { G.c = { k: "c", n: "Contact", tx: "", it: [] }; order.push("c"); }
+    var NAME = { a: "من نحن", p: "المنتجات", x: "التطبيقات", n: "الأخبار", c: "تواصل معنا" };
+    var tabs = order.map(function (g) { var tb = G[g]; if (ar) tb.n = NAME[g]; return tb; });
+    var all = []; tabs.forEach(function (tb) { tb.it.forEach(function (s) { all.push(s); }); });
+    var yr = (all.concat([b.h || "", G.a.tx, L(x.about), x.company]).join(" · ").match(/(?:founded|established|since|est\.)\D{0,14}((?:19|20)\d{2})/i) || [])[1];
+    function pick(k) { var seen = {}, out = []; all.forEach(function (s) { if (kindOf(s) === k && !seen[s]) { seen[s] = 1; out.push(s); } }); return out; }
+    var addr = x.address || pick("ad")[0] || "";
+    function kick(s) { return '<span class="mz-kick">' + esc(s) + "</span>"; }
+    function pcard(p, big) { return '<span class="mz-bp' + (big ? " mz-big" : "") + '"><img src="' + img(p.img) + '" alt="" loading="lazy"><b dir="auto">' + esc(clip(p.n, 40)) + "</b>" + (big && L(p.d) ? "<small dir=\"auto\">" + esc(clip(L(p.d), 90)) + "</small>" : "") + "</span>"; }
+    function grid(n) { return ps.length ? '<div class="mz-bgrid">' + ps.slice(0, n).map(function (p) { return pcard(p); }).join("") + "</div>" : '<div class="mz-bch mz-bnum">' + ln.map(function (n2, j) { return "<span><em>" + (j < 9 ? "0" : "") + (j + 1) + "</em>" + esc(clip(n2, 34)) + "</span>"; }).join("") + "</div>"; }
+    function stat(v, l) { return v ? '<div class="mz-stt"><b dir="ltr">' + esc(v) + "</b><small>" + esc(l) + "</small></div>" : ""; }
+    /* About: the story on one side, the facts on the other */
+    function pA(tb) {
+      var feats = tb.it.filter(function (s) { return !kindOf(s) && s !== x.company; }), yrs = yr ? new Date().getFullYear() - (+yr) : 0;
+      return '<div class="mz-pg mz-pa' + (feats.length || ps.length || ln.length ? "" : " mz-thin") + '"><div class="mz-pa-main">' + kick(tr("About the company", "عن الشركة")) + au(x.company, "h4") + au(L(x.about) || tb.tx, "p", "mz-lead") + (!ar && tb.tx && L(x.about) ? au(tb.tx, "p") : "") +
+        (feats.length ? '<ul class="mz-feat">' + feats.slice(0, 10).map(function (s) { return au(s, "li"); }).join("") + "</ul>" : "") +
+        (ps.length ? '<div class="mz-pa-strip">' + ps.slice(0, 4).map(function (p) { return '<img src="' + img(p.img) + '" alt="" loading="lazy">'; }).join("") + "</div>" : (ln.length ? '<div class="mz-pa-strip mz-pa-ln">' + ln.slice(0, 4).map(function (s, j) { return '<span class="mz-ptl"><em>0' + (j + 1) + "</em>" + au(clip(s, 50), "b") + "</span>"; }).join("") + "</div>" : "")) + "</div>" +
+        '<aside class="mz-pa-side">' + (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "") + '<div class="mz-sts">' + stat(yr, tr("Founded", "سنة التأسيس")) + stat(yrs > 0 ? yrs + "+" : "", tr("Years of experience", "عامًا من الخبرة")) + stat(ps.length || ln.length || "", tr("Products in this issue", "منتجًا في هذا العدد")) + stat(x.certs ? String(x.certs).split(/\s*[·,]\s*/)[0] : "", tr("Certified", "شهادة الجودة")) + "</div>" +
+        '<dl class="mz-pfx">' + (L(x.city) ? "<dt>" + tr("Location", "الموقع") + "</dt>" + au(L(x.city), "dd") : "") + (addr ? "<dt>" + tr("Address", "العنوان") + "</dt>" + au(addr, "dd") : "") + (x.certs ? "<dt>" + tr("Certificates", "الشهادات") + "</dt>" + au(x.certs, "dd") : "") + (catName(x.cat) ? "<dt>" + tr("Industry", "القطاع") + "</dt><dd>" + esc(catName(x.cat)) + "</dd>" : "") + "</dl></aside></div>";
+    }
+    /* Products: a catalogue, the range listed beside large product cards */
+    function pP(tb) {
+      var range = tb.it.length ? tb.it : ln, cn = ps.length ? Math.min(ps.length, 8) : Math.min(range.length, 8);
+      return '<div class="mz-pg mz-pp"><aside class="mz-pp-cat">' + kick(tr("Product range", "مجموعة المنتجات")) + (tb.tx && !ar ? au(tb.tx, "p") : "") + "<ol>" + range.slice(0, 12).map(function (s) { return au(clip(s, 48), "li"); }).join("") + "</ol></aside>" +
+        '<div class="mz-pp-grid mz-n' + cn + (ps.length ? "" : " mz-none") + '">' + (ps.length ? ps.slice(0, 8).map(function (p) { return pcard(p, 1); }).join("") : range.slice(0, 8).map(function (s, j) { return '<span class="mz-ptl"><em>' + (j < 9 ? "0" : "") + (j + 1) + "</em>" + au(clip(s, 60), "b") + "</span>"; }).join("")) + "</div></div>";
+    }
+    /* Applications: numbered tiles, where the products are used */
+    function pX(tb) {
+      return '<div class="mz-pg mz-px"><header>' + kick(tr("Where it is used", "مجالات الاستخدام")) + au(tb.n, "h4") + (tb.tx && !ar ? au(tb.tx, "p") : au(L(x.about), "p")) + '</header><div class="mz-px-grid mz-n' + Math.min(tb.it.length, 12) + '">' + tb.it.slice(0, 12).map(function (s, j) { return '<span class="mz-ptl"><em>' + (j < 9 ? "0" : "") + (j + 1) + "</em>" + au(clip(s, 60), "b") + "</span>"; }).join("") + "</div>" +
+        (ps.length ? '<div class="mz-px-strip">' + ps.slice(0, 5).map(function (p) { return pcard(p); }).join("") + "</div>" : "") + "</div>";
+    }
+    /* News: the newest story large, the rest as a dated list */
+    function pN(tb) {
+      var it = tb.it.map(function (s) { var m = s.match(/^(.*?)\s*\(([^)]*\d{4}[^)]*)\)\s*$/) || s.match(/^(.*?(?:19|20)\d{2})?,\s*(.*\d{4}.*)$/); if (m && m[1]) return { h: m[1], d: m[2] }; var y = s.match(/(?:19|20)\d{2}/); return { h: s, d: y ? y[0] : "" }; });
+      if (!it.length) return '<div class="mz-pg mz-pn"><article class="mz-pn-top">' + kick(tr("News", "الأخبار")) + au(tb.tx, "h4") + "</article></div>";
+      return '<div class="mz-pg mz-pn"><article class="mz-pn-top">' + kick(tr("Latest news", "آخر الأخبار")) + (it[0].d ? '<em dir="ltr">' + esc(it[0].d) + "</em>" : "") + au(it[0].h, "h4") + (tb.tx && !ar ? au(tb.tx, "p") : "") + (ps.length ? '<span class="mz-pn-pic"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "")) + "</article>" +
+        '<ol class="mz-pn-list">' + it.slice(1, 8).map(function (n2) { return "<li>" + (n2.d ? '<em dir="ltr">' + esc(n2.d) + "</em>" : "<em>—</em>") + au(n2.h, "b") + "</li>"; }).join("") + "</ol></div>";
+    }
+    /* Contact: the address card beside one-tap ways to reach the company */
+    function pC(tb) {
+      var seen = {}, rows = [];
+      function row(l, v, href) { var key = String(v).replace(/\D/g, "") || v; if (!v || seen[key]) return; seen[key] = 1; rows.push("<" + (href ? 'a href="' + esc(href) + '"' : "div") + "><small>" + esc(l) + '</small><b dir="ltr">' + esc(v) + "</b></" + (href ? "a" : "div") + ">"); }
+      if (x.tel) row(tr("Phone", "الهاتف"), x.tel, "tel:" + String(x.tel).replace(/[^+\d]/g, ""));
+      pick("tl").forEach(function (s) { var v = s.replace(/^[^+\d(]*/, ""), l = s.slice(0, s.length - v.length).trim() || "Tel"; row(l, v, /whatsapp/i.test(s) ? "https://wa.me/" + v.replace(/\D/g, "") : "tel:" + v.replace(/[^+\d]/g, "")); });
+      pick("fx").forEach(function (s) { row(tr("Fax", "الفاكس"), s.replace(/^[^+\d(]*/, "")); });
+      if (x.email) row(tr("Email", "البريد الإلكتروني"), x.email, "mailto:" + x.email);
+      pick("em").forEach(function (s) { row(tr("Email", "البريد الإلكتروني"), s, "mailto:" + s); });
+      if (web(x)) row(tr("Website", "الموقع الإلكتروني"), String(web(x)).replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""), web(x));
+      var hrs = pick("hr")[0];
+      return '<div class="mz-pg mz-pk"><div class="mz-pk-card">' + (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "") + kick(tr("Get in touch", "تواصل مع الشركة")) + au(x.company, "h4") + (addr ? au(addr, "p") : "") + (L(x.city) && !addr ? au(L(x.city), "p") : "") + (hrs ? au(hrs, "p", "mz-hrs") : "") + cta(x, "mz-sm") + "</div>" +
+        '<div class="mz-pk-act">' + rows.slice(0, 8).join("") + "</div></div>";
+    }
+    var PANE = { a: pA, p: pP, x: pX, n: pN, c: pC };
     return '<section class="mz-slide mz-bs mz-L' + lay + (o.wall ? " mz-bw" : "") + '" data-w="' + esc(web(x) || "") + '" style="--a:' + b.a + ";--b:" + b.b + ";--on:" + b.on + ";--f:" + (FONTS[x.cat] || "'Archivo'") + '">' +
-      '<nav class="mz-bnav"><button type="button" class="mz-blg" data-mz="bt" data-t="-1" aria-label="' + esc(x.company) + '">' + (lg ? '<img src="' + lg + '" alt="">' : "<b>" + esc(clip(x.company, 18)) + "</b>") + '</button><div dir="' + (b.m ? "ltr" : A.dir()) + '">' + (tabs.length ? "" : '<b class="mz-bname">' + esc(x.company) + "</b>") + tabs.map(function (tb, j) { return '<button type="button" data-mz="bt" data-t="' + j + '">' + esc(tb.n) + "</button>"; }).join("") + "</div>" + (o.x || "") + "</nav>" +
-      '<div class="mz-bbody"><div class="mz-bpane on" data-p="-1"><div class="mz-bhero"><i class="mz-bpat" aria-hidden="true"></i><div class="mz-btx"><small>' + esc(x.company) + "</small><h3>" + esc(head) + "</h3><p>" + esc(clip(L(x.about), 110)) + '</p></div><div class="mz-bwin">' + (ps.length ? media(x) : '<span class="mz-bset">' + ln.slice(0, 4).map(function (n2) { return "<i>" + esc(clip(n2, 22)) + "</i>"; }).join("") + "</span>") + "</div></div>" +
-      (slo.length ? '<div class="mz-btick" dir="ltr"><div>' + slo.concat(slo, slo, slo).map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + "</div></div>" : "") + '<div class="mz-bsec">' + grid(6) + '<p class="mz-babt">' + esc(L(x.about)) + "</p>" + chips([L(x.city), x.certs].filter(Boolean)) + "</div></div>" +
-      tabs.map(function (tb, j) { return '<div class="mz-bpane" data-p="' + j + '"><div class="mz-bsec"><h4>' + esc(tb.n) + "</h4>" + pane(tb) + "</div></div>"; }).join("") + "</div>" +
+      '<nav class="mz-bnav"><button type="button" class="mz-blg" data-mz="bt" data-t="-1" aria-label="' + esc(x.company) + '">' + (lg ? '<img src="' + lg + '" alt="">' : "<b>" + esc(clip(x.company, 18)) + "</b>") + '</button><div dir="' + A.dir() + '">' + tabs.map(function (tb, j) { return '<button type="button" data-mz="bt" data-t="' + j + '">' + esc(tb.n) + "</button>"; }).join("") + "</div>" + (o.x || "") + "</nav>" +
+      '<div class="mz-bbody"><div class="mz-bpane on" data-p="-1"><div class="mz-bhero"><i class="mz-bpat" aria-hidden="true"></i><div class="mz-btx">' + (head !== x.company ? au(x.company, "small") : "") + au(head, "h3") + au(clip(L(x.about), 150), "p") + '</div><div class="mz-bwin">' + (ps.length ? media(x) : '<span class="mz-bset">' + ln.slice(0, 4).map(function (n2) { return "<i>" + esc(clip(n2, 22)) + "</i>"; }).join("") + "</span>") + "</div></div>" +
+      (slo.length ? '<div class="mz-btick" dir="ltr"><div>' + slo.concat(slo, slo, slo).map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + "</div></div>" : "") + '<div class="mz-bsec mz-bhome">' + grid(6) + '<div class="mz-bhf">' + stat(yr, tr("Founded", "سنة التأسيس")) + stat(L(x.city), tr("Location", "الموقع")) + stat(x.certs, tr("Certificates", "الشهادات")) + stat(catName(x.cat), tr("Industry", "القطاع")) + "</div></div></div>" +
+      tabs.map(function (tb, j) { return '<div class="mz-bpane mz-k' + tb.k + '" data-p="' + j + '">' + PANE[tb.k](tb) + "</div>"; }).join("") + "</div>" +
       '<footer class="mz-bft">' + (o.pre || "") + cta(x, "mz-sm") + '<a class="mz-bmore" href="' + hrefCo(x) + '">' + t("details") + "</a>" + (o.post || "") + "</footer></section>";
   }
   doc.addEventListener("click", function (ev) { var b = ev.target.closest && ev.target.closest('[data-mz="bt"]'); if (!b) return; var s = b.closest(".mz-bs"), k = b.getAttribute("data-t"); if (!s) return;
@@ -280,7 +347,7 @@
   /* articles in the reels: picture on top (the illustration cut out of the banner), then the headline as real text, then the writer */
   function artBy(a) { if (!a.author) return ""; return '<span class="mz-by">' + (a.face ? '<img src="' + img(a.face) + '" alt="" loading="lazy">' : '<i aria-hidden="true"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3"/></svg></i>') + "<u>" + esc(a.author) + "</u></span>"; }
   function artSlide(a) { var pic = a.cut || a.img;
-    return '<section class="mz-slide mz-art mz-art2' + (a.fit ? " mz-fit" : "") + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(img(pic)) + '&quot;)"' : "") + '>' + (pic ? '<div class="mz-av"><img src="' + img(pic) + '" alt="" loading="lazy"></div>' : "") +
+    return '<section class="mz-slide mz-art mz-art2' + (a.fit ? " mz-fit" : "") + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(new URL(img(pic), location.href).href) + '&quot;)"' : "") + '>' + (pic ? '<div class="mz-av"><img src="' + img(pic) + '" alt="" loading="lazy"></div>' : "") +
       '<div class="mz-cap"><span class="mz-tag">' + t("article") + "</span><h3>" + esc(aTitle(a)) + "</h3>" + artBy(a) + "<p>" + esc(aSum(a)) + '</p><a class="mz-read" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></section>"; }
   function brandFeed() { var a = ads().filter(function (x) { return !FCAT || x.cat === FCAT; }).sort(function (x, y) { return (prods(y).length ? 1 : 0) - (prods(x).length ? 1 : 0) || x.page - y.page; }), r = FCAT ? [] : arts(), out = [], j = 0;
     a.forEach(function (x, i) { out.push({ ad: x }); var want = Math.floor((i + 1) * r.length / a.length); while (j < want) out.push({ art: r[j++] }); }); return out; }
@@ -288,7 +355,7 @@
   var PROD = W.AAT_MZ_REEL === "prod";
   function prodItems(x) { var ps = prods(x), it = ps.length ? ps.map(function (p) { return { n: p.n, d: L(p.d) || "", img: img(p.img) }; }) : lines(x).map(function (n2) { return { n: n2, d: "" }; });
     if (!it.length) it = [{ n: x.company, d: "" }]; var base = it.slice(); while (it.length < 6) it = it.concat(base); return { all: it.slice(0, 12), uniq: base.length }; }
-  function prodSlide(x) { var b = BR[x.page] || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), pi = prodItems(x), n = pi.all.length;
+  function prodSlide(x) { var b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), pi = prodItems(x), n = pi.all.length;
     return '<section class="mz-slide mz-ps" data-w="' + esc(web(x) || "") + '" style="--a:' + b.a + ";--b:" + b.b + ";--on:" + b.on + '" data-n="' + n + '" data-u="' + pi.uniq + '">' +
       '<header class="mz-phd"><a class="mz-plg" href="' + esc(web(x) || hrefCo(x)) + '"' + (web(x) ? ' target="_blank" rel="noopener noreferrer"' : "") + '>' + (lg ? '<img src="' + lg + '" alt="">' : "") + '</a><span><b>' + esc(x.company) + "</b><small>" + esc(catName(x.cat)) + " · " + esc(L(x.city)) + "</small></span></header>" +
       '<div class="mz-rw"><i class="mz-rglow"></i><i class="mz-rfloor"></i><div class="mz-ring">' + pi.all.map(function (p, i) { return '<div class="mz-ri" data-i="' + i + '" data-n="' + esc(p.n) + '" data-d="' + esc(clip(p.d || L(x.about), 150)) + '"><span class="mz-rc">' + (p.img ? '<img src="' + p.img + '" alt="" loading="lazy">' : '<b>' + esc(clip(p.n, 40)) + "</b>") + "</span></div>"; }).join("") + "</div></div>" +
@@ -336,9 +403,9 @@
     var feed = brandFeed(), done = null, box = null;
     root.innerHTML = '<div class="mz-shelf"><header><span class="mz-sico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><b>' + t("v_reels") + '</b><button type="button" data-mz="so" data-k="0">' + t("playAll") + '</button></header><div class="mz-srow" dir="' + A.dir() + '">' +
       feed.map(function (o, k) {
-        if (o.ad) { var x = o.ad, b = BR[x.page] || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x);
+        if (o.ad) { var x = o.ad, b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x);
           return '<button type="button" class="mz-sc" data-mz="so" data-k="' + k + '" style="--a:' + b.a + ";--b:" + b.b + '" aria-label="' + esc(x.company) + '">' + (ps.length ? '<span class="mz-scp"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : '<span class="mz-scl">' + lines(x).slice(0, 3).map(function (n2) { return "<i>" + esc(clip(n2, 20)) + "</i>"; }).join("") + "</span>") + '<span class="mz-sct">' + (lg ? '<span class="mz-scg"><img src="' + lg + '" alt="" loading="lazy"></span>' : "") + "<b>"  + esc(clip(x.company, 34)) + "</b><small>" + esc(shortName(x.cat)) + "</small></span></button>"; }
-        var a = o.art, pic = a.cut || a.img; return '<button type="button" class="mz-sc mz-sca mz-sca2' + (a.fit ? " mz-fit" : "") + '" data-mz="so" data-k="' + k + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(img(pic)) + '&quot;)"' : "") + '>' + (pic ? '<span class="mz-scv"><img src="' + img(pic) + '" alt="" loading="lazy"></span>' : "") + '<span class="mz-sct"><em>' + t("article") + "</em><b>" + esc(clip(aTitle(a), 70)) + "</b>" + artBy(a) + "</span></button>";
+        var a = o.art, pic = a.cut || a.img; return '<button type="button" class="mz-sc mz-sca mz-sca2' + (a.fit ? " mz-fit" : "") + '" data-mz="so" data-k="' + k + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(new URL(img(pic), location.href).href) + '&quot;)"' : "") + '>' + (pic ? '<span class="mz-scv"><img src="' + img(pic) + '" alt="" loading="lazy"></span>' : "") + '<span class="mz-sct"><em>' + t("article") + "</em><b>" + esc(clip(aTitle(a), 70)) + "</b>" + artBy(a) + "</span></button>";
       }).join("") + '</div></div><div class="mz-shelfreel"></div>';
     var holder = q(root, ".mz-shelfreel"), row = q(root, ".mz-srow"), d = null, moved = false;
     c.later(300, function () { var all = qa(row, 'img[loading="lazy"]'), k = 0; (function more() { for (var z = 0; z < 10 && k < all.length; z++, k++) { all[k].decoding = "async"; all[k].loading = "eager"; } if (k < all.length) c.later(180, more); })(); });

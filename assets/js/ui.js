@@ -67,9 +67,9 @@
       '<span class="pc-b"><b>' + esc(p.it.n) + '</b><small>' + esc(p.c.company) + '</small><span class="pc-p">' + (A.safeUrl(p.c.web) ? esc(String(p.c.web).replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "")) + " ↗" : esc(L(A.cats[p.c.cat]))) + "</span></span></a>";
   }
   function articleCard(a, big) {
-    var lg = A.articleLang();
-    return '<a class="ac rv' + (big ? " big" : "") + '" href="#article-' + a.id + '">' + (a.img ? '<span class="ac-img"><img src="' + img(a.img) + '" alt="" loading="lazy"></span>' : "") +
-      '<span class="ac-b"><b>' + esc(a.title[lg] || a.title.en || a.title.ar) + '</b><span class="ac-s">' + esc(a.sum[lg] || a.sum.en || a.sum.ar || "") + '</span>' + (a.custom ? "" : "<small>" + t("ed_page", { n: a.pages[0] }) + "</small>") + "</span></a>";
+    var lg = A.articleLang(), pic = a.cut || a.img, pen = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3"/></svg>';
+    return '<a class="ac rv' + (big ? " big" : "") + (a.cut ? " cut" : "") + '" href="#article-' + a.id + '">' + (pic ? '<span class="ac-img"><img src="' + img(pic) + '" alt="" loading="lazy"></span>' : "") +
+      '<span class="ac-b"><b>' + esc(a.title[lg] || a.title.en || a.title.ar) + '</b><span class="ac-s">' + esc(a.sum[lg] || a.sum.en || a.sum.ar || "") + '</span>' + (a.author ? '<span class="ac-by">' + (a.face ? '<img src="' + img(a.face) + '" alt="" loading="lazy">' : "<i>" + pen + "</i>") + "<u>" + esc(String(a.author).replace(/\s*\([^)]*\)\s*$/, "")) + "</u>" + (a.face ? "<i>" + pen + "</i>" : "") + "</span>" : "") + (a.custom ? "" : "<small>" + t("ed_page", { n: a.pages[0] }) + "</small>") + "</span></a>";
   }
   function newsCard(n, i) {
     var b = A.newsBody[i];

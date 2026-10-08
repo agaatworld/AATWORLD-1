@@ -14,7 +14,7 @@
   --red: #D5121B; --red-2: #EC1D25; --red-t: #C40F18; --wa: #0F7A42;
   --bg: #FBFAF8; --surface: #FFFFFF; --soft: #F3F1ED; --ink: #101012; --text: #2E2E33; --muted: #63636B; --line: #E3E0DA;
   --shadow: 0 18px 40px -24px rgba(16, 16, 18, .35);
-  --font: "Inter Tight", "Almarai", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --font: "Inter Tight", "Jazeera", "Almarai", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
   --r: 14px; --hd: 72px; --ease: cubic-bezier(.2, .7, .2, 1);
   color-scheme: light;
 }
@@ -22,7 +22,7 @@
   --red-t: #FF6B72; --bg: #0D0D0F; --surface: #17171B; --soft: #131316; --ink: #F5F5F7; --text: #D8D8DE; --muted: #A3A3AD; --line: #2B2B31;
   --shadow: 0 18px 40px -24px rgba(0, 0, 0, .8); color-scheme: dark;
 }
-html[lang="ar"] { --font: "Almarai", "Inter Tight", "Segoe UI", Tahoma, sans-serif; }
+html[lang="ar"] { --font: "Jazeera", "Almarai", "Inter Tight", "Segoe UI", Tahoma, sans-serif; }
 
 /* ---------- base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -430,3 +430,22 @@ html.intro-on .hero-c > *, html.intro-on .hero-cover, html.intro-on .scrib path,
 
 /* Remove the large faint "45" behind the banner */
 .hero::after{content:none!important;display:none!important}
+
+/* Al Jazeera Arabic typeface for all Arabic text on the site (the same one the magazine uses) */
+@font-face { font-family: "Jazeera"; font-weight: 400 800; font-display: swap; src: url("../fonts/jazeera.ttf") format("truetype"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF; }
+/* Sections are separated by space only: no dividing lines or grey bands */
+.sec.alt, html.mz-bgon .sec.alt, html.mz-quiet .sec.alt { background: transparent; border: 0; }
+/* Logo cards: every logo is fitted whole inside its card */
+.lg { width: 168px; height: 92px; display: flex; align-items: center; justify-content: center; padding: 12px 16px; box-sizing: border-box; overflow: hidden; }
+.lg img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.tg { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.tg .lg { width: auto; height: 104px; }
+/* Article cards: the picture, then the headline, then the writer with a pen */
+.ac.cut .ac-img { background: #fff; }
+.ac.cut .ac-img img { object-fit: cover; object-position: center; }
+.ac-by { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--red-2); }
+.ac-by img { flex: none; width: 30px; height: 30px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--red-2); }
+.ac-by i { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--red-2); color: #fff; font-style: normal; }
+.ac-by img + u + i { margin-inline-start: auto; background: none; color: var(--red-2); }
+.ac-by u { text-decoration: none; font-weight: 800; font-size: 15px; letter-spacing: .01em; color: var(--ink); }
+.ac.big .ac-by u { font-size: 17px; }

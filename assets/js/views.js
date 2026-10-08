@@ -30,6 +30,9 @@
     /* Brands you can trust: the partner logos shown on aatworld.com */
     var BR = [["pakarpertanian.my", "https://www.pakarpertanian.my", "https://aatworld.com/wp-content/uploads/2023/03/pakar1.jpg"], ["Watertech", "https://www.simem.info", "https://aatworld.com/wp-content/uploads/2023/03/watertech.jpg"], ["SIMEM", "https://www.simem.info", "https://aatworld.com/wp-content/uploads/2023/03/Simem1.jpg"], ["IMLAB", "https://www.aips.kz", "https://aatworld.com/wp-content/uploads/2023/03/IMLAB-LOGO.jpg"], ["AIPS", "https://www.aips.kz", "https://aatworld.com/wp-content/uploads/2023/03/1T.jpg"], ["Al-Meswak", "https://www.al-meswak.com.my", "https://aatworld.com/wp-content/uploads/2023/03/2T.jpg"], ["NS Expo", "https://www.en.ns-expo.kz", "https://aatworld.com/wp-content/uploads/2023/03/7T.jpg"], ["Transport Events", "https://www.transportevents.com", "https://aatworld.com/wp-content/uploads/2023/03/6T.jpg"], ["Transport Events", "https://www.transportevents.com", "https://aatworld.com/wp-content/uploads/2023/03/55T.jpg"], ["Pasofal", "https://www.pasofal.com", "https://aatworld.com/wp-content/uploads/2023/03/4T.jpg"], ["KITF", "https://www.kitf.kz", "https://aatworld.com/wp-content/uploads/2023/03/33T.jpg"], ["A'Sharqiyah University", "https://www.asu.edu.om", "https://aatworld.com/wp-content/uploads/2023/03/www.asu_.edu_.om_.png"], ["MIHAS", "https://www.mihas.com.my", "https://aatworld.com/wp-content/uploads/2023/11/download.jpg"], ["Saudi PP", "https://www.saudipp.com", "https://aatworld.com/wp-content/uploads/2023/03/www.saudipp.com1_.png"], ["Diodo", "https://www.diodo.com", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-9.png"], ["Unipass", "https://www.unipass.co.kr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-8-1.png"], ["SANHA", "https://www.sanha.co.za", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-7-1.png"], ["Kosedag", "https://www.kosedag.com.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-6-1.png"], ["Enfal Fistik", "https://www.enfalfistik.com", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-5-1.png"], ["Emtel", "https://www.emtel.com.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-4-1.png"], ["Dalong", "https://www.dalong.com.tw", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-2-1.png"], ["BAU", "https://www.bau.edu.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-1-1.png"], ["SteelFab \u00b7 Expo Centre Sharjah", "https://steelfabme.com/", "https://aatworld.com/wp-content/uploads/2023/03/Logo-EXPO-CENTRE-SHARJAH.jpg"]];
     var logos = BR.map(function (b) { return '<a class="lg" href="' + esc(b[1]) + '" target="_blank" rel="noopener noreferrer" title="' + esc(b[0]) + '"><img src="' + esc(b[2]) + '" alt="' + esc(b[0]) + '" loading="lazy"></a>'; }).join("");
+    /* Advertisers in this issue: the logos of the companies advertising in the current magazine */
+    var advLogos = ((window.AAT_ISSUE || {}).ads || []).map(function (c) { var l = A.logoOf(c); return l ? '<a class="lg" href="#company-' + c.page + '" title="' + esc(c.company) + '"><img src="' + img(l) + '" alt="' + esc(c.company) + '" loading="lazy"></a>' : ""; }).join("");
+    var AR = A.state.lang === "ar", trust = sec("trust", U.head(AR ? "شركاؤنا" : "Our partners", AR ? "علامات تثقون بها" : "Brands You Can Trust") + '<div class="tg">' + logos + "</div>");
     var html =
       '<section class="hero"><div class="wrap hero-g"><div class="hero-c">' +
       '<p class="kick">' + esc(t("mb_issue", { n: M.issue, m: L(M.month) })) + "</p>" +
@@ -42,11 +45,11 @@
       '<div class="live-kpi"><a href="#flip"><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
       (nx ? '<a href="#exhibition-' + nx.id + '"><b>' + Math.max(A.daysUntil(nx, new Date()), 0) + "</b><span>" + t("rp_days") + " " + esc(nx.name) + "</span></a>" : "") + "</div></div></div></section>" +
 
-      '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title"), ["magazine", t("mb_brands")]) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + logos + logos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" +
+      (advLogos ? '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title"), ["magazine", t("mb_brands")]) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + advLogos + advLogos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" : "") +
 
       sec("", U.head(t("fa_kicker"), t("fa_title"), ["advertise", t("fa_how")]) + slider()) +
 
-      sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + img("u/" + x.img + ".jpg") + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>") +
+      sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + A.indPic(x.img) + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>") +
 
       sec("", U.head(t("hot_kicker"), t("hot_title"), ["products", t("hot_all")]) + '<div class="pg">' + A.allProducts().slice(0, 8).map(U.productCard).join("") + "</div>") +
 
@@ -55,6 +58,8 @@
       sec("", U.head(t("news_kicker"), t("news_title"), ["news", t("news_btn")]) + '<div class="ng">' + newsCards(-1, 3) + "</div>") +
 
       (ev.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window"), ["exhibitions", t("nav_exhibitions")]) + '<div class="el">' + ev.slice(0, 4).map(U.eventRow).join("") + "</div>") : "") +
+
+      trust +
 
       sec("", '<div class="am"><div><p class="kick">' + t("am_kicker") + '</p><h2 class="h2 split">' + t("am_title") + '</h2><p class="lead">' + t("am_p1") + "</p><p>" + t("am_p2") + "</p><p>" + t("am_p3") + '</p><a class="more" href="#about">' + t("am_more") + '<span class="flip">' + ic("arrow", 16) + "</span></a></div>" +
         '<div class="am-p"><div class="am-c dark"><small>' + t("am_founder") + "</small><b>" + (A.state.lang === "ar" ? "محمد مروان فتال" : "Muhammad Marwan Fattal") + '</b><i>1982</i></div><div class="am-c"><small>' + t("am_ceo") + "</small><b>" + (A.state.lang === "ar" ? "مروان أنس" : "Marwan Anas") + "</b></div>" +
@@ -144,7 +149,7 @@
     var ev = A.eventsWindow(new Date(), 3).filter(function (e) { return x.ind.indexOf(e.industry) > -1; });
     var name = t("ln_" + x.img);
     return { title: name, html:
-      '<header class="ih"><img src="' + img("u/" + x.img + ".jpg") + '" alt=""><div class="wrap">' + U.crumbs([[t("home"), "home"], [t("nav_products"), "products"], [name]]) + '<h1 class="h1" tabindex="-1">' + esc(name) + '</h1><p class="lead">' + esc(t("ln_" + x.img + "_d")) + "</p></div></header>" +
+      '<header class="ih"><img src="' + A.indPic(x.img) + '" alt=""><div class="wrap">' + U.crumbs([[t("home"), "home"], [t("nav_products"), "products"], [name]]) + '<h1 class="h1" tabindex="-1">' + esc(name) + '</h1><p class="lead">' + esc(t("ln_" + x.img + "_d")) + "</p></div></header>" +
       (prods.length ? sec("", U.head(t("hot_kicker"), t("hot_title"), ["products", t("hot_all")]) + '<div class="pg">' + prods.slice(0, 12).map(U.productCard).join("") + "</div>") : "") +
       (ev.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window")) + '<div class="el">' + ev.map(U.eventRow).join("") + "</div>") : "") +
       (!prods.length && !ev.length ? sec("", '<p class="empty">' + t("pr_none") + '</p><div class="row"><a class="btn btn-red" href="#products">' + t("hot_all") + "</a></div>") : "") +

@@ -150,6 +150,9 @@
   function eventById(id) { var l = D.events || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function daysUntil(e, now) { var a = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((parseDate(e.start) - a) / 864e5); }
 
+  /* sector pictures: the original photo set is not in the site files, so each sector borrows a fitting picture from the modern-products section */
+  var IND_PIC = { u8: 7, u15: 3, u91: 20, u68: 37, u82: 24, u29: 15, u51: 18, u87: 12, u20: 32, u10: 11, u58: 14 };
+  function indPic(k) { return IND_PIC[k] == null ? "" : img("modern/m" + IND_PIC[k] + ".jpg"); }
   var INDUSTRIES = [
     { slug: "automation", img: "u8", ind: ["machinery"], cats: ["machinery", "plastics"] },
     { slug: "cnc", img: "u15", ind: ["machinery"], cats: ["machinery", "tools"] },
@@ -207,7 +210,7 @@
     companies: companies, cats: cats, company: company, companyPages: companyPages, logoOf: logoOf, productsOf: productsOf, productDesc: productDesc,
     allProducts: allProducts, usedCats: usedCats, matchProduct: matchProduct, byTier: byTier, tierOf: tierOf,
     articles: articles, articlesFor: articlesFor, article: article, articleLang: articleLang, newsBody: newsBody,
-    eventsWindow: eventsWindow, eventById: eventById, daysUntil: daysUntil, INDUSTRIES: INDUSTRIES, industry: industry,
+    eventsWindow: eventsWindow, eventById: eventById, daysUntil: daysUntil, INDUSTRIES: INDUSTRIES, industry: industry, indPic: indPic,
     parseRoute: parseRoute, waLink: waLink, mailLink: mailLink, img: img, companyImg: companyImg, hasPage: hasPage, inMagazine: inMagazine, setCustom: setCustom, getCustom: getCustom, clone: clone, BASE: BASE
   };
 })(typeof window !== "undefined" ? window : globalThis);
