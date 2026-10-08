@@ -21,7 +21,7 @@ window.AAT_DATA = {
     },
     calendarNote: {
       en: "Dates are taken from organizer and trade-fair listings as of September 2026. Always confirm on the official show website before booking travel.",
-      ar: "التواريخ مأخوذة من المنظّمين وقوائم المعارض التجارية حتى سبتمبر 2026. تأكّد دائمًا من الموقع الرسمي للمعرض قبل حجز السفر."
+      ar: "التواريخ مأخوذة من المنظّمين وقوائم المعارض التجارية حتى سبتمبر 2026. تأكّد دائماً من الموقع الرسمي للمعرض قبل حجز السفر."
     }
   },
 
@@ -37,7 +37,7 @@ window.AAT_DATA = {
   /* Latest news from aatworld.com (image keys refer to assets/img/newsN.jpg) */
   news: [
     { img: "news1", title: { en: "TiTE x IHT launches Global Buyer Program to strengthen hardware sourcing", ar: "معرض تايوان للعدد (TiTE) ومعرض IHT يطلقان برنامج المشترين الدوليين لتعزيز توريد العدد والخردوات" } },
-    { img: "news2", title: { en: "Taiwan AI certification gains momentum as adoption accelerates", ar: "شهادات الذكاء الاصطناعي في تايوان تكتسب زخمًا مع تسارع التبنّي" } },
+    { img: "news2", title: { en: "Taiwan AI certification gains momentum as adoption accelerates", ar: "شهادات الذكاء الاصطناعي في تايوان تكتسب زخماً مع تسارع التبنّي" } },
     { img: "news3", title: { en: "Panjit expands power semiconductor portfolio for AI and automotive markets", ar: "شركة بانجيت (Panjit) توسّع منتجاتها من أشباه موصلات الطاقة لأسواق الذكاء الاصطناعي والسيارات" } },
     { img: "news4", title: { en: "Taipei Cycle highlights the future of the global bicycle industry", ar: "معرض تايبيه للدراجات يرسم مستقبل صناعة الدراجات العالمية" } },
     { img: "news5", title: { en: "TDS-DYISHENG: proven reliability for modern industry", ar: "TDS-DYISHENG: موثوقية مثبتة للصناعة الحديثة" } },
@@ -240,7 +240,7 @@ window.AAT_DATA = {
       },
       includes: {
         en: ["Show registration and badges", "Hotel and airport transfers", "Interpreter: Arabic, English, Chinese", "At least five pre-booked supplier meetings", "Optional factory visits"],
-        ar: ["التسجيل في المعرض وبطاقات الدخول", "الفندق والتنقّل من المطار وإليه", "مترجم: عربي وإنجليزي وصيني", "خمسة اجتماعات على الأقل محجوزة مسبقًا مع موردين", "زيارات اختيارية للمصانع"]
+        ar: ["التسجيل في المعرض وبطاقات الدخول", "الفندق والتنقّل من المطار وإليه", "مترجم: عربي وإنجليزي وصيني", "خمسة اجتماعات على الأقل محجوزة مسبقاً مع موردين", "زيارات اختيارية للمصانع"]
       },
       price: { en: "Quote per show", ar: "عرض سعر لكل معرض" }
     },
@@ -262,7 +262,7 @@ window.AAT_DATA = {
       title: { en: "Online supplier meetings", ar: "اجتماعات مرئية مع الموردين" },
       summary: {
         en: "Meet a Taiwanese supplier by video without travelling. We schedule across time zones and join as interpreter if you need one.",
-        ar: "قابِل موردًا تايوانيًا عبر الفيديو دون سفر. ننسّق المواعيد بين المناطق الزمنية وننضم كمترجمين عند الحاجة."
+        ar: "قابِل مورداً تايوانياً عبر الفيديو دون سفر. ننسّق المواعيد بين المناطق الزمنية وننضم كمترجمين عند الحاجة."
       },
       includes: {
         en: ["Scheduling across time zones", "Agenda and product questions prepared", "Interpreter on the call", "Written summary afterwards"],
@@ -302,13 +302,13 @@ window.AAT_DATA = {
     {
       id: "reader",
       name: { en: "Reader", ar: "قارئ" },
-      price: { en: "Free", ar: "مجانًا" },
+      price: { en: "Free", ar: "مجاناً" },
       who: { en: "For anyone following trade with Taiwan.", ar: "لكل من يتابع التجارة مع تايوان." },
       features: {
         en: ["AAT Magazine and show guides", "Exhibitions calendar and show alerts", "Weekly newsletter", "AAT Assistant on the website"],
         ar: ["مجلة AAT وأدلة المعارض", "تقويم المعارض وتنبيهاتها", "النشرة الأسبوعية", "مساعد AAT على الموقع"]
       },
-      cta: { en: "Subscribe free", ar: "اشترك مجانًا" }
+      cta: { en: "Subscribe free", ar: "اشترك مجاناً" }
     },
     {
       id: "club", highlight: true,
@@ -460,11 +460,11 @@ window.AAT_DATA = {
           "AAT can help at every step: matchmaking to build the shortlist, verification before payment, and delegations and online meetings to meet suppliers."
         ],
         ar: [
-          "1. اكتب مواصفات واضحة تشمل المواد والأبعاد والمعايير والكمية والتغليف والسعر المستهدف وميناء التسليم. يرد الموردون أسرع ويقدّمون أسعارًا أدق عندما يكون الطلب كاملًا.",
-          "2. ابنِ قائمة مختصرة لا طويلة. يكفي ثلاثة إلى خمسة موردين مؤهلين. انظر إلى ما يصدّرونه حاليًا، وشهاداتهم، وهل يشاركون في المعرض الرئيسي لمنتجك.",
+          "1. اكتب مواصفات واضحة تشمل المواد والأبعاد والمعايير والكمية والتغليف والسعر المستهدف وميناء التسليم. يرد الموردون أسرع ويقدّمون أسعاراً أدق عندما يكون الطلب كاملاً.",
+          "2. ابنِ قائمة مختصرة لا طويلة. يكفي ثلاثة إلى خمسة موردين مؤهلين. انظر إلى ما يصدّرونه حالياً، وشهاداتهم، وهل يشاركون في المعرض الرئيسي لمنتجك.",
           "3. تحقّق قبل أن تدفع. راجع السجل التجاري، واطلب مراجع تصدير، ورتّب زيارة للمصنع في الطلبات الكبيرة. استرداد العربون أصعب بكثير من تقبّل تأخير.",
-          "4. قابِل الموردين حضوريًا أو عبر الفيديو. يتيح لك المعرض مقارنة عدة موردين في يوم واحد، وتناسب مكالمة الفيديو مع مترجم المتابعة والطلبات الأصغر.",
-          "5. ابدأ بطلب تجريبي. اتفق كتابيًا على فحوص الجودة وشروط التسليم (Incoterms)، ثم وسّع الطلبات بعد وصول الشحنة الأولى كما اتُّفق.",
+          "4. قابِل الموردين حضورياً أو عبر الفيديو. يتيح لك المعرض مقارنة عدة موردين في يوم واحد، وتناسب مكالمة الفيديو مع مترجم المتابعة والطلبات الأصغر.",
+          "5. ابدأ بطلب تجريبي. اتفق كتابياً على فحوص الجودة وشروط التسليم (Incoterms)، ثم وسّع الطلبات بعد وصول الشحنة الأولى كما اتُّفق.",
           "تساعدك AAT في كل خطوة: المطابقة لبناء القائمة المختصرة، والتوثيق قبل الدفع، والوفود والاجتماعات المرئية لمقابلة الموردين."
         ]
       }
@@ -474,7 +474,7 @@ window.AAT_DATA = {
       date: "2026-09-27", industry: "hardware", minutes: 3, event: "taiwan-industry-week-2026",
       title: {
         en: "October 20–22: Taiwan’s busiest week for industrial buyers",
-        ar: "20–22 أكتوبر: الأسبوع الأكثر ازدحامًا للمشترين الصناعيين في تايوان"
+        ar: "20–22 أكتوبر: الأسبوع الأكثر ازدحاماً للمشترين الصناعيين في تايوان"
       },
       excerpt: {
         en: "Hardware, metal, safety, HVAC, electronics and PCB shows run the same three days in Taipei, with tools and hardware in Taichung.",
@@ -490,10 +490,10 @@ window.AAT_DATA = {
         ],
         ar: [
           "من 20 إلى 22 أكتوبر 2026 يستضيف مركز نانغانغ للمعارض في تايبيه أسبوع تايوان الصناعي، الذي يجمع معرض تايوان للعدد، ومعرض تقنيات المعادن، ومعرض السلامة المهنية T-SAFE، ومعرض التبريد والتكييف.",
-          "وفي الأيام نفسها تغطي معارض TAITRONICS وAIoT Taiwan وTPCA المكوّنات الإلكترونية والذكاء الاصطناعي وإنترنت الأشياء ولوحات الدوائر المطبوعة، في نانغانغ أيضًا.",
+          "وفي الأيام نفسها تغطي معارض TAITRONICS وAIoT Taiwan وTPCA المكوّنات الإلكترونية والذكاء الاصطناعي وإنترنت الأشياء ولوحات الدوائر المطبوعة، في نانغانغ أيضاً.",
           "وفي تايتشونغ يُقام معرض تايوان الدولي للعدد والخردوات TiTE بالتوازي مع معرض الخردوات الدولي. ووسط تايوان هو أكبر تجمّع لصناعة العدد في الجزيرة، لذا تقع مصانع كثيرة على بُعد ساعة من مكان المعرض.",
           "بالنسبة للمشتري، هذا أسبوع فعّال: يومان في تايبيه ويوم في تايتشونغ، يربط بينهما القطار السريع في أقل من ساعة. ويأتي بعد معرض Energy Taiwan (14–16 أكتوبر)، فيمكن لمشتري الطاقة الجمع بين الرحلتين.",
-          "تنظّم AAT وفدًا من المشترين لهذا الأسبوع. تواصل معنا لحجز مقعدك وأخبرنا بالمنتجات التي تريد استيرادها."
+          "تنظّم AAT وفداً من المشترين لهذا الأسبوع. تواصل معنا لحجز مقعدك وأخبرنا بالمنتجات التي تريد استيرادها."
         ]
       }
     }
@@ -510,7 +510,7 @@ window.AAT_DATA = {
     },
     {
       q: { en: "What does “AAT verified” mean?", ar: "ماذا تعني شارة «موثّق من AAT»؟" },
-      a: { en: "Our team has checked the company’s business registration in Taiwan, visited the factory and reviewed its export history. The badge shows the date of the last check and is renewed every year.", ar: "تحقّق فريقنا من السجل التجاري للشركة في تايوان، وزار المصنع، وراجع سجل التصدير. تُظهر الشارة تاريخ آخر فحص وتُجدَّد سنويًا." }
+      a: { en: "Our team has checked the company’s business registration in Taiwan, visited the factory and reviewed its export history. The badge shows the date of the last check and is renewed every year.", ar: "تحقّق فريقنا من السجل التجاري للشركة في تايوان، وزار المصنع، وراجع سجل التصدير. تُظهر الشارة تاريخ آخر فحص وتُجدَّد سنوياً." }
     },
     {
       q: { en: "Which languages do you work in?", ar: "بأي لغات تعملون؟" },
