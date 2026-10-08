@@ -125,10 +125,10 @@
     function upd() {
       tick = false; var y = W.scrollY, h = root.scrollHeight - W.innerHeight;
       if (bar) bar.style.transform = "scaleX(" + (h > 0 ? Math.min(y / h, 1) : 0).toFixed(4) + ")";
-      hdr.classList.toggle("scrolled", y > 24);
+      /* the top bar stays put: same size, always visible, no hiding or shrinking while scrolling */
       var open = ($("#mnav") && !$("#mnav").hidden) || ($(".lang-m") && !$(".lang-m").hidden);
-      if (!open && y > 260 && y > last + 4) { hdr.classList.add("hide"); root.classList.add("hdr-off"); }
-      else if (y < last - 4 || y < 260) { hdr.classList.remove("hide"); root.classList.remove("hdr-off"); }
+
+
       if (Math.abs(y - last) > 4) last = y;
     }
     W.addEventListener("scroll", function () { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });

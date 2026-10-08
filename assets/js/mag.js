@@ -717,7 +717,7 @@
     top.addEventListener("click", up); fl.addEventListener("click", function (ev) { if (/^#?(home)?$/.test(location.hash)) up(ev); });
     var tick = 0;
     function upd() { tick = 0; var y = W.pageYOffset || 0, hdr = doc.getElementById("hdr"), lv = doc.querySelector("#app .live"), thr = lv ? lv.getBoundingClientRect().bottom + y - 70 : 720, past = y > thr;
-      root.classList.toggle("mz-tiny", y > 40); root.classList.toggle("mz-past", past);
+       root.classList.toggle("mz-past", past);
       root.classList.toggle("mz-float", past && !!hdr && hdr.classList.contains("hide")); root.classList.toggle("mz-totop", y > 700); }
     function req() { if (!tick) tick = W.requestAnimationFrame(function () { W.setTimeout(upd, 0); }); }
     W.addEventListener("scroll", req, { passive: true }); W.addEventListener("resize", req); W.addEventListener("hashchange", function () { W.setTimeout(upd, 120); }); upd();

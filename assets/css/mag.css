@@ -963,3 +963,8 @@ body:has(.fbx) #hdr { position: relative !important; flex: none; padding: 6px 8p
 body:has(.fbx) #app { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
 body:has(.fbx) #app > *, body:has(.fbx) .fbx { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; padding-top: 0 !important; }
 body:has(.fbx) .fbx iframe { flex: 1 1 0; height: auto !important; min-height: 0 !important; width: 100%; }
+
+/* Top bar: fixed in place at one size on every page; nothing about it animates on scroll */
+#hdr, #hdr.hide { transform: none !important; transition: none !important; }
+#hdr .hd, #hdr .mz-lgo, #hdr .hd-nav a, #hdr .hd-adv, .hd-brand img { transition: none !important; }
+html.hdr-off { --hd: 72px; }
