@@ -427,3 +427,6 @@ html.intro-on .hero-c > *, html.intro-on .hero-cover, html.intro-on .scrib path,
 .xb-in { display: grid; gap: 18px; align-items: center; } .xb-in.pic { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
 .xb-img { width: 100%; border-radius: var(--r); } .xb-t { display: grid; gap: 12px; justify-items: start; }
 @media (max-width: 900px) { .xb-in.pic { grid-template-columns: 1fr; } }
+
+/* Remove the large faint "45" behind the banner */
+.hero::after{content:none!important;display:none!important}
