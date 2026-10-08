@@ -72,12 +72,8 @@
       sec("", '<div class="cg" id="co-list">' + A.byTier(A.companies).map(U.companyCard).join("") + '</div><p class="empty" id="co-none" hidden>' + t("ed_none") + "</p>") };
   }
   function flip(page) {
-    var n = IS.pages;
-    return { title: t("fl_title"), html:
-      '<section class="fb" data-fb data-page="' + A.clamp(page || 1, 1, n) + '" data-n="' + n + '"><div class="wrap">' + U.crumbs([[t("home"), "home"], [t("nav_magazine"), "magazine"], [t("fl_title")]]) +
-      '<div class="fb-top"><h1 class="h2" tabindex="-1">' + t("ed_title") + '</h1><span class="fb-lbl" aria-live="polite"></span></div>' +
-      '<div class="fb-stage"><button type="button" class="ib fb-nav prev" data-act="fb" data-d="-1" aria-label="' + esc(t("prev")) + '">' + ic("chev", 24) + '</button><div class="fb-book" dir="rtl"><div class="fb-p r"><img alt=""></div><div class="fb-p l"><img alt=""></div><div class="fb-leaf" aria-hidden="true"><div class="f"><img alt=""></div><div class="b"><img alt=""></div></div></div><button type="button" class="ib fb-nav next" data-act="fb" data-d="1" aria-label="' + esc(t("next")) + '">' + ic("chev", 24) + "</button></div>" +
-      '<div class="fb-ctl"><label class="sr" for="fb-r">' + t("fl_jump") + '</label><input id="fb-r" type="range" min="1" max="' + n + '" value="' + (page || 1) + '" dir="ltr"><div class="fb-links"></div></div></div></section>' };
+    /* the issue is its own page-turning edition; the site shows it in place */
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:calc(100vh - 64px);min-height:520px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
