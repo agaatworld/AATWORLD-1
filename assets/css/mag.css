@@ -827,3 +827,10 @@ html.mz-lock, html.mz-lock body { overflow: hidden; overscroll-behavior: none; }
 @media (max-width: 900px) { .mz-reel.mz-full .mz-ps { padding-top: calc(72px + env(safe-area-inset-top)); } .mz-reel.mz-full .mz-pmt .mz-pcat { font-size: 11.5px; padding-inline: 10px; flex: 0 1 auto; } .mz-reel.mz-full .mz-pmt .mz-cta { flex: 1 1 auto; } }
 @media (max-height: 620px) and (max-width: 900px) { .mz-reel.mz-full .mz-ps { padding-top: calc(70px + env(safe-area-inset-top)); } }
 @media (orientation: landscape) and (max-height: 500px) { .mz-reel.mz-full .mz-ps { padding-top: 72px; } .mz-reel.mz-full .mz-phd b { font-size: 15px; } .mz-reel.mz-full .mz-pmt .mz-pcat { display: none; } }
+
+/* Magazine view: the page does not scroll, so the top bar stays still and nothing animates around the issue */
+html:has(.fbx), body:has(.fbx) { overflow: hidden; }
+body:has(.fbx) #hdr { position: relative; transform: none !important; transition: none; padding-bottom: 6px; }
+body:has(.fbx) #hdr, body:has(.fbx) #hdr * { transition: none !important; animation: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+body:has(.fbx) #ftr, body:has(.fbx) #progress, body:has(.fbx)::before, body:has(.fbx)::after { display: none !important; }
+.fbx iframe { height: calc(100vh - 58px) !important; height: calc(100dvh - 58px) !important; min-height: 0 !important; }
