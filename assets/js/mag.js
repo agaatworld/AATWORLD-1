@@ -778,7 +778,7 @@
   var FL = {
     tw: ["#D6202B", function () { var r = ""; for (var i = 0; i < 12; i++) r += '<polygon points="15,3.6 16.3,8 13.7,8" fill="#fff" transform="rotate(' + i * 30 + ' 15 10)"/>'; return '<rect width="60" height="40" fill="#D6202B"/><rect width="30" height="20" fill="#1B3F9C"/>' + r + '<circle cx="15" cy="10" r="4.1" fill="#1B3F9C"/><circle cx="15" cy="10" r="3.4" fill="#fff"/>'; }],
     id: ["#D6202B", function () { return '<rect width="60" height="40" fill="#fff"/><rect width="60" height="20" fill="#D6202B"/>'; }],
-    my: ["#1B3F9C", function () { var r = '<rect width="60" height="40" fill="#fff"/>'; for (var i = 0; i < 7; i++) r += '<rect y="' + (i * 5.714).toFixed(2) + '" width="60" height="2.857" fill="#CC0001"/>'; return r + '<rect width="30" height="22.86" fill="#010066"/>' + cres(12, 11.4, 6.6, "#FFCC00", "#010066", 2) + star(19.5, 11.4, 5, "#FFCC00"); }],
+    my: ["#1B3F9C", function () { return '<image href="assets/img/flag-my.png" width="60" height="40" preserveAspectRatio="none"/>'; }],
     pk: ["#0B6B3A", function () { return '<rect width="60" height="40" fill="#01411C"/><rect width="15" height="40" fill="#fff"/>' + cres(37, 20, 10, "#fff", "#01411C", 2.8) + star(42.5, 15.5, 4, "#fff", -60); }],
     af: ["#1c1c1c", function () { return '<rect width="60" height="40" fill="#D32011"/><rect width="20" height="40" fill="#000"/><rect x="40" width="20" height="40" fill="#007A36"/><circle cx="30" cy="20" r="6" fill="none" stroke="#fff" stroke-width="1.4"/>'; }],
     dz: ["#0B7A3E", function () { return '<rect width="60" height="40" fill="#fff"/><rect width="30" height="40" fill="#006233"/>' + cres(30, 20, 10, "#D21034", "#fff", 2.6) + '<rect width="30" height="40" fill="#006233" clip-path="inset(0)" opacity="0"/>' + star(35, 20, 4.6, "#D21034", -90); }],
@@ -786,7 +786,7 @@
     iq: ["#C8102E", function () { return h3("#CE1126", "#fff", "#000") + '<text x="30" y="23.6" text-anchor="middle" font-family="Almarai, Tahoma, Arial" font-weight="800" font-size="7" fill="#007A3D">الله أكبر</text>'; }],
     kw: ["#0B7A3E", function () { return h3("#007A3D", "#fff", "#CE1126") + '<polygon points="0,0 15,13.3 15,26.6 0,40" fill="#000"/>'; }],
     ye: ["#C8102E", function () { return h3("#CE1126", "#fff", "#000"); }],
-    om: ["#C8102E", function () { return h3("#fff", "#DB161B", "#008000") + '<rect width="16" height="40" fill="#DB161B"/><path d="M5 5l6 6M11 5l-6 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/>'; }],
+    om: ["#C8102E", function () { return '<image href="assets/img/flag-om.png" width="60" height="40" preserveAspectRatio="none"/>'; }],
     qa: ["#8A1538", function () { var p = "0,0 17,0", i; for (i = 0; i < 9; i++) p += " 23," + (i * 4.444 + 2.222).toFixed(2) + " 17," + ((i + 1) * 4.444).toFixed(2); return '<rect width="60" height="40" fill="#8A1538"/><polygon points="' + p + ' 0,40" fill="#fff"/>'; }],
     sa: ["#0B6B3A", function () { return '<rect width="60" height="40" fill="#005430"/><image href="assets/img/flag-sa.png" x="8" y="-2" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>'; }],
     sy: ["#0B7A3E", function () { return h3("#007A3D", "#fff", "#000") + star(18, 20, 3.4, "#CE1126") + star(30, 20, 3.4, "#CE1126") + star(42, 20, 3.4, "#CE1126"); }],
