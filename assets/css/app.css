@@ -432,7 +432,8 @@ html.intro-on .hero-c > *, html.intro-on .hero-cover, html.intro-on .scrib path,
 .hero::after{content:none!important;display:none!important}
 
 /* Al Jazeera Arabic typeface for all Arabic text on the site (the same one the magazine uses) */
-@font-face { font-family: "Jazeera"; font-weight: 400 800; font-display: swap; src: url("../fonts/jazeera.ttf") format("truetype"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF; }
+@font-face { font-family: "Jazeera"; font-weight: 100 500; font-display: swap; src: url("../fonts/aljazeera-regular.ttf") format("truetype"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF; }
+@font-face { font-family: "Jazeera"; font-weight: 600 900; font-display: swap; src: url("../fonts/aljazeera-bold.ttf") format("truetype"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFF; }
 /* Sections are separated by space only: no dividing lines or grey bands */
 .sec.alt, html.mz-bgon .sec.alt, html.mz-quiet .sec.alt { background: transparent; border: 0; }
 /* Logo cards: every logo is fitted whole inside its card */
