@@ -9,9 +9,9 @@
   /* ---------- theme and language ---------- */
   function applyTheme(th) { root.setAttribute("data-theme", th); var m = $('meta[name="theme-color"]'); if (m) m.setAttribute("content", th === "dark" ? "#0D0D0F" : "#FFFFFF"); }
   function initPrefs() {
-    var th = A.store.get("theme", null) || (W.matchMedia && W.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var th = A.store.get("theme3", null) || "light";
     applyTheme(th);
-    A.setLang(A.store.get("lang", null) || "ar");
+    A.setLang(A.store.get("lang3", null) || "ar");
   }
   function chrome() {
     root.lang = A.state.lang; root.dir = A.dir();
@@ -315,9 +315,9 @@
       if (!a) return;
       var act = a.getAttribute("data-act");
       if (act === "skip") { e.preventDefault(); var h1s = $("h1", app) || app; h1s.setAttribute("tabindex", "-1"); h1s.focus(); }
-      else if (act === "theme") { var th = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; applyTheme(th); A.store.set("theme", th); applyLook(); }
+      else if (act === "theme") { var th = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; applyTheme(th); A.store.set("theme3", th); applyLook(); }
       else if (act === "lang-open") { var m = $(".lang-m"); m.hidden = !m.hidden; a.setAttribute("aria-expanded", String(!m.hidden)); }
-      else if (act === "lang") { A.setLang(a.getAttribute("data-lang")); A.store.set("lang", A.state.lang); chrome(); render(true); }
+      else if (act === "lang") { A.setLang(a.getAttribute("data-lang")); A.store.set("lang3", A.state.lang); chrome(); render(true); }
       else if (act === "menu") { var mn = $("#mnav"); mn.hidden = !mn.hidden; a.setAttribute("aria-expanded", String(!mn.hidden)); }
       else if (act === "sl") sliderGo(+a.getAttribute("data-i"));
       else if (act === "fb") { e.stopPropagation(); fbGo(+a.getAttribute("data-d")); }
