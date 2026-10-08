@@ -245,10 +245,12 @@
       sec("", '<div class="two"><div><h2 class="h2">' + t("cb_partners") + '</h2><p class="lead">' + t("cb_partners_p") + '</p></div><div class="card"><h2 class="h3">' + t("cb_join") + "</h2>" + clubJoin() + "</div></div>") + turnkey() };
   }
   /* turnkey projects: first studies for industrial projects, a benefit of the club (Arabic) */
+  /* a picture for each industry group, borrowed from the modern-products pictures */
+  function tkPic(name) { var M = [["كهربائ", 11], ["غذائ", 20], ["معدن", 12], ["بلاستيك", 32], ["نسيج", 10], ["دوائ", 8], ["كيميائ", 5], ["خشب", 39], ["ورق", 9], ["تعبئة", 38], ["طبي", 15]], n = 3; M.some(function (m) { if (name.indexOf(m[0]) > -1) { n = m[1]; return true; } return false; }); return '<span class="tk-p"><img src="' + img("modern/m" + n + ".jpg") + '" alt="" loading="lazy"></span>'; }
   function turnkey() {
     var T = W.AAT_TURNKEY; if (!T || A.state.lang !== "ar") return "";
     return sec("alt", U.head(esc(T.sub), esc(T.title)) + '<div class="two tk"><div class="prose">' + T.intro.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + '</div><div class="card"><h3 class="h3">' + esc(T.incT) + '</h3><ul class="ticks">' + T.inc.map(function (x) { return typeof x === "string" ? "<li>" + esc(x) + "</li>" : "<li>" + esc(x[0]) + '<ul class="tk-sub">' + x[1].map(function (y) { return "<li>" + esc(y) + "</li>"; }).join("") + "</ul></li>"; }).join("") + "</ul></div></div>" +
-      '<div class="tk-g">' + T.groups.map(function (g) { return '<div class="card tk-c rv"><h3 class="h3">' + esc(g[0]) + " <small>" + g[1].length + "</small></h3><ul>" + g[1].map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>"; }).join("") + '</div><p class="lead tk-e">' + esc(T.end) + "</p>" + clubJoin());
+      '<div class="tk-g">' + T.groups.map(function (g) { return '<div class="card tk-c rv">' + tkPic(g[0]) + '<h3 class="h3">' + esc(g[0]) + " <small>" + g[1].length + "</small></h3><ul>" + g[1].map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>"; }).join("") + '</div><p class="lead tk-e">' + esc(T.end) + "</p>" + clubJoin());
   }
   function about() {
     var M = D.magazine;
