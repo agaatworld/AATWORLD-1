@@ -141,10 +141,11 @@
   function article(id) { for (var i = 0; i < articles.length; i++) if (articles[i].id === id) return articles[i]; return null; }
   function articleLang() { return state.lang === "ar" ? "ar" : "en"; }
 
-  /* exhibitions that start between today and three months from today (or are running now) */
-  function eventsWindow(now, months) {
-    var from = new Date(now.getFullYear(), now.getMonth(), now.getDate()), to = new Date(from); to.setMonth(to.getMonth() + (months || 3));
-    return (D.events || []).filter(function (e) { return parseDate(e.end) >= from && parseDate(e.start) <= to; })
+  /* exhibitions shown on the site: every one that starts on or after 1 January 2027 (and not already over), with no end limit */
+  var EV_FROM = new Date(2027, 0, 1);
+  function eventsWindow(now) {
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate()), from = today > EV_FROM ? today : EV_FROM;
+    return (D.events || []).filter(function (e) { return parseDate(e.start) >= EV_FROM && parseDate(e.end) >= from; })
       .sort(function (a, b) { return parseDate(a.start) - parseDate(b.start); });
   }
   function eventById(id) { var l = D.events || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }

@@ -43,7 +43,7 @@
 
   function tierBadge() { return ""; }
   function head(kicker, title, link) {
-    return '<div class="sh"><div><p class="kick">' + kicker + '</p><h2 class="h2 split">' + title + "</h2></div>" + (link ? '<a class="more" href="#' + link[0] + '">' + link[1] + '<span class="flip">' + ic("arrow", 16) + "</span></a>" : "") + "</div>";
+    return '<div class="sh"><div>' + (kicker ? '<p class="kick">' + kicker + "</p>" : "") + '<h2 class="h2 split">' + title + "</h2></div>" + (link ? '<a class="more" href="#' + link[0] + '">' + link[1] + '<span class="flip">' + ic("arrow", 16) + "</span></a>" : "") + "</div>";
   }
   function crumbs(items) {
     return '<nav class="crumbs" aria-label="Breadcrumb">' + items.map(function (i) { return i[1] ? '<a href="#' + i[1] + '">' + esc(i[0]) + "</a>" : '<span aria-current="page">' + esc(i[0]) + "</span>"; }).join('<i aria-hidden="true">/</i>') + "</nav>";

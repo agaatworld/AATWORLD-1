@@ -32,12 +32,12 @@
     var logos = BR.map(function (b) { return '<a class="lg" href="' + esc(b[1]) + '" target="_blank" rel="noopener noreferrer" title="' + esc(b[0]) + '"><img src="' + esc(b[2]) + '" alt="' + esc(b[0]) + '" loading="lazy"></a>'; }).join("");
     /* Advertisers in this issue: the logos of the companies advertising in the current magazine */
     var advLogos = ((window.AAT_ISSUE || {}).ads || []).map(function (c) { var l = A.logoOf(c); return l ? '<a class="lg" href="#company-' + c.page + '" title="' + esc(c.company) + '"><img src="' + img(l) + '" alt="' + esc(c.company) + '" loading="lazy"></a>' : ""; }).join("");
-    var AR = A.state.lang === "ar", trust = sec("trust", U.head(AR ? "شركاؤنا" : "Our partners", AR ? "علامات تثقون بها" : "Brands You Can Trust") + '<div class="tg">' + logos + "</div>");
+    var AR = A.state.lang === "ar", trust = '<section class="sec logos trust"><div class="lw" dir="ltr"><div class="lw-row lw-rev">' + logos + logos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>";
     var html =
       '<section class="hero"><div class="wrap hero-g"><div class="hero-c">' +
       '<p class="kick">' + esc(t("mb_issue", { n: M.issue, m: L(M.month) })) + "</p>" +
       '<div class="yrs"><span class="sr">' + t("yrs_sr") + '</span><b class="yrs-n" aria-hidden="true" data-roll>' + M.years + '</b><span class="yrs-w" aria-hidden="true">' + t("yrs_word") + '</span><span class="yrs-s" aria-hidden="true">' + t("yrs_since") + "</span></div>" +
-      '<h1 class="h0" tabindex="-1"><span class="scrib">' + t("h82_first") + '<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 60 3, 120 12, 180 6 S 262 3, 297 8"/></svg></span></h1>' +
+      '<h1 class="h0" tabindex="-1"><span class="scrib">' + t("h82_first") + '<i class="uline" aria-hidden="true"></i></span></h1>' +
       '<p class="lead">' + t("hero_lead") + '</p><div class="row"><a class="btn btn-adv btn-lg" href="#advertise">' + ic("megaphone", 20) + t("adv_btn") + '</a><a class="btn btn-line btn-lg" href="#flip">' + ic("book", 18) + t("mb_read", { n: M.issue }) + "</a></div></div>" +
       '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-559.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
 
@@ -47,7 +47,6 @@
 
       (advLogos ? '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title"), ["magazine", t("mb_brands")]) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + advLogos + advLogos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" : "") +
 
-      sec("", U.head(t("fa_kicker"), t("fa_title"), ["advertise", t("fa_how")]) + slider()) +
 
       sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + A.indPic(x.img) + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>") +
 
@@ -57,13 +56,10 @@
 
       sec("", U.head(t("news_kicker"), t("news_title"), ["news", t("news_btn")]) + '<div class="ng">' + newsCards(-1, 3) + "</div>") +
 
-      (ev.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window"), ["exhibitions", t("nav_exhibitions")]) + '<div class="el">' + ev.slice(0, 4).map(U.eventRow).join("") + "</div>") : "") +
+      (ev.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window"), ["exhibitions", t("nav_exhibitions")]) + '<div class="el">' + ev.slice(0, 8).map(U.eventRow).join("") + "</div>") : "") +
 
       trust +
 
-      sec("", '<div class="am"><div><p class="kick">' + t("am_kicker") + '</p><h2 class="h2 split">' + t("am_title") + '</h2><p class="lead">' + t("am_p1") + "</p><p>" + t("am_p2") + "</p><p>" + t("am_p3") + '</p><a class="more" href="#about">' + t("am_more") + '<span class="flip">' + ic("arrow", 16) + "</span></a></div>" +
-        '<div class="am-p"><div class="am-c dark"><small>' + t("am_founder") + "</small><b>" + (A.state.lang === "ar" ? "محمد مروان فتال" : "Muhammad Marwan Fattal") + '</b><i>1982</i></div><div class="am-c"><small>' + t("am_ceo") + "</small><b>" + (A.state.lang === "ar" ? "مروان أنس" : "Marwan Anas") + "</b></div>" +
-        '<a class="am-c club" href="#club"><small>AATBC</small><b>' + t("cb_more") + "</b></a></div></div>") +
 
       '<section class="sec cta"><div class="wrap cta-in"><div><h2 class="h2">' + t("chat_person") + "</h2><p>" + t("tn_p2") + "</p></div>" + U.contactButtons("", true) + "</div></section>";
     return { title: "", html: html };

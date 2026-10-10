@@ -401,7 +401,7 @@
   COMP.shelf = function (root, c, o) {
     FCAT = (o && o.cat) || ""; var myCat = FCAT, grid = !!(o && o.grid); if (grid) root.classList.add("mz-grid");
     var feed = brandFeed(), done = null, box = null;
-    root.innerHTML = '<div class="mz-shelf"><header><span class="mz-sico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><b>' + t("v_reels") + '</b><button type="button" data-mz="so" data-k="0">' + t("playAll") + '</button></header><div class="mz-srow" dir="' + A.dir() + '">' +
+    root.innerHTML = '<div class="mz-shelf"><div class="mz-srow" dir="' + A.dir() + '">' +
       feed.map(function (o, k) {
         if (o.ad) { var x = o.ad, b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x);
           return '<button type="button" class="mz-sc" data-mz="so" data-k="' + k + '" style="--a:' + b.a + ";--b:" + b.b + '" aria-label="' + esc(x.company) + '">' + (ps.length ? '<span class="mz-scp"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : '<span class="mz-scl">' + lines(x).slice(0, 3).map(function (n2) { return "<i>" + esc(clip(n2, 20)) + "</i>"; }).join("") + "</span>") + '<span class="mz-sct">' + (lg ? '<span class="mz-scg"><img src="' + lg + '" alt="" loading="lazy"></span>' : "") + "<b>"  + esc(clip(x.company, 34)) + "</b><small>" + esc(shortName(x.cat)) + "</small></span></button>"; }

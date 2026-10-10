@@ -121,6 +121,8 @@
 
   /* header: shrinks, hides while scrolling down, returns when scrolling up; red line follows the pointer in the menu */
   function headerScroll() {
+    /* opening the magazine from any link goes full screen (browsers only allow this on a click) */
+    doc.addEventListener("click", function (ev) { var a = ev.target.closest && ev.target.closest('a[href^="#flip"], a[href="#magazine"].hero-cover'); if (!a) return; var el = doc.documentElement; try { if (!doc.fullscreenElement && el.requestFullscreen) el.requestFullscreen().catch(function () {}); } catch (e) { /* not allowed */ } }, true);
     var last = W.scrollY, tick = false, bar = $("#progress");
     function upd() {
       tick = false; var y = W.scrollY, h = root.scrollHeight - W.innerHeight;

@@ -312,7 +312,7 @@ window.AAT_DATA = {
     },
     {
       id: "club", highlight: true,
-      name: { en: "AAT Business Club member", ar: "عضو نادي AAT للأعمال" },
+      name: { en: "AAT Business Club member", ar: "عضو نادي رجال الأعمال" },
       price: { en: "Annual fee on request", ar: "الرسوم السنوية عند الطلب" },
       who: { en: "For importers and traders who buy from Taiwan.", ar: "للمستوردين والتجّار الذين يشترون من تايوان." },
       features: {
