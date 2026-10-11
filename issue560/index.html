@@ -708,6 +708,19 @@ body{background:radial-gradient(ellipse at 50% 30%,var(--desk),var(--desk2));col
 .dk b{font-size:16px}.dk .c,.dk .go,.dk .cp{font-size:14.5px}
 @media (max-width:700px){#mBtn{width:60px;height:38px;top:6px;inset-inline-start:6px}.nv{width:40px;height:40px;top:auto!important;bottom:58px!important;translate:0 0!important}}
 .rail svg.lg{width:210px!important;height:71px!important;flex:none}.info .folio .fi{font-size:11.5px;white-space:nowrap}.info .folio .fw{font-size:12px}
+/* --- round 3: weak-eyesight pass --- */
+.cv-side{width:112px!important;right:12px!important;top:10px!important;bottom:10px!important;border-radius:30px!important;box-shadow:0 8px 22px -8px rgba(0,0,0,.45);padding:22px 0;box-sizing:border-box}
+.cv-side span{font-size:35px!important;line-height:1.38!important;font-weight:800!important;letter-spacing:0!important;color:#123E86;white-space:normal!important;height:100%;text-align:center;display:block}
+.y-hd{right:136px!important;gap:14px!important}.y-pr.g{right:136px!important}.cv-issue{right:136px!important;gap:16px!important;padding:8px 16px!important;font-size:18px!important}
+.y-hd h2{font-size:28px!important}.y-hd p{font-size:14.5px!important}.y-hd img{width:96px!important}
+/* advertiser pages: the artwork steps back a little so the advice strip and the page footer can be large */
+.sheet.ad .adbox{transform:scale(.972);transform-origin:50% 0}
+.remind,.adlab,.sheet.ad .adlab,.sheet.ad.framed .adlab{font-size:22px!important;font-weight:800!important;height:54px!important;bottom:62px!important;left:34px!important;right:34px!important;border-radius:12px!important;gap:10px}
+.adlab .en{font-size:23px}
+.folio{height:38px!important;bottom:16px!important;font-size:17px!important;font-weight:800!important;left:34px;right:34px;padding-top:6px}
+.folio .fw{font-size:17px!important;font-weight:800!important}.folio .fi{font-size:16.5px!important;font-weight:800!important;white-space:nowrap}
+.folio b,.sheet.ad .folio b{font-size:22px!important;min-width:52px!important;height:34px!important;border-radius:6px}
+.info .folio .fi{font-size:13px!important}.info .folio .fw{font-size:14px!important}
 </style>
 <script src="assets/page-flip.js"></script>
 <script>(function(){"use strict";
@@ -732,8 +745,10 @@ zoom=window.innerWidth>700&&window.innerWidth>window.innerHeight*1.15;
 (function(){var tl=$("#drwTools");["#bToc","#bZoom","#bFull",'.tb a.ub[href$=".pdf"]',"#bLang"].forEach(function(q){var e=$(q);if(e)tl.appendChild(e)})})();
 function dims(){var mb=window.innerWidth<=700,w=stage.clientWidth-(mb?20:150),h=stage.clientHeight-(mb?12:24);single=w<h*1.15;var fit=Math.min(w/(PWB*(single?1:2)),h/PHB);
  /* "large" (the default on a computer) fits the two pages to the window WIDTH, so text is big and the page scrolls; "whole page" fits the height */
- k=fit;if(zoom)k=single?fit*1.9:Math.max(fit,Math.min(w/(PWB*2),1.4));return[Math.max(120,Math.floor(PWB*k)),Math.max(170,Math.floor(PHB*k))]}
-function near(){for(var p=Math.max(1,cur-4);p<=Math.min(N,cur+5);p++){var w=wraps[p-1];if(!w._ld){w._ld=1;[].forEach.call(w.querySelectorAll("img[loading]"),function(m){m.removeAttribute("loading")})}}}
+ k=fit;if(zoom){if(mb)k=fit*1.9;else{single=true;k=Math.max(Math.min(w/PWB,1.35),Math.min(w/PWB,h/PHB))}}return[Math.max(120,Math.floor(PWB*k)),Math.max(170,Math.floor(PHB*k))]}
+/* readers with weak eyesight: no text on a page below a minimum size. Dense reference pages (tables, indexes) take a lower floor so they still fit. */
+function floorize(sh){var dense=/\b(exh|idx|tk|dir)\b/.test(sh.className),F=dense?12.5:14.5,els=sh.querySelectorAll("*"),i,e,c,t,fs;for(i=0;i<els.length;i++){e=els[i];if(e.closest(".folio,.adlab,.cv-side,.rail"))continue;t=false;for(c=e.firstChild;c;c=c.nextSibling)if(c.nodeType===3&&c.nodeValue.trim().length>1){t=true;break}if(!t)continue;fs=parseFloat(getComputedStyle(e).fontSize);if(fs<F)e.style.setProperty("font-size",F+"px","important")}}
+function near(){for(var p=Math.max(1,cur-4);p<=Math.min(N,cur+5);p++){var w=wraps[p-1];if(!w._ld){w._ld=1;floorize(sheets[p-1]);[].forEach.call(w.querySelectorAll("img[loading]"),function(m){m.removeAttribute("loading")})}}}
 function sync(){var i=PF.getCurrentPageIndex();if(zoom&&stage.scrollTop>0)stage.scrollTo({top:0,behavior:"smooth"});cur=single?N-i:(i>=N-1?1:i<=0?N:N-i-1);near();ui()}
 function build(){var d=dims();if(PF){try{PF.destroy()}catch(e){}PF=null}
  clip.innerHTML="";var el=document.createElement("div");el.id="bk";clip.appendChild(el);clip.style.width=(single?d[0]:2*d[0])+"px";clip.style.height=d[1]+"px";stage.classList.toggle("single",single);stage.classList.toggle("zoom",zoom);
