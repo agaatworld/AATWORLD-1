@@ -806,4 +806,7 @@ var m0=/^#p-(\d+)$/.exec(location.hash);cur=m0?Math.max(1,Math.min(N,+m0[1])):1;
 })();
 </script>
 
+<script>/* aatFsOnce: the first touch or click inside the magazine opens it full screen (once per opening), also when it was reached without the "read the magazine" button */
+(function(){var done=false;function fs(){if(done)return;done=true;try{var d=document;try{if(window.parent!==window&&window.parent.document)d=window.parent.document}catch(x){}if(!d.fullscreenElement&&!d.webkitFullscreenElement){var el=d.documentElement;if(el.requestFullscreen)el.requestFullscreen().catch(function(){});else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen()}}catch(x){}}
+document.addEventListener("pointerdown",fs,true);document.addEventListener("touchend",fs,true);document.addEventListener("keydown",fs,true)})();</script>
 </body></html>
