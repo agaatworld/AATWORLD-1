@@ -103,7 +103,7 @@ html[dir="rtl"] #progress { transform-origin: 100% 50%; }
 #hdr.scrolled .hd { height: 52px; max-width: 1140px; }
 .hd-brand img { height: 34px; width: auto; transition: height .4s; } #hdr.scrolled .hd-brand img { height: 28px; }
 .hd-nav { position: relative; display: flex; flex: 1; min-width: 0; }
-.hd-nav a { padding: 8px 9px; font-weight: 600; font-size: 13.5px; color: var(--text); text-decoration: none; white-space: nowrap; transition: color .2s; }
+.hd-nav a { padding: 8px 8px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; white-space: nowrap; transition: color .2s; }
 .hd-nav a:hover, .hd-nav a[aria-current="page"] { color: var(--ink); }
 .hd-ind { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--red-2); border-radius: 2px; opacity: 0; pointer-events: none; transition: transform .45s var(--ease), width .45s var(--ease), opacity .25s; }
 .hd-act { display: flex; align-items: center; gap: 4px; margin-inline-start: auto; }
@@ -122,7 +122,7 @@ html[dir="rtl"] #progress { transform-origin: 100% 50%; }
 .mnav .btn { margin-top: 12px; } .mnav-l { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 8px; }
 @media (max-width: 1179px) { .hd-nav, .hd-adv { display: none; } .hd-menu { display: inline-grid; } }
 @media (min-width: 1180px) { .mnav { display: none !important; } }
-@media (min-width: 1180px) and (max-width: 1300px) { .hd-nav a { padding-inline: 6px; font-size: 12.5px; } }
+@media (min-width: 1180px) and (max-width: 1300px) { .hd-nav a { padding-inline: 5px; font-size: 14.5px; } }
 html.hdr-off { --hd: 8px; }
 
 /* ---------- hero ---------- */

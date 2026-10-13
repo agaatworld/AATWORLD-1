@@ -64,8 +64,22 @@
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart();
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); floorText(app); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
+  }
+  /* readers with weak eyesight: no text on the site is allowed to stay small */
+  function floorText(root) {
+    if (!root) return;
+    var all = root.querySelectorAll("*"), i, el, k, own, fs, tag, min;
+    for (i = 0; i < all.length; i++) {
+      el = all[i]; tag = el.tagName;
+      if (tag === "SVG" || tag === "svg" || tag === "PATH" || tag === "path" || tag === "SCRIPT" || tag === "STYLE" || tag === "IMG" || el.closest("svg")) continue;
+      own = false; for (k = 0; k < el.childNodes.length; k++) { var n = el.childNodes[k]; if (n.nodeType === 3 && n.nodeValue.trim()) { own = true; break; } }
+      if (!own) continue;
+      fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+      min = /^(P|LI|DD|BLOCKQUOTE)$/.test(tag) ? 18 : 16;
+      if (fs < min) el.style.fontSize = min + "px";
+    }
   }
   function closeMenus() {
     var m = $("#mnav"), b = $("[data-act=menu]"); if (m) m.hidden = true; if (b) b.setAttribute("aria-expanded", "false");
