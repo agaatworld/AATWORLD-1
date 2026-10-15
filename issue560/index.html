@@ -751,11 +751,11 @@ var wraps=sheets.map(function(s,i){var w=document.createElement("div");w.classNa
 $("#src").remove();
 var PF=null,cur=1,timer=0,tdx=null;
 var SITE=[["home","الرئيسية","Home"],["articles","المقالات","Articles"],["news","الأخبار","News"],["exhibitions","معارض دولية","International exhibitions"],["products","منتجات وصناعات حديثة","Products & modern industries"],["club","نادي رجال الأعمال","Business Club"],["about","من نحن","About us"],["contact","تواصل معنا","Contact"]];
-zoom=window.innerWidth>700&&window.innerWidth>window.innerHeight*1.15;
+zoom=false;
 (function(){var tl=$("#drwTools");["#bToc","#bZoom","#bFull",'.tb a.ub[href$=".pdf"]',"#bLang"].forEach(function(q){var e=$(q);if(e)tl.appendChild(e)})})();
 function dims(){var mb=window.innerWidth<=700,w=stage.clientWidth-(mb?20:150),h=stage.clientHeight-(mb?12:24);single=w<h*1.15;var fit=Math.min(w/(PWB*(single?1:2)),h/PHB);
  /* "large" (the default on a computer) fits the two pages to the window WIDTH, so text is big and the page scrolls; "whole page" fits the height */
- k=fit;if(zoom){if(mb)k=fit*1.9;else{single=true;k=Math.max(Math.min(w/PWB,1.35),Math.min(w/PWB,h/PHB))}}return[Math.max(120,Math.floor(PWB*k)),Math.max(170,Math.floor(PHB*k))]}
+ k=fit;if(!zoom&&!mb){/* default on a computer: the page fills the window height exactly, nothing cut off; two pages side by side when both fit at full height, otherwise one */k=(h-8)/PHB;single=w<PWB*k*2;if(single)k=Math.min(k,w/PWB)}if(zoom){if(mb)k=fit*1.9;else{single=true;k=Math.max(Math.min(w/PWB,1.35),Math.min(w/PWB,h/PHB))}}return[Math.max(120,Math.floor(PWB*k)),Math.max(170,Math.floor(PHB*k))]}
 /* readers with weak eyesight: no text on a page below a minimum size. Dense reference pages (tables, indexes) take a lower floor so they still fit. */
 function floorize(sh){var dense=/\b(exh|idx|tk|dir)\b/.test(sh.className),F=dense?12.5:14.5,els=sh.querySelectorAll("*"),i,e,c,t,fs;for(i=0;i<els.length;i++){e=els[i];if(e.closest(".folio,.adlab,.cv-side,.rail"))continue;t=false;for(c=e.firstChild;c;c=c.nextSibling)if(c.nodeType===3&&c.nodeValue.trim().length>1){t=true;break}if(!t)continue;fs=parseFloat(getComputedStyle(e).fontSize);if(fs<F)e.style.setProperty("font-size",F+"px","important")}}
 function near(){for(var p=Math.max(1,cur-4);p<=Math.min(N,cur+5);p++){var w=wraps[p-1];if(!w._ld){w._ld=1;floorize(sheets[p-1]);[].forEach.call(w.querySelectorAll("img[loading]"),function(m){m.removeAttribute("loading")})}}}
