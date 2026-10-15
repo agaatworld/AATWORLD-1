@@ -332,6 +332,7 @@
       if (!a) return;
       var act = a.getAttribute("data-act");
       if (act === "skip") { e.preventDefault(); var h1s = $("h1", app) || app; h1s.setAttribute("tabindex", "-1"); h1s.focus(); }
+      else if (act === "more" && A.exRest) { var nb = a, from = +nb.getAttribute("data-next") || 60, list = $("#ex-list"); if (list) { list.insertAdjacentHTML("beforeend", A.exRest.slice(from, from + 60).map(A.ui.eventRow).join("")); var nx2 = from + 60; if (nx2 >= A.exRest.length) nb.parentNode.remove(); else nb.setAttribute("data-next", nx2); } }
       else if (act === "theme") { var th = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; applyTheme(th); A.store.set("theme3", th); applyLook(); }
       else if (act === "lang-open") { var m = $(".lang-m"); m.hidden = !m.hidden; a.setAttribute("aria-expanded", String(!m.hidden)); }
       else if (act === "lang") { A.setLang(a.getAttribute("data-lang")); A.store.set("lang3", A.state.lang); chrome(); render(true); }

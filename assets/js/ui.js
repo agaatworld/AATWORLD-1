@@ -75,9 +75,10 @@
     var b = A.newsBody[i];
     return '<a class="nc rv" href="#news-' + i + '"><span class="nc-img"><img src="' + img(n.img) + '" alt="" loading="lazy"></span><span class="nc-b">' + (b && b.date ? "<small>" + esc(A.fmtDate(b.date)) + "</small>" : "") + "<b>" + esc(L(n.title)) + "</b></span></a>";
   }
+  var fmtCache = {};
   function eventRow(e) {
     var d = A.parseDate(e.start), days = A.daysUntil(e, new Date());
-    var mon; try { mon = new Intl.DateTimeFormat(A.state.lang === "ar" ? "ar-u-nu-latn" : A.state.lang, { month: "short" }).format(d); } catch (x) { mon = d.getMonth() + 1; }
+    var mon; try { var fk = A.state.lang; fmtCache[fk] = fmtCache[fk] || new Intl.DateTimeFormat(fk === "ar" ? "ar-u-nu-latn" : fk, { month: "short" }); mon = fmtCache[fk].format(d); } catch (x) { mon = d.getMonth() + 1; }
     var cn = (A.D.countries || {})[e.country];
     var when = e.approx ? A.fmtMonth(e.start) : A.fmtRange(e.start, e.end);
     return '<a class="er rv" data-c="' + (e.country || "") + '" href="#exhibition-' + e.id + '"><span class="er-d' + (e.approx ? " mo" : "") + '"><b>' + (e.approx ? esc(mon) : d.getDate()) + "</b><small>" + (e.approx ? d.getFullYear() : esc(mon)) + '</small></span><span class="er-b"><b>' + esc((A.state.lang === "ar" && e.nameAr || e.name)) + "</b>" + (e.sector ? '<em class="er-s">' + esc(L(e.sector)) + "</em>" : "") + "<small>" + esc(when) + (L(e.venue) ? " · " + esc(L(e.venue)) : "") + (cn ? " · " + esc(L(cn)) : "") + '</small></span><span class="er-n">' + (e.approx ? (A.state.lang === "ar" ? "اليوم يُعلن لاحقاً" : "Day to be announced") : days > 0 ? t("days_to_go", { n: days }) : t("on_now")) + "</span></a>";

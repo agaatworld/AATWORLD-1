@@ -76,7 +76,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261015e#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261015f#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
@@ -217,10 +217,11 @@
   /* ---------- exhibitions ---------- */
   function exhibitions() {
     var ev = A.eventsWindow(new Date(), 2), cn = D.countries || {}, cnt = {}, isAr = A.state.lang === "ar";
+    A.exRest = ev;
     ev.forEach(function (e) { cnt[e.country] = (cnt[e.country] || 0) + 1; });
     var chips = Object.keys(cn).length ? '<div class="chips exc" role="tablist"><button type="button" class="chip on" data-exc="">' + (isAr ? "كل الدول" : "All countries") + " <small>" + ev.length + "</small></button>" + Object.keys(cn).map(function (k) { return '<button type="button" class="chip' + (cnt[k] ? "" : " none") + '" data-exc="' + k + '"' + (cnt[k] ? "" : " disabled") + ">" + esc(L(cn[k])) + " <small>" + (cnt[k] || 0) + "</small></button>"; }).join("") + "</div>" : "";
     return { title: t("nav_exhibitions"), html: U.pageHead([[t("home"), "home"], [t("nav_exhibitions")]], t("nav_exhibitions"), t("x_ex_window")) +
-      sec("", ev.length ? chips + '<div class="el">' + ev.map(U.eventRow).join("") + "</div>" : '<p class="empty">' + t("x_ex_none") + "</p>") };
+      sec("", ev.length ? chips + '<div class="el" id="ex-list">' + ev.slice(0, 60).map(U.eventRow).join("") + "</div>" + (ev.length > 60 ? '<p class="more-row"><button type="button" class="btn btn-line btn-lg" data-act="more" data-next="60">' + (isAr ? "عرض المزيد" : "Show more") + "</button></p>" : "") : '<p class="empty">' + t("x_ex_none") + "</p>") };
   }
   function exhibition(id) {
     var e = A.eventById(id); if (!e) return notFound();
