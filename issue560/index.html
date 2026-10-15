@@ -759,7 +759,9 @@ function dims(){var mb=window.innerWidth<=700,w=stage.clientWidth-(mb?20:150),h=
 /* readers with weak eyesight: no text on a page below a minimum size. Dense reference pages (tables, indexes) take a lower floor so they still fit. */
 function floorize(sh){var dense=/\b(exh|idx|tk|dir)\b/.test(sh.className),F=dense?12.5:14.5,els=sh.querySelectorAll("*"),i,e,c,t,fs;for(i=0;i<els.length;i++){e=els[i];if(e.closest(".folio,.adlab,.cv-side,.rail"))continue;t=false;for(c=e.firstChild;c;c=c.nextSibling)if(c.nodeType===3&&c.nodeValue.trim().length>1){t=true;break}if(!t)continue;fs=parseFloat(getComputedStyle(e).fontSize);if(fs<F)e.style.setProperty("font-size",F+"px","important")}}
 function near(){for(var p=Math.max(1,cur-4);p<=Math.min(N,cur+5);p++){var w=wraps[p-1];if(!w._ld){w._ld=1;floorize(sheets[p-1]);[].forEach.call(w.querySelectorAll("img[loading]"),function(m){m.removeAttribute("loading")})}}}
-function sync(){var i=PF.getCurrentPageIndex();if(zoom&&stage.scrollTop>0)stage.scrollTo({top:0,behavior:"smooth"});cur=single?N-i:(i>=N-1?1:i<=0?N:N-i-1);near();ui()}
+function sync(){var i=PF.getCurrentPageIndex();if(zoom&&stage.scrollTop>0)stage.scrollTo({top:0,behavior:"smooth"});cur=single?N-i:(i>=N-1?1:i<=0?N:N-i-1);center();near();ui()}
+/* the front and back covers stand alone: move the book so the cover sits in the middle of the window, not on one half */
+function center(){var w=parseFloat(clip.style.width)||0,x=single?0:cur===1?w/4:cur===N?-w/4:0;clip.style.transition="transform .5s ease";clip.style.transform=x?"translateX("+x+"px)":""}
 function build(){var d=dims();if(PF){try{PF.destroy()}catch(e){}PF=null}
  clip.innerHTML="";var el=document.createElement("div");el.id="bk";clip.appendChild(el);clip.style.width=(single?d[0]:2*d[0])+"px";clip.style.height=d[1]+"px";stage.classList.toggle("single",single);stage.classList.toggle("zoom",zoom);
  var sc=d[0]/PWB;sheets.forEach(function(s){s.style.transform="scale("+sc+")"});near();

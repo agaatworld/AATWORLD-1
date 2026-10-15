@@ -3,6 +3,26 @@
    Adds: the advertiser spotlight at the top of the home page, a "Digital editions" page under Magazine
    (reels, company guide, arcade, orbit, discover, spotlight), and a main "Visit website" button on company pages.
    Uses the site's own data, routes, colours and fonts; nothing here changes the existing pages' structure. */
+/* speed: slow computers get a lighter page (no moving background), and on every computer the decorations pause while the page scrolls */
+(function (W) {
+  var root = W.document.documentElement, n = W.navigator || {}, t = 0;
+  if ((n.hardwareConcurrency || 8) <= 4 || (n.deviceMemory || 8) <= 4 || (W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches)) root.classList.add("lite");
+  W.addEventListener("scroll", function () { if (!t) root.classList.add("is-scrolling"); W.clearTimeout(t); t = W.setTimeout(function () { t = 0; root.classList.remove("is-scrolling"); }, 180); }, { passive: true });
+  /* moving parts that are off the screen stop working until they come back into view */
+  if (!("IntersectionObserver" in W) || !W.document.getAnimations) return;
+  var io = new W.IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var el = e.target, list;
+      try { list = el.getAnimations({ subtree: true }); } catch (x) { return; }
+      if (!e.isIntersecting) { el._paused = list.filter(function (a) { return a.playState === "running"; }); el._paused.forEach(function (a) { a.pause(); }); }
+      else if (el._paused) { el._paused.forEach(function (a) { if (a.playState === "paused") a.play(); }); el._paused = null; }
+    });
+  }, { rootMargin: "200px 0px" });
+  function watch() { [].forEach.call(W.document.querySelectorAll("#app section, #app .mz-mount, #ftr"), function (el) { if (!el._io) { el._io = 1; io.observe(el); } }); }
+  W.addEventListener("hashchange", function () { W.setTimeout(watch, 400); W.setTimeout(watch, 1500); });
+  W.addEventListener("load", function () { W.setTimeout(watch, 400); W.setTimeout(watch, 2000); });
+})(window);
+
 (function (W) {
   "use strict";
   var A = W.AAT, doc = document;
@@ -548,7 +568,7 @@
 (function (W) {
   "use strict";
   var doc = W.document, root = doc.documentElement;
-  var still = W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var still = (W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches) || root.classList.contains("lite");
 
   /* ── background: drifting line icons of trade, business and publishing, softly linked ── */
   var IC = [
@@ -632,7 +652,7 @@
       }
     }
     function frame(ts) {
-      raf = W.requestAnimationFrame(frame); if (ts - last < 33) return; if (root.classList.contains("mz-quiet")) { last = ts; return; }
+      raf = W.requestAnimationFrame(frame); if (ts - last < 50) return; if (root.classList.contains("mz-quiet") || root.classList.contains("is-scrolling")) { last = ts; return; }
       var dt = Math.min((ts - last) / 1000, .08); last = ts; draw(ts / 1000, dt);
     }
     function run() { W.cancelAnimationFrame(raf); if (!still && !doc.hidden) { last = W.performance.now(); raf = W.requestAnimationFrame(frame); } }
@@ -725,14 +745,14 @@
   /* rows of cards drift slowly sideways on their own until someone touches them */
   function drift() {
     [].slice.call(doc.querySelectorAll("#app .mz-mount:not(.mz-grid) .mz-srow, #app .ind")).forEach(function (el) {
-      if (el._dr || still) return; el._dr = 1; var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
+      if (el._dr || still || root.classList.contains("lite")) return; el._dr = 1; var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
       function wait(ms) { idle = W.performance.now() + ms; pos = null; }
       ["pointerdown", "pointermove", "wheel", "touchstart", "touchmove", "focusin"].forEach(function (n) { el.addEventListener(n, function (e) { if (n !== "pointermove" || e.pointerType === "mouse") wait(n === "pointermove" ? 900 : 3500); }, { passive: true }); });
       if ("IntersectionObserver" in W) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(el);
       (function step(ts) {
         if (!el.isConnected) return; W.requestAnimationFrame(step);
         var dt = Math.min(ts - lastT, 60); lastT = ts;
-        if (!vis || doc.hidden || ts < idle || root.classList.contains("mz-lock") || el.scrollWidth <= el.clientWidth + 4) { pos = null; return; }
+        if (!vis || doc.hidden || ts < idle || root.classList.contains("mz-lock") || root.classList.contains("is-scrolling") || el.scrollWidth <= el.clientWidth + 4) { pos = null; return; }
         if (pos === null) pos = el.scrollLeft;
         var before = el.scrollLeft; pos += dir * dt * .022; el.scrollLeft = pos;
         if (Math.abs(pos - el.scrollLeft) > 2 || (el.scrollLeft === before && Math.abs(pos - before) > 1.5)) { dir = -dir; pos = el.scrollLeft; idle = ts + 1200; }

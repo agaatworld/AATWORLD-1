@@ -61,6 +61,7 @@
     var v = V.view(route);
     timers.forEach(clearInterval); timers = [];
     app.innerHTML = '<div class="view">' + v.html + "</div>";
+    doc.body.classList.toggle("is-mag", route.v === "flip"); /* the magazine page: no site zoom, no header (works in browsers without :has) */
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });

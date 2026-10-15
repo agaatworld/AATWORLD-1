@@ -39,7 +39,7 @@
       '<div class="yrs"><span class="sr">' + t("yrs_sr") + '</span><b class="yrs-n" aria-hidden="true" data-roll>' + M.years + '</b><span class="yrs-w" aria-hidden="true">' + t("yrs_word") + '</span><span class="yrs-s" aria-hidden="true">' + t("yrs_since") + "</span></div>" +
       '<h1 class="h0" tabindex="-1"><span class="scrib">' + t("h82_first") + '<i class="uline" aria-hidden="true"></i></span></h1>' +
       '<p class="lead">' + t("hero_lead") + '</p><div class="row"><a class="btn btn-adv btn-lg" href="#advertise">' + ic("megaphone", 20) + t("adv_btn") + '</a><a class="btn btn-line btn-lg" href="#flip">' + ic("book", 18) + t("mb_read", { n: M.issue }) + "</a></div></div>" +
-      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-559.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
+      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
 
       '<section class="live"><div class="wrap live-g"><div class="live-map">' + U.tradeMap() + '</div><div class="live-s"><p class="live-k"><i></i>' + t("rp_live") + '</p><h2 class="h2">' + t("rn_line") + "</h2>" +
       '<div class="live-kpi"><a href="#flip"><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
@@ -76,7 +76,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:calc(100vh - 64px);min-height:520px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
@@ -251,7 +251,7 @@
   function about() {
     var M = D.magazine;
     return { title: t("about_title"), html: U.pageHead([[t("home"), "home"], [t("nav_about")]], t("about_title"), t("about_lead")) +
-      sec("", '<div class="two"><div class="prose">' + [1, 2, 3, 4, 5].map(function (n) { return "<p>" + t("ab" + n) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-559.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
+      sec("", '<div class="two"><div class="prose">' + [1, 2, 3, 4, 5].map(function (n) { return "<p>" + t("ab" + n) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
       '<section class="sec facts"><div class="wrap facts-g"><div><b class="count" data-to="' + M.years + '">' + M.years + "</b><span>" + t("fact_years") + '</span></div><div><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("fact_issues") + "</span></div><div><b>" + M.since + "</b><span>" + t("fact_since") + "</span></div></div></section>" +
       '<section class="sec cta"><div class="wrap cta-in"><div><h2 class="h2">' + t("chat_person") + "</h2><p>" + t("tn_p2") + "</p></div>" + U.contactButtons("", true) + "</div></section>" };
   }

@@ -488,7 +488,7 @@ html[lang="ar"] .prose, .rd[lang="ar"] .prose { font-size: 22px; line-height: 1.
 #app, #ftr { zoom: 1.08; }
 @media (min-width: 900px) { #app, #ftr { zoom: 1.18; } }
 @media (min-width: 1500px) { #app, #ftr { zoom: 1.26; } }
-body:has(.fbx) #app { zoom: 1; }
+body:has(.fbx) #app, body.is-mag #app, body.is-mag #ftr { zoom: 1; }
 .kick, html[lang="ar"] .kick, html[lang^="zh"] .kick { font-size: 19px; font-weight: 800; }
 .h2 { font-size: clamp(26px, 2.5vw, 36px); }
 .more { font-size: 17px; font-weight: 700; }
@@ -525,7 +525,7 @@ html.mz-bgon body, html.mz-bgon[data-theme="dark"] body { background-attachment:
 .hd, .mnav, #hdr .hd { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; }
 .btn-adv, .btn-adv::before, .btn-adv::after, .btn .ic, .more .ic { animation: none !important; }
 /* Magazine page: the magazine takes the whole window; the site menu lives in the magazine's own side drawer */
-body:has(.fbx) #hdr { display: none !important; }
+body:has(.fbx) #hdr, body.is-mag #hdr, body.is-mag #ftr { display: none !important; }
 
 /* Live trade map, readable: red labels with white text, strong red moving lines and dots */
 .tm-lb rect, .tm-lb.hub rect, .tm-lb.ar rect { fill: #D21F26 !important; stroke: none !important; }
@@ -537,3 +537,12 @@ body:has(.fbx) #hdr { display: none !important; }
 /* exhibitions: sector line, and month-only shows */
 .er-s { display: block; font-style: normal; font-weight: 700; color: var(--red-2); font-size: 17px; margin-top: 2px; }
 .er-d.mo b { font-size: 22px; } .er-d.mo small { font-size: 15px; }
+
+/* ===== speed (update 16) ===== */
+/* decorations pause while the page scrolls, so scrolling stays smooth */
+html.is-scrolling *, html.is-scrolling *::before, html.is-scrolling *::after { animation-play-state: paused !important; }
+/* slow computers: no moving decorations, no costly glow filters (content, ads and the map stay) */
+html.lite .mz-wbg i, html.lite .mz-blob, html.lite .mz-L1 .mz-bpat::after, html.lite #app::before, html.lite .mz-av img, html.lite .mz-adp img:only-child, html.lite .mz-rglow, html.lite .xc-f .fl, html.lite .btn-adv::after, html.lite .btn-adv .ic, html.lite .mz-cta::after, html.lite .mz-ad::after { animation: none !important; }
+html.lite .tm-glow, html.lite .mz-wbg i { filter: none !important; }
+/* magazine page: the site chat button would cover the magazine's page bar */
+body.is-mag #chat { display: none !important; }
