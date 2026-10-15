@@ -558,3 +558,10 @@ body.is-mag #chat { display: none !important; }
 .mem-card p { font-size: 17px; margin: 0; color: var(--muted, #555); }
 .mem-card small { display: block; font-size: 16px; margin-top: 4px; color: var(--red, #D21F26); font-weight: 700; }
 .mem-more-row { text-align: center; margin: 0; }
+.mem-grid { animation: memIn .2s ease; }
+@keyframes memIn { from { opacity: .35; } to { opacity: 1; } }
+.mem-pager { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin: 4px 0 0; }
+.mem-pg { min-width: 56px; min-height: 56px; padding: 0 14px; font: inherit; font-size: 20px; font-weight: 800; border-radius: 12px; border: 2px solid var(--red, #D21F26); background: var(--surface, #fff); color: var(--red, #D21F26); cursor: pointer; }
+.mem-pg.on { background: var(--red, #D21F26); color: #fff; }
+.mem-pg:focus-visible { outline: 3px solid #7A0A10; outline-offset: 2px; }
+.mem-dots { font-size: 20px; font-weight: 800; padding: 0 4px; }

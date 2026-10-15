@@ -76,7 +76,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261015f#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261015h#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
@@ -242,7 +242,7 @@
       '<label class="sr" for="mem-q">' + (ar ? "ابحث بالاسم" : "Search by name") + '</label>' +
       '<input class="mem-q" id="mem-q" type="search" autocomplete="off" placeholder="' + (ar ? "ابحث بالاسم أو الشركة" : "Search by name or company") + '">' +
       '<p class="mem-count" aria-live="polite"></p><div class="mem-grid"></div>' +
-      '<p class="mem-more-row"><button type="button" class="btn btn-line btn-lg mem-more" data-act="mem-more" hidden>' + (ar ? "عرض المزيد" : "Show more") + '</button></p></div>';
+      '<nav class="mem-pager" aria-label="' + (ar ? "صفحات الأعضاء" : "Member pages") + '"></nav></div>';
   }
   function club() {
     return { title: t("mem_title"), html: U.pageHead([[t("home"), "home"], [t("nav_membership")]], t("mem_title"), t("mem_lead")) +
