@@ -1,2 +1,4 @@
 _release/
 __pycache__/
+members/photos/*
+!members/photos/.gitkeep

@@ -546,3 +546,15 @@ html.lite .mz-wbg i, html.lite .mz-blob, html.lite .mz-L1 .mz-bpat::after, html.
 html.lite .tm-glow, html.lite .mz-wbg i { filter: none !important; }
 /* magazine page: the site chat button would cover the magazine's page bar */
 body.is-mag #chat { display: none !important; }
+
+/* ===== club members (update 20): filled from members/list.php ===== */
+.mem-box { display: grid; gap: 18px; }
+.mem-q { width: 100%; max-width: 520px; min-height: 52px; font: inherit; font-size: 18px; padding: 10px 16px; border-radius: 12px; border: 2px solid var(--line, #d9d9de); background: var(--surface, #fff); color: inherit; }
+.mem-count { font-size: 18px; font-weight: 700; margin: 0; }
+.mem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+.mem-card { background: var(--surface, #fff); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; text-align: center; }
+.mem-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; background: #f3f3f5; }
+.mem-card h3 { font-size: 19px; line-height: 1.35; margin: 10px 0 4px; }
+.mem-card p { font-size: 17px; margin: 0; color: var(--muted, #555); }
+.mem-card small { display: block; font-size: 16px; margin-top: 4px; color: var(--red, #D21F26); font-weight: 700; }
+.mem-more-row { text-align: center; margin: 0; }

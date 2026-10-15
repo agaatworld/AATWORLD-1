@@ -235,10 +235,20 @@
   /* ---------- club, about, advertise, contact ---------- */
   function clubMark() { return '<span class="cbm" aria-label="AAT Business Club"><b>AAT</b><small>BUSINESS CLUB</small></span>'; }
   function clubJoin() { return '<div class="row"><a class="btn btn-wa btn-lg" href="' + A.waLink(t("cb_join_wa")) + '" target="_blank" rel="noopener noreferrer">' + ic("chat", 18) + t("wa") + '</a><a class="btn btn-line btn-lg" href="' + A.mailLink(D.config.clubEmail, "AAT Business Club", t("cb_join_wa")) + '">' + ic("mail", 18) + t("email_word") + "</a></div>"; }
+  /* the members list is filled by the browser from members/list.php (it reads the photos folder on the server) */
+  function membersBox() {
+    var ar = A.state.lang === "ar";
+    return '<div class="mem-box" id="mem-box"><h2 class="h2">' + (ar ? "أعضاء نادي رجال الأعمال" : "AAT Business Club members") + '</h2>' +
+      '<label class="sr" for="mem-q">' + (ar ? "ابحث بالاسم" : "Search by name") + '</label>' +
+      '<input class="mem-q" id="mem-q" type="search" autocomplete="off" placeholder="' + (ar ? "ابحث بالاسم أو الشركة" : "Search by name or company") + '">' +
+      '<p class="mem-count" aria-live="polite"></p><div class="mem-grid"></div>' +
+      '<p class="mem-more-row"><button type="button" class="btn btn-line btn-lg mem-more" data-act="mem-more" hidden>' + (ar ? "عرض المزيد" : "Show more") + '</button></p></div>';
+  }
   function club() {
     return { title: t("mem_title"), html: U.pageHead([[t("home"), "home"], [t("nav_membership")]], t("mem_title"), t("mem_lead")) +
       sec("", '<div class="cb-top">' + clubMark() + '<div><h2 class="h2">' + t("cb_goals") + '</h2><p class="lead">' + t("cb_goals_p") + "</p><p>" + t("cb_goals_p2") + "</p>" + clubJoin() + "</div></div>") +
       sec("alt", U.head("AATBC", t("cb_ben")) + '<ol class="cb-l">' + [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return '<li class="rv"><b>' + A.pad2(n) + "</b><span>" + t("cb_b" + n) + "</span></li>"; }).join("") + "</ol>") +
+      sec("alt", membersBox()) +
       sec("", '<div class="two"><div><h2 class="h2">' + t("cb_partners") + '</h2><p class="lead">' + t("cb_partners_p") + '</p></div><div class="card"><h2 class="h3">' + t("cb_join") + "</h2>" + clubJoin() + "</div></div>") + turnkey() };
   }
   /* turnkey projects: first studies for industrial projects, a benefit of the club (Arabic) */

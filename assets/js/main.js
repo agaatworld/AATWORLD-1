@@ -65,7 +65,7 @@
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); floorText(app); floorText($("#ftr"));
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
   /* readers with weak eyesight: no text on the site is allowed to stay small */
@@ -203,6 +203,27 @@
     else { f.src = fbSrc(cur[0]); b.src = fbSrc(nxt[1]); fb.r.src = fbSrc(nxt[0]); }
     void leaf.offsetWidth; leaf.classList.add("go");
     setTimeout(function () { fb.page = nxt[0]; fbShow(); leaf.className = "fb-leaf"; fb.busy = false; }, 620);
+  }
+  /* members of the club: fills the grid from members/list.php, with search and 24 at a time */
+  function membersStart() {
+    var box = $("#mem-box", app); if (!box) return;
+    var ar = A.state.lang === "ar", all = null, shown = 24, grid = $(".mem-grid", box), cnt = $(".mem-count", box), more = $(".mem-more", box), inp = $("#mem-q", box), q = "";
+    function card(m) {
+      return '<article class="mem-card"><img loading="lazy" decoding="async" src="' + esc(m.photo) + '" alt="' + esc(m.name) + '" width="240" height="240"><h3>' + esc(m.name) + "</h3>" +
+        (m.company ? "<p>" + esc(m.company) + "</p>" : "") + (m.country ? "<small>" + esc(m.country) + "</small>" : "") + "</article>";
+    }
+    function draw() {
+      if (!all) return;
+      var list = all.filter(function (m) { return !q || (m.name + " " + (m.company || "")).toLowerCase().indexOf(q) > -1; });
+      grid.innerHTML = list.slice(0, shown).map(card).join("");
+      cnt.textContent = (ar ? "عدد الأعضاء: " : "Members: ") + list.length + (list.length !== all.length ? " / " + all.length : "");
+      more.hidden = list.length <= shown;
+    }
+    more.addEventListener("click", function () { shown += 24; draw(); });
+    inp.addEventListener("input", function () { q = inp.value.trim().toLowerCase(); shown = 24; draw(); });
+    fetch("members/list.php").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+      all = d.members || []; if (!all.length) { cnt.textContent = ar ? "قائمة الأعضاء ستظهر هنا بعد رفع الصور." : "The member list will appear here once the photos are uploaded."; return; } draw();
+    }).catch(function () { cnt.textContent = ar ? "قائمة الأعضاء غير متاحة الآن." : "The member list is not available right now."; });
   }
   function flipStart() {
     var el = $("[data-fb]", app); fb = null; if (!el) return;
