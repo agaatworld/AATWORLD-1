@@ -1,50 +1,69 @@
 """Make a small copy of the WordPress 'uploads' photo folder, ready to send.
 
 Run on your own computer (needs Python 3 and Pillow):
-    pip install pillow
     python shrink_uploads.py "C:/path/to/uploads" "C:/path/to/uploads-small"
 
-Every photo is made at most 900 pixels wide/high and saved with good quality.
-Folder structure is kept. Other files are skipped. Originals are not changed.
+- Keeps the folder structure (2023/03/...).
+- Skips WordPress size copies such as "photo-150x150.webp" (only the originals are kept).
+- Every photo becomes a .jpg, at most 900 pixels on its longest side.
+- Originals are not changed. A file that cannot be read is skipped and reported.
 """
 import os
+import re
 import sys
-from PIL import Image
+from PIL import Image, ImageOps
 
-MAX = 900          # largest side in pixels
-QUALITY = 80       # JPEG quality (80 looks clean, much smaller)
+MAX = 900
+QUALITY = 80
 IMAGES = (".jpg", ".jpeg", ".png", ".webp")
+SIZE_COPY = re.compile(r"-\d+x\d+$", re.IGNORECASE)   # e.g. name-150x150
 
-src, dst = sys.argv[1], sys.argv[2]
-if not os.path.isdir(src):
-    sys.exit(f"ERROR: the folder {src} does not exist. Check the path (it must be the folder that contains 2023, 2024, ...).")
-before = after = count = skipped = 0
+def main():
+    if len(sys.argv) != 3:
+        sys.exit('Usage: python shrink_uploads.py "<uploads folder>" "<output folder>"')
+    src, dst = sys.argv[1], sys.argv[2]
+    if not os.path.isdir(src):
+        sys.exit(f"ERROR: the folder {src} does not exist. It must be the folder that contains 2023, 2024, ...")
 
-for root, _, files in os.walk(src):
-    for name in files:
-        if not name.lower().endswith(IMAGES):
-            skipped += 1
-            continue
-        path = os.path.join(root, name)
-        out_dir = os.path.join(dst, os.path.relpath(root, src))
-        os.makedirs(out_dir, exist_ok=True)
-        out = os.path.join(out_dir, name)
-        before += os.path.getsize(path)
-        try:
-            im = Image.open(path)
-            im.thumbnail((MAX, MAX))          # keeps the proportions
-            if name.lower().endswith(".png"):
-                im.save(out, optimize=True)
-            else:
-                im.convert("RGB").save(out, "JPEG", quality=QUALITY, optimize=True, progressive=True)
-                if not name.lower().endswith((".jpg", ".jpeg")):
-                    out = os.path.splitext(out)[0] + ".jpg"
-            after += os.path.getsize(out)
-            count += 1
-        except Exception as err:
-            print("could not read", path, err)
+    done = skipped = failed = before = after = 0
+    for root, _, files in os.walk(src):
+        for name in files:
+            stem, ext = os.path.splitext(name)
+            if ext.lower() not in IMAGES:
+                skipped += 1
+                continue
+            if SIZE_COPY.search(stem):
+                skipped += 1          # WordPress size copy, the original is also in the folder
+                continue
+            path = os.path.join(root, name)
+            out_dir = os.path.join(dst, os.path.relpath(root, src))
+            out = os.path.join(out_dir, stem + ".jpg")
+            try:
+                im = Image.open(path)
+                im = ImageOps.exif_transpose(im)
+                if im.mode in ("RGBA", "LA", "P"):
+                    im = im.convert("RGBA")
+                    bg = Image.new("RGB", im.size, (255, 255, 255))
+                    bg.paste(im, mask=im.getchannel("A"))
+                    im = bg
+                else:
+                    im = im.convert("RGB")
+                im.thumbnail((MAX, MAX))
+                os.makedirs(out_dir, exist_ok=True)
+                im.save(out, "JPEG", quality=QUALITY, optimize=True)
+                before += os.path.getsize(path)
+                after += os.path.getsize(out)
+                done += 1
+                if done % 200 == 0:
+                    print(f"  {done} photos done...", flush=True)
+            except Exception as err:
+                failed += 1
+                print(f"could not convert {path}: {err}", flush=True)
 
-if count == 0:
-    print("No photos were found in that folder. Check that it contains year folders (2023, 2024, ...) with photos inside.")
-print(f"done: {count} photos, {skipped} other files skipped")
-print(f"size before: {before/1e6:,.0f} MB   after: {after/1e6:,.0f} MB")
+    if done == 0:
+        print("No photos were found. Check that the folder contains year folders (2023, 2024, ...) with photos inside.")
+    print(f"done: {done} photos converted, {skipped} files skipped (size copies / other), {failed} failed")
+    print(f"size before: {before/1e6:,.0f} MB   after: {after/1e6:,.0f} MB")
+
+if __name__ == "__main__":
+    main()
