@@ -31,6 +31,7 @@ function clean_name($file) {
     $s = preg_replace('/-(scaled|\d+x\d+)$/i', '', $s);   // drop WordPress size suffixes
     $s = str_replace(['-', '_', '.'], ' ', $s);
     $s = preg_replace('/(\p{L})\d+$/u', '$1', $s);        // drop a trailing copy number ("Salmi1")
+    $s = preg_replace('/\s+\d+$/u', '', $s);             // drop a trailing " 1" copy number ("Sami El Khateeb 1")
     $s = preg_replace('/\s+/u', ' ', $s);
     return trim($s);
 }
