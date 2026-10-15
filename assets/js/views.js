@@ -43,7 +43,7 @@
 
       '<section class="live"><div class="wrap live-g"><div class="live-map">' + U.tradeMap() + '</div><div class="live-s"><p class="live-k"><i></i>' + t("rp_live") + '</p><h2 class="h2">' + t("rn_line") + "</h2>" +
       '<div class="live-kpi"><a href="#flip"><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
-      (nx ? '<a href="#exhibition-' + nx.id + '"><b>' + Math.max(A.daysUntil(nx, new Date()), 0) + "</b><span>" + t("rp_days") + " " + esc(nx.name) + "</span></a>" : "") + "</div></div></div></section>" +
+      "</div></div></div></section>" +
 
       (advLogos ? '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title"), ["magazine", t("mb_brands")]) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + advLogos + advLogos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" : "") +
 
@@ -226,7 +226,7 @@
     var e = A.eventById(id); if (!e) return notFound();
     var url = A.safeUrl(e.url), themes = LA(e.themes);
     return { title: (A.state.lang === "ar" && e.nameAr || e.name), html: U.pageHead([[t("home"), "home"], [t("nav_exhibitions"), "exhibitions"], [(A.state.lang === "ar" && e.nameAr || e.name)]], (A.state.lang === "ar" && e.nameAr || e.name), L(e.summary)) +
-      sec("", '<div class="cod"><dl class="spec"><dt>' + t("x_ex_dates") + "</dt><dd>" + esc(A.fmtRange(e.start, e.end)) + "</dd><dt>" + t("x_ex_venue") + "</dt><dd>" + esc(L(e.venue)) + "</dd><dt>" + t("x_ex_org") + "</dt><dd>" + esc(e.organizer) + "</dd></dl>" +
+      sec("", '<div class="cod"><dl class="spec"><dt>' + t("x_ex_dates") + "</dt><dd>" + esc(e.approx ? A.fmtMonth(e.start) : A.fmtRange(e.start, e.end)) + "</dd><dt>" + t("x_ex_venue") + "</dt><dd>" + esc(L(e.venue)) + "</dd><dt>" + t("x_ex_org") + "</dt><dd>" + esc(e.organizer) + "</dd></dl>" +
         "<div>" + (themes.length ? '<h2 class="h3">' + t("x_ex_themes") + '</h2><ul class="ticks">' + themes.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
         '<div class="row">' + (url ? '<a class="btn btn-red" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + ic("link", 18) + t("x_ex_site") + "</a>" : "") + '<a class="btn btn-line" href="#exhibitions">' + t("nav_exhibitions") + "</a></div></div></div>") };
   }

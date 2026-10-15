@@ -54,6 +54,7 @@
     return o.en != null ? o.en : "";
   }
   function fmtDate(s) { try { return new Intl.DateTimeFormat(LOCALE[state.lang], { day: "numeric", month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s; } }
+  function fmtMonth(s) { try { return new Intl.DateTimeFormat(LOCALE[state.lang], { month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s.slice(0, 7); } }
   function fmtRange(a, b) {
     try {
       var f = new Intl.DateTimeFormat(LOCALE[state.lang], { day: "numeric", month: "short", year: "numeric" });
@@ -207,7 +208,7 @@
 
   root.AAT = {
     D: D, IS: IS, esc: esc, pad2: pad2, clamp: clamp, safeUrl: safeUrl, parseDate: parseDate, store: store,
-    LANGS: LANGS, isLang: isLang, detectLang: detectLang, state: state, setLang: setLang, dir: dir, t: t, L: L, fmtDate: fmtDate, fmtRange: fmtRange,
+    LANGS: LANGS, isLang: isLang, detectLang: detectLang, state: state, setLang: setLang, dir: dir, t: t, L: L, fmtDate: fmtDate, fmtRange: fmtRange, fmtMonth: fmtMonth,
     companies: companies, cats: cats, company: company, companyPages: companyPages, logoOf: logoOf, productsOf: productsOf, productDesc: productDesc,
     allProducts: allProducts, usedCats: usedCats, matchProduct: matchProduct, byTier: byTier, tierOf: tierOf,
     articles: articles, articlesFor: articlesFor, article: article, articleLang: articleLang, newsBody: newsBody,

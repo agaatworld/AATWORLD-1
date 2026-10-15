@@ -526,3 +526,14 @@ html.mz-bgon body, html.mz-bgon[data-theme="dark"] body { background-attachment:
 .btn-adv, .btn-adv::before, .btn-adv::after, .btn .ic, .more .ic { animation: none !important; }
 /* Magazine page: the magazine takes the whole window; the site menu lives in the magazine's own side drawer */
 body:has(.fbx) #hdr { display: none !important; }
+
+/* Live trade map, readable: red labels with white text, strong red moving lines and dots */
+.tm-lb rect, .tm-lb.hub rect, .tm-lb.ar rect { fill: #D21F26 !important; stroke: none !important; }
+.tm-lb text, .tm-lb.hub text { fill: #fff !important; font-weight: 800 !important; font-size: 17px !important; }
+.tm-glow { stroke: #E3101A !important; stroke-width: 3.6 !important; filter: drop-shadow(0 0 4px rgba(210, 31, 38, .55)) !important; animation-name: run !important; }
+.tm-glow.rev { animation-name: runr !important; }
+.tm-end { fill: #D21F26 !important; stroke: #fff; stroke-width: 1.5; }
+.tm-arc { stroke: rgba(210, 31, 38, .55) !important; stroke-width: 1.6 !important; }
+/* exhibitions: sector line, and month-only shows */
+.er-s { display: block; font-style: normal; font-weight: 700; color: var(--red-2); font-size: 17px; margin-top: 2px; }
+.er-d.mo b { font-size: 22px; } .er-d.mo small { font-size: 15px; }
