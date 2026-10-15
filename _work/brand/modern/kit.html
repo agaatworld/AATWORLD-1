@@ -1,0 +1,393 @@
+<title>AAT Brand Kit 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700;6..96,800&family=Manrope:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&text=%E4%B8%AD%E9%98%BF%E5%95%86%E6%A5%AD%E9%9B%9C%E8%AA%8C%E4%BA%9E%E6%B4%B2%E9%98%BF%E6%8B%89%E4%BC%AF%E8%B2%BF%E6%98%93%E5%B1%95%E8%A6%BD&display=swap">
+<style>
+@font-face{font-family:"Jazeera";src:url(data:font/ttf;base64,%%JAZ_R%%) format("truetype");font-weight:400}
+@font-face{font-family:"Jazeera";src:url(data:font/ttf;base64,%%JAZ_B%%) format("truetype");font-weight:700}
+/* Layout: a printed brand book. White paper pages, red chapter bands, mockups on sand boards. One committed light look. */
+:root{
+  --red:#D21F26; --deep:#7A0A10; --crimson:#C4141C; --ink:#1A1314; --paper:#FFFFFF; --sand:#F4EEEA; --gold:#B8913A; --muted:#5B4D4F; --line:#E6DCD7;
+  --display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --text:"Manrope","Segoe UI",system-ui,sans-serif;
+  --ar:"Jazeera","Segoe UI","Tahoma",sans-serif;
+  --zh:"Noto Serif TC","PMingLiU","Songti TC",serif;
+  color-scheme:light;
+}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+*{box-sizing:border-box}
+svg{display:block}
+a{color:var(--red)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+.bar .wrap{display:flex;align-items:center;gap:18px;padding:10px max(16px,env(safe-area-inset-left,0px));flex-wrap:wrap}
+.bar .home{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;font-size:18px}
+.bar .home i{width:44px;height:32px}
+.bar nav{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.bar nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:17px;padding:8px 12px;border-radius:8px}
+.bar nav a:hover{background:var(--sand);color:var(--red)}
+section{padding-block:64px;border-bottom:1px solid var(--line)}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:clamp(34px,4.6vw,56px);color:var(--ink)}
+h3{font-size:clamp(24px,2.4vw,30px)}
+.lead{font-size:20px;max-width:62ch;color:var(--muted);margin:14px 0 0}
+p{margin:0}
+.head{display:flex;flex-direction:column;gap:6px;margin-bottom:34px}
+.num{font-family:var(--text);font-weight:800;font-size:17px;letter-spacing:.14em;color:var(--red);text-transform:uppercase}
+.grid{display:grid;gap:22px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tile{border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:200px;min-width:0}
+.tile.w{background:var(--paper);border:1px solid var(--line)}
+.tile.s{background:var(--sand)}
+.tile.r{background:var(--red);color:var(--paper)}
+.tile.d{background:var(--deep);color:var(--paper)}
+.tile.k{background:var(--ink);color:var(--paper)}
+.cap{font-size:17px;font-weight:700}
+.cap small{display:block;font-weight:500;font-size:16px;opacity:.8}
+.note{font-size:17px;color:var(--muted)}
+/* hero */
+.hero{padding-block:56px 40px}
+.hero .big{padding:4vw 2vw 2vw}
+.hero h1{font-size:clamp(40px,6vw,84px);margin-top:28px}
+.hero h1 em{font-style:italic;color:var(--red)}
+.trio{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:18px;font-size:22px;align-items:baseline}
+.trio .ar{font-family:var(--ar);font-weight:700;font-size:28px}
+.trio .zh{font-family:var(--zh);font-weight:700;font-size:26px}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-top:36px;background:var(--sand);border-radius:16px;padding:24px}
+.compare .arrow{font-size:34px;color:var(--red);font-weight:800}
+.compare figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.compare figcaption{font-weight:700;font-size:17px}
+.changes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:22px}
+.changes div{border-top:3px solid var(--red);padding-top:10px;font-size:17px}
+.changes b{display:block;font-size:18px}
+/* colour */
+.sw{border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.sw .chip{height:150px}
+.sw .info{padding:14px 16px;font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums}
+.sw .info b{display:block;font-size:19px}
+.sw button{font:inherit;font-weight:700;font-size:16px;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 10px;margin-top:8px;cursor:pointer}
+.ratio{display:flex;height:56px;border-radius:12px;overflow:hidden;margin-top:22px;border:1px solid var(--line)}
+.ratio span{display:flex;align-items:center;padding-left:12px;font-weight:700;font-size:16px;color:var(--paper)}
+/* type */
+.spec{border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.spec .tag{font-size:16px;font-weight:700;color:var(--red);letter-spacing:.1em;text-transform:uppercase}
+.spec .sample{line-height:1.15;overflow-wrap:anywhere}
+.scale{display:grid;gap:8px;margin-top:22px}
+.scale div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
+.scale span{font-size:16px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* mockups */
+.board{background:var(--sand);border-radius:18px;padding:clamp(16px,3vw,36px);display:flex;flex-direction:column;gap:16px;min-width:0}
+.board .lbl{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:800;font-size:18px}
+.board .lbl span{font-weight:600;color:var(--muted);font-size:16px;font-variant-numeric:tabular-nums}
+.mk{container-type:inline-size;position:relative;overflow:hidden;box-shadow:0 18px 40px -22px rgba(26,19,20,.45);background:var(--paper)}
+.pat{background-color:var(--red);background-repeat:repeat}
+.fb{aspect-ratio:820/312}
+.fbwrap{position:relative;padding-bottom:9cqw;container-type:inline-size}
+.fbwrap .pp{position:absolute;left:4cqw;bottom:0;width:20cqw;aspect-ratio:1;border-radius:50%;background:var(--paper);border:1.2cqw solid var(--paper);box-shadow:0 6px 20px -10px rgba(0,0,0,.5);display:grid;place-items:center}
+.fbwrap .pp i{width:82%}
+.fbwrap .meta{position:absolute;left:27cqw;bottom:0;font-size:max(16px,2.6cqw);font-weight:800;line-height:1.25}
+.fbwrap .meta small{display:block;font-weight:600;color:var(--muted);font-size:max(16px,1.9cqw)}
+.yt{aspect-ratio:2560/1440}
+.safe{position:absolute;left:19.8cqw;width:60.4cqw;top:50%;transform:translateY(-50%);height:16.5cqw;border:2px dashed rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;gap:3cqw}
+.safe .t{color:var(--paper);font-size:max(16px,2.2cqw);font-weight:700;line-height:1.3}
+.safe .t b{display:block;font-family:var(--ar);font-size:max(16px,2.6cqw)}
+.safe em{position:absolute;right:1cqw;bottom:-3.6cqw;font-style:normal;color:rgba(255,255,255,.8);font-size:max(16px,1.3cqw);font-weight:600}
+.ig{aspect-ratio:1}
+.story{aspect-ratio:9/16}
+.card{aspect-ratio:90/54;border-radius:1.4cqw}
+.a4{aspect-ratio:210/297}
+.rollup{aspect-ratio:85/200}
+.web{aspect-ratio:16/9}
+.avatars{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.av{width:clamp(96px,14vw,150px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;box-shadow:0 10px 24px -14px rgba(0,0,0,.5)}
+.av i{width:76%}
+.appi{width:clamp(96px,14vw,150px);aspect-ratio:1;border-radius:24%;display:grid;place-items:center;box-shadow:0 10px 24px -14px rgba(0,0,0,.5)}
+.appi i{width:74%}
+.fav{display:flex;gap:16px;align-items:end}
+.fav div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:16px;font-weight:600}
+/* downloads */
+.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.dli{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.dli .pv{height:130px;border-radius:10px;position:relative}
+.dli .pv i{display:block;position:absolute;inset:12px}
+.dli .pv i svg{width:100%;height:100%}
+.dli b{font-size:18px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:800;font-size:17px;min-height:46px;padding:8px 16px;border-radius:10px;border:2px solid var(--red);background:var(--paper);color:var(--red);cursor:pointer}
+.btn.solid{background:var(--red);color:var(--paper)}
+.btn:hover{background:var(--deep);border-color:var(--deep);color:var(--paper)}
+.checker{background-color:#fff;background-image:linear-gradient(45deg,#ece6e3 25%,transparent 25%,transparent 75%,#ece6e3 75%),linear-gradient(45deg,#ece6e3 25%,transparent 25%,transparent 75%,#ece6e3 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:10px;font-weight:700;font-size:17px;z-index:9;max-width:calc(100% - 32px)}
+i.l,i.y{display:block;font-style:normal}
+i.l svg,i.y svg{width:100%;height:auto}
+.foot{padding-block:40px;font-size:17px;color:var(--muted);display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between}
+@media (max-width:900px){.g3,.g4,.dl{grid-template-columns:repeat(2,minmax(0,1fr))}.changes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.g2,.g3,.g4,.dl{grid-template-columns:minmax(0,1fr)}.compare{grid-template-columns:1fr}.compare .arrow{transform:rotate(90deg);justify-self:center}.bar nav{display:none}.scale div{grid-template-columns:96px minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<header class="bar"><div class="wrap">
+  <a class="home" href="#top"><i class="y" data-sym="#D21F26,#7A0A10"></i>AAT Brand Kit</a>
+  <nav aria-label="Sections"><a href="#logo">Logo</a><a href="#symbol">Symbol</a><a href="#colour">Colour</a><a href="#type">Type</a><a href="#social">Social media</a><a href="#print">Print</a><a href="#files">Files</a></nav>
+</div></header>
+
+<main class="wrap" id="top">
+
+<section class="hero">
+  <div class="big"><i class="l" data-logo="#D21F26"></i></div>
+  <h1>The same AAT, <em>drawn for today.</em></h1>
+  <div class="trio"><span>Arab Asian Trade</span><span class="ar" dir="rtl" lang="ar">التجارة العربية الآسيوية</span><span class="zh" lang="zh-Hant">中阿商業雜誌</span></div>
+  <p class="lead">A modern redrawing of the logo used since 1982. The structure stays: two A letters whose long lines sweep to the left and curl, and the T beside them. Every curve is now built from clean, even shapes so it prints sharp at any size, from a phone icon to a trade-show banner.</p>
+  <div class="compare">
+    <figure><i class="l" data-old="1"></i><figcaption>Before · traced 1982 artwork</figcaption></figure>
+    <div class="arrow" aria-hidden="true">→</div>
+    <figure><i class="l" data-logo="#D21F26"></i><figcaption>After · 2027 redrawing</figcaption></figure>
+  </div>
+  <div class="changes">
+    <div><b>Clean swashes</b>Each line thickens, sweeps and ends in a round spiral, like a pen stroke.</div>
+    <div><b>Sharper letters</b>Strong slanted stems, thin cross bars, no rough edges.</div>
+    <div><b>Curved T</b>The T top now arcs like the swashes, so all three letters belong together.</div>
+    <div><b>Clear tagline</b>IDEAS FOR BUSINESS in wide, easy-to-read capitals.</div>
+  </div>
+</section>
+
+<section id="logo">
+  <div class="head"><span class="num">Logo</span><h2>One logo, four ways to use it</h2><p class="lead">Use red on white whenever you can. On red or dark photos, use the white logo. Use black only for one-colour printing such as fax or stamps.</p></div>
+  <div class="grid g2">
+    <div class="tile w"><i class="l" data-logo="#D21F26"></i><p class="cap">Main logo<small>Red on white. First choice.</small></p></div>
+    <div class="tile r"><i class="l" data-logo="#FFFFFF"></i><p class="cap">Reversed<small>White on AAT Red.</small></p></div>
+    <div class="tile k"><i class="l" data-logo="#FFFFFF"></i><p class="cap">On dark<small>White on ink or dark photos.</small></p></div>
+    <div class="tile s"><i class="l" data-logo="#1A1314"></i><p class="cap">One colour<small>Black, for single-colour printing.</small></p></div>
+  </div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="tile w"><div style="display:flex;align-items:center;gap:5%"><i class="y" data-sym="#D21F26,#7A0A10" style="width:26%"></i><span style="width:2px;align-self:stretch;background:var(--line)"></span><i class="l" data-logo="#D21F26" data-tag="0" style="width:62%"></i></div><p class="cap">Side by side<small>Symbol and logo together, for website headers and signs.</small></p></div>
+    <div class="tile w" style="align-items:center"><i class="y" data-sym="#D21F26,#7A0A10" style="width:30%"></i><i class="l" data-logo="#D21F26" style="width:78%"></i><p class="cap" style="align-self:flex-start">Stacked<small>For square spaces: covers, booths, gifts.</small></p></div>
+  </div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="tile s">
+      <svg viewBox="0 0 1240 520" role="img" aria-label="Clear space around the logo equals the height of the crossbar gap">
+        <rect x="80" y="70" width="1080" height="400" fill="none" stroke="#D21F26" stroke-width="3" stroke-dasharray="12 9"/>
+        <g transform="translate(120 104) scale(1)" fill="#D21F26" id="csLogo"></g>
+        <g fill="#7A0A10" font-family="Manrope,sans-serif" font-size="30" font-weight="700"><text x="80" y="46">Keep this space empty</text></g>
+        <rect x="80" y="70" width="40" height="40" fill="#7A0A10" opacity=".25"/><text x="132" y="98" font-family="Manrope,sans-serif" font-size="26" font-weight="700" fill="#7A0A10">= height of the T top</text>
+      </svg>
+      <p class="cap">Clear space<small>Leave at least the height of the T top bar empty on every side.</small></p>
+    </div>
+    <div class="tile s">
+      <div style="display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap"><div><i class="l" data-logo="#D21F26" style="width:160px"></i><p class="note">160 px wide</p></div><div><i class="l" data-logo="#D21F26" data-tag="0" style="width:110px"></i><p class="note">110 px, no tagline</p></div><div><i class="y" data-sym="#D21F26,#7A0A10" style="width:48px"></i><p class="note">Symbol 48 px</p></div></div>
+      <p class="cap">Smallest sizes<small>Logo with tagline: 160 px screen, 35 mm print. Below that, drop the tagline. Below 110 px, use the symbol.</small></p>
+    </div>
+  </div>
+</section>
+
+<section id="symbol">
+  <div class="head"><span class="num">Symbol</span><h2>The Meeting Swash</h2><p class="lead">A sign without letters, taken from the curl at the end of each A. Two swashes reach toward each other and turn into spirals: one for the Arab world, one for Asia. The spiral also recalls the cloud scrolls of Chinese art and the flourishes of Arabic calligraphy, so it speaks to both readers of the magazine.</p></div>
+  <div class="grid g3">
+    <div class="tile w" style="align-items:center"><i class="y" data-sym="#D21F26,#7A0A10" style="width:70%"></i><p class="cap" style="align-self:flex-start">Two-tone<small>AAT Red and Deep Red. First choice.</small></p></div>
+    <div class="tile r" style="align-items:center"><i class="y" data-sym="#FFFFFF,#FFFFFF" style="width:70%"></i><p class="cap" style="align-self:flex-start">White on red</p></div>
+    <div class="tile s" style="align-items:center"><svg viewBox="0 0 420 300" aria-label="How the symbol is built: one swash, turned half a circle"><g id="build"></g></svg><p class="cap" style="align-self:flex-start">How it is built<small>One swash (red) turned half a circle (outline) gives the pair.</small></p></div>
+  </div>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="tile s"><div class="avatars"><div class="av" style="background:#fff"><i class="y" data-sym="#D21F26,#7A0A10"></i></div><div class="av" style="background:var(--red)"><i class="y" data-sym="#FFFFFF,#FFFFFF"></i></div></div><p class="cap">Profile pictures<small>Facebook, YouTube, WhatsApp, LinkedIn.</small></p></div>
+    <div class="tile s"><div class="avatars"><div class="appi" style="background:var(--red)"><i class="y" data-sym="#FFFFFF,#FFFFFF"></i></div><div class="appi" style="background:var(--ink)"><i class="y" data-sym="#D21F26,#FFFFFF"></i></div></div><p class="cap">App icon<small>Phone home screen.</small></p></div>
+    <div class="tile s"><div class="fav"><div><i class="y" data-sym="#D21F26,#7A0A10" style="width:16px"></i>16</div><div><i class="y" data-sym="#D21F26,#7A0A10" style="width:32px"></i>32</div><div><i class="y" data-sym="#D21F26,#7A0A10" style="width:64px"></i>64</div><div><i class="y" data-sym="#D21F26,#7A0A10" style="width:96px"></i>96 px</div></div><p class="cap">Browser tab icon<small>Still clear at 16 pixels.</small></p></div>
+  </div>
+  <div class="tile pat" data-pat="#D21F26,#B5161D" style="margin-top:22px;min-height:260px;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:22px 34px;width:min(520px,80%)"><i class="l" data-logo="#D21F26"></i></div></div>
+  <p class="note" style="margin-top:10px">Brand pattern: small Meeting Swashes in a darker red on AAT Red. Use it behind the logo on covers, cards, banners and booths.</p>
+</section>
+
+<section id="colour">
+  <div class="head"><span class="num">Colour</span><h2>Red leads. Everything else supports it.</h2><p class="lead">Codes for screens (HEX, RGB) and for the printer (CMYK). Tap a code to copy it.</p></div>
+  <div class="grid g4" id="swatches"></div>
+  <div class="ratio" aria-label="How much of each colour to use"><span style="flex:45;background:var(--red)">Red 45%</span><span style="flex:30;background:var(--paper);color:var(--ink)">White 30%</span><span style="flex:12;background:var(--ink)">Ink 12%</span><span style="flex:8;background:var(--deep)">Deep 8%</span><span style="flex:5;background:var(--gold)">5%</span></div>
+  <p class="note" style="margin-top:10px">Gold is only for special moments: anniversary issues, awards, the Business Club. Never for body text.</p>
+</section>
+
+<section id="type">
+  <div class="head"><span class="num">Typography</span><h2>Three languages, one voice</h2><p class="lead">Large and bold, for readers of all ages. The smallest text anywhere is 16 pixels on screen or 9 points in print.</p></div>
+  <div class="grid g2">
+    <div class="spec"><span class="tag">English headlines · Bodoni Moda Bold</span><span class="sample" style="font-family:var(--display);font-weight:700;font-size:clamp(34px,4vw,52px)">Trade between Asia and the Arab world</span><p class="note">Same high contrast of thick and thin as the logo. Free from Google Fonts.</p></div>
+    <div class="spec"><span class="tag">English text · Manrope</span><span class="sample" style="font-weight:800;font-size:30px">IDEAS FOR BUSINESS</span><span style="font-size:20px">Since 1982, Arab Asian Trade has connected Asian manufacturers with importers across the Middle East and North Africa.</span><p class="note">Used for the tagline, body text, menus and buttons.</p></div>
+    <div class="spec" dir="rtl" lang="ar"><span class="tag" dir="ltr" style="align-self:flex-end">Arabic · Al-Jazeera</span><span class="sample" style="font-family:var(--ar);font-weight:700;font-size:clamp(34px,4vw,50px)">التجارة العربية الآسيوية</span><span style="font-family:var(--ar);font-size:22px">نافذتكم إلى أسواق آسيا منذ عام ١٩٨٢. معارض دولية، أخبار، ومنتجات.</span></div>
+    <div class="spec" lang="zh-Hant"><span class="tag">Chinese · Noto Serif TC Bold</span><span class="sample" style="font-family:var(--zh);font-weight:700;font-size:clamp(38px,4.4vw,56px)">中阿商業雜誌</span><p class="note">Traditional characters, as used by the Taiwan office.</p></div>
+  </div>
+  <div class="scale">
+    <div><span>Headline 56</span><b style="font-family:var(--display);font-size:clamp(30px,4vw,56px);line-height:1.1">Exhibitions 2027</b></div>
+    <div><span>Title 30</span><b style="font-family:var(--display);font-size:30px">948 trade shows, 16 countries</b></div>
+    <div><span>Body 18–20</span><span style="font-size:20px;color:var(--ink)">Readable text for long articles and product pages.</span></div>
+    <div><span>Smallest 16</span><span style="font-size:16px;color:var(--ink)">Captions, footers and labels never go below this size.</span></div>
+  </div>
+</section>
+
+<section id="social">
+  <div class="head"><span class="num">Social media</span><h2>Ready for every channel</h2><p class="lead">Exact sizes each platform asks for. The dashed box on YouTube marks the part every device shows.</p></div>
+  <div class="grid">
+    <div class="board"><div class="lbl">Facebook page<span>Cover 820 × 312 px · profile 320 × 320 px</span></div>
+      <div class="fbwrap"><div class="mk fb pat" data-pat="#D21F26,#B5161D">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 4cqw 0 27cqw;gap:3cqw">
+          <i class="l" data-logo="#FFFFFF" style="width:31cqw;flex:none"></i>
+          <div dir="rtl" style="color:#fff;text-align:right;line-height:1.25;white-space:nowrap"><div style="font-family:var(--ar);font-weight:700;font-size:3.1cqw">التجارة العربية الآسيوية</div><div style="font-family:var(--zh);font-weight:700;font-size:2.7cqw;margin-top:.6cqw">中阿商業雜誌</div><div style="font-size:1.9cqw;font-weight:700;margin-top:1.4cqw;direction:ltr">B2B trade magazine · since 1982</div></div>
+        </div></div>
+        <div class="pp"><i class="y" data-sym="#D21F26,#7A0A10"></i></div>
+        <div class="meta">Arab Asian Trade · AAT<small>Trade magazine · Taipei, Taiwan</small></div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">YouTube channel<span>Banner 2560 × 1440 px · safe area 1546 × 423 px · picture 800 × 800 px</span></div>
+      <div class="mk yt pat" data-pat="#7A0A10,#6A0910">
+        <div class="safe"><i class="l" data-logo="#FFFFFF" style="width:30cqw"></i><div class="t"><b dir="rtl">معارض · مقابلات · منتجات</b>Trade shows · interviews · products</div><em>safe area</em></div>
+      </div>
+      <div class="avatars"><div class="av" style="background:var(--red)"><i class="y" data-sym="#FFFFFF,#FFFFFF"></i></div><p class="note">Channel picture: white symbol on AAT Red.</p></div>
+    </div>
+    <div class="grid g2">
+      <div class="board"><div class="lbl">Instagram post<span>1080 × 1080 px</span></div>
+        <div class="mk ig" style="background:var(--red);color:#fff">
+          <i class="y" data-sym="#E8434A,#B5161D" style="position:absolute;width:84cqw;right:-22cqw;top:-10cqw;opacity:.9"></i>
+          <div dir="rtl" style="position:absolute;right:8cqw;left:8cqw;top:30cqw;text-align:right">
+            <div style="font-family:var(--ar);font-weight:700;font-size:13cqw;line-height:1.05">معارض دولية<br>2027</div>
+            <div style="font-family:var(--ar);font-size:5.4cqw;margin-top:3cqw">948 معرضاً في 16 دولة</div>
+          </div>
+          <div style="position:absolute;left:8cqw;right:8cqw;bottom:7cqw;display:flex;justify-content:space-between;align-items:end"><i class="l" data-logo="#FFFFFF" style="width:38cqw"></i><span style="font-weight:800;font-size:4cqw">aatworld.com</span></div>
+        </div>
+      </div>
+      <div class="board"><div class="lbl">Instagram / WhatsApp story<span>1080 × 1920 px</span></div>
+        <div class="mk story" style="width:62%;align-self:center;background:var(--paper)">
+          <div class="pat" data-pat="#D21F26,#B5161D" style="position:absolute;inset:0 0 46% 0"></div>
+          <div style="position:absolute;top:8cqw;left:0;right:0;display:flex;justify-content:center"><i class="l" data-logo="#FFFFFF" style="width:70cqw"></i></div>
+          <div style="position:absolute;top:24%;left:22cqw;right:22cqw;aspect-ratio:210/297;background:#fff;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);padding:5cqw 4cqw;display:flex;flex-direction:column;gap:3cqw"><i class="l" data-logo="#D21F26"></i><i class="y" data-sym="#D21F26,#7A0A10" style="width:60%;align-self:center;margin-top:6cqw"></i><div style="margin-top:auto;font-weight:800;font-size:4.4cqw;color:var(--red)">Issue 561 · 2027</div></div>
+          <div style="position:absolute;bottom:7cqw;left:8cqw;right:8cqw;text-align:center"><div style="font-family:var(--display);font-weight:700;font-size:9cqw;line-height:1.1">New issue<br>is online</div><div dir="rtl" style="font-family:var(--ar);font-weight:700;font-size:7cqw;color:var(--red);margin-top:2cqw">العدد الجديد متاح الآن</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Website header<span>Arabic, right to left · large text</span></div>
+      <div class="mk web" style="background:#fff">
+        <div dir="rtl" style="display:flex;align-items:center;justify-content:space-between;padding:2.2cqw 4cqw;border-bottom:1px solid var(--line);gap:2cqw">
+          <i class="l" data-logo="#D21F26" style="width:20cqw"></i>
+          <div style="display:flex;gap:2.4cqw;font-family:var(--ar);font-weight:700;font-size:max(16px,2cqw)"><span style="color:var(--red)">الرئيسية</span><span>المجلة</span><span>معارض دولية</span><span>نادي رجال الأعمال</span><span>من نحن</span></div>
+        </div>
+        <div class="pat" data-pat="#D21F26,#B5161D" style="position:absolute;inset:9.5cqw 0 0 0;display:flex;align-items:center;padding:0 6cqw" dir="rtl">
+          <div style="color:#fff;max-width:64cqw"><div style="font-family:var(--ar);font-weight:700;font-size:5.6cqw;line-height:1.2">بوابتكم إلى أسواق آسيا</div><div style="font-family:var(--ar);font-size:2.4cqw;margin-top:1.4cqw">مجلة تجارية مطبوعة وإلكترونية منذ عام ١٩٨٢</div><div style="display:inline-block;margin-top:3cqw;background:#fff;color:var(--red);font-family:var(--ar);font-weight:700;font-size:2.2cqw;padding:1.1cqw 3cqw;border-radius:1cqw">تصفح العدد الجديد</div></div>
+          <i class="y" data-sym="#FFFFFF,#F6D6D7" style="position:absolute;left:6cqw;width:28cqw"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="print">
+  <div class="head"><span class="num">Print</span><h2>Business card, magazine and stationery</h2><p class="lead">The business card keeps the layout already approved: logo on white on the front, the red pattern side with the name in three languages on the back.</p></div>
+  <div class="grid g2">
+    <div class="board"><div class="lbl">Business card · front<span>90 × 54 mm</span></div>
+      <div class="mk card" style="background:#fff">
+        <div id="arcTL" style="position:absolute;inset:0"></div>
+        <div style="position:absolute;top:7cqw;left:0;right:0;display:flex;justify-content:center"><i class="l" data-logo="#D21F26" style="width:44cqw"></i></div>
+        <div style="position:absolute;left:7cqw;bottom:6.5cqw;line-height:1.35"><div style="font-weight:800;font-size:4.6cqw">Mohamad Marwan Fattal</div><div style="font-weight:800;font-size:3cqw;letter-spacing:.2em;color:var(--red)">OWNER</div><div style="font-size:3.3cqw;font-weight:600;margin-top:1.6cqw">+886 966 404 681<br>marwanaat@gmail.com</div></div>
+        <div style="position:absolute;right:15cqw;bottom:6.5cqw;width:16cqw" id="qr"></div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Business card · back<span>90 × 54 mm</span></div>
+      <div class="mk card pat" data-pat="#D21F26,#B5161D">
+        <div style="position:absolute;top:5.5cqw;left:0;right:0;text-align:center;color:#fff;line-height:1.3"><div style="font-weight:800;font-size:4cqw;letter-spacing:.06em">ARAB ASIAN TRADE</div><div style="font-family:var(--ar);font-weight:700;font-size:5cqw" dir="rtl">التجارة العربية الآسيوية</div><div style="font-family:var(--zh);font-weight:700;font-size:4.4cqw">中阿商業雜誌</div></div>
+        <div style="position:absolute;top:24cqw;left:27cqw;right:27cqw;background:#fff;border-radius:2cqw;padding:1.8cqw 3.4cqw"><i class="l" data-logo="#D21F26"></i></div>
+        <div style="position:absolute;bottom:3.6cqw;left:0;right:0;text-align:center;color:#fff;font-size:2.8cqw;font-weight:600;line-height:1.4">P.O. BOX 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.<br><b style="font-size:3.4cqw">www.aatworld.com</b></div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Magazine cover<span>A4 · 210 × 297 mm</span></div>
+      <div class="mk a4" style="width:86%;align-self:center;background:#fff">
+        <div style="position:absolute;top:5cqw;left:6cqw;right:6cqw"><i class="l" data-logo="#D21F26"></i></div>
+        <div style="position:absolute;top:41cqw;left:6cqw;right:6cqw;display:flex;justify-content:space-between;align-items:baseline;border-top:.5cqw solid var(--ink);padding-top:1.6cqw;font-weight:800;font-size:3.2cqw"><span>ISSUE 561 · 2027</span><span dir="rtl" style="font-family:var(--ar);font-size:3.8cqw">التجارة العربية الآسيوية</span><span style="font-family:var(--zh);font-size:3.4cqw">中阿商業雜誌</span></div>
+        <div class="pat" data-pat="#D21F26,#B5161D" style="position:absolute;top:50cqw;left:6cqw;right:6cqw;bottom:24cqw;display:grid;place-items:center"><i class="y" data-sym="#FFFFFF,#F6D6D7" style="width:62%"></i></div>
+        <div style="position:absolute;left:6cqw;right:6cqw;bottom:6cqw;display:flex;justify-content:space-between;align-items:end;gap:3cqw"><div style="font-family:var(--display);font-weight:700;font-size:7.4cqw;line-height:1">Since<br>1982</div><div style="font-weight:700;font-size:2.8cqw;text-align:right;line-height:1.5;color:var(--muted)">Taiwan · Malaysia · Indonesia · Türkiye<br>UAE · Saudi Arabia · Egypt · Qatar</div></div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Letterhead<span>A4 · 210 × 297 mm</span></div>
+      <div class="mk a4" style="width:86%;align-self:center;background:#fff">
+        <div style="position:absolute;top:7cqw;left:8cqw;width:36cqw"><i class="l" data-logo="#D21F26"></i></div>
+        <div style="position:absolute;top:7.6cqw;right:8cqw;text-align:right;line-height:1.35"><div dir="rtl" style="font-family:var(--ar);font-weight:700;font-size:3.1cqw">التجارة العربية الآسيوية</div><div style="font-family:var(--zh);font-weight:700;font-size:3.2cqw">中阿商業雜誌</div><div style="font-weight:800;font-size:2.6cqw;letter-spacing:.08em;color:var(--red)">ARAB ASIAN TRADE</div></div>
+        <div style="position:absolute;top:34cqw;left:8cqw;right:8cqw;display:flex;flex-direction:column;gap:2.6cqw" aria-hidden="true"><span style="height:1.2cqw;width:30%;background:#E9E1DD;border-radius:1cqw"></span><span style="height:1.2cqw;background:#F1EBE8;border-radius:1cqw"></span><span style="height:1.2cqw;background:#F1EBE8;border-radius:1cqw"></span><span style="height:1.2cqw;width:84%;background:#F1EBE8;border-radius:1cqw"></span><span style="height:1.2cqw;background:#F1EBE8;border-radius:1cqw"></span><span style="height:1.2cqw;width:60%;background:#F1EBE8;border-radius:1cqw"></span></div>
+        <i class="y" data-sym="#FBE9EA,#F6DADB" style="position:absolute;right:-12cqw;bottom:16cqw;width:62cqw"></i>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:13cqw;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 8cqw;font-size:2.4cqw;font-weight:700;gap:3cqw"><span>P.O. BOX 568, Yonghe, New Taipei City 234964, Taiwan</span><span style="text-align:right">+886 966 404 681<br>www.aatworld.com</span></div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Exhibition roll-up banner<span>85 × 200 cm</span></div>
+      <div class="mk rollup" style="width:52%;align-self:center;background:#fff">
+        <div style="position:absolute;top:0;left:0;right:0;height:46%;background:var(--red)"></div>
+        <div style="position:absolute;top:10cqw;left:10cqw;right:10cqw"><i class="l" data-logo="#FFFFFF"></i></div>
+        <div style="position:absolute;top:58cqw;left:10cqw;right:10cqw;text-align:center;color:#fff"><div dir="rtl" style="font-family:var(--ar);font-weight:700;font-size:10cqw;line-height:1.2">مجلة التجارة<br>العربية الآسيوية</div><div style="font-family:var(--zh);font-weight:700;font-size:9cqw;margin-top:3cqw">中阿商業雜誌</div></div>
+        <div style="position:absolute;top:46%;left:0;right:0;display:grid;place-items:center;padding-top:16cqw"><i class="y" data-sym="#D21F26,#7A0A10" style="width:70cqw"></i></div>
+        <div class="pat" data-pat="#D21F26,#B5161D" style="position:absolute;left:0;right:0;bottom:0;height:22%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:8cqw">aatworld.com</div>
+      </div>
+    </div>
+    <div class="board"><div class="lbl">Email signature<span>Gmail and Outlook</span></div>
+      <div class="mk" style="background:#fff;padding:5cqw;display:flex;gap:4cqw;align-items:center;border-radius:1cqw">
+        <i class="y" data-sym="#D21F26,#7A0A10" style="width:16cqw;flex:none"></i>
+        <div style="border-left:.5cqw solid var(--red);padding-left:4cqw;line-height:1.45;font-size:max(16px,3.6cqw)"><b style="font-size:max(17px,4.4cqw)">Mohamad Marwan Fattal</b><br><span style="color:var(--red);font-weight:800;letter-spacing:.12em;font-size:max(16px,3cqw)">OWNER · ARAB ASIAN TRADE</span><br>+886 966 404 681<br>www.aatworld.com</div>
+      </div>
+      <p class="note">Keep it plain text plus the symbol image, so it shows correctly in every email program.</p>
+    </div>
+  </div>
+</section>
+
+<section id="files">
+  <div class="head"><span class="num">Files</span><h2>Save the artwork</h2><p class="lead">Every file has a transparent background. SVG stays sharp at any size (for printers and designers). PNG is for Word, WhatsApp and social media.</p></div>
+  <div class="dl" id="dl"></div>
+</section>
+
+<footer class="foot"><span>AAT Brand Kit · 2027 edition · prepared for Arab Asian Trade, Taipei</span><span>Logo structure since 1982</span></footer>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const D=%%DATA%%;
+const QR=%%QR%%;
+const OLD=%%OLD%%;
+(function(){
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const L=D.logo,Y=D.symbol;
+function logoSVG(c,tag=true,pad=8){const y1=tag?344:316;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${6-pad} ${6-pad} ${992+2*pad} ${y1-6+2*pad}" fill="${c}" role="img" aria-label="AAT logo">${['A1','A2','T'].map(k=>`<path d="${L[k]}"/>`).join('')}${tag?`<path d="${L.TAG}"/>`:''}</svg>`}
+function symSVG(a,b,pad=12){const [x0,y0,x1,y1]=Y.box;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${(x0-pad).toFixed(1)} ${(y0-pad).toFixed(1)} ${(x1-x0+2*pad).toFixed(1)} ${(y1-y0+2*pad).toFixed(1)}" role="img" aria-label="AAT symbol"><path fill="${a}" d="${Y.a}"/><path fill="${b}" d="${Y.b}"/></svg>`}
+function oldSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 413 138" fill="#D21F26" role="img" aria-label="Previous AAT logo">${OLD.map(d=>`<path fill-rule="evenodd" d="${d}"/>`).join('')}</svg>`}
+function patURL(bg,fg){const [x0,y0,x1,y1]=Y.box,w=x1-x0,h=y1-y0;const s=40/w;
+  const t=(dx,dy)=>`<g transform="translate(${dx} ${dy}) scale(${s.toFixed(4)}) translate(${-x0} ${-y0})"><path d="${Y.a}"/><path d="${Y.b}"/></g>`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="${bg}"/><g fill="${fg}">${t(4,6)}${t(36,38)}${t(-28,38)}</g></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`}
+$$('[data-logo]').forEach(e=>e.innerHTML=logoSVG(e.dataset.logo,e.dataset.tag!=='0'));
+$$('[data-sym]').forEach(e=>{const [a,b]=e.dataset.sym.split(',');e.innerHTML=symSVG(a,b)});
+$$('[data-old]').forEach(e=>e.innerHTML=oldSVG());
+$$('[data-pat]').forEach(e=>{const [a,b]=e.dataset.pat.split(',');e.style.backgroundImage=patURL(a,b);e.style.backgroundSize="64px 64px"});
+// clear space logo
+$('#csLogo').innerHTML=['A1','A2','T','TAG'].map(k=>`<path d="${L[k]}"/>`).join('');$('#csLogo').setAttribute('transform','translate(124 112)');
+// build diagram
+(function(){const [x0,y0,x1,y1]=Y.box;const s=Math.min(380/(x1-x0),260/(y1-y0));$('#build').innerHTML=`<g transform="translate(20 20) scale(${s}) translate(${-x0} ${-y0})"><path d="${Y.a}" fill="#D21F26"/><path d="${Y.b}" fill="none" stroke="#7A0A10" stroke-width="${2.2/s}" stroke-dasharray="${8/s} ${5/s}"/><circle cx="200" cy="200" r="${5/s}" fill="#1A1314"/></g>`})();
+// QR
+$('#qr').innerHTML=`<svg viewBox="-2 -2 ${QR.n+4} ${QR.n+4}" role="img" aria-label="QR code with contact card"><rect x="-2" y="-2" width="${QR.n+4}" height="${QR.n+4}" fill="#fff"/><path d="${QR.d}" fill="#1A1314"/></svg>`;
+// card arcs of symbols (top-left and bottom-right)
+(function(){let h='';const add=(cx,cy,r,a0,a1,n,size,rot0)=>{for(let i=0;i<n;i++){const a=(a0+(a1-a0)*i/(n-1))*Math.PI/180;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+  h+=`<i class="y" style="position:absolute;left:${x-size/2}cqw;top:${(y-size/2)}cqw;width:${size}cqw;opacity:${.3+.7*(i/(n-1))}">${symSVG('#D21F26','#7A0A10')}</i>`}};
+  add(0,0,15,6,84,4,5.4,90);add(100,60,15,186,264,4,5.4,90);$('#arcTL').innerHTML=h})();
+// swatches
+const SW=[["AAT Red","#D21F26","210, 31, 38","0 / 95 / 90 / 0","Logo, headlines, buttons"],["Deep Red","#7A0A10","122, 10, 16","20 / 100 / 95 / 35","Symbol second tone, pattern"],["Crimson","#C4141C","196, 20, 28","5 / 100 / 95 / 5","Hover, print solid areas"],["Ink","#1A1314","26, 19, 20","60 / 70 / 60 / 85","Text, dark backgrounds"],["Paper","#FFFFFF","255, 255, 255","0 / 0 / 0 / 0","Pages, cards"],["Silk Sand","#F4EEEA","244, 238, 234","3 / 6 / 7 / 0","Quiet panels, boards"],["Gold","#B8913A","184, 145, 58","25 / 40 / 85 / 10","Special editions only"],["Pattern Red","#B5161D","181, 22, 29","10 / 100 / 95 / 10","Swashes inside the pattern"]];
+$('#swatches').innerHTML=SW.map(([n,h,r,c,u])=>`<div class="sw"><div class="chip" style="background:${h};${h==='#FFFFFF'?'border-bottom:1px solid var(--line)':''}"></div><div class="info"><b>${n}</b>HEX ${h}<br>RGB ${r}<br>CMYK ${c}<br><span style="color:var(--muted)">${u}</span><br><button data-copy="${h}">Copy ${h}</button></div></div>`).join('');
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2400)};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(!b)return;const v=b.dataset.copy;
+  (navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Copied '+v),()=>toast('Colour code: '+v))});
+// downloads
+const FILES=[["Logo · red","logo","#D21F26",1,"#fff"],["Logo · white","logo","#FFFFFF",1,"#D21F26"],["Logo · black","logo","#1A1314",1,"#fff"],["Logo · no tagline","logo","#D21F26",0,"#fff"],["Symbol · two-tone","sym","#D21F26,#7A0A10",0,"#fff"],["Symbol · white","sym","#FFFFFF,#FFFFFF",0,"#D21F26"]];
+$('#dl').innerHTML=FILES.map((f,i)=>`<div class="dli"><div class="pv ${f[4]==='#fff'?'checker':''}" style="${f[4]!=='#fff'?'background:'+f[4]:''}"><i>${f[1]==='logo'?logoSVG(f[2],!!f[3]):symSVG(...f[2].split(','))}</i></div><b>${f[0]}</b><div class="btns"><button class="btn solid" data-dl="${i}" data-fmt="png">Save PNG</button><button class="btn" data-dl="${i}" data-fmt="svg">Save SVG</button></div></div>`).join('');
+let dlc=null;
+async function save(name,blob){try{if(!dlc&&window.claude&&window.claude.use)dlc=await window.claude.use('downloads')}catch(e){}
+  if(dlc){try{await dlc.save({filename:name,data:blob});toast('Saved '+name);return}catch(e){if(e&&e.code==='declined'){toast('Save cancelled');return}}}
+  toast('Saving is not available here. Ask Claude for the files.')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-dl]');if(!b)return;const f=FILES[+b.dataset.dl];
+  const svg=f[1]==='logo'?logoSVG(f[2],!!f[3]):symSVG(...f[2].split(','));const base='AAT-'+f[0].toLowerCase().replace(/[^a-z]+/g,'-').replace(/-+$/,'');
+  if(b.dataset.fmt==='svg'){save(base+'.svg',new Blob([svg],{type:'image/svg+xml'}));return}
+  const img=new Image();img.onload=()=>{const vb=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement.getAttribute('viewBox').split(' ').map(Number);
+    const W=f[1]==='logo'?4000:2000,H=Math.round(W*vb[3]/vb[2]);const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(img,0,0,W,H);c.toBlob(bl=>save(base+'.png',bl),'image/png')};
+  img.src=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}))});
+})();
+</script>
