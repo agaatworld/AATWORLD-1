@@ -1,7 +1,10 @@
 """Make a small copy of the WordPress 'uploads' photo folder, ready to send.
 
 Run on your own computer (needs Python 3 and Pillow):
-    python shrink_uploads.py "C:/path/to/uploads" "C:/path/to/uploads-small"
+    python shrink_uploads.py "C:/path/to/uploads" "C:/path/to/uploads-small" member_photos.txt
+
+The third part is optional but important: member_photos.txt lists ONLY the club member photos.
+Without it, every photo in the folder is converted (articles, ads, logos too).
 
 - Keeps the folder structure (2023/03/...).
 - Skips WordPress size copies such as "photo-150x150.webp" (only the originals are kept).
@@ -13,15 +16,20 @@ import re
 import sys
 from PIL import Image, ImageOps
 
-MAX = 900
+MAX = 600          # members are shown as cards about 240-480 px wide
 QUALITY = 80
 IMAGES = (".jpg", ".jpeg", ".png", ".webp")
 SIZE_COPY = re.compile(r"-\d+x\d+$", re.IGNORECASE)   # e.g. name-150x150
 
 def main():
-    if len(sys.argv) != 3:
-        sys.exit('Usage: python shrink_uploads.py "<uploads folder>" "<output folder>"')
+    if len(sys.argv) not in (3, 4):
+        sys.exit('Usage: python shrink_uploads.py "<uploads folder>" "<output folder>" [member_photos.txt]')
     src, dst = sys.argv[1], sys.argv[2]
+    only = None
+    if len(sys.argv) == 4:
+        with open(sys.argv[3], encoding="utf-8") as fh:
+            only = {line.strip().replace("\\", "/").lower() for line in fh if line.strip()}
+        print(f"only the {len(only)} listed member photos will be converted")
     if not os.path.isdir(src):
         sys.exit(f"ERROR: the folder {src} does not exist. It must be the folder that contains 2023, 2024, ...")
 
@@ -30,6 +38,10 @@ def main():
         for name in files:
             stem, ext = os.path.splitext(name)
             if ext.lower() not in IMAGES:
+                skipped += 1
+                continue
+            rel = os.path.relpath(os.path.join(root, name), src).replace("\\", "/").lower()
+            if only is not None and rel not in only:
                 skipped += 1
                 continue
             if SIZE_COPY.search(stem):
