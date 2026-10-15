@@ -19,7 +19,7 @@ import sys
 from PIL import Image
 
 IMAGES = (".jpg", ".jpeg", ".png", ".webp")
-MAX_DISTANCE = 6          # how different two picture fingerprints may be (0 = identical)
+MAX_DISTANCE = 2          # 0 = identical; 2 = same picture, even if resized or re-saved. Keep low so different people are not merged
 
 def norm_name(stem):
     s = re.sub(r"^.*?\.{2,}\s*", "", stem)          # "Interview...-Name"
