@@ -1,0 +1,169 @@
+<title>AAT Logo Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a workbench. Tool rail left, drawing board centre, inspector right; stacks on phones. */
+:root{
+  --paper:#F2EFEF; --panel:#FFFFFF; --ink:#1F1819; --muted:#665A5B; --line:#DDD4D4;
+  --accent:#D21F26; --accent-ink:#FFFFFF; --soft:#F8E6E7; --board:#E6E0E0;
+  --chk1:#FFFFFF; --chk2:#E3DEDE; --gizmo:#1F6FEB; --gizmo2:#E8A400;
+  --ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#151112; --panel:#1E191A; --ink:#F3EDED; --muted:#AE9FA0; --line:#3A3132;
+  --accent:#F0454B; --accent-ink:#FFFFFF; --soft:#3A1E20; --board:#0E0B0C;
+  --chk1:#2A2526; --chk2:#211C1D; --gizmo:#5B9BFF; --gizmo2:#FFC233; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#151112; --panel:#1E191A; --ink:#F3EDED; --muted:#AE9FA0; --line:#3A3132;
+  --accent:#F0454B; --accent-ink:#FFFFFF; --soft:#3A1E20; --board:#0E0B0C;
+  --chk1:#2A2526; --chk2:#211C1D; --gizmo:#5B9BFF; --gizmo2:#FFC233; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:17px;line-height:1.4;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;box-sizing:border-box}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--gizmo);outline-offset:2px}
+.app{height:100%;display:grid;grid-template-columns:96px minmax(0,1fr) 400px;grid-template-rows:auto minmax(0,1fr) auto;gap:10px;
+  grid-template-areas:"top top top" "rail board insp" "rail status insp"}
+.top{grid-area:top;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand b{font-stretch:75%;font-weight:800;font-size:26px;letter-spacing:.01em;color:var(--accent)}
+.brand span{font-size:17px;color:var(--muted)}
+.grp{display:flex;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px}
+.btn{min-height:44px;min-width:44px;padding:6px 12px;border:1px solid transparent;border-radius:8px;background:transparent;font-weight:600;font-size:17px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{background:var(--soft)}
+.btn.on{background:var(--accent);color:var(--accent-ink)}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);background:var(--panel)}
+.btn:disabled{opacity:.4;cursor:default}
+.rail{grid-area:rail;display:flex;flex-direction:column;gap:8px}
+.tool{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:700;font-size:16px}
+.tool svg{width:30px;height:30px}
+.tool small{font-size:16px;font-weight:600}
+.tool.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tool kbd{font-family:var(--num);font-size:16px;opacity:.7}
+.board{grid-area:board;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--board);touch-action:none;min-height:300px}
+.board.chk{background-color:var(--chk1);background-image:linear-gradient(45deg,var(--chk2) 25%,transparent 25%,transparent 75%,var(--chk2) 75%),linear-gradient(45deg,var(--chk2) 25%,transparent 25%,transparent 75%,var(--chk2) 75%);background-size:24px 24px;background-position:0 0,12px 12px}
+#svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.zoomtag{position:absolute;right:10px;bottom:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:var(--num);font-size:16px}
+.status{grid-area:status;display:flex;gap:18px;flex-wrap:wrap;font-size:16px;color:var(--muted);align-items:center;min-height:28px}
+.status b{color:var(--ink);font-weight:600}
+.status .num{font-family:var(--num)}
+.insp{grid-area:insp;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;position:sticky;top:0;background:var(--panel);z-index:2;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;padding:12px 4px;border:0;background:transparent;font-weight:700;font-size:17px;border-bottom:3px solid transparent}
+.tabs button.on{border-bottom-color:var(--accent);color:var(--accent)}
+.tabs button:disabled{opacity:.35}
+.pane{padding:14px;display:flex;flex-direction:column;gap:16px}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec h3{margin:0;font-size:19px;font-weight:800;font-stretch:85%;display:flex;align-items:center;gap:8px;text-wrap:balance}
+.sec h3 .x{margin-left:auto}
+.hint{font-size:16px;color:var(--muted);margin:0}
+.row{display:grid;grid-template-columns:110px minmax(0,1fr) 104px;gap:8px;align-items:center}
+.row label{font-size:16px;font-weight:600;cursor:pointer;user-select:none}
+.row label:hover{color:var(--accent)}
+.row input[type=range]{width:100%;accent-color:var(--accent);height:30px}
+.row .nb{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.row input[type=number]{width:100%;min-width:0;border:0;background:transparent;padding:8px 4px;font-family:var(--num);font-size:16px;text-align:right}
+.row .nb span{padding-right:6px;color:var(--muted);font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:40px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-weight:600;font-size:16px}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.layers{display:flex;flex-direction:column;gap:4px}
+.lay{display:grid;grid-template-columns:44px 28px minmax(0,1fr) 44px;align-items:center;gap:6px;padding:4px;border-radius:10px;border:1px solid transparent}
+.lay.on{border-color:var(--accent);background:var(--soft)}
+.lay .nm{font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;padding:8px 0}
+.sw{width:26px;height:26px;border-radius:6px;border:1px solid var(--line)}
+.icon{width:44px;height:44px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center}
+.icon:hover{background:var(--soft)}
+.icon svg{width:24px;height:24px}
+.off{opacity:.35}
+.color{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.color input[type=color]{width:52px;height:44px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--panel)}
+.color input[type=text]{width:120px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-family:var(--num);font-size:16px}
+.swatch{width:40px;height:40px;border-radius:8px;border:1px solid var(--line)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600;font-size:16px}
+.field input[type=text],.field select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;cursor:pointer}
+.toggle input{width:22px;height:22px;accent-color:var(--accent)}
+.confirm{border:2px solid var(--accent);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--soft)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:10px;font-weight:600;font-size:17px;z-index:9;max-width:calc(100% - 32px)}
+.preview{max-width:100%;border:1px solid var(--line);border-radius:8px;background-color:var(--chk1);background-image:linear-gradient(45deg,var(--chk2) 25%,transparent 25%,transparent 75%,var(--chk2) 75%),linear-gradient(45deg,var(--chk2) 25%,transparent 25%,transparent 75%,var(--chk2) 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+textarea.code{width:100%;height:120px;font-family:var(--num);font-size:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{min-width:40px;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:19px;font-weight:700}
+.letters button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:1100px){.app{grid-template-columns:86px minmax(0,1fr) 340px}.row{grid-template-columns:96px minmax(0,1fr) 100px}}
+@media (max-width:860px){
+  html,body{height:auto}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto 58vh auto auto;grid-template-areas:"top" "rail" "board" "status" "insp"}
+  .app{height:auto}
+  .rail{flex-direction:row;overflow-x:auto;min-height:96px}
+  .tool{padding:8px 4px}
+  .tool{flex:1 0 74px}
+  .insp{overflow:visible}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand"><b>AAT Logo Studio</b><span>Edit the logo, shape the swashes, export clean files</span></div>
+    <div class="grp">
+      <button class="btn" id="undo" title="Undo (Ctrl+Z)" aria-label="Undo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo</button>
+      <button class="btn" id="redo" title="Redo (Ctrl+Y)" aria-label="Redo">Redo<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="zout" aria-label="Zoom out">−</button>
+      <button class="btn" id="zfit">Fit</button>
+      <button class="btn" id="zin" aria-label="Zoom in">+</button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="ghostBtn" title="Show the original logo as a blue outline">Compare</button>
+      <button class="btn" id="gridBtn">Grid</button>
+      <button class="btn" id="snapBtn">Snap</button>
+    </div>
+  </header>
+
+  <nav class="rail" aria-label="Tools">
+    <button class="tool on" data-tool="move"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 8-6 1.6L10 19z"/></svg><small>Move</small><kbd>V</kbd></button>
+    <button class="tool" data-tool="nodes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18C8 6 16 6 20 18"/><rect x="2" y="16" width="5" height="5" fill="currentColor"/><rect x="17" y="16" width="5" height="5" fill="currentColor"/><circle cx="12" cy="4" r="2.4" fill="currentColor"/><path d="M6 4h12" stroke-dasharray="2 2"/></svg><small>Points</small><kbd>A</kbd></button>
+    <button class="tool" data-tool="swash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M21 5c-6 2-9 8-12 12-2 3-6 3-6 0 0-2 2-3 3.5-2"/></svg><small>Swash</small><kbd>S</kbd></button>
+    <button class="tool" data-tool="brush"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8" stroke-dasharray="3 2"/><path d="M8 12h8M13 9l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg><small>Sculpt</small><kbd>B</kbd></button>
+    <button class="tool" data-tool="pan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-6.5a1.5 1.5 0 0 1 3 0V11m0-4.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.5 14a1.5 1.5 0 0 1 2.5-1.7L8 15"/></svg><small>Hand</small><kbd>H</kbd></button>
+  </nav>
+
+  <main class="board chk" id="board">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg">
+      <g id="world"><rect id="bgRect" x="-5000" y="-5000" width="10000" height="10000" fill="none"/><g id="gridG"></g><g id="layersG"></g><g id="ghostG"></g></g>
+      <g id="ov"></g>
+    </svg>
+    <div class="zoomtag" id="zoomTag">100%</div>
+  </main>
+
+  <div class="status" id="status"><span>Cursor <b class="num" id="cur">–</b></span><span id="selInfo"></span><span id="hint"></span></div>
+
+  <aside class="insp" aria-label="Inspector">
+    <div class="tabs" role="tablist">
+      <button data-tab="shape" class="on">Shape</button>
+      <button data-tab="swash">Swash</button>
+      <button data-tab="text">Text</button>
+      <button data-tab="export">Export</button>
+    </div>
+    <div class="pane" id="pane"></div>
+  </aside>
+</div>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+<script>
+%%DATA%%
+</script>
+<script>
+%%APP%%
+</script>
