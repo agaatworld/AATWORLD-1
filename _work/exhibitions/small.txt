@@ -1,0 +1,184 @@
+#iq
+ERBIL LOGISTICS EXHIBITION | Jan 2027 | ? | Erbil | Erbil International Fairground | Logistics and transport
+AUTOSHOW IRAQ | Feb 2027 | ? | Erbil | Erbil International Fairground | Automotive and spare parts
+IEE - IRAQ ENERGY EXPO & CONFERENCE | 03/22/2027 | 3 | Baghdad | Baghdad International Fair Grounds | Energy, oil and gas
+ERBIL AUTOSHOW | 04/01/2027 | 4 | Erbil | Erbil International Fairground | Automotive
+IRAQ EXPO OGEP | Apr 2027 | ? | Basra | Basrah International Fair Ground | Oil, gas and petrochemicals
+ERBIL BUILD EXPO | 05/06/2027 | 4 | Erbil | Erbil International Fairground | Building and construction
+MEETS IRAQ | Jul 2027 | ? | Erbil | Erbil International Fairground | Education and technology
+IRAQ BUILD EXPO BAGHDAD | Aug 2027 | ? | Baghdad | Baghdad International Fair Grounds | Building and energy
+CONSTRUCT IRAQ | Sep 2027 | ? | Erbil | Erbil International Fairground | Construction and HVAC
+IRAQ BEAUTY EXPO | Sep 2027 | ? | Baghdad | Baghdad International Fair Grounds | Beauty and cosmetics
+IRAQ F&B EXPO | Sep 2027 | ? | Baghdad | Baghdad International Fair Grounds | Food and beverage
+IRAQ HVAC R EXPO | Sep 2027 | ? | Erbil | Erbil International Fairground | HVAC and refrigeration
+IRAQ OIL & GAS | Sep 2027 | ? | Baghdad | Baghdad International Fair Grounds | Oil and gas
+IRAQ BUILDEX | 10/07/2027 | 4 | Baghdad | Baghdad International Fair Grounds | Construction materials
+IRAQ HOME & HOTEL EXPO | 10/07/2027 | 4 | Baghdad | Baghdad International Fair Grounds | Interior design and hospitality
+#kw
+HORECA KUWAIT | Jan 2027 | ? | Kuwait City | ? | Hotel and restaurant
+KUWAIT BUILD & DESIGN WEEK | May 2027 | ? | Sabah Al-Salem | Sahara Arena | Building and design
+MEICA EXPO | Sep 2027 | ? | Kuwait City | ? | Instrumentation and automation
+#om
+IDF OMAN | 01/11/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Interior design
+KBS OMAN | 01/11/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Kitchens and bathrooms
+LIGHT OMAN | 01/11/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Lighting
+SMART LIVING & WORKSPACES | 01/11/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Smart home and office
+TSS OMAN | 01/11/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Tiles and stone
+COMEX OMAN | 02/01/2027 | 4 | Muscat | Oman Convention & Exhibition Centre | IT and telecom
+LOGISTEX | Apr 2027 | ? | Muscat | Oman Convention & Exhibition Centre | Logistics
+GHEDEX MUSCAT | 04/12/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Higher education
+OMAN DESIGN & BUILD WEEK | 04/19/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Construction and design
+OPES - OMAN PETROLEUM & ENERGY SHOW | 04/26/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Oil, gas and energy
+OMAN SUSTAINABILITY WEEK | May 2027 | ? | Muscat | Oman Convention & Exhibition Centre | Sustainability, energy and water
+HORECA OMAN | Sep 2027 | ? | Muscat | Oman Convention & Exhibition Centre | Hospitality and food
+OMAN HEALTH | 09/20/2027 | 3 | Muscat | Oman Convention & Exhibition Centre | Health and medical
+#qa
+HEAVY MAX | May 2027 | ? | Doha | Doha Exhibition & Convention Center | Construction machinery
+PROJECT QATAR | Jun 2027 | ? | Doha | Doha Exhibition & Convention Center | Construction and building materials
+QATAR SMART MANUFACTURING | Jun 2027 | ? | Doha | ? | Smart manufacturing
+AEMOB - AUTONOMOUS E-MOBILITY FORUM | Sep 2027 | ? | Doha | Doha Exhibition & Convention Center | Electric mobility
+DOHA JEWELLERY & WATCHES EXHIBITION | Sep 2027 | ? | Doha | Doha Exhibition & Convention Center | Jewellery and watches
+TRANSPORT MIDDLE EAST | 10/26/2027 | 3 | Doha | ? | Ports, shipping and logistics
+#dz
+COSMETICA NORTH AFRICA | 01/13/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Cosmetics and beauty
+AGRO PACK EXPO | 01/25/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Food and packaging
+SIPHAL | 01/27/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Pharmaceutical industry
+ERA | 02/01/2027 | 3 | Oran | Centre de Conventions Mohamed Benahmed | Renewable energy
+CTO FORUM ALGERIA | Mar 2027 | ? | Algiers | Palais de la Culture d'Alger | ICT
+HORECA EXPO ALGERIE | 03/16/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Hotel and catering equipment
+BATIMEX | 03/24/2027 | 4 | Annaba | Hotel Sheraton Annaba | Building and construction
+EQUIP AUTO ALGERIA | 03/29/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Auto parts and maintenance
+SIEE-POLLUTEC ALGERIE | 03/29/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Water and environment
+DIGITAL AFRICAN SUMMIT - ALGERIA | Apr 2027 | ? | Algiers | Palais des Expositions d'Alger - Safex | Digital innovation
+SIAHA - INTERNATIONAL TOURISM, TRAVEL AND TRANSPORT SHOW | Apr 2027 | ? | Oran | Centre de Conventions Mohamed Benahmed | Tourism and transport
+SIMEM - INTERNATIONAL HEALTH EXHIBITION | 04/07/2027 | 4 | Oran | Centre de Conventions Mohamed Benahmed | Medical equipment
+DJAZAGRO | 04/12/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Agri-food industry
+METAL STEEL & MINING ALGERIA EXPO | 04/12/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | Steel and mining
+ICT AFRICA SUMMIT | 04/26/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | ICT
+TEXSTYLE EXPO | 04/26/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | Textiles and leather
+MAGHREB PHARMA EXPO | 04/27/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | Pharmaceutical industry
+PLAST ALGER | 04/27/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | Plastics and rubber
+PRINTPACK ALGER | 04/27/2027 | 3 | Algiers | Palais des Expositions d'Alger - Safex | Printing and packaging
+ALGER CERAMICA EXPO | May 2027 | ? | Algiers | Palais des Expositions d'Alger - Safex | Ceramics
+BATIMATEC | May 2027 | ? | Algiers | Palais des Expositions d'Alger - Safex | Building materials
+QHSE EXPO | May 2027 | ? | Oran | Centre de Conventions Mohamed Benahmed | Health, safety and environment
+SIMA-SIPSA ALGERIE | 05/31/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Agribusiness and livestock
+ALPHARMA | Jun 2027 | ? | Annaba | Hotel Sheraton Annaba | Pharmacy
+FIA - FOIRE INTERNATIONALE D'ALGER | Jun 2027 | ? | Algiers | Palais des Expositions d'Alger - Safex | General fair
+DENTEX ALGERIA | 06/09/2027 | 4 | Algiers | Palais des Expositions d'Alger - Safex | Dental
+ALIMENTARIO | Sep 2027 | ? | Mostaganem | Centre commercial Uno | Agri-food industry
+INNOV BUILD EXPO | Oct 2027 | ? | Algiers | Palais des Expositions d'Alger - Safex | Architecture and construction
+MICA - MINES AND QUARRIES | Oct 2027 | ? | Algiers | Hotel Sheraton - Club des Pins | Mining and quarrying
+#sy
+HEALTHINNOVATE | Feb 2027 | ? | Damascus | Damascus International Fairground | Healthcare
+SYRIA FOODPEX | Apr 2027 | ? | Damascus | Damascus International Fairground | Food and packaging
+SYRIA HITECH | Apr 2027 | ? | Damascus | Damascus International Fairground | ICT
+SYRIA MOTOR SHOW | Apr 2027 | ? | Damascus | Damascus International Fairground | Automotive
+SYRIA AGRITEX | Jul 2027 | ? | Damascus | Damascus International Fairground | Agriculture and livestock
+4P SYRIA | 07/25/2027 | 3 | Damascus | Damascus International Fairground | Packaging, printing and plastics
+AGRITEK SYRIA | 07/25/2027 | 3 | Damascus | Damascus International Fairground | Agri-technology
+FOOD SYRIA | 07/25/2027 | 3 | Damascus | Damascus International Fairground | Food and beverage
+HITECH - INTERNATIONAL ICT EXHIBITION | Nov 2027 | ? | Damascus | Damascus International Fairground | ICT
+SYRIA HVAC, W EXPO | Dec 2027 | ? | Damascus | Damascus International Fairground | HVAC and water
+#tw
+TIBE - TAIPEI INTERNATIONAL BOOK EXHIBITION | 02/16/2027 | 6 | Taipei | Taipei World Trade Center (TWTC) | Book publishing
+TIMTOS | 03/02/2027 | 6 | Taipei | Taipei World Trade Center (TWTC) | Machine tools
+TAIPEI INTERNATIONAL CYCLE SHOW | Mar 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Bicycles
+WIND ENERGY ASIA | Mar 2027 | ? | Kaohsiung | Kaohsiung Exhibition Center | Wind power
+TIBS - TAIPEI INTERNATIONAL BAKERY SHOW | 03/11/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Bakery
+TAISPO | 03/24/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Sporting goods
+TAIPEI AMPA - AUTOTRONICS TAIPEI + E-MOBILITY TAIWAN | 04/13/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Auto parts and e-mobility
+DESIGNED GIFTIONERY TAIPEI | 04/15/2027 | 4 | Taipei | Taipei World Trade Center (TWTC) | Gifts and stationery
+DRT - DIVING, RESORT AND TRAVEL SHOW - TAIWAN | 04/16/2027 | 3 | Taipei | Taipei International Convention Centre (TICC) | Diving and travel
+ELECTRONIC EQUIPMENT EXHIBITION | 04/21/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Semiconductor equipment
+TOUCH TAIWAN - DISPLAY INTERNATIONAL | 04/21/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Displays and touch panels
+TOUCH TAIWAN - SMART MANUFACTURING | 04/21/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Smart manufacturing
+AMWC ASIA - AESTHETIC & ANTI-AGING MEDICINE WORLD CONGRESS | 04/30/2027 | 3 | Taipei | Taipei International Convention Centre (TICC) | Aesthetic medicine
+ATLIFE - ASSISTIVE TECHNOLOGY FOR LIFE | 05/13/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Assistive technology and elder care
+CHANCHAO TAICHUNG PETS AND AQUARIUM SHOW | 05/14/2027 | 4 | Taichung | Greater Taichung International Expo Center | Pet products
+COMPUTEX TAIPEI | 06/01/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | IT and computing
+FOOD TAIPEI | Jun 2027 | ? | Taipei | Taipei World Trade Center (TWTC) | Food
+FOODTECH TAIPEI | Jun 2027 | ? | Taipei | Taipei World Trade Center (TWTC) | Food processing machinery
+MEDICAL TAIWAN | Jun 2027 | ? | Taipei | Taipei World Trade Center (TWTC) | Medical and healthcare
+TAIPEI PACK | Jun 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Packaging
+TAIWAN HORECA | Jun 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Hotel, restaurant and catering
+AQUACULTURE TAIWAN EXPO & FORUM | 06/02/2027 | 3 | Taichung | Greater Taichung International Expo Center | Aquaculture
+ASIA AGRI-TECH EXPO & FORUM | 06/02/2027 | 3 | Taichung | Greater Taichung International Expo Center | Agri-technology
+CAT - COLD CHAIN & AGRI-FOOD TECH EXPO | 06/02/2027 | 3 | Taichung | Greater Taichung International Expo Center | Cold chain and agri-food
+LIVESTOCK TAIWAN EXPO & FORUM | 06/02/2027 | 3 | Taichung | Greater Taichung International Expo Center | Livestock
+CHANCHAO TAIPEI PETS SHOW | Jul 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Pet products
+TAIWAN INTERNATIONAL INTERIOR DESIGN EXPO | Jul 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Interior design and building materials
+TCFB - TAICHUNG INTERNATIONAL TEA, COFFEE & BAKERY SHOW | Jul 2027 | ? | Taichung | Greater Taichung International Expo Center | Tea, coffee and bakery
+ZAK WORLD OF FAÇADES - TAIWAN - TAIPEI | 07/22/2027 | 1 | Taipei | Sheraton Grand Taipei Hotel | Facade engineering
+ASIA HEALTHCARE & MEDICAL COSMETOLOGY EXPO | 07/28/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Healthcare and cosmetics
+BIO ASIA-TAIWAN EXHIBITION | 07/28/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Biotechnology
+AUTOMATION TAIPEI | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Industrial automation
+LASER & PHOTONICS TAIWAN | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Lasers and photonics
+TAIMOLD - TAIPEI INTERNATIONAL SMART MOLD & DIE INDUSTRY FAIR | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Moulds and dies
+TAIPEI INTERNATIONAL COLD CHAIN TECHNOLOGY EXHIBITION | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Cold chain technology
+TAIPEI INTERNATIONAL LOGISTICS & IOT EXHIBITION | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Logistics and IoT
+TAIROS - TAIWAN AUTOMATION INTELLIGENCE AND ROBOT SHOW | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Automation and robotics
+TAIWAN 3D PRINTING & ADDITIVE MANUFACTURING SHOW | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | 3D printing
+TFPE - TAIPEI INTERNATIONAL FLUID POWER EXHIBITION | 08/04/2027 | 4 | Taipei | Taipei Nangang Exhibition Center | Fluid power
+SEMICON TAIWAN | Sep 2027 | ? | Taipei | Taipei Nangang Exhibition Center | Semiconductors
+TAIWAN INNOTECH EXPO | Sep 2027 | ? | Taipei | Taipei World Trade Center (TWTC) | Technology and R&D
+TAINAN INTERNATIONAL TEA, COFFEE & FOOD SHOW | 09/03/2027 | 4 | Tainan | ICC Tainan | Tea, coffee and food
+INTERNATIONAL AQUACULTURE & FISHERIES EXPO TAIWAN | 09/08/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Aquaculture and fisheries
+TAIWAN SMART AGRIWEEK | 09/08/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Smart agriculture
+TIFSS - TAIWAN INTERNATIONAL FISHERIES & SEAFOOD SHOW | 09/08/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Fisheries and seafood
+TADTE - TAIPEI AEROSPACE & DEFENSE TECHNOLOGY EXHIBITION | 09/23/2027 | 3 | Taipei | Taipei Nangang Exhibition Center | Aerospace and defence
+#my
+BORNEO INTERNATIONAL CONSUMER EXPO | Jan 2027 | ? | Kota Kinabalu | SICC - Sabah International Convention Centre | Consumer goods
+MIJF - MALAYSIA INTERNATIONAL JEWELLERY FAIR | 01/15/2027 | 4 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Jewellery
+DRT - DIVING, RESORT AND TRAVEL SHOW | 02/19/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Diving and travel
+MIFF - MALAYSIAN INTERNATIONAL FURNITURE FAIR | 03/01/2027 | 4 | Kuala Lumpur | MITEC | Furniture
+EFE EXPO | 03/02/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Export furniture
+GTI SOUTHEAST ASIA EXPO | Apr 2027 | ? | Kuala Lumpur | Putra World Trade Centre (PWTC) | Amusement and entertainment
+HR & WORKPLACE MALAYSIA | Apr 2027 | ? | Kuala Lumpur | Pavilion Hotel, Kuala Lumpur | HR and workplace
+MTE - MALAYSIA INTERNATIONAL TECHNOLOGY EXPO | Apr 2027 | ? | Kuala Lumpur | Putra World Trade Centre (PWTC) | Technology
+FUTURE HEALTHCARE ASIA | 04/21/2027 | 2 | Kuala Lumpur | The Royale Chulan Hotel | Healthcare
+REFUELFORUM APAC & ANZ | 04/21/2027 | 2 | Kuala Lumpur | Parkroyal Collection | Fuel retail equipment
+ASIA CARBON CAPTURE | May 2027 | ? | Kuala Lumpur | Crowne Plaza Kuala Lumpur City Centre | Carbon capture
+CYBERSECMY CONFERENCE - MALAYSIA | May 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Cybersecurity
+IBE - INTERNATIONAL BEAUTY EXPO | 05/01/2027 | 4 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Beauty and cosmetics
+MALAYSIA AUTOSHOW | May 2027 | ? | Johor Bahru | ? | Automotive
+MALAYSIA BIKE SHOW | May 2027 | ? | Kuala Lumpur | Malaysia Agro Exposition Park Serdang | Motorcycles
+MRO SOUTHEAST ASIA | May 2027 | ? | Kuala Lumpur | Hilton Kuala Lumpur | Aviation maintenance
+AUTOMEX | 05/05/2027 | 4 | Kuala Lumpur | MITEC | Industrial automation
+METALTECH MALAYSIA | 05/05/2027 | 4 | Kuala Lumpur | MITEC | Metalworking and machine tools
+INTERNATIONAL CAFÉ & BEVERAGE SHOW | 05/13/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Coffee and beverages
+SEMICON SOUTHEAST ASIA | 05/25/2027 | 3 | Kuala Lumpur | MITEC | Semiconductors
+ITEX | 05/27/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Inventions and innovation
+MGJE - MALAYSIA GOLD & JEWELLERY TRADE EXHIBITION | 05/28/2027 | 3 | Penang | Spice Convention Centre, Penang | Gold and jewellery
+MALAYSIA GIFTS FAIR | Jun 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Gifts and premiums
+MIDE - MALAYSIA INTERNATIONAL DIVE EXPO | Jun 2027 | ? | Kuala Lumpur | MITEC | Diving and marine tourism
+LAB ASIA | 06/09/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Laboratory equipment
+MIJF-TRADEX - MALAYSIA INTERNATIONAL JEWELLERY FAIR | 06/25/2027 | 4 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Jewellery trade
+ARCHIDEX | 06/30/2027 | 4 | Kuala Lumpur | MITEC | Architecture and interiors
+MYLOG EXPO | 06/30/2027 | 3 | Shah Alam | Setia City Convention Centre | Logistics and warehousing
+MYWARE - MALAYSIA WASTE MANAGEMENT AND RECYCLING EXPO | 06/30/2027 | 3 | Shah Alam | Setia City Convention Centre | Waste and recycling
+MYWATEREX - MALAYSIA WATER TECHNOLOGY EXPO | 06/30/2027 | 3 | Shah Alam | Setia City Convention Centre | Water technology
+INTERNATIONAL ENERGY WEEK (IEW) | 07/06/2027 | 3 | Kuching | Borneo Convention Centre, Kuching | Energy
+CPHI SOUTH EAST ASIA | 07/13/2027 | 3 | Kuala Lumpur | MITEC | Pharmaceutical ingredients
+WHX KUALA LUMPUR | 07/13/2027 | 3 | Kuala Lumpur | MITEC | Healthcare
+WHX LABS KUALA LUMPUR | 07/13/2027 | 3 | Kuala Lumpur | MITEC | Medical laboratories
+FDM - FOOD & DRINKS MALAYSIA | 07/20/2027 | 3 | Kuala Lumpur | MITEC | Food and beverage
+MIFB - MALAYSIA INTERNATIONAL FOOD AND BEVERAGE TRADE FAIR | 07/21/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Food and beverage
+INFOCOMM SOUTHEAST ASIA | 07/28/2027 | 3 | Kuala Lumpur | ? | ICT and audiovisual
+AGTECH INTERNATIONAL AGRO EXPO - SABAH | Aug 2027 | ? | Kota Kinabalu | SICC - Sabah International Convention Centre | Agriculture
+MBAM ONEBUILD | Aug 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Construction
+PENANG SIGNATURE GOLD FAIR | Aug 2027 | ? | Penang | Spice Convention Centre, Penang | Gold jewellery
+LIVESTOCK MALAYSIA | 08/10/2027 | 3 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Feed, livestock and meat
+WIRE AND CABLE MALAYSIA | 08/10/2027 | 3 | Kuala Lumpur | MITEC | Wire and cable
+OPTICAL FIBER COMM. & ICT MALAYSIA | 08/19/2027 | 3 | Kuala Lumpur | MITEC | Optical fibre and ICT
+AOBE - ASIA OUTDOOR KITCHEN & BARBECUE EQUIPMENT EXPO - MALAYSIA | 09/10/2027 | 3 | Kuala Lumpur | MITEC | Outdoor kitchen equipment
+FOOD & HOSPITALITY MALAYSIA | 09/21/2027 | 4 | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Food service and hospitality
+AGRI MALAYSIA | Sep 2027 | ? | Kuala Lumpur | ? | Agricultural technology
+ASEAN SHOP | Sep 2027 | ? | Kuala Lumpur | MITEC | Retail and store fittings
+ASIA FASHION (MALAYSIA) SHOW | Sep 2027 | ? | Kuala Lumpur | MITEC | Fashion and footwear
+ASIA LIVING EXPO - MALAYSIA | Sep 2027 | ? | Kuala Lumpur | MITEC | Outdoor furniture
+ATFE - ASIA TIMBER FRAMING EXPO - MALAYSIA | Sep 2027 | ? | Kuala Lumpur | MITEC | Timber and eco building materials
+BEAUTYEXPO | Sep 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Beauty and cosmetics
+ENGINEER & MARVEX | Sep 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Engineering and HVAC
+MIHAS | Sep 2027 | ? | Kuala Lumpur | MITEC | Halal products and services
+OIL AND GAS ASIA | Sep 2027 | ? | Kuala Lumpur | Kuala Lumpur Convention Centre (KLCC) | Oil, gas and petrochemicals

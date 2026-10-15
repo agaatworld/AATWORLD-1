@@ -1,0 +1,11 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 800 }, hasTouch: true });
+  p.on('pageerror', e => console.log('ERR', e.message));
+  await p.addInitScript(() => { const iv = setInterval(() => { if (window.St && !window._h) { window._h = 1; const O = St.PageFlip; St.PageFlip = function (a, c) { const x = new O(a, c); window.zz = x; return x; }; clearInterval(iv); } }, 1); });
+  await p.goto('http://localhost:8765/issue560/index.html'); await p.waitForTimeout(2500);
+  console.log(await p.evaluate(() => { const P = window.AATFlip; if (!P) return 'no PF'; const r = [P.getOrientation(), P.getCurrentPageIndex(), P.getPageCount(), P.getState()]; P.flipPrev('top'); return r.join(' '); }));
+  await p.waitForTimeout(1500); console.log(await p.evaluate(() => AATFlip.getCurrentPageIndex() + ' ' + AATFlip.getState() + ' ' + document.getElementById('pn').textContent));
+  console.log(await p.evaluate(() => { AATFlip.turnToPage(50); return AATFlip.getCurrentPageIndex(); })); 
+  console.log(await p.evaluate(() => { AATFlip.flipPrev('top'); return 1; })); await p.waitForTimeout(1500); console.log(await p.evaluate(() => AATFlip.getCurrentPageIndex()));
+  console.log(await p.evaluate(() => { AATFlip.flipNext('top'); return 1; })); await p.waitForTimeout(1500); console.log(await p.evaluate(() => AATFlip.getCurrentPageIndex()));
+  await b.close(); })();

@@ -1,0 +1,12 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 860, height: 1300 } }); p.on('pageerror', e => console.log('ERR', e.message));
+  await p.goto('http://localhost:8765/issue560/index.html'); await p.waitForTimeout(3000);
+  const r = await p.evaluate(() => { const out = { hist: {}, small: {}, types: {} };
+    document.querySelectorAll('.pgw').forEach(w => { w.style.display = 'block'; });
+    document.querySelectorAll('.sheet').forEach(sh => { const t = sh.className.replace('sheet', '').replace(/odd|even/, '').trim(); out.types[t] = (out.types[t] || 0) + 1;
+      const tw = document.createTreeWalker(sh, NodeFilter.SHOW_TEXT); let n; while (n = tw.nextNode()) { const s = n.nodeValue.trim(); if (s.length < 2) continue; const e = n.parentElement; const cs = getComputedStyle(e); if (cs.display === 'none' || cs.visibility === 'hidden') continue; const fs = Math.round(parseFloat(cs.fontSize) * 2) / 2; out.hist[fs] = (out.hist[fs] || 0) + s.length;
+        if (fs < 14) { let k = t.split(' ')[0] + ' :: '; let x = e, path = []; for (let i = 0; i < 3 && x && x !== sh; i++, x = x.parentElement) path.unshift(x.tagName.toLowerCase() + (x.className && typeof x.className === 'string' ? '.' + x.className.trim().split(/\s+/).join('.') : '')); k += path.join(' > ') + ' @' + fs; out.small[k] = (out.small[k] || 0) + s.length; } } });
+    return out; });
+  console.log('TYPES', JSON.stringify(r.types)); console.log('HIST', Object.entries(r.hist).sort((a, b) => a[0] - b[0]).map(x => x[0] + 'px:' + x[1]).join('  '));
+  console.log(Object.entries(r.small).sort((a, b) => b[1] - a[1]).slice(0, 70).map(x => x[1] + '  ' + x[0]).join('\n'));
+  await b.close(); })();

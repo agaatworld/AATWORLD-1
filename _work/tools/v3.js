@@ -1,0 +1,11 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch(); const st = p => p.evaluate(() => document.getElementById('pn').textContent + ' clip ' + document.getElementById('clip').style.width);
+  const p = await b.newPage({ viewport: { width: 1600, height: 900 } }); p.on('pageerror', e => console.log('ERR', e.message));
+  await p.goto('http://localhost:8765/issue560/index.html#p-6'); await p.waitForTimeout(2500); console.log('large', await st(p)); await p.screenshot({ path: 'v3-a.png' });
+  await p.click('#nx'); await p.waitForTimeout(1500); console.log('next', await st(p)); await p.click('#pv'); await p.waitForTimeout(1500); console.log('prev', await st(p));
+  await p.mouse.wheel(0, 600); await p.waitForTimeout(500); console.log('scrollTop', await p.evaluate(() => document.getElementById('stage').scrollTop)); await p.screenshot({ path: 'v3-b.png' });
+  await p.click('#mBtn'); await p.click('#bZoom'); await p.waitForTimeout(900); console.log('whole', await st(p)); await p.click('#nx'); await p.waitForTimeout(1500); console.log('whole next', await st(p)); await p.screenshot({ path: 'v3-c.png' });
+  await p.click('#mBtn'); await p.click('#bZoom'); await p.waitForTimeout(900); console.log('large again', await st(p));
+  await p.close();
+  const q = await b.newPage({ viewport: { width: 1600, height: 900 } }); q.on('pageerror', e => console.log('ERR', e.message)); await q.goto('http://localhost:8765/index.html#flip'); await q.waitForTimeout(3500); await q.screenshot({ path: 'v3-d.png' });
+  await b.close(); })();

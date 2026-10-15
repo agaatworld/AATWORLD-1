@@ -1,0 +1,130 @@
+STEELFAB | 01/11/2027 | 4 | Sharjah | Expo Centre Sharjah | Metalworking and steel fabrication
+DEAL - DUBAI ENTERTAINMENT, AMUSEMENT & LEISURE SHOW | 01/12/2027 | 3 | Dubai | Dubai World Trade Centre | Amusement and leisure
+GULF PRINT & PACK | 01/12/2027 | 3 | Dubai | Dubai World Trade Centre | Print and packaging
+WFES WATER | 01/12/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Water technology
+WORLD FUTURE ENERGY SUMMIT | 01/12/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Renewable energy
+WORLD FUTURE ENVIRONMENT EXHIBITION | 01/12/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Environmental equipment
+EROC - GCC OTORHINOLARYNGOLOGY AUDIOLOGY AND COMMUNICATION DISORDERS CONFERENCE | 01/14/2027 | 3 | Dubai | InterContinental Hotel Festival City | ENT medicine
+AEEDC | 01/19/2027 | 3 | Dubai | Dubai World Trade Centre | Dental
+WORLD SHISHA - DUBAI | 01/20/2027 | 2 | Dubai | Dubai World Trade Centre | Shisha
+ARAB HEALTH | 01/25/2027 | 4 | Dubai | Dubai World Trade Centre | Healthcare
+BUILDING HEALTHCARE MIDDLE EAST | 01/25/2027 | 4 | Dubai | Dubai World Trade Centre | Healthcare facilities
+IDEX | 01/25/2027 | 5 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Defence
+OBS-GYNE | 01/25/2027 | 4 | Dubai | Dubai World Trade Centre | Obstetrics and gynecology
+PATIENT SAFETY | 01/25/2027 | 4 | Dubai | Dubai World Trade Centre | Patient safety
+WHX DUBAI | 01/25/2027 | 4 | Dubai | Dubai World Trade Centre | Healthcare
+MEDLAB MIDDLE EAST | 01/26/2027 | 4 | Dubai | Dubai World Trade Centre | Laboratory
+WORLD OF COFFEE - DUBAI | 01/26/2027 | 3 | Dubai | Dubai World Trade Centre | Coffee
+IREX (INTERNATIONAL REAL ESTATE EXPO) - DUBAI | 01/30/2027 | 2 | Dubai | Anantara Downtown Dubai Hotel | Real estate
+REFUEL FORUM MENA | 02/01/2027 | 2 | Dubai | Grand Hyatt, Dubai | Service station equipment
+BREAKBULK MIDDLE EAST | 02/02/2027 | 2 | Dubai | Dubai World Trade Centre | Maritime project cargo
+MRO MIDDLE EAST | 02/02/2027 | 2 | Dubai | Dubai World Trade Centre | Aviation maintenance
+EDUCATION AND TRAINING EXHIBITION IN DUBAI | 02/03/2027 | 3 | Dubai | Dubai World Trade Centre | Education and training
+GULF EDUCATION & TRAINING EXHIBITION - GETEX DUBAI | 02/03/2027 | 3 | Dubai | Dubai World Trade Centre | Higher education
+PROPTECH CONNECT - MIDDLE EAST | 02/03/2027 | 2 | Dubai | Grand Hyatt, Dubai | Real estate technology
+DIHF - DUBAI INTERNATIONAL HORSE FAIR | Mar 2027 | ? | Dubai | Dubai World Trade Centre | Equestrian
+GULFOOD EXHIBITION | 03/15/2027 | 5 | Dubai | Dubai World Trade Centre | Food and beverage
+HYGIENE & NONWOVEN SHOW - UAE | 03/16/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Hygiene and nonwovens
+PACKAGING & RECYCLE SHOW - UAE | 03/16/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Packaging and recycling
+PAPER & TISSUE SHOW - UAE | 03/16/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Paper and tissue
+PROFESSIONAL BEAUTY - GCC | 03/22/2027 | 2 | Dubai | Festival Arena by InterContinental | Beauty and wellness
+ARAB PLAST | 03/24/2027 | 3 | Dubai | Dubai World Trade Centre | Plastics and petrochemicals
+DUPHAT | 03/30/2027 | 3 | Dubai | Dubai World Trade Centre | Pharmaceutical technology
+MENA GEOSPATIAL FORUM | 03/30/2027 | 2 | Dubai | Al Habtoor Grand Resort | Geospatial technology
+DESERT ARCHITECTURE MENA FORUM | 04/01/2027 | 2 | Dubai | Al Habtoor Grand Resort | Architecture
+DOMOTEX MIDDLE EAST | Apr 2027 | ? | Dubai | Dubai World Trade Centre | Flooring and carpets
+IGMS - INTERNATIONAL GLASS MANUFACTURING SHOW | Apr 2027 | ? | Dubai | Dubai World Trade Centre | Glass industry
+SHARJAH CHILDREN'S READING FESTIVAL | Apr 2027 | ? | Sharjah | Expo Centre Sharjah | Children's books
+SMART DATA SUMMIT | Apr 2027 | ? | Dubai | JW Marriott Hotel Marina, Dubai | Data and AI
+MIDDLE EAST FILM & COMIC CON | 04/02/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Entertainment
+DUBAI DERMA | 04/06/2027 | 3 | Dubai | Dubai World Trade Centre | Dermatology
+DUBAI WOOD SHOW | 04/06/2027 | 3 | Dubai | Dubai World Trade Centre | Wood and woodworking machinery
+GVF - GLOBAL VERTICAL FARMING FAIR | 04/06/2027 | 2 | Dubai | Festival Arena by InterContinental | Vertical farming
+CONNECTING HYDROGEN MENA | 04/07/2027 | 2 | Dubai | Le Meridien Dubai Hotel & Conference | Hydrogen energy
+MENA DESALINATION FORUM | 04/07/2027 | 2 | Abu Dhabi | Conrad Abu Dhabi Etihad Towers | Desalination and water
+MENA STORMWATER AND WASTE WATER FORUM | 04/07/2027 | 2 | Abu Dhabi | Conrad Abu Dhabi Etihad Towers | Wastewater
+AIM - ANNUAL INVESTMENT MEETING | 04/12/2027 | 3 | Dubai | Dubai World Trade Centre | Investment
+IPS - INTERNATIONAL PROPERTY SHOW - DUBAI | 04/12/2027 | 3 | Dubai | Dubai World Trade Centre | Real estate
+ART DUBAI | May 2027 | ? | Dubai | Madinat Jumeirah Resort | Art
+OFFSHORE SUPPORT VESSELS CONFERENCE | May 2027 | ? | Abu Dhabi | ? | Offshore oil and gas
+ATM - ARABIAN TRAVEL MARKET | 05/03/2027 | 4 | Dubai | Dubai World Trade Centre | Travel and tourism
+DIHAD DUBAI | 05/04/2027 | 3 | Dubai | Dubai World Trade Centre | Humanitarian aid
+SEATRADE MARITIME LOGISTICS MIDDLE EAST | 05/04/2027 | 3 | Dubai | Dubai World Trade Centre | Maritime and logistics
+INTERSOLAR MIDDLE EAST | 05/11/2027 | 3 | Dubai | Dubai World Trade Centre | Solar energy
+LIGHTING AT MIDDLE EAST ELECTRICITY | 05/11/2027 | 3 | Dubai | Dubai World Trade Centre | Lighting
+MIDDLE EAST ELECTRICITY | 05/11/2027 | 3 | Dubai | Dubai World Trade Centre | Power and electricity
+MIDDLE EAST ENERGY - DUBAI | 05/11/2027 | 3 | Dubai | Dubai World Trade Centre | Energy
+IGIC UAE - INTERNATIONAL GEOTECHNICAL INNOVATION CONFERENCE | 05/26/2027 | 2 | Dubai | ? | Geotechnical engineering
+MIDDLE EAST EVENT SHOW | 06/01/2027 | 2 | Dubai | Dubai World Trade Centre | Events and MICE
+WORKSPACE | 06/01/2027 | 3 | Dubai | Dubai World Trade Centre | Office furniture and design
+INDEX DUBAI | 06/01/2027 | 3 | Dubai | Dubai World Trade Centre | Furniture and interiors
+THE HOTEL SHOW DUBAI | 06/01/2027 | 3 | Dubai | Dubai World Trade Centre | Hospitality
+ZAK WORLD OF FAÇADES - UAE - DUBAI | 06/24/2027 | 1 | Dubai | Habtoor Grand Resort & Spa | Facade engineering
+CHINA HOMELIFE DUBAI | Jun 2027 | ? | Dubai | Dubai World Trade Centre | Home products sourcing
+EXPOCULINAIRE | Jun 2027 | ? | Sharjah | Expo Centre Sharjah | Food and kitchen equipment
+INTERNATIONAL APPAREL & TEXTILE FAIR DUBAI | Jun 2027 | ? | Dubai | Dubai World Trade Centre | Apparel and textiles
+MIDDLE EAST RAIL | Jun 2027 | ? | ? | ? | Rail transport
+MOBILITY LIVE ME | Jun 2027 | ? | ? | ? | Mobility technology
+ADIHEX - INTERNATIONAL HUNTING & EQUESTRIAN EXHIBITION | Aug 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Hunting and equestrian
+MEBIS - MIDDLE EAST BANKING INNOVATION SUMMIT | 09/15/2027 | 2 | Dubai | Jumeirah Emirates Tower Hotel | Banking technology
+ABU DHABI INTERNATIONAL BOOK FAIR | Sep 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Books and publishing
+AIMCS EXPO | Sep 2027 | ? | Abu Dhabi | Rixos Marina Abu Dhabi | Instrumentation and automation
+E-CRIME & CYBERSECURITY ABU DHABI | Sep 2027 | ? | Abu Dhabi | The St. Regis Abu Dhabi | Cybersecurity
+MENA EV SHOW | Sep 2027 | ? | Dubai | Radisson Blu Deira Creek Convention Hall | Electric vehicles
+MIDEAST WATCH & JEWELLERY SHOW | Sep 2027 | ? | Sharjah | Expo Centre Sharjah | Watches and jewellery
+PAPER ARABIA | Sep 2027 | ? | Dubai | Dubai World Trade Centre | Paper and printing
+RU'YA | Sep 2027 | ? | Dubai | Dubai World Trade Centre | Careers and recruitment
+SEAMLESS MIDDLE EAST | Sep 2027 | ? | Dubai | Dubai World Trade Centre | Payments and fintech
+ABU DHABI GLOBAL HEALTHCARE WEEK | Oct 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Healthcare
+ACCESSABILITIES EXPO | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Disability care
+AGRA ME | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Agriculture and irrigation
+AGROFARM MIDDLE EAST | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Animal production
+AIRPORT SHOW DUBAI | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Airport industry
+ARABLAB EXPO | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Laboratory instruments
+CABSAT | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Broadcast and telecom
+DUBAI ACTIVE | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Fitness and wellness
+EDUCATION SHOW | Oct 2027 | ? | Sharjah | Expo Centre Sharjah | Higher education
+GROWTECH MIDDLE EAST | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Agri-tech
+HRSE - HR SUMMIT & EXPO | Oct 2027 | ? | Dubai | Dubai World Trade Centre | HR
+ISS WORLD MEA | Oct 2027 | ? | Dubai | JW Marriott Marquis Hotel Dubai | Security intelligence
+JEWELLERY, GEM & TECHNOLOGY DUBAI | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Jewellery trade
+MENA CLIMATE PROOF FORUM | Oct 2027 | ? | Dubai | ? | Climate adaptation
+MYPLANT & GARDEN MIDDLE EAST GREEN EXPO | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Horticulture and landscaping
+NAJAH ABU DHABI | Oct 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Education and careers
+PORT DEVELOPMENT MEA FORUM | Oct 2027 | ? | Dubai | Al Habtoor Grand Resort | Maritime ports
+ROADS, BRIDGES AND TUNNELS MENA CONFERENCE | Oct 2027 | ? | Dubai | ? | Road infrastructure
+WETEX & DUBAI SOLAR SHOW - DUBAI | Oct 2027 | ? | Dubai | Dubai World Trade Centre | Water, energy and solar
+WINDOWS, DOORS AND FACADES EVENT - UAE | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Windows, doors and facades
+AIME - AIRCRAFT INTERIORS MIDDLE EAST | 11/15/2027 | 5 | Dubai | Dubai World Trade Centre | Aircraft interiors
+DUBAI AIRSHOW | 11/15/2027 | 5 | Dubai | Dubai World Trade Centre | Aerospace and defence
+VIV MEA | 11/23/2027 | 3 | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Animal production
+ADIPEC | Nov 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Oil, gas and energy
+BIG 5 GLOBAL | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Building and construction
+DUBAI INTERNATIONAL BOAT SHOW | Nov 2027 | ? | Dubai | Dubai Harbour | Boats and marine
+EVS UNITED ARAB EMIRATES | Nov 2027 | ? | Sharjah | Expo Centre Sharjah | Electric vehicle components
+FUTUREFM | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Facilities management
+GEOWORLD | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Geospatial technology
+GESS DUBAI | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Education
+GULFOOD MANUFACTURING | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Food processing
+HEAVY | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Construction machinery
+HIVE FURNITURE SHOW | Nov 2027 | ? | Sharjah | Expo Centre Sharjah | Furniture and home decor
+HORTI AGRI NEXT MEA - HAN MEA | Nov 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Horticulture and agriculture
+HVAC R EXPO DUBAI | Nov 2027 | ? | Dubai | Dubai World Trade Centre | HVAC and refrigeration
+INTERMOBILITY EXPO | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Transport and mobility
+INTERNATIONAL APPAREL & TEXTILE FAIR DUBAI | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Apparel and textiles
+JWS ABU DHABI | Nov 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Jewellery and watches
+LIVEABLECITIESX | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Urban development
+MARBLE & STONE WORLD | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Stone industry
+MIDDLE EAST ORGANIC & NATURAL PRODUCTS EXPO DUBAI | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Organic and natural products
+SFF - SPECIALITY FOOD FESTIVAL | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Gourmet food
+SHARJAH WORLD BOOK FAIR | Nov 2027 | ? | Sharjah | Expo Centre Sharjah | Book publishing
+TAWDEEF | Nov 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Recruitment
+THE BIG 5 SOLAR | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Solar energy
+THE MINING SHOW - DUBAI | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Mining
+URBAN DESIGN & LANDSCAPE | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Urban design and landscape
+WORLD POLICE SUMMIT | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Law enforcement
+WORLD TOBACCO MIDDLE EAST | Nov 2027 | ? | Dubai | Dubai World Trade Centre | Tobacco industry
+WORLD UTILITIES CONGRESS | Nov 2027 | ? | Abu Dhabi | ADNEC - Abu Dhabi National Exhibition Centre | Power and water utilities
+CHINA HOMELIFE DUBAI | Dec 2027 | ? | Dubai | Dubai World Trade Centre | Chinese products sourcing
+GITEX GLOBAL | Dec 2027 | ? | Dubai | Dubai World Trade Centre | ICT, AI and startups
+JEWELLERY & BRIDE ARABIA - DUBAI | Dec 2027 | ? | Dubai | Dubai World Trade Centre | Jewellery
