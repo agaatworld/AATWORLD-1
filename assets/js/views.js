@@ -76,7 +76,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261015e#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
