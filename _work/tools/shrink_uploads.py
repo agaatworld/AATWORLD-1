@@ -16,6 +16,8 @@ QUALITY = 80       # JPEG quality (80 looks clean, much smaller)
 IMAGES = (".jpg", ".jpeg", ".png", ".webp")
 
 src, dst = sys.argv[1], sys.argv[2]
+if not os.path.isdir(src):
+    sys.exit(f"ERROR: the folder {src} does not exist. Check the path (it must be the folder that contains 2023, 2024, ...).")
 before = after = count = skipped = 0
 
 for root, _, files in os.walk(src):
@@ -42,5 +44,7 @@ for root, _, files in os.walk(src):
         except Exception as err:
             print("could not read", path, err)
 
+if count == 0:
+    print("No photos were found in that folder. Check that it contains year folders (2023, 2024, ...) with photos inside.")
 print(f"done: {count} photos, {skipped} other files skipped")
 print(f"size before: {before/1e6:,.0f} MB   after: {after/1e6:,.0f} MB")
