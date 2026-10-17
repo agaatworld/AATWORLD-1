@@ -123,7 +123,7 @@ public class OverlayService extends Service {
         SharedPreferences p = Bridge.prefs(this);
         // default: bottom-left corner, above the navigation bar
         lp.x = p.getInt("x", 0);
-        lp.y = p.getInt("y", scr.height() - h - Math.round(72 * density));
+        lp.y = p.getInt("y", scr.height() - h - Math.round(110 * density));
         clamp();
         side = lp.x + w / 2 > scr.width() / 2 ? -1 : 1;
 
@@ -221,8 +221,9 @@ public class OverlayService extends Service {
             slop = ViewConfiguration.get(c).getScaledTouchSlop();
         }
 
+        // dispatchTouchEvent instead of onInterceptTouchEvent: the WebView asks parents not to intercept
         @Override
-        public boolean onInterceptTouchEvent(MotionEvent e) {
+        public boolean dispatchTouchEvent(MotionEvent e) {
             switch (e.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     downX = e.getRawX(); downY = e.getRawY();
@@ -233,27 +234,18 @@ public class OverlayService extends Service {
                     if (vt != null) vt.recycle();
                     vt = VelocityTracker.obtain();
                     vt.addMovement(e);
-                    return false;
+                    return super.dispatchTouchEvent(e);
                 case MotionEvent.ACTION_MOVE:
                     if (vt != null) vt.addMovement(e);
-                    if (candidate && Math.hypot(e.getRawX() - downX, e.getRawY() - downY) > slop * 1.5) {
+                    if (!dragging && candidate && Math.hypot(e.getRawX() - downX, e.getRawY() - downY) > slop * 1.5) {
                         dragging = true;
+                        MotionEvent c = MotionEvent.obtain(e);
+                        c.setAction(MotionEvent.ACTION_CANCEL);
+                        super.dispatchTouchEvent(c); // the page stops tracking this touch
+                        c.recycle();
                         js("clawd.onNativeDrag(1,0)");
-                        return true; // the page receives ACTION_CANCEL
                     }
-                    return false;
-                default:
-                    return false;
-            }
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        @Override
-        public boolean onTouchEvent(MotionEvent e) {
-            if (!dragging) return false;
-            if (vt != null) vt.addMovement(e);
-            switch (e.getActionMasked()) {
-                case MotionEvent.ACTION_MOVE:
+                    if (!dragging) return super.dispatchTouchEvent(e);
                     lp.x = startX + Math.round(e.getRawX() - downX);
                     lp.y = startY + Math.round(e.getRawY() - downY);
                     clamp();
@@ -264,16 +256,18 @@ public class OverlayService extends Service {
                     return true;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                    if (vt != null) { vt.recycle(); vt = null; }
+                    if (!dragging) return super.dispatchTouchEvent(e);
                     dragging = false;
                     Rect s = screen();
                     int ns = lp.x + lp.width / 2 > s.width() / 2 ? -1 : 1;
                     if (ns != side) { side = ns; js("clawd.setSide(" + side + ")"); }
                     js("clawd.onNativeDrag(0,0)");
                     Bridge.prefs(getContext()).edit().putInt("x", lp.x).putInt("y", lp.y).apply();
-                    if (vt != null) { vt.recycle(); vt = null; }
                     return true;
+                default:
+                    return dragging || super.dispatchTouchEvent(e);
             }
-            return true;
         }
     }
 }
