@@ -19,6 +19,9 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -138,6 +141,13 @@ public class OverlayService extends Service {
         web.setVerticalScrollBarEnabled(false);
         web.setHorizontalScrollBarEnabled(false);
         web.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        web.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage m) {
+                Log.d("Clawd", "js: " + m.message() + " @" + m.lineNumber());
+                return true;
+            }
+        });
         web.addJavascriptInterface(new Bridge(this, null, this), "A");
         web.loadUrl("file:///android_asset/clawd.html?m=overlay&side=" + side);
 
@@ -161,6 +171,7 @@ public class OverlayService extends Service {
 
     void setZone(float l, float t, float r, float b) {
         zone[0] = l; zone[1] = t; zone[2] = r; zone[3] = b;
+        Log.d("Clawd", "zone " + l + "," + t + "," + r + "," + b);
     }
 
     void onPref(String k, String v) {
@@ -234,11 +245,13 @@ public class OverlayService extends Service {
                     if (vt != null) vt.recycle();
                     vt = VelocityTracker.obtain();
                     vt.addMovement(e);
+                    Log.d("Clawd", "down " + cx + "," + cy + " candidate=" + candidate);
                     return super.dispatchTouchEvent(e);
                 case MotionEvent.ACTION_MOVE:
                     if (vt != null) vt.addMovement(e);
                     if (!dragging && candidate && Math.hypot(e.getRawX() - downX, e.getRawY() - downY) > slop * 1.5) {
                         dragging = true;
+                        Log.d("Clawd", "drag start");
                         MotionEvent c = MotionEvent.obtain(e);
                         c.setAction(MotionEvent.ACTION_CANCEL);
                         super.dispatchTouchEvent(c); // the page stops tracking this touch

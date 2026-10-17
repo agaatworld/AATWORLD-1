@@ -33,6 +33,6 @@ CX=$(dp 64); CY=$(( H - $(dp 188) ))
 adb shell input swipe $CX $CY $(( W - $(dp 90) )) $(( H / 2 )) 900; sleep 1.5; shot 08_dragged
 adb shell am start -n com.android.settings/.Settings; sleep 3; shot 09_over_settings
 adb shell am start -n $P/.MainActivity; sleep 5; shot 10_app_again
-adb logcat -d | grep -E "AndroidRuntime|FATAL|Uncaught|chromium.*Error" > $OUT/log.txt || true
+adb logcat -d | grep -E "AndroidRuntime|FATAL|Uncaught|chromium.*Error|Clawd" > $OUT/log.txt || true
 adb shell dumpsys activity services $P | head -30 >> $OUT/log.txt
 exit 0
