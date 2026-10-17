@@ -1,18 +1,49 @@
-10-17 15:48:21.302   287   287 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
-10-17 15:48:21.305   287   287 I AndroidRuntime: Using default boot image
-10-17 15:48:21.305   287   287 I AndroidRuntime: Leaving lock profiling enabled
-10-17 15:48:37.144   874   874 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
-10-17 15:48:42.599  1510  1510 W UncaughtExceptionHandler: UncaughtExceptionHandler.clearSignatureCheckSecurityExceptionState():262 clear signature check security exception state
-10-17 15:48:52.265  1723  2428 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:28.083   864   864 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-17 15:53:33.086  1482  1482 W UncaughtExceptionHandler: UncaughtExceptionHandler.clearSignatureCheckSecurityExceptionState():262 clear signature check security exception state
+10-17 15:53:43.768  1717  2166 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:44.374  1717  2746 E A       : Caused by: org.chromium.net.impl.ce: Exception in CronetUrlRequest: net::ERR_NAME_NOT_RESOLVED, ErrorCode=1, InternalErrorCode=-105, Retryable=false
+10-17 15:53:44.374  1717  2746 E A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(PG:4)
+10-17 15:53:45.688  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:45.688  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:45.798  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:45.799  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.276  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.276  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.512  1717  2166 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.512  1717  2166 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.819  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.819  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.874  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:47.874  1717  2163 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:53:49.739  1051  1244 W HeterodyneSyncer: 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:54:14.291  3597  3597 D Clawd   : zone 0.15238096,58.196827,128.91429,167.1492
+10-17 15:54:15.234  1051  1244 E bwfc    : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+10-17 15:54:23.227  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:27.288  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:34.772  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:34.979  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.042  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.163  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.257  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.467  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.530  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.626  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.768  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:35.912  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:36.008  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:36.163  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:36.245  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:36.385  3597  3597 D Clawd   : down 139.80952,69.333336 candidate=false
+10-17 15:54:41.433  3597  3597 D Clawd   : down 64.0,41.52381 candidate=false
 ACTIVITY MANAGER SERVICES (dumpsys activity services)
   User 0 active services:
-  * ServiceRecord{ce27b23 u0 com.aat.clawd/.OverlayService}
+  * ServiceRecord{480cfa4 u0 com.aat.clawd/.OverlayService}
     intent={cmp=com.aat.clawd/.OverlayService}
     packageName=com.aat.clawd
     processName=com.aat.clawd
-    baseDir=/data/app/~~x0OrpwJmU0J7eXNcwgPWig==/com.aat.clawd-wU_avhH4AnAwSXzvqSBv9w==/base.apk
+    baseDir=/data/app/~~JGZG-67GjO_opXdAKE0zZA==/com.aat.clawd-DXZwH0NHrOFzmVk2zvOKvQ==/base.apk
     dataDir=/data/user/0/com.aat.clawd
-    app=ProcessRecord{7db434a 2923:com.aat.clawd/u0a174}
+    app=ProcessRecord{3d6e908 3597:com.aat.clawd/u0a174}
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=com.aat.clawd
     recentCallingUid=10174
@@ -20,17 +51,17 @@ ACTIVITY MANAGER SERVICES (dumpsys activity services)
     startForegroundCount=1
     infoAllowStartForeground=[callingPackage: com.aat.clawd; callingUid: 10174; uidState: TOP ; intent: Intent { cmp=com.aat.clawd/.OverlayService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null]
     isForeground=true foregroundId=7 foregroundNoti=Notification(channel=clawd shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x62 color=0x00000000 actions=1 vis=PRIVATE)
-    createTime=-47s922ms startingBgTimeout=--
-    lastActivity=-19s566ms restartTime=-47s914ms createdFromFg=true
+    createTime=-44s568ms startingBgTimeout=--
+    lastActivity=-32s841ms restartTime=-44s568ms createdFromFg=true
     startRequested=true delayedStop=false stopIfKilled=false callStart=true lastStartId=2
 
-  * ServiceRecord{b8f29ce u0 com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
+  * ServiceRecord{1cd27ae u0 com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
     intent={cmp=com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
     packageName=com.aat.clawd
     processName=com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
-    baseDir=/data/app/~~z6ryJyXlZkh4HHPALUZ8nQ==/com.google.android.webview-O8wpOY1_DW_yMKA9s4NsRw==/WebViewGoogle.apk
+    baseDir=/data/app/~~InXSENjvmwbSwt_mwqBkag==/com.google.android.webview-p8fMuWCTZpPwID4Agpn86w==/WebViewGoogle.apk
     dataDir=/data/user/0/com.google.android.webview
-    app=ProcessRecord{ec8fe39 3069:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
-    isolationHostProc=ProcessRecord{ec8fe39 3069:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
+    app=ProcessRecord{ae93d9d 3648:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
+    isolationHostProc=ProcessRecord{ae93d9d 3648:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=com.aat.clawd
