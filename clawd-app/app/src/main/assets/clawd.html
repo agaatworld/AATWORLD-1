@@ -807,7 +807,9 @@ function physics(dt){
   } else if (stick.phase === 'charge'){
     var c0 = stick.charge; stick.charge = Math.min(1, stick.charge + dt / 1.5);
     var c = stick.charge, tr = c * .06 * Math.sin(T * 55);
-    stick.x = lerp(stick.x, r.x + 1 * U * c, .3); stick.y = lerp(stick.y, -1.2 * U - 1.4 * U * c, .3); stick.a = lerp(stick.a, .55 + c * .55 + tr, .3);
+    var ov = MODE === 'overlay';
+    stick.x = lerp(stick.x, r.x + (ov ? -.4 : 1) * U * c, .3); stick.y = lerp(stick.y, -1.2 * U - (ov ? .6 : 1.4) * U * c, .3);
+    stick.a = lerp(stick.a, (ov ? .22 + c * .28 : .55 + c * .55) + tr, .3);
     if (((c * 10) | 0) !== ((c0 * 10) | 0)) SFX.charge(c);
     if (c >= 1 && c0 < 1){ vib(40); SFX.pop(); }
     if (T - stick.lastPlea > .9){ stick.lastPlea = T; say('scared', 2, 1, 'scared'); }
@@ -817,7 +819,7 @@ function physics(dt){
     var t = Math.min(1, stick.t), f = stick.from, to = stick.to, w = stick.wind;
     if (t < w){ // wind-up: lift and rotate back
       var u = easeOut(t / w);
-      stick.x = lerp(f.x, r.x + .6 * U, u); stick.y = lerp(f.y, -1 * U, u); stick.a = lerp(f.a, .7, u);
+      stick.x = lerp(f.x, r.x + (MODE === 'overlay' ? 0 : .6) * U, u); stick.y = lerp(f.y, -1 * U, u); stick.a = lerp(f.a, MODE === 'overlay' ? .4 : .7, u);
       stick.wx = stick.x; stick.wy = stick.y; stick.wa = stick.a;
     } else {
       var s = easeIn((t - w) / (1 - w)), bx = w ? stick.wx : f.x, by = w ? stick.wy : f.y, ba = w ? stick.wa : f.a;
