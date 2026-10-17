@@ -126,7 +126,7 @@ public class OverlayService extends Service {
         SharedPreferences p = Bridge.prefs(this);
         // default: bottom-left corner, above the navigation bar
         lp.x = p.getInt("x", 0);
-        lp.y = p.getInt("y", scr.height() - h - Math.round(110 * density));
+        lp.y = p.getInt("y", scr.height() - h - Math.round(150 * density));
         clamp();
         side = lp.x + w / 2 > scr.width() / 2 ? -1 : 1;
 
