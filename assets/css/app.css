@@ -601,3 +601,4 @@ html.is-scrolling .live-map, html.is-scrolling .live-map *, html.is-scrolling .l
 ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 .app-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: 0 4px 12px -6px rgba(0, 0, 0, .45); }
 .app-i svg { width: 30px; height: 30px; display: block; }
+.app-i svg { width: 36px; height: 36px; }
