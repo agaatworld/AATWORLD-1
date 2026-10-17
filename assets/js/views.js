@@ -26,7 +26,9 @@
       }).join("") + '</div><div class="sl-nav" role="tablist">' + list.map(function (c, i) { return '<button type="button" role="tab" class="sl-t' + (i ? "" : " on") + '" data-act="sl" data-i="' + i + '" aria-selected="' + !i + '" aria-label="' + esc(c.company) + '"><b dir="ltr">' + A.pad2(i + 1) + '</b><i><u></u></i></button>'; }).join("") + "</div></div>";
   }
   function home() {
-    var M = D.magazine, ev = A.eventsWindow(new Date(), 3).filter(function (e) { return !e.ext; }), nx = ev[0], arts = A.articlesFor(A.state.lang).filter(function (a) { return A.state.lang === "ar" || !a.fresh; });
+    /* the home list shows the next shows from different countries (the first show of each country, by date), not only the first country in the calendar */
+    var evAll = A.eventsWindow(new Date(), 3), seenC = {}, evMix = evAll.filter(function (e) { if (seenC[e.country]) return false; seenC[e.country] = 1; return true; }).slice(0, 8);
+    var M = D.magazine, ev = evAll.filter(function (e) { return !e.ext; }), nx = ev[0], arts = A.articlesFor(A.state.lang).filter(function (a) { return A.state.lang === "ar" || !a.fresh; });
     /* Brands you can trust: the partner logos shown on aatworld.com */
     var BR = [["pakarpertanian.my", "https://www.pakarpertanian.my", "https://aatworld.com/wp-content/uploads/2023/03/pakar1.jpg"], ["Watertech", "https://www.simem.info", "https://aatworld.com/wp-content/uploads/2023/03/watertech.jpg"], ["SIMEM", "https://www.simem.info", "https://aatworld.com/wp-content/uploads/2023/03/Simem1.jpg"], ["IMLAB", "https://www.aips.kz", "https://aatworld.com/wp-content/uploads/2023/03/IMLAB-LOGO.jpg"], ["AIPS", "https://www.aips.kz", "https://aatworld.com/wp-content/uploads/2023/03/1T.jpg"], ["Al-Meswak", "https://www.al-meswak.com.my", "https://aatworld.com/wp-content/uploads/2023/03/2T.jpg"], ["NS Expo", "https://www.en.ns-expo.kz", "https://aatworld.com/wp-content/uploads/2023/03/7T.jpg"], ["Transport Events", "https://www.transportevents.com", "https://aatworld.com/wp-content/uploads/2023/03/6T.jpg"], ["Transport Events", "https://www.transportevents.com", "https://aatworld.com/wp-content/uploads/2023/03/55T.jpg"], ["Pasofal", "https://www.pasofal.com", "https://aatworld.com/wp-content/uploads/2023/03/4T.jpg"], ["KITF", "https://www.kitf.kz", "https://aatworld.com/wp-content/uploads/2023/03/33T.jpg"], ["A'Sharqiyah University", "https://www.asu.edu.om", "https://aatworld.com/wp-content/uploads/2023/03/www.asu_.edu_.om_.png"], ["MIHAS", "https://www.mihas.com.my", "https://aatworld.com/wp-content/uploads/2023/11/download.jpg"], ["Saudi PP", "https://www.saudipp.com", "https://aatworld.com/wp-content/uploads/2023/03/www.saudipp.com1_.png"], ["Diodo", "https://www.diodo.com", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-9.png"], ["Unipass", "https://www.unipass.co.kr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-8-1.png"], ["SANHA", "https://www.sanha.co.za", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-7-1.png"], ["Kosedag", "https://www.kosedag.com.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-6-1.png"], ["Enfal Fistik", "https://www.enfalfistik.com", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-5-1.png"], ["Emtel", "https://www.emtel.com.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-4-1.png"], ["Dalong", "https://www.dalong.com.tw", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-2-1.png"], ["BAU", "https://www.bau.edu.tr", "https://aatworld.com/wp-content/uploads/2023/04/Untitled-1-1.png"], ["SteelFab \u00b7 Expo Centre Sharjah", "https://steelfabme.com/", "https://aatworld.com/wp-content/uploads/2023/03/Logo-EXPO-CENTRE-SHARJAH.jpg"]];
     var logos = BR.map(function (b) { return '<a class="lg" href="' + esc(b[1]) + '" target="_blank" rel="noopener noreferrer" title="' + esc(b[0]) + '"><img src="' + esc(b[2]) + '" alt="' + esc(b[0]) + '" loading="lazy"></a>'; }).join("");
@@ -39,24 +41,23 @@
       '<div class="yrs"><span class="sr">' + t("yrs_sr") + '</span><b class="yrs-n" aria-hidden="true" data-roll>' + M.years + '</b><span class="yrs-w" aria-hidden="true">' + t("yrs_word") + '</span><span class="yrs-s" aria-hidden="true">' + t("yrs_since") + "</span></div>" +
       '<h1 class="h0" tabindex="-1"><span class="scrib">' + t("h82_first") + '<i class="uline" aria-hidden="true"></i></span></h1>' +
       '<p class="lead">' + t("hero_lead") + '</p><div class="row"><a class="btn btn-adv btn-lg" href="#advertise">' + ic("megaphone", 20) + t("adv_btn") + '</a><a class="btn btn-line btn-lg" href="#flip">' + ic("book", 18) + t("mb_read", { n: M.issue }) + "</a></div></div>" +
-      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-559.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
+      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
 
       '<section class="live"><div class="wrap live-g"><div class="live-map">' + U.tradeMap() + '</div><div class="live-s"><p class="live-k"><i></i>' + t("rp_live") + '</p><h2 class="h2">' + t("rn_line") + "</h2>" +
-      '<div class="live-kpi"><a href="#flip"><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
+      '<div class="live-kpi"><a href="#flip"><i class="kpi-pre">' + (A.state.lang === "ar" ? "أصدرنا" : "We have published") + '</i><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
       "</div></div></div></section>" +
 
-      (advLogos ? '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title"), ["magazine", t("mb_brands")]) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + advLogos + advLogos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" : "") +
+      (advLogos ? '<section class="sec logos"><div class="wrap">' + U.head(t("lw_kicker"), t("lw_title")) + '</div><div class="lw" dir="ltr"><div class="lw-row">' + advLogos + advLogos.replace(/<a class="lg"/g, '<a class="lg" tabindex="-1" aria-hidden="true"') + "</div></div></section>" : "") +
 
 
-      sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + A.indPic(x.img) + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>") +
-
-      sec("", U.head(t("hot_kicker"), t("hot_title"), ["products", t("hot_all")]) + '<div class="pg">' + A.allProducts().slice(0, 8).map(U.productCard).join("") + "</div>") +
+      sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + A.indPic(x.img) + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>" +
+        '<div class="pg pg-in">' + A.allProducts().slice(0, 8).map(U.productCard).join("") + "</div>") +
 
       (arts.length ? sec("alt", U.head(t("ar_nav"), t("art_home_t"), ["articles", t("ar_back")]) + '<div class="ag">' + arts.slice(0, 5).map(function (a, i) { return U.articleCard(a, i === 0); }).join("") + "</div>") : "") +
 
       sec("", U.head(t("news_kicker"), t("news_title"), ["news", t("news_btn")]) + '<div class="ng">' + newsCards(-1, 3) + "</div>") +
 
-      (ev.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window"), ["exhibitions", t("nav_exhibitions")]) + '<div class="el">' + ev.slice(0, 8).map(U.eventRow).join("") + "</div>") : "") +
+      (evMix.length ? sec("alt", U.head(t("shows_kicker"), t("x_ex_window"), ["exhibitions", AR ? "كل المعارض" : "All exhibitions"]) + '<div class="el">' + evMix.map(U.eventRow).join("") + "</div>") : "") +
 
       trust +
 
@@ -76,7 +77,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:calc(100vh - 64px);min-height:520px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261017a#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
@@ -155,8 +156,9 @@
   /* ---------- articles and news ---------- */
   function articles() {
     var all = A.articlesFor(A.state.lang), list = all.filter(function (a) { return !a.fresh; }), fresh = all.filter(function (a) { return a.fresh; }), isAr = A.state.lang === "ar";
-    return { title: t("ar_nav"), html: U.pageHead([[t("home"), "home"], [t("ar_nav")]], isAr ? t("ar_title") : t("news_title"), isAr ? t("ar_lead", { n: D.magazine.issue }) : "") +
-      (fresh.length ? sec("", U.head(isAr ? "جديد" : "New · العربية", isAr ? "مقالات هذا الشهر" : "This month's articles") + '<div class="ag three ag-new" lang="ar" dir="rtl">' + fresh.map(function (a) { return U.articleCard(a, false); }).join("") + "</div>") : "") +
+    /* no "Articles from the magazine" / "This month's articles" headings (owner's request): the articles start at once; the page title stays for screen readers only */
+    return { title: t("ar_nav"), html: '<h1 class="sr" tabindex="-1">' + esc(t("ar_nav")) + "</h1>" +
+      (fresh.length ? sec("", '<div class="ag three ag-new" lang="ar" dir="rtl">' + fresh.map(function (a) { return U.articleCard(a, false); }).join("") + "</div>") : "") +
       (list.length ? sec(fresh.length ? "alt" : "", '<div class="ag">' + list.map(function (a, i) { return U.articleCard(a, i === 0); }).join("") + "</div>") : "") };
   }
   /* "Modern products and industries": AAT's own selection of factories, kept apart from the magazine's advertisers */
@@ -218,9 +220,11 @@
   function exhibitions() {
     var ev = A.eventsWindow(new Date(), 2), cn = D.countries || {}, cnt = {}, isAr = A.state.lang === "ar";
     ev.forEach(function (e) { cnt[e.country] = (cnt[e.country] || 0) + 1; });
+    /* the first 40 rows come with the page; main.js adds the rest in the background (A.exRest), and the country counts use the full list (A.exAllList) */
+    A.exAllList = ev; A.exRest = ev.slice(40);
     var chips = Object.keys(cn).length ? '<div class="chips exc" role="tablist"><button type="button" class="chip on" data-exc="">' + (isAr ? "كل الدول" : "All countries") + " <small>" + ev.length + "</small></button>" + Object.keys(cn).map(function (k) { return '<button type="button" class="chip' + (cnt[k] ? "" : " none") + '" data-exc="' + k + '"' + (cnt[k] ? "" : " disabled") + ">" + esc(L(cn[k])) + " <small>" + (cnt[k] || 0) + "</small></button>"; }).join("") + "</div>" : "";
-    return { title: t("nav_exhibitions"), html: U.pageHead([[t("home"), "home"], [t("nav_exhibitions")]], t("nav_exhibitions"), t("x_ex_window")) +
-      sec("", ev.length ? chips + '<div class="el">' + ev.map(U.eventRow).join("") + "</div>" : '<p class="empty">' + t("x_ex_none") + "</p>") };
+    return { title: t("nav_exhibitions"), html: U.pageHead([], t("nav_exhibitions"), "") +
+      sec("", ev.length ? chips + '<div class="el" id="ex-list">' + ev.slice(0, 40).map(U.eventRow).join("") + "</div>" : '<p class="empty">' + t("x_ex_none") + "</p>") };
   }
   function exhibition(id) {
     var e = A.eventById(id); if (!e) return notFound();
@@ -234,10 +238,20 @@
   /* ---------- club, about, advertise, contact ---------- */
   function clubMark() { return '<span class="cbm" aria-label="AAT Business Club"><b>AAT</b><small>BUSINESS CLUB</small></span>'; }
   function clubJoin() { return '<div class="row"><a class="btn btn-wa btn-lg" href="' + A.waLink(t("cb_join_wa")) + '" target="_blank" rel="noopener noreferrer">' + ic("chat", 18) + t("wa") + '</a><a class="btn btn-line btn-lg" href="' + A.mailLink(D.config.clubEmail, "AAT Business Club", t("cb_join_wa")) + '">' + ic("mail", 18) + t("email_word") + "</a></div>"; }
+  /* the members list is filled by the browser from members/list.php (it reads the photos folder on the server) */
+  function membersBox() {
+    var ar = A.state.lang === "ar";
+    return '<div class="mem-box" id="mem-box"><h2 class="h2">' + (ar ? "أعضاء نادي رجال الأعمال" : "AAT Business Club members") + '</h2>' +
+      '<label class="sr" for="mem-q">' + (ar ? "ابحث بالاسم" : "Search by name") + '</label>' +
+      '<input class="mem-q" id="mem-q" type="search" autocomplete="off" placeholder="' + (ar ? "ابحث بالاسم أو الشركة" : "Search by name or company") + '">' +
+      '<p class="mem-count" aria-live="polite"></p><div class="mem-grid"></div>' +
+      '<nav class="mem-pager" aria-label="' + (ar ? "صفحات الأعضاء" : "Member pages") + '"></nav></div>';
+  }
   function club() {
     return { title: t("mem_title"), html: U.pageHead([[t("home"), "home"], [t("nav_membership")]], t("mem_title"), t("mem_lead")) +
       sec("", '<div class="cb-top">' + clubMark() + '<div><h2 class="h2">' + t("cb_goals") + '</h2><p class="lead">' + t("cb_goals_p") + "</p><p>" + t("cb_goals_p2") + "</p>" + clubJoin() + "</div></div>") +
       sec("alt", U.head("AATBC", t("cb_ben")) + '<ol class="cb-l">' + [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return '<li class="rv"><b>' + A.pad2(n) + "</b><span>" + t("cb_b" + n) + "</span></li>"; }).join("") + "</ol>") +
+      sec("alt", membersBox()) +
       sec("", '<div class="two"><div><h2 class="h2">' + t("cb_partners") + '</h2><p class="lead">' + t("cb_partners_p") + '</p></div><div class="card"><h2 class="h3">' + t("cb_join") + "</h2>" + clubJoin() + "</div></div>") + turnkey() };
   }
   /* turnkey projects: first studies for industrial projects, a benefit of the club (Arabic) */
@@ -248,11 +262,13 @@
     return sec("alt", U.head(esc(T.sub), esc(T.title)) + '<div class="two tk"><div class="prose">' + T.intro.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + '</div><div class="card"><h3 class="h3">' + esc(T.incT) + '</h3><ul class="ticks">' + T.inc.map(function (x) { return typeof x === "string" ? "<li>" + esc(x) + "</li>" : "<li>" + esc(x[0]) + '<ul class="tk-sub">' + x[1].map(function (y) { return "<li>" + esc(y) + "</li>"; }).join("") + "</ul></li>"; }).join("") + "</ul></div></div>" +
       '<div class="tk-g">' + T.groups.map(function (g) { return '<div class="card tk-c rv">' + tkPic(g[0]) + '<h3 class="h3">' + esc(g[0]) + " <small>" + g[1].length + "</small></h3><ul>" + g[1].map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>"; }).join("") + '</div><p class="lead tk-e">' + esc(T.end) + "</p>" + clubJoin());
   }
+  /* the text under "من نحن" is copied word for word from the old website (WordPress page 'About Us') */
+  var ABOUT_TXT = {"ar": ["هنا في \"مجموعة التجارة العربية الآسيوية\" يتعرّف التجار ورجال الأعمال والمصنعين والمستوردين والمصدّرين على بعضهم البعض، ويتعاونون رغم اختلاف اللغات، ورغم المسافات بين الدول", "يقوم \"نادي رجال الأعمال\" بربط التجارة بين الشركات العربية والأفريقية والآسيوية وبقية دول العالم للمورّدين والمصنعين والمستوردين، مما يساهم في نجاح المصنّعين وشركات التصدير... وكذلك في نجاح التجار ورجال الأعمال", "عبر \"مجموعة التجارة العربية الآسيوية\" يتمّ تمكين المصانع والشركات من تطوير طريقة تسويقها وبيعها وتشغيلها وتحسين كفاءتها... حيث يتمّ توفير البنية التحتية والوصول إلى التسويق لمساعدة التجار والعلامات التجارية وتجار التجزئة والشركات الأخرى على الاستفادة من قوة التكنولوجيا الجديدة للتفاعل مع مستخدميهم وعملائهم والعمل بكفاءة أكبر"], "en": ["Here at the Arab-Asian Trade Group, traders, businesspeople, manufacturers, importers, and exporters connect and collaborate despite language barriers and geographical distances. The \"Business Men's Club\" facilitates trade between Arab, African, and Asian companies and companies worldwide, connecting suppliers, manufacturers, and importers.", "This contributes to the success of manufacturers, exporters, and traders. Through the Arab-Asian Trade Group, factories and companies are empowered to improve their marketing, sales, and operational efficiency. We provide infrastructure and marketing access to help traders, brands, retailers, and other businesses use new technologies to engage with users and customers and operate more efficiently."], "zh": ["Here at the Arab-Asian Trade Group, traders, businesspeople, manufacturers, importers, and exporters connect and collaborate despite language barriers and geographical distances. The \"Business Men's Club\" facilitates trade between Arab, African, and Asian companies and companies worldwide, connecting suppliers, manufacturers, and importers.", "This contributes to the success of manufacturers, exporters, and traders. Through the Arab-Asian Trade Group, factories and companies are empowered to improve their marketing, sales, and operational efficiency. We provide infrastructure and marketing access to help traders, brands, retailers, and other businesses use new technologies to engage with users and customers and operate more efficiently."]};
   function about() {
     var M = D.magazine;
-    return { title: t("about_title"), html: U.pageHead([[t("home"), "home"], [t("nav_about")]], t("about_title"), t("about_lead")) +
-      sec("", '<div class="two"><div class="prose">' + [1, 2, 3, 4, 5].map(function (n) { return "<p>" + t("ab" + n) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-559.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
-      '<section class="sec facts"><div class="wrap facts-g"><div><b class="count" data-to="' + M.years + '">' + M.years + "</b><span>" + t("fact_years") + '</span></div><div><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("fact_issues") + "</span></div><div><b>" + M.since + "</b><span>" + t("fact_since") + "</span></div></div></section>" +
+    return { title: t("about_title"), html: U.pageHead([[t("home"), "home"], [t("nav_about")]], t("about_title"), "") +
+      sec("", '<div class="two"><div class="prose">' + (ABOUT_TXT[A.state.lang] || ABOUT_TXT.en).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
+      '<section class="sec facts"><div class="wrap facts-g"><div><b class="count" data-to="' + M.years + '">' + M.years + "</b><span>" + t("fact_years") + '</span></div><div><i class="kpi-pre">' + (A.state.lang === "ar" ? "أصدرنا" : "We have published") + '</i><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("fact_issues") + "</span></div><div><b>" + M.since + "</b><span>" + t("fact_since") + "</span></div></div></section>" +
       '<section class="sec cta"><div class="wrap cta-in"><div><h2 class="h2">' + t("chat_person") + "</h2><p>" + t("tn_p2") + "</p></div>" + U.contactButtons("", true) + "</div></section>" };
   }
   var POS = ["cover", "back", "spread", "premium", "full", "half"];
@@ -260,7 +276,7 @@
     var M = D.magazine, noReport = /report|تقرير|報告|报告|laporan/i;
     return { title: t("adv_btn"), html:
       '<header class="ph adv"><div class="wrap">' + U.crumbs([[t("home"), "home"], [t("adv_btn")]]) + '<p class="kick">' + t("ad_kicker") + '</p><h1 class="h1 split" tabindex="-1">' + t("ad_title") + '</h1><p class="lead">' + t("ad_lead") + "</p>" +
-      '<div class="facts-g"><div><b>' + M.since + "</b><span>" + t("mb_f1") + "</span></div><div><b>" + M.issue + "</b><span>" + t("mb_f2") + "</span></div><div><b>5</b><span>" + t("ad_langs") + "</span></div></div>" + U.contactButtons(t("ad_wa"), true) + "</div></header>" +
+      '<div class="facts-g"><div><b>' + M.since + "</b><span>" + t("mb_f1") + "</span></div><div><i class=\"kpi-pre\">" + (A.state.lang === "ar" ? "أصدرنا" : "We have published") + "</i><b>" + M.issue + "</b><span>" + t("mb_f2") + "</span></div><div><b>5</b><span>" + t("ad_langs") + "</span></div></div>" + U.contactButtons(t("ad_wa"), true) + "</div></header>" +
       sec("", U.head(t("ad_pos_kicker"), t("ad_pos_title")) + '<div class="pos">' + POS.map(function (k, i) {
         var ex = A.companies.filter(function (c) { return c.tier === k; })[0];
         return '<article class="pos-c rv"><span class="pos-n">' + A.pad2(i + 1) + '</span><h3 class="h3">' + t("pos_" + k) + '</h3><p class="pos-p">' + t("pos_" + k + "_p") + '</p><ul class="ticks">' + t("pos_" + k + "_w").split("|").filter(function (w) { return !noReport.test(w); }).map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("") + "</ul>" +
@@ -270,15 +286,14 @@
   }
   function contact() {
     var c = D.config;
-    function tile(icon, label, val, btns, ltr) { return '<div class="ct rv"><span class="ct-i">' + ic(icon, 22) + "</span><small>" + label + "</small><b" + (ltr ? ' dir="ltr"' : "") + ">" + val + '</b><div class="row">' + btns + "</div></div>"; }
+    function tile(icon, label, val, btns, ltr, extra) { return '<div class="ct rv"><span class="ct-i">' + ic(icon, 22) + "</span><small>" + label + "</small><b" + (ltr ? ' dir="ltr"' : "") + ">" + val + "</b>" + (extra || "") + '<div class="row">' + btns + "</div></div>"; }
     function copyBtn(v) { return '<button type="button" class="btn btn-line btn-sm" data-act="copy" data-copy="' + esc(v) + '">' + t("copy") + "</button>"; }
     return { title: t("contact_title"), html: U.pageHead([[t("home"), "home"], [t("nav_contact")]], t("contact_title"), "") +
       sec("", '<div class="ctg">' +
-        tile("chat", t("contact_whatsapp"), esc(c.phoneDisplay), '<a class="btn btn-wa btn-sm" href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer">' + t("wa") + "</a>" + copyBtn(c.phoneDisplay), 1) +
+        tile("chat", t("contact_whatsapp"), esc(c.phoneDisplay), '<a class="btn btn-wa btn-sm" href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer">' + t("wa") + "</a>" + copyBtn(c.phoneDisplay), 1, '<p class="apps-t">' + (A.state.lang === "ar" ? "الرقم متاح على هذه التطبيقات:" : "This number is on these apps:") + "</p>" + U.apps()) +
         tile("mail", t("contact_email"), esc(c.email), '<a class="btn btn-red btn-sm" href="mailto:' + esc(c.email) + '">' + t("email_word") + "</a>" + copyBtn(c.email), 1) +
         tile("mail", t("contact_support"), esc(c.clubEmail), '<a class="btn btn-red btn-sm" href="mailto:' + esc(c.clubEmail) + '">' + t("email_word") + "</a>" + copyBtn(c.clubEmail), 1) +
-        tile("pin", t("contact_address"), esc(L(c.address)), "") +
-        tile("play", t("yt"), "AAT World video", '<a class="btn btn-line btn-sm" href="' + esc(A.safeUrl(c.social.youtube)) + '" target="_blank" rel="noopener noreferrer">' + t("yt") + "</a>") + "</div>") };
+        tile("pin", t("contact_address"), esc(L(c.address)), "") + "</div>") };
   }
   function privacy() { return { title: t("privacy_title"), html: U.pageHead([[t("home"), "home"], [t("privacy_title")]], t("privacy_title"), "") + sec("", '<div class="prose">' + t("x_privacy").split("|").map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>") }; }
   function notFound() { return { title: t("nf_title"), html: U.pageHead([[t("home"), "home"]], t("nf_title"), t("nf_lead")) + sec("", '<div class="row"><a class="btn btn-red" href="#home">' + t("home") + "</a></div>") }; }

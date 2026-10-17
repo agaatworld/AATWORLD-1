@@ -9,7 +9,7 @@
   /* ---------- theme and language ---------- */
   function applyTheme(th) { root.setAttribute("data-theme", th); var m = $('meta[name="theme-color"]'); if (m) m.setAttribute("content", th === "dark" ? "#0D0D0F" : "#FFFFFF"); }
   function initPrefs() {
-    var th = A.store.get("theme3", null) || "light";
+    var th = "light"; /* dark mode was removed (owner's request) */
     applyTheme(th);
     A.setLang(A.store.get("lang3", null) || "ar");
   }
@@ -61,10 +61,11 @@
     var v = V.view(route);
     timers.forEach(clearInterval); timers = [];
     app.innerHTML = '<div class="view">' + v.html + "</div>";
+    doc.body.classList.toggle("is-mag", route.v === "flip"); /* the magazine page: no site zoom, no header (works in browsers without :has) */
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); floorText(app); floorText($("#ftr"));
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); exFill(); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
   /* readers with weak eyesight: no text on the site is allowed to stay small */
@@ -125,8 +126,10 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) { if (!en.isIntersecting) return; var el = en.target; io.unobserve(el); if (el.classList.contains("count")) countUp(el); else el.classList.add("in"); });
     }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
-    $$(".rv, .split, .sh, .lead", app).forEach(function (el) {
-      if (el.getBoundingClientRect().top < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
+    /* measure every element first, then change classes: measuring after each change made the browser redo the page layout once per element (seconds on long lists such as the exhibitions) */
+    var els = $$(".rv, .split, .sh, .lead", app), tops = els.map(function (el) { return el.getBoundingClientRect().top; });
+    els.forEach(function (el, i) {
+      if (tops[i] < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
       else { el.classList.add("pre"); io.observe(el); }
     });
     $$(".count", app).forEach(function (el) { io.observe(el); });
@@ -202,6 +205,52 @@
     else { f.src = fbSrc(cur[0]); b.src = fbSrc(nxt[1]); fb.r.src = fbSrc(nxt[0]); }
     void leaf.offsetWidth; leaf.classList.add("go");
     setTimeout(function () { fb.page = nxt[0]; fbShow(); leaf.className = "fb-leaf"; fb.busy = false; }, 620);
+  }
+  /* exhibitions: the first rows are drawn with the page and the rest follow in small batches, so the page opens at once (no "show more" button) */
+  function exFill() {
+    var list = $("#ex-list", app), rest = A.exRest, at = 0; A.exRest = null; if (!list || !rest || !rest.length) return;
+    (function step() {
+      if (!list.isConnected) return;
+      var start = list.children.length, on = $(".exc .on[data-exc]", app), k = on ? on.getAttribute("data-exc") : "";
+      list.insertAdjacentHTML("beforeend", rest.slice(at, at + 80).map(A.ui.eventRow).join("")); at += 80;
+      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (k && r.getAttribute("data-c") !== k) r.style.display = "none"; r.classList.add("in"); floorText(r); }
+      if (at < rest.length) setTimeout(step, 40);
+    })();
+  }
+  /* members of the club: fills the grid from members/list.php, 20 per page with page numbers under it, and a search box.
+     A page change only swaps the cards in place, so the reader stays where they are on the page */
+  function membersStart() {
+    var box = $("#mem-box", app); if (!box) return;
+    var ar = A.state.lang === "ar", all = null, per = 20, page = 1, grid = $(".mem-grid", box), cnt = $(".mem-count", box), pager = $(".mem-pager", box), inp = $("#mem-q", box), q = "";
+    function card(m) {
+      return '<article class="mem-card"><img loading="lazy" decoding="async" src="' + esc(m.photo) + '" alt="' + esc(m.name) + '" width="240" height="240"><h3>' + esc(m.name) + "</h3>" +
+        (m.company ? "<p>" + esc(m.company) + "</p>" : "") + (m.country ? "<small>" + esc(m.country) + "</small>" : "") + "</article>";
+    }
+    function pg(p, label, cur) {
+      return '<button type="button" class="mem-pg' + (cur ? " on" : "") + '" data-mem="' + p + '"' + (cur ? ' aria-current="page"' : "") + ">" + label + "</button>";
+    }
+    function pages(n) {
+      if (n < 2) return "";
+      var h = page > 1 ? pg(page - 1, ar ? "السابق" : "Prev", false) : "";
+      for (var i = 1; i <= n; i++) {
+        if (i === 1 || i === n || Math.abs(i - page) <= 1) h += pg(i, i, i === page);
+        else if (i === 2 || i === n - 1) h += '<span class="mem-dots">…</span>';
+      }
+      return h + (page < n ? pg(page + 1, ar ? "التالي" : "Next", false) : "");
+    }
+    function draw() {
+      if (!all) return;
+      var list = all.filter(function (m) { return !q || (m.name + " " + (m.company || "")).toLowerCase().indexOf(q) > -1; });
+      var n = Math.max(1, Math.ceil(list.length / per)); if (page > n) page = n;
+      grid.innerHTML = list.slice((page - 1) * per, page * per).map(card).join("");
+      cnt.textContent = (ar ? "عدد الأعضاء: " : "Members: ") + list.length + (list.length !== all.length ? " / " + all.length : "") + (n > 1 ? (ar ? " — صفحة " : " — page ") + page + " / " + n : "");
+      pager.innerHTML = pages(n);
+    }
+    pager.addEventListener("click", function (e) { var b = e.target.closest("[data-mem]"); if (!b) return; page = +b.getAttribute("data-mem"); draw(); });
+    inp.addEventListener("input", function () { q = inp.value.trim().toLowerCase(); page = 1; draw(); });
+    fetch("members/list.php").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+      all = d.members || []; if (!all.length) { cnt.textContent = ar ? "قائمة الأعضاء ستظهر هنا بعد رفع الصور." : "The member list will appear here once the photos are uploaded."; return; } draw();
+    }).catch(function () { cnt.textContent = ar ? "قائمة الأعضاء غير متاحة الآن." : "The member list is not available right now."; });
   }
   function flipStart() {
     var el = $("[data-fb]", app); fb = null; if (!el) return;

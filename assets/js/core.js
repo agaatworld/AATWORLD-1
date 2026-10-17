@@ -146,8 +146,10 @@
   var EV_FROM = new Date(2027, 0, 1);
   function eventsWindow(now) {
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate()), from = today > EV_FROM ? today : EV_FROM;
-    return (D.events || []).filter(function (e) { return parseDate(e.start) >= EV_FROM && parseDate(e.end) >= from; })
-      .sort(function (a, b) { return parseDate(a.start) - parseDate(b.start); });
+    /* dates are read once per show (not once per sort comparison): the list has ~1000 shows */
+    return (D.events || []).map(function (e) { return { e: e, s: parseDate(e.start), f: parseDate(e.end) }; })
+      .filter(function (x) { return x.s >= EV_FROM && x.f >= from; })
+      .sort(function (a, b) { return a.s - b.s; }).map(function (x) { return x.e; });
   }
   function eventById(id) { var l = D.events || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function daysUntil(e, now) { var a = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((parseDate(e.start) - a) / 864e5); }
