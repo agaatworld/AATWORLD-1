@@ -9,7 +9,7 @@
   /* ---------- theme and language ---------- */
   function applyTheme(th) { root.setAttribute("data-theme", th); var m = $('meta[name="theme-color"]'); if (m) m.setAttribute("content", th === "dark" ? "#0D0D0F" : "#FFFFFF"); }
   function initPrefs() {
-    var th = A.store.get("theme3", null) || "light";
+    var th = "light"; /* dark mode was removed (owner's request) */
     applyTheme(th);
     A.setLang(A.store.get("lang3", null) || "ar");
   }
@@ -65,7 +65,7 @@
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); floorText($("#ftr"));
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); exFill(); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
   /* readers with weak eyesight: no text on the site is allowed to stay small */
@@ -126,8 +126,10 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) { if (!en.isIntersecting) return; var el = en.target; io.unobserve(el); if (el.classList.contains("count")) countUp(el); else el.classList.add("in"); });
     }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
-    $$(".rv, .split, .sh, .lead", app).forEach(function (el) {
-      if (el.getBoundingClientRect().top < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
+    /* measure every element first, then change classes: measuring after each change made the browser redo the page layout once per element (seconds on long lists such as the exhibitions) */
+    var els = $$(".rv, .split, .sh, .lead", app), tops = els.map(function (el) { return el.getBoundingClientRect().top; });
+    els.forEach(function (el, i) {
+      if (tops[i] < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
       else { el.classList.add("pre"); io.observe(el); }
     });
     $$(".count", app).forEach(function (el) { io.observe(el); });
@@ -203,6 +205,17 @@
     else { f.src = fbSrc(cur[0]); b.src = fbSrc(nxt[1]); fb.r.src = fbSrc(nxt[0]); }
     void leaf.offsetWidth; leaf.classList.add("go");
     setTimeout(function () { fb.page = nxt[0]; fbShow(); leaf.className = "fb-leaf"; fb.busy = false; }, 620);
+  }
+  /* exhibitions: the first rows are drawn with the page and the rest follow in small batches, so the page opens at once (no "show more" button) */
+  function exFill() {
+    var list = $("#ex-list", app), rest = A.exRest, at = 0; A.exRest = null; if (!list || !rest || !rest.length) return;
+    (function step() {
+      if (!list.isConnected) return;
+      var start = list.children.length, on = $(".exc .on[data-exc]", app), k = on ? on.getAttribute("data-exc") : "";
+      list.insertAdjacentHTML("beforeend", rest.slice(at, at + 80).map(A.ui.eventRow).join("")); at += 80;
+      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (k && r.getAttribute("data-c") !== k) r.style.display = "none"; r.classList.add("in"); floorText(r); }
+      if (at < rest.length) setTimeout(step, 40);
+    })();
   }
   /* members of the club: fills the grid from members/list.php, 20 per page with page numbers under it, and a search box.
      A page change only swaps the cards in place, so the reader stays where they are on the page */
@@ -367,7 +380,6 @@
       if (!a) return;
       var act = a.getAttribute("data-act");
       if (act === "skip") { e.preventDefault(); var h1s = $("h1", app) || app; h1s.setAttribute("tabindex", "-1"); h1s.focus(); }
-      else if (act === "more" && A.exRest) { var nb = a, from = +nb.getAttribute("data-next") || 60, list = $("#ex-list"); if (list) { list.insertAdjacentHTML("beforeend", A.exRest.slice(from, from + 60).map(A.ui.eventRow).join("")); var nx2 = from + 60; if (nx2 >= A.exRest.length) nb.parentNode.remove(); else nb.setAttribute("data-next", nx2); } }
       else if (act === "theme") { var th = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; applyTheme(th); A.store.set("theme3", th); applyLook(); }
       else if (act === "lang-open") { var m = $(".lang-m"); m.hidden = !m.hidden; a.setAttribute("aria-expanded", String(!m.hidden)); }
       else if (act === "lang") { A.setLang(a.getAttribute("data-lang")); A.store.set("lang3", A.state.lang); chrome(); render(true); }

@@ -565,3 +565,39 @@ body.is-mag #chat { display: none !important; }
 .mem-pg.on { background: var(--red, #D21F26); color: #fff; }
 .mem-pg:focus-visible { outline: 3px solid #7A0A10; outline-offset: 2px; }
 .mem-dots { font-size: 20px; font-weight: 800; padding: 0 4px; }
+
+/* ---------- owner's changes (update 22) ---------- */
+/* header: the page links spread across the whole bar, in larger type */
+#hdr .hd { max-width: 1480px; }
+@media (min-width: 1180px) {
+  #hdr .hd-nav { justify-content: space-evenly; gap: 6px; }
+  #hdr .hd-nav a, html #hdr .hd-nav a { font-size: clamp(17px, 1.3vw, 21px); font-weight: 800; padding: 8px 6px; }
+}
+.lang-sw { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line, #d9d9de); background: var(--surface, #fff); color: var(--ink, #111); font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.lang-sw:hover { border-color: var(--red, #D21F26); color: var(--red, #D21F26); }
+/* 24-hour chat on the left, the back-to-top button on the right, in both languages */
+.chat-b, .chat { inset-inline-start: auto; left: 18px; right: auto; }
+#mz-top { inset-inline-end: auto; right: 18px; left: auto; }
+/* the search bar stays in its place above the list instead of floating over the page */
+.bar, .bar.sticky { position: static; }
+/* "We have published / 560 / issues of the magazine" */
+.kpi-pre { display: block; font-style: normal; font-weight: 800; font-size: 18px; line-height: 1.3; }
+/* the products of this issue sit inside "Modern products and industries", under the sectors */
+.pg-in { margin-top: 28px; }
+/* "this number is on": the messaging apps */
+.apps { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none; }
+.apps li { padding: 4px 12px; border-radius: 999px; background: var(--surface-2, #f1f1f4); color: var(--ink, #111); font-weight: 800; font-size: 16px; }
+.ft .apps li { background: rgba(255, 255, 255, .12); color: #fff; }
+/* the full exhibitions list (~950 rows): rows below the screen are laid out only when scrolled to */
+#ex-list .er { content-visibility: auto; contain-intrinsic-size: auto 110px; }
+.ft ul.apps, ul.apps { display: flex; flex-wrap: wrap; justify-content: flex-start; }
+.ft ul.apps li, ul.apps li { display: inline-block; width: auto; margin: 0; }
+.ft-b bdi { white-space: nowrap; }
+.ft-r { white-space: nowrap; }
+/* while scrolling, every animation pauses to keep the page smooth, except the "45 years" counter and the trade map (owner's request) */
+html.is-scrolling .yrs, html.is-scrolling .yrs *, html.is-scrolling .yrs *::before, html.is-scrolling .yrs *::after,
+html.is-scrolling .live-map, html.is-scrolling .live-map *, html.is-scrolling .live-map *::before, html.is-scrolling .live-map *::after { animation-play-state: running !important; }
+/* the apps as icons */
+ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
+.app-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: 0 4px 12px -6px rgba(0, 0, 0, .45); }
+.app-i svg { width: 30px; height: 30px; display: block; }
