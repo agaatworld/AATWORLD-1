@@ -1,17 +1,18 @@
-10-17 15:42:55.578   285   285 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
-10-17 15:42:55.583   285   285 I AndroidRuntime: Using default boot image
-10-17 15:42:55.583   285   285 I AndroidRuntime: Leaving lock profiling enabled
-10-17 15:43:19.524   881   881 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
-10-17 15:43:29.486  1473  1473 W UncaughtExceptionHandler: UncaughtExceptionHandler.clearSignatureCheckSecurityExceptionState():262 clear signature check security exception state
+10-17 15:48:21.302   287   287 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-17 15:48:21.305   287   287 I AndroidRuntime: Using default boot image
+10-17 15:48:21.305   287   287 I AndroidRuntime: Leaving lock profiling enabled
+10-17 15:48:37.144   874   874 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-17 15:48:42.599  1510  1510 W UncaughtExceptionHandler: UncaughtExceptionHandler.clearSignatureCheckSecurityExceptionState():262 clear signature check security exception state
+10-17 15:48:52.265  1723  2428 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
 ACTIVITY MANAGER SERVICES (dumpsys activity services)
   User 0 active services:
-  * ServiceRecord{4e88203 u0 com.aat.clawd/.OverlayService}
+  * ServiceRecord{ce27b23 u0 com.aat.clawd/.OverlayService}
     intent={cmp=com.aat.clawd/.OverlayService}
     packageName=com.aat.clawd
     processName=com.aat.clawd
-    baseDir=/data/app/~~0lFeJo6i-OsbOusQHckmzg==/com.aat.clawd-nIz6DzziesnWvC7WIq0CUw==/base.apk
+    baseDir=/data/app/~~x0OrpwJmU0J7eXNcwgPWig==/com.aat.clawd-wU_avhH4AnAwSXzvqSBv9w==/base.apk
     dataDir=/data/user/0/com.aat.clawd
-    app=ProcessRecord{e534e56 2553:com.aat.clawd/u0a174}
+    app=ProcessRecord{7db434a 2923:com.aat.clawd/u0a174}
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=com.aat.clawd
     recentCallingUid=10174
@@ -19,17 +20,17 @@ ACTIVITY MANAGER SERVICES (dumpsys activity services)
     startForegroundCount=1
     infoAllowStartForeground=[callingPackage: com.aat.clawd; callingUid: 10174; uidState: TOP ; intent: Intent { cmp=com.aat.clawd/.OverlayService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:34; startForegroundCount:0; bindFromPackage:null]
     isForeground=true foregroundId=7 foregroundNoti=Notification(channel=clawd shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x62 color=0x00000000 actions=1 vis=PRIVATE)
-    createTime=-43s919ms startingBgTimeout=--
-    lastActivity=-43s919ms restartTime=-43s919ms createdFromFg=true
-    startRequested=true delayedStop=false stopIfKilled=false callStart=true lastStartId=1
+    createTime=-47s922ms startingBgTimeout=--
+    lastActivity=-19s566ms restartTime=-47s914ms createdFromFg=true
+    startRequested=true delayedStop=false stopIfKilled=false callStart=true lastStartId=2
 
-  * ServiceRecord{824601a u0 com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
+  * ServiceRecord{b8f29ce u0 com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
     intent={cmp=com.aat.clawd/org.chromium.content.app.SandboxedProcessService0:0}
     packageName=com.aat.clawd
     processName=com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
-    baseDir=/data/app/~~__hM_8E1Vy94x9atnyXStA==/com.google.android.webview-uW_EkyPPZxv0P5Gf2FbcsA==/WebViewGoogle.apk
+    baseDir=/data/app/~~z6ryJyXlZkh4HHPALUZ8nQ==/com.google.android.webview-O8wpOY1_DW_yMKA9s4NsRw==/WebViewGoogle.apk
     dataDir=/data/user/0/com.google.android.webview
-    app=ProcessRecord{9e8fc96 2775:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
-    isolationHostProc=ProcessRecord{9e8fc96 2775:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
+    app=ProcessRecord{ec8fe39 3069:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
+    isolationHostProc=ProcessRecord{ec8fe39 3069:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a174i0}
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=com.aat.clawd
