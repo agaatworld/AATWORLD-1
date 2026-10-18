@@ -1,30 +1,29 @@
-  Window #0 Window{f504308 u0 ScreenDecorOverlayBottom}:
-  Window #1 Window{87b85ee u0 ScreenDecorOverlay}:
-  Window #2 Window{4d9be23 u0 SecondaryHomeHandle0}:
-  Window #3 Window{5d2cef2 u0 EdgeBackGestureHandler0}:
-  Window #4 Window{c8850d2 u0 NavigationBar0}:
-  Window #5 Window{c98cd75 u0 NotificationShade}:
-  Window #6 Window{752049d u0 StatusBar}:
-  Window #7 Window{678b32f u0 com.aat.clawd}:
+  Window #0 Window{ad1974b u0 ScreenDecorOverlayBottom}:
+  Window #1 Window{9459df8 u0 ScreenDecorOverlay}:
+  Window #2 Window{25e8276 u0 SecondaryHomeHandle0}:
+  Window #3 Window{87ce45 u0 EdgeBackGestureHandler0}:
+  Window #4 Window{18ceff7 u0 NavigationBar0}:
+  Window #5 Window{10eb033 u0 NotificationShade}:
+  Window #6 Window{2c1709e u0 StatusBar}:
+  Window #7 Window{35e7e6b u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #8 Window{5f9090c u0 com.aat.clawd}:
+  Window #8 Window{706329 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #9 Window{fe1f8ba u0 com.aat.clawd}:
+  Window #9 Window{7b6cc44 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #10 Window{ca46297 u0 com.aat.clawd}:
+  Window #10 Window{430807b u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #11 Window{1889e14 u0 com.aat.clawd}:
+  Window #11 Window{b3141c5 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #12 Window{46e939c u0 ShellDropTarget}:
-  Window #13 Window{49b438f u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #14 Window{4753a8 u0 InputMethod}:
-  Window #15 Window{234304b u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #16 Window{5dbb647 u0 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #12 Window{7c0a96f u0 ShellDropTarget}:
+  Window #13 Window{82aa491 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #14 Window{5bfb0a2 u0 InputMethod}:
+  Window #15 Window{2b9f260 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #16 Window{cf394df u0 com.aat.clawd/com.aat.clawd.MainActivity}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=NONE
-    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{595041f u0 com.aat.clawd/.MainActivity} t9}
-    mActivityRecord=ActivityRecord{595041f u0 com.aat.clawd/.MainActivity} t9}
-    WindowStateAnimator{f410379 com.aat.clawd/com.aat.clawd.MainActivity}:
-  Window #17 Window{71923c9 u0 com.android.systemui.wallpapers.ImageWallpaper}:
-  mLastDisplayFreezeDuration=+3s869ms due to Window{5dbb647 u0 com.aat.clawd/com.aat.clawd.MainActivity}
-      topApp=ActivityRecord{595041f u0 com.aat.clawd/.MainActivity} t9}
-      snapshot=TaskSnapshot{ mId=1792287537695 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@9d786c (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
+    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
+    mActivityRecord=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
+    WindowStateAnimator{8f8eb80 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #17 Window{1e7be8 u0 com.android.systemui.wallpapers.ImageWallpaper}:
+      topApp=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
+      snapshot=TaskSnapshot{ mId=1792288598332 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@d0029e0 (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
