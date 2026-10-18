@@ -1,202 +1,103 @@
-10-18 02:38:17.484   889   889 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
-10-18 02:38:39.392  2700  3351 D Clawd   : stage ready {"w":412.19049072265625,"h":416.71429443359375,"dpr":2.625}
-10-18 02:38:53.601  2700  3351 D Clawd   : stage ready {"w":412.19049072265625,"h":915.047607421875,"dpr":2.625}
-10-18 02:38:53.748  2700  2700 D Clawd   : pad chatbtn 257 2040 126 126
-10-18 02:38:53.869  2700  2700 D Clawd   : pad tool 284 2205 242 137
-10-18 02:38:53.917  2700  2700 D Clawd   : pad char 16 2100 265 197
-10-18 02:38:55.249  2700  2700 D Clawd   : pad chatbtn 257 2040 126 126
-10-18 02:38:55.500  2700  2700 D Clawd   : pad tool 265 2069 137 228
-10-18 02:38:55.501  2700  2700 D Clawd   : pad char 16 2100 265 197
-10-18 02:38:56.759  2700  2700 D Clawd   : pad chatbtn 226 2103 126 126
-10-18 02:38:57.221  2700  2700 D Clawd   : pad tool 252 2134 137 228
-10-18 02:38:57.221  2700  2700 D Clawd   : pad char 16 2163 244 197
-10-18 02:38:58.528  2700  2700 D Clawd   : pad chatbtn 236 2103 126 126
-10-18 02:38:58.762  2700  2700 D Clawd   : pad tool 255 2134 137 228
-10-18 02:38:58.762  2700  2700 D Clawd   : pad char 16 2163 244 197
-10-18 02:39:00.145  2700  2700 D Clawd   : pad chatbtn 226 2103 126 126
-10-18 02:39:00.499  2700  2700 D Clawd   : pad tool 255 2137 137 228
-10-18 02:39:00.499  2700  2700 D Clawd   : pad char 16 2163 236 197
-10-18 02:39:01.934  2700  2700 D Clawd   : pad chatbtn 260 2103 126 126
-10-18 02:39:02.016  2700  2700 D Clawd   : pad tool 257 2137 137 228
-10-18 02:39:02.016  2700  2700 D Clawd   : pad char 16 2163 268 197
-10-18 02:39:03.100  2700  2700 D Clawd   : touch char down 150 2261
-10-18 02:39:03.241  2700  3351 D Clawd   : js gesture char tap 0.00s
-10-18 02:39:03.488  2700  2700 D Clawd   : pad chatbtn 257 2097 126 126
-10-18 02:39:03.715  2700  2700 D Clawd   : pad tool 257 2134 137 228
-10-18 02:39:03.715  2700  2700 D Clawd   : pad char 16 2158 265 205
-10-18 02:39:05.042  2700  2700 D Clawd   : pad chatbtn 257 2095 126 126
-10-18 02:39:05.866  2700  2700 D Clawd   : pad tool 252 2132 137 228
-10-18 02:39:05.866  2700  2700 D Clawd   : pad char 16 2158 265 205
-10-18 02:39:06.666  2700  2700 D Clawd   : pad chatbtn 257 2095 126 126
-10-18 02:39:06.852  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:06.884  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:06.894  2700  3351 D Clawd   : js gesture tool cancel 0.01s
-10-18 02:39:07.142  2700  3351 D Clawd   : js gesture tool tap 0.00s
-10-18 02:39:07.173  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:07.174  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:07.591  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:07.593  2700  2700 D Clawd   : touch tool down 320 2246
-10-18 02:39:07.853  2700  2700 D Clawd   : pad tool 284 2174 202 189
-10-18 02:39:07.853  2700  2700 D Clawd   : pad char 16 2158 265 205
-10-18 02:39:07.978  2700  3351 D Clawd   : js gesture tool cancel 0.00s
-10-18 02:39:07.994  2700  3351 D Clawd   : js gesture tool tap 0.00s
-10-18 02:39:08.001  2700  3351 D Clawd   : js gesture tool cancel 0.00s
-10-18 02:39:08.001  2700  3351 D Clawd   : js gesture tool tap 0.00s
-10-18 02:39:08.777  2700  2700 D Clawd   : pad chatbtn 257 2079 126 126
-10-18 02:39:09.649  2700  2700 D Clawd   : pad tool 263 2134 137 231
-10-18 02:39:09.649  2700  2700 D Clawd   : pad char 16 2145 265 218
-10-18 02:39:10.347  2700  2700 D Clawd   : pad chatbtn 257 2076 126 126
-10-18 02:39:11.243  2700  2700 D Clawd   : pad tool 249 2113 137 228
-10-18 02:39:11.243  2700  2700 D Clawd   : pad char 18 2145 260 218
-10-18 02:39:12.111  2700  2700 D Clawd   : pad chatbtn 260 2092 126 126
-10-18 02:39:12.971  2700  2700 D Clawd   : pad tool 252 2137 137 228
-10-18 02:39:12.971  2700  2700 D Clawd   : pad char 16 2153 265 210
-10-18 02:39:14.376  2700  2700 D Clawd   : pad chatbtn 257 2092 126 126
-10-18 02:39:14.499  2700  2700 D Clawd   : pad tool 252 2137 137 228
-10-18 02:39:14.499  2700  2700 D Clawd   : pad char 16 2153 265 207
-10-18 02:39:16.211  2700  2700 D Clawd   : touch tool down 320 2251
-10-18 02:39:19.428  2700  2700 D Clawd   : pad chatbtn 583 1935 126 126
-10-18 02:39:19.460  2700  2700 D Clawd   : pad tool 95 2118 137 228
-10-18 02:39:19.460  2700  2700 D Clawd   : pad char 339 1998 265 207
-10-18 02:39:19.460  2700  3351 D Clawd   : js gesture tool drag 3.13s
-10-18 02:39:21.883  2700  2700 D Clawd   : pad chatbtn 711 2074 126 126
-10-18 02:39:21.883  2700  2700 D Clawd   : pad tool 95 2116 137 228
-10-18 02:39:21.883  2700  2700 D Clawd   : pad char 509 2134 223 226
-10-18 02:39:23.714  2700  2700 D Clawd   : pad chatbtn 851 2074 126 126
-10-18 02:39:23.715  2700  2700 D Clawd   : pad tool 92 2118 137 228
-10-18 02:39:23.715  2700  2700 D Clawd   : pad char 630 2134 239 228
-10-18 02:39:25.346  2700  2700 D Clawd   : pad chatbtn 856 2079 126 126
-10-18 02:39:25.347  2700  2700 D Clawd   : pad tool 92 2121 137 228
-10-18 02:39:25.347  2700  2700 D Clawd   : pad char 630 2142 247 221
-10-18 02:39:27.209  2700  2700 D Clawd   : pad chatbtn 853 2082 126 126
-10-18 02:39:27.209  2700  2700 D Clawd   : pad tool 89 2124 137 228
-10-18 02:39:27.209  2700  2700 D Clawd   : pad char 630 2142 244 218
-10-18 02:39:28.851  2700  2700 D Clawd   : pad chatbtn 853 2095 126 126
-10-18 02:39:28.851  2700  2700 D Clawd   : pad tool 89 2124 137 228
-10-18 02:39:28.851  2700  2700 D Clawd   : pad char 630 2158 244 205
-10-18 02:39:30.554  2700  2700 D Clawd   : pad chatbtn 858 2092 126 126
-10-18 02:39:30.554  2700  2700 D Clawd   : pad tool 89 2121 137 228
-10-18 02:39:30.555  2700  2700 D Clawd   : pad char 622 2153 260 207
-10-18 02:39:32.373  2700  2700 D Clawd   : pad chatbtn 864 2092 126 126
-10-18 02:39:32.373  2700  2700 D Clawd   : pad tool 89 2121 137 228
-10-18 02:39:32.373  2700  2700 D Clawd   : pad char 620 2153 265 207
-10-18 02:39:34.028  2700  2700 D Clawd   : pad chatbtn 864 2105 126 126
-10-18 02:39:34.029  2700  2700 D Clawd   : pad tool 92 2118 137 228
-10-18 02:39:34.029  2700  2700 D Clawd   : pad char 620 2168 265 194
-10-18 02:39:36.486  2700  2700 D Clawd   : pad chatbtn 843 2111 126 126
-10-18 02:39:36.486  2700  2700 D Clawd   : pad tool 92 2116 137 228
-10-18 02:39:36.486  2700  2700 D Clawd   : pad char 641 2174 223 189
-10-18 02:39:38.368  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:38.368  2700  2700 D Clawd   : pad tool 95 2116 137 228
-10-18 02:39:38.368  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:39.878  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:39.878  2700  2700 D Clawd   : pad tool 95 2116 137 228
-10-18 02:39:39.878  2700  2700 D Clawd   : pad char 646 2174 213 189
-10-18 02:39:40.215  5148  5148 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-18 02:39:40.306  5148  5148 I AndroidRuntime: Using default boot image
-10-18 02:39:40.306  5148  5148 I AndroidRuntime: Leaving lock profiling enabled
-10-18 02:39:40.900  5148  5148 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-18 02:39:41.525  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:41.525  2700  2700 D Clawd   : pad tool 95 2118 137 228
-10-18 02:39:41.525  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:42.974  5148  5148 D AndroidRuntime: Shutting down VM
-10-18 02:39:43.407  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:43.407  2700  2700 D Clawd   : pad tool 95 2124 137 228
-10-18 02:39:43.407  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:44.714  2700  3351 D Clawd   : js tool pillow
-10-18 02:39:45.011  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:45.011  2700  2700 D Clawd   : pad tool 87 2226 137 137
-10-18 02:39:45.011  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:46.558  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:46.558  2700  2700 D Clawd   : pad tool 87 2195 137 158
-10-18 02:39:46.558  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:48.279  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:48.279  2700  2700 D Clawd   : pad tool 87 2189 137 160
-10-18 02:39:48.279  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:50.067  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:50.067  2700  2700 D Clawd   : pad tool 87 2184 137 160
-10-18 02:39:50.067  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:51.653  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:51.653  2700  2700 D Clawd   : pad tool 89 2187 137 160
-10-18 02:39:51.653  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:53.836  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:53.836  2700  2700 D Clawd   : pad tool 89 2192 137 160
-10-18 02:39:53.836  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:55.711  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:55.711  2700  2700 D Clawd   : pad tool 89 2195 137 160
-10-18 02:39:55.711  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:57.345  2700  2700 D Clawd   : pad chatbtn 837 2111 126 126
-10-18 02:39:57.359  2700  2700 D Clawd   : pad tool 89 2189 137 160
-10-18 02:39:57.359  2700  2700 D Clawd   : pad char 643 2174 215 189
-10-18 02:39:59.273  2700  2700 D Clawd   : pad chatbtn 830 2111 126 126
-10-18 02:39:59.275  2700  2700 D Clawd   : pad tool 89 2189 137 160
-10-18 02:39:59.283  2700  2700 D Clawd   : pad char 651 2174 200 189
-10-18 02:40:02.781  2700  2700 D Clawd   : pad chatbtn 827 2118 126 126
-10-18 02:40:02.782  2700  2700 D Clawd   : pad tool 87 2184 137 160
-10-18 02:40:02.782  2700  2700 D Clawd   : pad char 656 2181 192 181
-10-18 02:40:04.423  2700  2700 D Clawd   : pad chatbtn 853 2111 126 126
-10-18 02:40:04.426  2700  2700 D Clawd   : pad tool 87 2187 137 160
-10-18 02:40:04.426  2700  2700 D Clawd   : pad char 627 2171 247 189
-10-18 02:40:06.095  2700  2700 D Clawd   : pad tool 87 2187 137 160
-10-18 02:40:06.096  2700  2700 D Clawd   : pad char 583 1305 205 152
-10-18 02:40:07.669  2700  2700 D Clawd   : pad tool 87 2189 137 160
-10-18 02:40:07.669  2700  2700 D Clawd   : pad char 341 1181 155 134
-10-18 02:40:08.241  2700  2700 D Clawd   : pad chatbtn 318 1145 126 126
-10-18 02:40:09.412  2700  2700 D Clawd   : pad tool 84 2192 137 160
-10-18 02:40:09.412  2700  2700 D Clawd   : pad char 21 1523 260 205
-10-18 02:40:10.193  2700  2700 D Clawd   : pad chatbtn 310 1730 126 126
-10-18 02:40:10.950  2700  2700 D Clawd   : pad tool 89 2192 137 160
-10-18 02:40:10.950  2700  2700 D Clawd   : pad char 144 2179 273 181
-10-18 02:40:12.169  2700  2700 D Clawd   : pad chatbtn 396 2103 126 126
-10-18 02:40:12.505  2700  2700 D Clawd   : pad tool 89 2195 137 160
-10-18 02:40:12.505  2700  2700 D Clawd   : pad char 155 2171 265 189
-10-18 02:40:14.171  2700  2700 D Clawd   : pad chatbtn 399 2111 126 126
-10-18 02:40:14.171  2700  2700 D Clawd   : pad tool 89 2192 137 160
-10-18 02:40:14.171  2700  2700 D Clawd   : pad char 158 2171 265 189
-10-18 02:40:15.820  2700  2700 D Clawd   : pad chatbtn 402 2092 126 126
-10-18 02:40:15.820  2700  2700 D Clawd   : pad tool 89 2192 137 160
-10-18 02:40:15.820  2700  2700 D Clawd   : pad char 158 2155 265 207
-10-18 02:40:17.343  2700  2700 D Clawd   : pad chatbtn 402 2092 126 126
-10-18 02:40:17.346  2700  2700 D Clawd   : pad tool 89 2187 137 160
-10-18 02:40:17.346  2700  2700 D Clawd   : pad char 158 2153 265 207
-10-18 02:40:18.852  2700  2700 D Clawd   : pad chatbtn 402 2092 126 126
-10-18 02:40:18.852  2700  2700 D Clawd   : pad tool 89 2187 137 160
-10-18 02:40:18.852  2700  2700 D Clawd   : pad char 158 2153 265 207
-10-18 02:40:20.385  2700  2700 D Clawd   : pad chatbtn 399 2095 126 126
-10-18 02:40:20.388  2700  2700 D Clawd   : pad tool 87 2192 137 160
-10-18 02:40:20.389  2700  2700 D Clawd   : pad char 160 2158 260 205
-10-18 02:40:21.987  2700  2700 D Clawd   : pad chatbtn 378 2118 126 126
-10-18 02:40:21.988  2700  2700 D Clawd   : pad tool 87 2192 137 160
-10-18 02:40:21.988  2700  2700 D Clawd   : pad char 179 2179 221 181
-10-18 02:40:23.871  2700  2700 D Clawd   : pad chatbtn 378 2129 126 126
-10-18 02:40:23.872  2700  2700 D Clawd   : pad tool 87 2189 137 160
-10-18 02:40:23.872  2700  2700 D Clawd   : pad char 179 2192 221 171
-10-18 02:40:26.113  2700  2700 D Clawd   : pad chatbtn 378 2129 126 126
-10-18 02:40:26.113  2700  2700 D Clawd   : pad tool 89 2184 137 158
-10-18 02:40:26.113  2700  2700 D Clawd   : pad char 179 2192 221 171
-10-18 02:40:28.278  2700  2700 D Clawd   : pad chatbtn 378 2129 126 126
-10-18 02:40:28.278  2700  2700 D Clawd   : pad tool 89 2192 137 160
-10-18 02:40:28.278  2700  2700 D Clawd   : pad char 179 2192 221 171
+10-18 06:27:41.939   285   285 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-18 06:27:41.943   285   285 I AndroidRuntime: Using default boot image
+10-18 06:27:41.943   285   285 I AndroidRuntime: Leaving lock profiling enabled
+10-18 06:28:06.452   884   884 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 06:28:50.582  2529  3188 D Clawd   : stage ready {"w":412.19049072265625,"h":387.2857360839844,"dpr":2.625}
+10-18 06:28:53.533  2529  3188 D Clawd   : stage ready {"w":412.19049072265625,"h":915.047607421875,"dpr":2.625}
+10-18 06:28:53.551  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:28:53.604  2529  2529 D Clawd   : pad char 42 2074 210 226
+10-18 06:28:55.086  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:28:55.752  2529  2529 D Clawd   : pad char 42 2137 221 226
+10-18 06:28:56.488  2529  2529 D Clawd   : touch char down 152 2250
+10-18 06:28:56.632  2529  3188 D Clawd   : js gesture char tap 0.01s
+10-18 06:28:57.630  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:28:57.631  2529  2529 D Clawd   : pad char 42 2137 189 226
+10-18 06:29:06.376  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:06.376  2529  2529 D Clawd   : pad char 42 2134 189 226
+10-18 06:29:08.145  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:08.145  2529  2529 D Clawd   : pad char 76 2129 210 234
+10-18 06:29:09.782  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:09.782  2529  2529 D Clawd   : pad char 123 2132 202 231
+10-18 06:29:11.378  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:11.378  2529  2529 D Clawd   : pad char 150 2129 197 231
+10-18 06:29:13.142  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:13.142  2529  2529 D Clawd   : pad char 173 2132 202 231
+10-18 06:29:14.724  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:14.725  2529  2529 D Clawd   : pad char 189 2129 210 234
+10-18 06:29:16.356  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:16.356  2529  2529 D Clawd   : pad char 223 2129 210 231
+10-18 06:29:17.990  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:17.991  2529  2529 D Clawd   : pad char 276 2129 197 231
+10-18 06:29:19.504  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:19.504  2529  2529 D Clawd   : pad char 305 2129 205 231
+10-18 06:29:20.319  4624  4624 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-18 06:29:20.427  4624  4624 I AndroidRuntime: Using default boot image
+10-18 06:29:20.427  4624  4624 I AndroidRuntime: Leaving lock profiling enabled
+10-18 06:29:21.081  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:21.081  2529  2529 D Clawd   : pad char 341 2129 210 234
+10-18 06:29:21.361  4624  4624 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-18 06:29:22.664  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:22.664  2529  2529 D Clawd   : pad char 391 2132 197 231
+10-18 06:29:24.196  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:24.196  2529  2529 D Clawd   : pad char 431 2132 202 231
+10-18 06:29:24.655  4624  4624 D AndroidRuntime: Shutting down VM
+10-18 06:29:25.761  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:25.761  2529  2529 D Clawd   : pad char 452 2134 181 228
+10-18 06:29:27.015  2529  3188 D Clawd   : js tool pillow
+10-18 06:29:27.734  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:27.734  2529  2529 D Clawd   : pad char 441 2134 179 226
+10-18 06:29:30.444  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:30.446  2529  2529 D Clawd   : pad char 441 2137 179 226
+10-18 06:29:32.531  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:32.531  2529  2529 D Clawd   : pad char 431 2137 189 226
+10-18 06:29:34.384  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:34.384  2529  2529 D Clawd   : pad char 431 2137 192 226
+10-18 06:29:51.327  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:51.327  2529  2529 D Clawd   : pad char 441 1331 173 207
+10-18 06:29:54.724  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:54.724  2529  2529 D Clawd   : pad char 417 1292 142 165
+10-18 06:29:57.238  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:57.316  2529  2529 D Clawd   : pad char 286 1171 126 147
+10-18 06:29:59.122  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:29:59.126  2529  2529 D Clawd   : pad char 79 1181 173 173
+10-18 06:30:01.035  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:01.035  2529  2529 D Clawd   : pad char 29 1504 189 226
+10-18 06:30:04.711  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:04.734  2529  2529 D Clawd   : pad char -10 2200 226 158
+10-18 06:30:06.401  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:06.405  2529  2529 D Clawd   : pad char 16 2118 189 244
+10-18 06:30:08.243  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:08.294  2529  2529 D Clawd   : pad char 13 2134 210 226
+10-18 06:30:09.800  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:09.800  2529  2529 D Clawd   : pad char 13 2134 200 226
+10-18 06:30:11.646  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:11.649  2529  2529 D Clawd   : pad char 13 2116 231 244
+10-18 06:30:13.384  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:13.387  2529  2529 D Clawd   : pad char 13 2116 215 244
+10-18 06:30:15.217  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:15.220  2529  2529 D Clawd   : pad char 13 2118 226 242
+10-18 06:30:16.720  2529  2529 D Clawd   : pad edge 1024 914 58 1105
+10-18 06:30:16.720  2529  2529 D Clawd   : pad char 13 2132 223 231
 === services ===
 ACTIVITY MANAGER SERVICES (dumpsys activity services)
   User 0 active services:
-  * ServiceRecord{785a24b u0 com.aat.clawd/.ClawdEyes}
+  * ServiceRecord{c20bcb8 u0 com.aat.clawd/.ClawdEyes}
     intent={cmp=com.aat.clawd/.ClawdEyes}
     packageName=com.aat.clawd
     processName=com.aat.clawd
     permission=android.permission.BIND_ACCESSIBILITY_SERVICE
-    baseDir=/data/app/~~BrVWlBAK06wPrd4R3dzrvQ==/com.aat.clawd-jUmVYNMT4Ad_eRKf3Hl7CQ==/base.apk
+    baseDir=/data/app/~~-brKEeT1UGCvBNFWPwUhhA==/com.aat.clawd-Xp3dBeChqA90kbYW2A0Qpg==/base.apk
     dataDir=/data/user/0/com.aat.clawd
-    app=ProcessRecord{26fa1d4 2700:com.aat.clawd/u0a174}
+    app=ProcessRecord{58f0f9b 2529:com.aat.clawd/u0a174}
     mIsAllowedBgActivityStartsByBinding=true
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=android
     recentCallingUid=1000
     allowStartForeground=PROC_STATE_PERSISTENT
     startForegroundCount=0
-    infoAllowStartForeground=[callingPackage: android; callingUid: 1000; uidState: PER ; intent: Intent { cmp=com.aat.clawd/.ClawdEyes }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:33; startForegroundCount:0; bindFromPackage:null]
-    createTime=-47s327ms startingBgTimeout=--
-    lastActivity=-47s304ms restartTime=-47s304ms createdFromFg=true
+    infoAllowStartForeground=[callingPackage: android; callingUid: 1000; uidState: PER ; intent: Intent { cmp=com.aat.clawd/.ClawdEyes }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<broadcast:1000:android.intent.action.BOOT_COMPLETED,reason:,reasonCode:BOOT_COMPLETED,duration:20000,callingUid:1000>; targetSdkVersion:34; callerTargetSdkVersion:33; startForegroundCount:0; bindFromPackage:null]
+    createTime=-58s989ms startingBgTimeout=--
+    lastActivity=-58s989ms restartTime=-58s989ms createdFromFg=true
     Bindings:
 === accessibility ===
 com.aat.clawd/com.aat.clawd.ClawdEyes
