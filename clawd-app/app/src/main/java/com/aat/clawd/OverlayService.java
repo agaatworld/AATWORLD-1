@@ -129,8 +129,9 @@ public class OverlayService extends Service implements SensorEventListener {
     /* ---------------- the stage (pass-through drawing window) ---------------- */
     @SuppressLint("SetJavaScriptEnabled")
     private void buildStage() {
+        Rect sc0 = screen();
         stageLp = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT,
+                sc0.width(), sc0.height(),
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -156,6 +157,9 @@ public class OverlayService extends Service implements SensorEventListener {
         stage.loadUrl("file:///android_asset/stage.html");
 
         stageRoot = stage;
+        stage.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or2, ob) -> {
+            if ((r - l) != (or2 - ol) || (b - t) != (ob - ot)) if (stage != null) stage.evaluateJavascript("window.dispatchEvent(new Event('resize'))", null);
+        });
         wm.addView(stageRoot, stageLp);
     }
 
@@ -180,6 +184,10 @@ public class OverlayService extends Service implements SensorEventListener {
         jsStage("clawd.insets(" + top + "," + Math.max(bottom, Math.round(10 * density)) + ",0,0)");
     }
 
+    @Override public void onConfigurationChanged(android.content.res.Configuration cfg) {
+        super.onConfigurationChanged(cfg);
+        if (stageLp != null && stage != null) { Rect sc = screen(); stageLp.width = sc.width(); stageLp.height = sc.height(); try { wm.updateViewLayout(stageRoot, stageLp); } catch (Exception ignored) {} sendInsets(); }
+    }
     void jsStage(String code) { if (stage != null) stage.evaluateJavascript("window.clawd&&" + code, null); }
     void onSettings(String json) {
         if (stage != null) stage.evaluateJavascript("window.clawd&&clawd.settings(" + Bus.q(json) + ")", null);

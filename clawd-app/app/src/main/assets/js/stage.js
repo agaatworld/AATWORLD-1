@@ -236,6 +236,7 @@ CL.startStage = function (opts) {
     if (!running) return;
     requestAnimationFrame(frame);
     const dt = M.min(0.05, (now - last) / 1000); last = now;
+    if (!opts.arena) { const r = cv.getBoundingClientRect(); if (Math.abs((r.width || 0) - world.W) > 1 || Math.abs((r.height || 0) - world.H) > 1) world.resize(); }
     // save battery: when tiny and calm, draw at half rate
     const calm = brain.c.scale.v < 0.5 && !brain.c.task && !world.fx.parts.length && !world.fx.texts.length && brain.tool.state === 'idle' && !G.size;
     if (calm && (skip++ & 1)) { world.T += dt; return; }
@@ -244,7 +245,8 @@ CL.startStage = function (opts) {
   document.addEventListener('visibilitychange', () => { if (document.hidden) running = false; else if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); } });
   window.addEventListener('resize', () => { world.resize(); });
   requestAnimationFrame(frame);
-  call('ready');
+  // report the real canvas size so the native side can confirm the stage is laid out
+  (function awaitSize(n){ world.resize(); if ((world.W < 2 || world.H < 2) && n < 60) return setTimeout(function(){ awaitSize(n + 1); }, 50); call('ready', JSON.stringify({ w: world.W, h: world.H, dpr: world.DPR })); })(0);
   setTimeout(() => { if (!opts.quiet) { brain.say(brain.c, 'hello', { prio: 2, mood: 'happy' }); brain.c.play(CL.R.wave(brain, brain.c), 1); } }, opts.helloDelay || 700);
   brain.touch();
 

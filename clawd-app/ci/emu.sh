@@ -39,7 +39,8 @@ adb shell input keyevent 4  # back out of settings
 adb shell am start -n $P/.MainActivity --ez float true
 sleep 5
 adb shell input keyevent 3   # home
-sleep 4; shot 08_home_floating
+sleep 5; shot 08_home_floating
+adb shell dumpsys window windows | grep -iE "clawd|Window #" | head -40 > "$OUT/windows.txt" || true
 # tap where Clawd starts (bottom-left) to make him react over the home screen
 adb shell input tap $(( W*16/100 )) $(( H - $(dp 150) )); sleep 0.6; shot 09_home_tap
 # over another app
@@ -55,7 +56,7 @@ adb shell input text "مرحبا"; sleep 0.5
 adb shell input tap $(( W*8/100 )) $(( H*45/100 )); sleep 2; shot 12_chat_send
 
 # ---- diagnostics ----
-adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught" > "$OUT/log.txt" || true
+adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught|Clawd|OverlayService" > "$OUT/log.txt" || true
 echo "=== services ===" >> "$OUT/log.txt"
 adb shell dumpsys activity services $P | head -20 >> "$OUT/log.txt"
 echo "=== accessibility ===" >> "$OUT/log.txt"
