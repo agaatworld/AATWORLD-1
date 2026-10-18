@@ -77,7 +77,7 @@ PY
 echo "pillow button at $POS"
 if [ -n "$POS" ]; then adb shell input tap $POS; fi
 sleep 1; shot 13b_app_pillow
-adb shell input keyevent 3; sleep 3; shot 13c_home_pillow
+adb shell input keyevent 3; sleep 4; shot 13c_home_pillow
 # typing: open a message compose box with the keyboard
 adb shell am start -a android.intent.action.SENDTO -d sms:5551234 --es sms_body " "; sleep 4; shot 09d_keyboard
 adb shell input text "salam"; sleep 2; shot 09e_typing

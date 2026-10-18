@@ -74,10 +74,12 @@ public class OverlayService extends Service implements SensorEventListener {
     /** The app screen has its own Clawd: hide the floating one (and its touch pads) while the app is in front. */
     static void appInFront(boolean front) { if (inst != null) inst.setHiddenForApp(front); }
     private boolean hiddenForApp;
+    private float stageAlpha = 1f;
     void setHiddenForApp(boolean h) {
         if (hiddenForApp == h) return;
         hiddenForApp = h;
-        if (stageRoot != null) stageRoot.setVisibility(h ? View.GONE : View.VISIBLE);
+        // fully transparent instead of GONE: the page keeps drawing, so he comes back at once with the current tool
+        if (stageRoot != null && stageLp != null) { stageLp.alpha = h ? 0f : stageAlpha; try { wm.updateViewLayout(stageRoot, stageLp); } catch (Exception ignored) { } }
         pads.setTouchable(!h);
     }
 
@@ -154,6 +156,7 @@ public class OverlayService extends Service implements SensorEventListener {
             float max = 0.8f;
             try { android.hardware.input.InputManager im = getSystemService(android.hardware.input.InputManager.class); if (im != null) max = im.getMaximumObscuringOpacityForTouch(); } catch (Exception ignored) { }
             stageLp.alpha = Math.max(0.5f, Math.min(0.8f, max - 0.01f));
+            stageAlpha = stageLp.alpha;
         }
         if (Build.VERSION.SDK_INT >= 28) stageLp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
