@@ -16,6 +16,14 @@ html,body{margin:0;height:100%;background:transparent;overflow:hidden;font-famil
 .head b{font-size:18px;flex:1}
 .head small{display:block;font-size:12px;font-weight:600;opacity:.9}
 .hb{width:38px;height:38px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.15);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center}
+/* Clawd himself at the top of the chat, reacting with a word or a line */
+.top{position:relative;height:108px;flex:0 0 auto;background:linear-gradient(#FFF3EC,var(--bg));border-bottom:2px solid var(--soft);overflow:hidden}
+.top canvas{position:absolute;right:6px;bottom:0;width:128px;height:108px}
+.say{position:absolute;right:138px;left:10px;top:50%;transform:translateY(-50%) scale(.6);opacity:0;transition:transform .18s,opacity .18s;
+  background:#fff;color:#141413;border:2.5px solid #141413;border-radius:14px;padding:7px 12px;font-size:calc(var(--fs) + 1px);font-weight:800;line-height:1.45;max-height:94px;overflow:hidden}
+.say.on{opacity:1;transform:translateY(-50%) scale(1)}
+.say:after{content:'';position:absolute;right:-11px;top:50%;margin-top:-7px;border:7px solid transparent;border-left-color:#141413}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .top{background:linear-gradient(#3A2A22,var(--bg))} }
 .msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
 .m{max-width:86%;padding:8px 12px;border-radius:14px;font-size:var(--fs);line-height:1.55;white-space:pre-wrap;word-wrap:break-word;border:2px solid var(--soft)}
 .m.u{align-self:flex-start;background:var(--me);color:#fff;border-color:transparent;border-top-right-radius:4px}
@@ -35,15 +43,16 @@ textarea{flex:1;resize:none;border:2px solid var(--line);border-radius:12px;padd
 <body>
 <div class="win">
   <div class="head" id="head">
-    <canvas class="av" id="av" width="60" height="48"></canvas>
-    <b>كلود<small id="sub">صاحبك عالشاشة · Claude</small></b>
+    <b id="who">كلود<small id="sub">صاحبك عالشاشة</small></b>
     <button class="hb" id="bBig" title="تكبير">⤢</button>
     <button class="hb" id="bMin" title="تصغير">—</button>
     <button class="hb" id="bClose" title="إغلاق">✕</button>
   </div>
+  <div class="top"><canvas id="cl"></canvas><div class="say" id="say"></div></div>
   <div class="msgs" id="msgs"></div>
   <div class="bar"><textarea id="inp" rows="1" placeholder="اكتب لكلود…" dir="auto"></textarea><button class="send" id="send">➤</button></div>
 </div>
+<script src="js/engine.js"></script>
 <script src="js/chat.js"></script>
 </body>
 </html>

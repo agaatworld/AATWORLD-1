@@ -15,6 +15,8 @@ function showStats() {
   const lo = RANKS[i][0], hi = RANKS[i + 1] ? RANKS[i + 1][0] : lo + 5000;
   $('sRank').textContent = RANKS[i][1]; $('sBar').style.width = M.min(100, ((e - lo) / (hi - lo)) * 100) + '%';
   if (CL.brain) $('sLove').textContent = 'المودّة: ' + M.round(CL.brain.rapport);
+  const use = +(CL.store('use:' + new Date().toDateString()) || 0), hh = M.floor(use / 3600), mm = M.floor((use % 3600) / 60);
+  if ($('useToday')) $('useToday').textContent = '📱 على الهاتف اليوم: ' + (hh ? hh + ' ساعة و' : '') + mm + ' دقيقة';
 }
 
 /* ---------------- arena */
@@ -61,7 +63,7 @@ function save() {
 }
 function getK(k) { const p = k.split('.'); return p.length > 1 ? S()[p[0]][p[1]] : S()[k]; }
 function setK(k, v) { const p = k.split('.'); if (p.length > 1) S()[p[0]][p[1]] = v; else S()[k] = v; save(); }
-const ACTS = [['tasbih', 'تسبيح بالمسبحة'], ['dua', 'دعاء'], ['quran', 'قراءة قرآن'], ['martial', 'فنون قتالية'], ['study', 'مذاكرة بالنضارة'],
+const ACTS = [['tasbih', 'تسبيح بالمسبحة'], ['dua', 'دعاء'], ['quran', 'قراءة قرآن'], ['hadith', 'قراءة حديث'], ['martial', 'فنون قتالية'], ['study', 'مذاكرة بالنضارة'],
   ['exercise', 'رياضة'], ['book', 'قراءة كتاب'], ['tea', 'استراحة شاي'], ['sleep', 'نوم'], ['juggle', 'لعب بالطابات'], ['plant', 'سقاية نبتته (بتكبر كل يوم)'],
   ['friend', 'زيارة صاحبه بكسل (حكي وتمارين)'], ['dawah', 'يدعو صاحبه للإسلام بالحكمة'], ['parkour', 'استعراض باركور'], ['stroll', 'مشي ثلاثي الأبعاد فوق التطبيقات']];
 const MODELS = [['claude-opus-5-5', 'Claude Opus 5.5 · الأذكى'], ['claude-sonnet-5-5', 'Claude Sonnet 5.5 · أسرع وأرخص'], ['claude-haiku-5-5', 'Claude Haiku 5.5 · الأرخص']];
@@ -74,7 +76,7 @@ const SCHEMA = [
   ['sw', 'sound', 'الأصوات'], ['sw', 'vib', 'الاهتزاز مع الضربات'],
   ['sw', 'td3d', 'ثلاثي الأبعاد', 'يلتفت ويتشقلب، وأحياناً بيتمشى فوق التطبيقات وكأنك شايفه من فوق'],
   ['sw', 'shrink', 'يصغر لما تتركه', 'بيصير قد زر صغير وبيكمّل نشاطاته'], ['num', 'shrinkSec', 'بعد كم ثانية يصغر', 10, 600],
-  ['sec', 'أدوات الضرب'], ['toolpick'], ['tools'],
+  ['sec', 'أدوات الضرب'], ['sw', 'toolEdge', 'الأداة مخبّاية ورا طرف الشاشة اليمين', 'مرّر إصبعك من طرف الشاشة اليمين لتطلع، ورجّعها لهناك لتتخبّى. لما يرميها بتروح لهناك كمان'], ['toolpick'], ['tools'],
   ['sec', 'الحركة'], ['sw', 'roam', 'يتمشى على الشاشة'], ['sw', 'parkour', 'حركات باركور وشقلبات'], ['sw', 'flee', 'يهرب لما تمسك العصا', 'لما تمسك الأداة أو تشحن ضربة أو تسحبها نحوه بيركض ويهرب منك، وإذا حصرته بالزاوية بيترجّاك أو بيقفز من فوقها'], ['sw', 'gravity', 'يتأثر بميلان وقلب التلفون'],
   ['sec', 'نشاطاته لما يكون فاضي'], ['acts'], ['sw', 'outfit', 'يلبس الجلابية والطاقية', 'بالقرآن والتسبيح والدعاء'],
   ['sec', 'تفاعله مع هاتفك'], ['note', 'هالميزات بتحتاج تفعيل «عيون كلود» من فوق.'],
@@ -82,9 +84,10 @@ const SCHEMA = [
   ['sw', 'chatRead', 'يجي يتطلّع لما تفتح الرسائل'], ['sw', 'appsAware', 'يعرف الشاشة الرئيسية والتطبيقات', 'بيتنطط فوق أيقونات الشاشة الرئيسية'],
   ['sw', 'usage', 'يذكّرك إذا طوّلت عالتلفون'], ['num', 'usageMin', 'بعد كم دقيقة استخدام', 10, 240], ['num', 'videoMin', 'بعد كم دقيقة مقاطع قصيرة', 3, 120],
   ['sw', 'night', 'يذكّرك بالنوم بعد نص الليل'], ['sw', 'greet', 'يسلّم عليك ويطمّن عنك لما ترجع'],
+  ['sec', 'الصلاة'], ['prayer'],
   ['sec', 'الأسئلة'], ['sw', 'questions', 'يسألك أسئلة وألغاز ومسابقات'], ['num', 'qEvery', 'كل كم دقيقة تقريباً', 2, 120],
   ['sec', 'الكرامة'], ['sw', 'dignity', 'ما بيقبل الضرب إذا كان على حق', 'بعد ما ينصحك أو وهو عم يقرأ قرآن أو يسبّح: أحياناً بيمسك العصا ويرميها، أو بيصادرها، أو بيعاتبك. وإذا زاد الضرب كتير بيروح يتمشى ويرجع يحكي معك'],
-  ['sec', 'الدردشة مع Claude'], ['chat'],
+  ['sec', 'الذكاء والدردشة'], ['chat'],
   ['sec', 'أخرى'], ['reset']
 ];
 function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
@@ -124,6 +127,7 @@ function renderSettings() {
     else if (type === 'acts') ACTS.forEach((a) => box().appendChild(row(a[1], '', sw('acts.' + a[0]))));
     else if (type === 'perms') renderPerms(box());
     else if (type === 'chat') renderChat(box());
+    else if (type === 'prayer') renderPrayer(box());
     else if (type === 'reset') { const b = el('button', 'btn', 'إرجاع الإعدادات الأصلية'); b.onclick = () => { if (confirm('أكيد؟')) { CL.applySettings(null); save(); renderSettings(); } }; box().appendChild(row('إعدادات أصلية', '', b)); }
   });
 }
@@ -145,21 +149,72 @@ function renderPerms(card) {
   item('battery', 'يضل شغّال بالخلفية', 'لحتى ما يسكّره النظام', p.battery);
   if (!p.a11y && p.eyes !== false) { const b = el('button', 'btn', 'معلومات التطبيق (للإعدادات المقيّدة)'); b.onclick = () => call('openPerm', 'appinfo'); card.appendChild(row('', '', b)); }
 }
-function renderChat(card) {
-  const has = NATIVE ? !!call('hasApiKey') : !!CL.store('keyset');
-  card.appendChild(row('مفتاح Claude', has ? 'محفوظ على هاتفك ✓' : 'لحتى يرد عليك Claude لازم تحط مفتاح API من console.anthropic.com', el('span', 'st ' + (has ? 'ok' : 'no'), has ? 'محفوظ' : 'ناقص')));
-  const r = row('', '', null); r.style.flexDirection = 'column'; r.style.alignItems = 'stretch';
-  const inp = el('input'); inp.type = 'password'; inp.placeholder = has ? '•••••••• (اكتب مفتاح جديد لتغييره)' : 'sk-ant-…'; inp.dir = 'ltr'; inp.autocomplete = 'off';
-  const b = el('button', 'btn', 'احفظ المفتاح'); b.style.marginTop = '8px';
-  b.onclick = () => { const k = inp.value.trim(); if (!k) return; if (NATIVE) call('setApiKey', k); else CL.store('keyset', true); inp.value = ''; renderSettings(); };
-  r.appendChild(inp); r.appendChild(b); card.appendChild(r);
-  const sel = el('select'); MODELS.forEach((m) => { const o = el('option', null, m[1]); o.value = m[0]; if (S().chatModel === m[0]) o.selected = true; sel.appendChild(o); });
-  sel.onchange = () => setK('chatModel', sel.value);
-  const r2 = row('النموذج', '', null); r2.style.flexDirection = 'column'; r2.style.alignItems = 'stretch'; r2.appendChild(sel); card.appendChild(r2);
-  card.appendChild(row('زر 💬 جنب كلود', 'وكمان: اسحب كلود لفوق بسرعة', sw('chatBtn')));
+function renderPrayer(card) { // prayer times for his reminders: a city or the phone's location, the method, today's times
+  card.appendChild(row('يذكّرك بالصلاة بوقتها', 'وبعد ساعة من كل صلاة بيسألك: صلّيتها بوقتها؟', sw('prayOn')));
+  const sel = el('select'), o0 = el('option', null, '— اختار مدينتك —'); o0.value = ''; sel.appendChild(o0);
+  CL.PRAY.CITIES.forEach((c, i) => { const o = el('option', null, c[0]); o.value = i; if (S().city === c[0]) o.selected = true; sel.appendChild(o); });
+  sel.onchange = () => { const c = CL.PRAY.CITIES[+sel.value]; if (!c) return; Object.assign(S(), { city: c[0], lat: c[1], lng: c[2], prayMethod: c[3] }); save(); renderSettings(); };
+  const r = row('مدينتك', S().city ? 'الحالية: ' + S().city : 'لحتى نحسب أوقات الصلاة عندك', null); r.style.flexDirection = 'column'; r.style.alignItems = 'stretch';
+  r.appendChild(sel);
+  const loc = el('button', 'btn', '📍 استعمل موقع هاتفي'); loc.style.marginTop = '8px'; loc.onclick = () => window.app.locate(); r.appendChild(loc);
+  card.appendChild(r);
+  const ms = el('select'); Object.keys(CL.PRAY.METHODS).forEach((k) => { const o = el('option', null, CL.PRAY.METHODS[k].name); o.value = k; if ((S().prayMethod || 'mwl') === k) o.selected = true; ms.appendChild(o); });
+  ms.onchange = () => setK('prayMethod', ms.value);
+  const r2 = row('طريقة الحساب', '', null); r2.style.flexDirection = 'column'; r2.style.alignItems = 'stretch'; r2.appendChild(ms); card.appendChild(r2);
+  const sg = el('div', 'seg'); [[1, 'العصر: الجمهور'], [2, 'العصر: الحنفي']].forEach((o) => { const b = el('button', (+S().asr || 1) === o[0] ? 'on' : '', o[1]); b.onclick = () => { setK('asr', o[0]); renderSettings(); }; sg.appendChild(b); });
+  card.appendChild(row('', '', sg));
+  const t = CL.PRAY.today(S());
+  if (t) { const g = el('div', 'ptimes'); t.forEach((p) => g.appendChild(el('div', null, '<b>' + p.name + '</b><span>' + CL.PRAY.fmt(p.at) + '</span>'))); card.appendChild(g); }
+}
+
+function renderChat(card) { // the AI: who answers (Gemini free / Claude paid), keys, learning, memory
+  const prov = S().ai || (NATIVE ? call('aiProvider') : 'gemini') || 'gemini';
+  const seg = el('div', 'seg');
+  [['gemini', 'Gemini · مجاني'], ['claude', 'Claude · مدفوع']].forEach((o) => { const b = el('button', prov === o[0] ? 'on' : '', o[1]); b.onclick = () => { setK('ai', o[0]); renderSettings(); }; seg.appendChild(b); });
+  const pr = row('مين يرد عليك؟', 'Gemini من Google مجاني بمفتاح من حسابك. Claude من Anthropic أذكى، بس ما إله مفتاح مجاني', null);
+  pr.style.flexWrap = 'wrap'; seg.style.width = '100%'; seg.style.marginTop = '8px'; pr.appendChild(seg); card.appendChild(pr);
+  const keyRow = (has, ph, save) => {
+    const r = row('', '', null); r.style.flexDirection = 'column'; r.style.alignItems = 'stretch';
+    const inp = el('input'); inp.type = 'password'; inp.placeholder = has ? '•••••••• (الصق مفتاح جديد لتغييره)' : ph; inp.dir = 'ltr'; inp.autocomplete = 'off';
+    const b = el('button', 'btn', 'احفظ المفتاح'); b.style.marginTop = '8px';
+    b.onclick = () => { const k = inp.value.trim(); if (!k) return; save(k); inp.value = ''; renderSettings(); };
+    r.appendChild(inp); r.appendChild(b); return r;
+  };
+  if (prov === 'gemini') {
+    const has = NATIVE ? !!call('hasGeminiKey') : !!CL.store('gkeyset');
+    card.appendChild(row('مفتاح Gemini المجاني', has ? 'محفوظ على هاتفك ✓' : 'لسا ما في مفتاح', el('span', 'st ' + (has ? 'ok' : 'no'), has ? 'جاهز' : 'ناقص')));
+    card.appendChild(el('div', 'note big', '<b>كيف تجيب مفتاح مجاني (دقيقتين):</b><ol><li>اضغط الزر تحت، بيفتح موقع Google AI Studio</li><li>سجّل دخول بحساب Gmail تبعك</li><li>اضغط <b dir="ltr">Create API key</b></li><li>انسخ المفتاح (بيبلّش بـ <b dir="ltr">AIza</b>)</li><li>ارجع هون، الصقه واضغط «احفظ المفتاح»</li></ol>ما بيطلب بطاقة دفع. الاستعمال المجاني إله حد يومي، وGoogle ممكن تستعمل المحادثات المجانية لتحسين خدماتها.'));
+    const go = el('button', 'btn primary', '🔑 افتح صفحة المفتاح المجاني'); go.onclick = () => { if (NATIVE) call('openUrl', 'https://aistudio.google.com/apikey'); else window.open('https://aistudio.google.com/apikey'); };
+    card.appendChild(row('', '', go));
+    card.appendChild(keyRow(has, 'AIza…', (k) => { if (NATIVE) call('setGeminiKey', k); else CL.store('gkeyset', true); }));
+  } else {
+    const has = NATIVE ? !!call('hasApiKey') : !!CL.store('keyset');
+    card.appendChild(row('مفتاح Claude', has ? 'محفوظ على هاتفك ✓' : 'من console.anthropic.com، وبيحتاج رصيد مدفوع', el('span', 'st ' + (has ? 'ok' : 'no'), has ? 'جاهز' : 'ناقص')));
+    card.appendChild(keyRow(has, 'sk-ant-…', (k) => { if (NATIVE) call('setApiKey', k); else CL.store('keyset', true); }));
+    const sel = el('select'); MODELS.forEach((m) => { const o = el('option', null, m[1]); o.value = m[0]; if (S().chatModel === m[0]) o.selected = true; sel.appendChild(o); });
+    sel.onchange = () => setK('chatModel', sel.value);
+    const r2 = row('النموذج', 'Haiku الأرخص، Opus الأذكى', null); r2.style.flexDirection = 'column'; r2.style.alignItems = 'stretch'; r2.appendChild(sel); card.appendChild(r2);
+  }
+  // learning: the AI writes new lines for him from your conversations
+  card.appendChild(row('يتعلّم كلام جديد من محادثاتكم', 'بعد كل دردشة ومرتين باليوم بيطلب جمل جديدة على ذوقك، وبتنضاف لكلامه وبتكبر مع الوقت', sw('genOn')));
+  const n = NATIVE ? (call('genCount') || 0) : 0;
+  const gb = el('button', 'btn', '✨ علّمه كلام جديد هلّق');
+  gb.onclick = () => { const st = $('genSt'); if (st) st.textContent = 'عم يتعلّم… (ممكن ياخد نص دقيقة)'; if (NATIVE) call('genNow'); else if (st) st.textContent = 'بالتطبيق بس'; };
+  const gr = row('الكلام اللي تعلّمه', '<span id="genSt">' + (n ? 'تعلّم لحد هلّق ' + n + ' جملة' : 'لسا ما تعلّم شي') + '</span>', null);
+  gr.style.flexWrap = 'wrap'; gb.style.width = '100%'; gb.style.marginTop = '8px'; gr.appendChild(gb); card.appendChild(gr);
+  // memory: what he knows about you and your standing instructions (from the chat)
+  let mem = []; try { mem = NATIVE ? JSON.parse(call('getMemory') || '[]') : (CL.store('memory') || []); } catch (e) { mem = []; }
+  const mr = row('شو بيعرف عنك', mem.length ? 'من دردشتكم. اضغط ✕ لتمسح شي' : 'لسا ولا شي. احكيله عن حالك، أو أعطيه توجيه مثل «احكيلي يمني دايماً» وبيتذكّره', null);
+  mr.style.flexDirection = 'column'; mr.style.alignItems = 'stretch';
+  const saveMem = () => { if (NATIVE) call('setMemory', JSON.stringify(mem)); else CL.store('memory', mem); renderSettings(); };
+  mem.forEach((m, i) => { const it = el('div', 'memit'); it.appendChild(el('span', null, m)); const x = el('button', 'x', '✕'); x.onclick = () => { mem.splice(i, 1); saveMem(); }; it.appendChild(x); mr.appendChild(it); });
+  if (mem.length) { const c = el('button', 'btn', 'امسح كل اللي بيعرفه'); c.style.marginTop = '8px'; c.onclick = () => { if (confirm('أكيد بدك تمسح ذاكرته عنك؟')) { mem = []; saveMem(); } }; mr.appendChild(c); }
+  card.appendChild(mr);
+  card.appendChild(row('احكي معه بصوتك', 'اضغط عليه مطوّل واحكي، ولما ترفع إصبعك بيرد عليك. الدردشة المكتوبة: اضغطه ضغطتين', sw('voice')));
+  card.appendChild(row('يرد بصوت مسموع', 'بيحتاج صوت عربي بالهاتف (إعدادات ← تحويل النص إلى كلام)', sw('voiceSpeak')));
   const t = el('button', 'btn', '💬 جرّب الدردشة'); t.onclick = () => { if (NATIVE) call('openChat', ''); else location.href = 'stage.html?mock=1'; };
   card.appendChild(row('', '', t));
-  card.appendChild(el('div', 'note', 'المفتاح بيتخزّن بس على هاتفك، وبيتبعت بس لـ Anthropic مع كل رسالة. مع الرسالة بيتبعت ملخّص قصير عن حالة كلود (مزاجه وآخر شي عملته، مثل إنك ضربته). ما بيتبعت أي شي من التطبيقات التانية.'));
+  card.appendChild(el('div', 'note', 'المفاتيح بتتخزّن بس على هاتفك، وبتنبعت بس للشركة اللي اخترتها مع كل رسالة. مع الرسالة بينبعت ملخّص قصير عن حالة كلود واللي بيعرفه عنك.'));
 }
 
 /* ---------------- sheets */
@@ -167,7 +222,10 @@ function openSheet(id) { $(id).classList.add('on'); if (id === 'set') renderSett
 document.querySelectorAll('[data-close]').forEach((b) => (b.onclick = () => b.closest('.sheet').classList.remove('on')));
 $('bSet').onclick = () => openSheet('set');
 $('bHelp').onclick = () => openSheet('help');
-window.app = { back: () => { const s = document.querySelector('.sheet.on'); if (s) { s.classList.remove('on'); return true; } return false; }, onResume: () => {
+window.app = {
+  locate: () => { if (!NATIVE) return; const r = call('locate'); if (r) { const p = r.split(','); window.app.located(+p[0], +p[1]); } },
+  located: (lat, lng) => { Object.assign(S(), { lat: +lat.toFixed(4), lng: +lng.toFixed(4), city: 'موقعي' }); save(); renderSettings(); },
+  genDone: (ok, msg) => { const st = $('genSt'); if (st) st.textContent = (ok ? '✓ ' : '') + msg; }, back: () => { const s = document.querySelector('.sheet.on'); if (s) { s.classList.remove('on'); return true; } return false; }, onResume: () => {
   // the floating Clawd may have changed settings (e.g. a tool picked in the chat): reload them so the app never writes old ones back
   if (NATIVE) { try { const s = JSON.parse(call('getSettings') || 'null'); if (s) { CL.applySettings(s); if (window.clawd && window.clawd.settings) window.clawd.settings(JSON.stringify(CL.settings)); } } catch (e) {} }
   floatLabel(); renderToolbar(); if ($('set').classList.contains('on')) renderSettings();

@@ -61,6 +61,43 @@ public class Bridge {
     }
     @JavascriptInterface public void openPerm(String which) { if (activity != null) ui.post(() -> activity.openPerm(which)); }
     @JavascriptInterface public boolean hasApiKey() { return Prefs.hasApiKey(ctx); }
+    @JavascriptInterface public boolean hasGeminiKey() { return Prefs.hasGeminiKey(ctx); }
+    @JavascriptInterface public void setGeminiKey(String k) { Prefs.setGeminiKey(ctx, k == null ? "" : k.trim()); }
+    @JavascriptInterface public String aiProvider() { return Mind.provider(ctx); }
+    @JavascriptInterface public boolean aiReady() { return Mind.ready(ctx); }
+    /* what he remembers about his owner, and the lines the AI wrote for him */
+    @JavascriptInterface public String getMemory() { return Mind.memory(ctx).toString(); }
+    @JavascriptInterface public void setMemory(String json) { try { Prefs.set(ctx, "memory", new org.json.JSONArray(json).toString()); } catch (Exception ignored) { } }
+    @JavascriptInterface public String getGenLines() { return Mind.genLines(ctx); }
+    @JavascriptInterface public int genCount() { return Mind.genCount(ctx); }
+    @JavascriptInterface public void clearGenLines() { Prefs.set(ctx, "genLines", "{}"); }
+    @JavascriptInterface public void genNow() {
+        Mind.generate(ctx, OverlayService.inst != null ? OverlayService.inst.recentChat() : "", (ok, msg) -> ui.post(() -> {
+            if (activity != null) activity.js("window.app&&app.genDone(" + ok + "," + Bus.q(msg) + ")");
+            if (OverlayService.inst != null) OverlayService.inst.pushGenLines();
+        }));
+    }
+    /** "lat,lng" from the phone (coarse is enough for prayer times); "" while asking for permission or waiting. */
+    @JavascriptInterface public String locate() {
+        if (ctx.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            if (activity != null) ui.post(() -> activity.requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 3));
+            return "";
+        }
+        try {
+            android.location.LocationManager lm = (android.location.LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+            android.location.Location best = null;
+            for (String p : lm.getProviders(true)) { android.location.Location l = lm.getLastKnownLocation(p); if (l != null && (best == null || l.getTime() > best.getTime())) best = l; }
+            if (best != null) return best.getLatitude() + "," + best.getLongitude();
+            if (android.os.Build.VERSION.SDK_INT >= 30 && activity != null) {
+                String prov = lm.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER) ? android.location.LocationManager.NETWORK_PROVIDER : android.location.LocationManager.GPS_PROVIDER;
+                lm.getCurrentLocation(prov, null, ctx.getMainExecutor(), l -> { if (l != null && activity != null) activity.js("window.app&&app.located(" + l.getLatitude() + "," + l.getLongitude() + ")"); });
+            }
+        } catch (Exception ignored) { }
+        return "";
+    }
+    @JavascriptInterface public void openUrl(String url) {
+        ui.post(() -> { try { android.content.Intent i = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url)); i.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK); ctx.startActivity(i); } catch (Exception ignored) { } });
+    }
     @JavascriptInterface public void setApiKey(String k) { Prefs.setApiKey(ctx, k == null ? "" : k.trim()); }
 
     /* chat is opened from the app screen, the stage, or the chat-button */
@@ -74,6 +111,8 @@ public class Bridge {
 
     /* ---- floating stage ---- */
     @JavascriptInterface public void setPads(String json) { if (overlay != null) ui.post(() -> overlay.setPads(json)); }
+    @JavascriptInterface public void voiceStart() { if (overlay != null) ui.post(overlay::voiceStart); }
+    @JavascriptInterface public void voiceStop() { if (overlay != null) ui.post(overlay::voiceStop); }
     @JavascriptInterface public void setDragZone(float l, float t, float r, float b) {
         if (chat != null) { ui.post(() -> chat.setDragZone(l, t, r, b)); }
     }

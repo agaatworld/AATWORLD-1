@@ -88,16 +88,43 @@ R.dua = function* (B, b) {
 R.quran = function* (B, b) {
   B.activity = 'quran'; religious(B, b); B.say(b, 'act_quran', { mood: 'calm' });
   try {
-    yield* wait(1.2); b.sit.t = 1; b.prop = { kind: 'mushaf', turn: 0 }; b.baseFace = 'serene'; b.look.ty = 0.7; b.fwdL.t = 0.4; b.fwdR.t = 0.4;
+    yield* wait(1.2); b.sit.t = 1; b.prop = { kind: 'mushaf', turn: 0 }; b.baseFace = 'reverent'; b.look.ty = 0.7; b.fwdL.t = 0.4; b.fwdR.t = 0.4;
     const dur = rnd(40, 70); let nextVerse = 6, nextPage = 9;
     yield* loop(dur, (t) => {
-      b.flip = M.sin(t * 2.4) * 0.06; // gentle rocking while reading
+      b.flip = M.sin(t * 2.4) * 0.025; // a slight, calm sway while reading
       if (t > nextPage) { nextPage = t + rnd(8, 12); b.prop.turn = 0.01; if (B.s.sound) CL.sfx.page(); }
       if (b.prop.turn > 0) { b.prop.turn += 0.05; if (b.prop.turn >= 1) b.prop.turn = 0; }
       if (t > nextVerse) { nextVerse = t + rnd(14, 20); const v = CL.verse(); B.sayText(b, '﴿' + v.t + '﴾  ' + v.r, { prio: 1, mood: 'calm', dur: 5, quran: true }); }
     });
-    B.say(b, 'act_done', { mood: 'calm' });
+    yield* R.quranReflect(B, b);
   } finally { b.flip = 0; b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdL.t = b.fwdR.t = 0; undress(B, b); B.worshipGlow = B.T + 180; B.activity = null; }
+};
+// after reading: a verse that moved him and a practical lesson from it, then he's free to play and talk
+R.quranReflect = function* (B, b) {
+  b.flip = 0; b.look.ty = 0.2; b.baseFace = 'think';
+  const pool = CL.VERSE_LESSONS && CL.VERSE_LESSONS.length ? CL.VERSE_LESSONS : CL.VERSE_LESSONS_BASE;
+  const v = pool[CL.bag('vlessons', pool.length)];
+  B.say(b, 'quran_reflect', { prio: 2, mood: 'calm', dur: 2.6 }); yield* wait(2.8);
+  B.sayText(b, '﴿' + v.t + '﴾ ' + v.s, { prio: 2, mood: 'calm', dur: clamp(2 + v.t.length * 0.06, 4, 9), quran: true }); yield* wait(clamp(2 + v.t.length * 0.06, 4, 9) + 0.2);
+  b.baseFace = 'normal';
+  B.sayText(b, 'الفائدة العملية: ' + v.lesson, { prio: 2, mood: 'calm', dur: clamp(2 + v.lesson.length * 0.06, 4, 8) }); yield* wait(clamp(2 + v.lesson.length * 0.06, 4, 8) + 0.3);
+  b.baseFace = 'normal'; B.say(b, 'quran_free', { prio: 2, mood: 'happy' });
+};
+R.hadith = function* (B, b) { // reading hadith from a book, each with its source and a practical lesson
+  B.activity = 'hadith'; B.say(b, 'hadith_read', { mood: 'calm' });
+  try {
+    yield* wait(1); b.sit.t = 1; b.prop = { kind: 'book', color: '#2F6B4F', turn: 0 }; b.baseFace = 'reverent'; b.look.ty = 0.6; b.fwdL.t = b.fwdR.t = 0.8; b.aL.t = b.aR.t = 0.3;
+    const pool = CL.HADITH.concat(CL.HADITH_MORE || []);
+    for (let i = 0; i < 2; i++) {
+      yield* loop(rnd(5, 8), (t) => { if (b.prop.turn > 0) { b.prop.turn += 0.05; if (b.prop.turn >= 1) b.prop.turn = 0; } });
+      b.prop.turn = 0.01; if (B.s.sound) CL.sfx.page();
+      const h = pool[CL.bag('hadith2', pool.length)];
+      const d1 = clamp(2 + h.t.length * 0.06, 4, 9);
+      B.sayText(b, '«' + h.t + '» ' + h.r, { prio: 1, mood: 'calm', dur: d1 }); yield* wait(d1 + 0.3);
+      if (h.b) { const d2 = clamp(2 + h.b.length * 0.06, 3.5, 7); B.sayText(b, 'الفائدة: ' + h.b, { prio: 1, mood: 'calm', dur: d2 }); yield* wait(d2 + 0.3); }
+    }
+    B.say(b, 'quran_free', { prio: 1, mood: 'happy' });
+  } finally { b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; B.worshipGlow = B.T + 180; B.activity = null; }
 };
 R.study = function* (B, b) {
   B.activity = 'study'; b.outfit.glasses = 1; B.say(b, 'act_study');
@@ -178,14 +205,14 @@ R.book = function* (B, b) {
 R.tea = function* (B, b) {
   B.activity = 'tea'; B.say(b, 'act_tea');
   try {
-    b.sit.t = 1; b.prop = { kind: 'tea', sip: 0 }; b.aR.t = -0.3; b.fwdR.t = 0.5; b.baseFace = 'relieved';
+    b.sit.t = 1; b.prop = { kind: 'tea', sip: 0 }; b.aR.t = 0.35; b.fwdR.t = 1; b.baseFace = 'relieved'; b.lockYaw = true; b.yaw.t = 0;
     for (let i = 0; i < 4; i++) {
-      yield* loop(rnd(3, 5), (t, dt) => { if (chance(dt * 3)) B.w.fx.puff(b.x + 4.3 * b.u, b.y - 6 * b.u, b.u * 0.4, 'rgba(255,255,255,.8)', 2); });
-      yield* tween(0.5, (k) => { b.prop.sip = k; b.aR.t = -0.3 - k * 1.2; }); b.setFace('relieved', 1);
-      yield* wait(0.6); yield* tween(0.5, (k) => { b.prop.sip = 1 - k; b.aR.t = -1.5 + k * 1.2; });
+      yield* wait(rnd(3, 5));
+      yield* tween(0.7, (k) => { b.aR.t = 0.35 - k * 3.45; b.prop.sip = k; }); b.setFace('shut', 1.2);
+      yield* wait(0.9); b.setFace('relieved', 2); yield* tween(0.6, (k) => { b.aR.t = -3.1 + k * 3.45; b.prop.sip = 1 - k; });
       if (i === 1) B.say(b, 'tea_sip', { prio: 1, mood: 'calm' });
     }
-  } finally { b.prop = null; b.sit.t = 0; b.aR.t = 0; b.fwdR.t = 0; b.baseFace = 'normal'; B.activity = null; }
+  } finally { b.prop = null; b.sit.t = 0; b.aR.t = 0; b.fwdR.t = 0; b.baseFace = 'normal'; b.lockYaw = false; B.activity = null; }
 };
 R.sleep = function* (B, b) {
   B.activity = 'sleep'; b.outfit.nightcap = 1;
@@ -260,6 +287,26 @@ R.handstand = function* (B, b) {
   yield* loop(2.2, (t) => { b.walk = s * 2 * b.u; b.legs[0] = M.sin(t * 12) * 0.5; b.legs[3] = -M.sin(t * 12) * 0.5; });
   b.walk = 0; yield* tween(0.4, (k) => { b.flip = PI + k * PI; }); b.flip = 0; b.pivotY = 5;
 };
+R.diveRoll = function* (B, b) { // a real parkour roll: short run-up, dive, roll over the shoulder, keep running
+  if (!b.ground || b.ground.e !== 'b') return;
+  const bd = B.w.bounds; let s = chance(0.5) ? 1 : -1;
+  if ((s > 0 && b.x > bd.x1 - 30 * b.u) || (s < 0 && b.x < bd.x0 + 30 * b.u)) s = -s;
+  yield* R.walkTo(B, b, b.x + s * 7 * b.u, 13 * b.u);
+  if (!b.ground) return;
+  b.setFace('determined', 1.5); b.vy = -26 * b.u; b.vx = s * 24 * b.u; b.ground = null; b.trick = { t: 0, dur: 0.5, flip: TAU * s };
+  if (B.s.sound) CL.sfx.flip();
+  yield* until(() => b.ground, 2);
+  yield* loop(0.35, () => { b.walk = s * 9 * b.u; }); b.walk = 0;
+};
+R.precision = function* (B, b) { // a precision jump to a spot, landing with arms out for balance
+  if (!b.ground || b.ground.e !== 'b') return;
+  const bd = B.w.bounds, x = clamp(b.x + rnd(-1, 1) * 26 * b.u, bd.x0 + 8 * b.u, bd.x1 - 8 * b.u);
+  b.setFace('focus', 1.2); b.sit.t = 0.45; b.aL.t = b.aR.t = 0.6; yield* wait(0.3); b.sit.t = 0; b.aL.t = b.aR.t = -1.0;
+  yield* R.jump(B, b, x, bd.y1, rnd(10, 14) * b.u, false);
+  b.aL.t = b.aR.t = -0.8; b.setFace('determined', 1);
+  yield* loop(0.7, (t) => { b.rollOverride = M.sin(t * 18) * 0.12 * (1 - t / 0.7); });
+  b.rollOverride = null; b.aL.t = b.aR.t = 0; b.setFace('proud', 1.2);
+};
 R.landing = function* (B, b, vn, air, trick) { // landing styles after big falls / tricks
   const styles = ['stick', 'roll', 'superhero', 'kneel', 'tada'];
   const st = styles[CL.bag('landing', styles.length)];
@@ -283,7 +330,7 @@ R.parkourShow = function* (B, b) {
         yield* R.jump(B, b, (p.x0 + p.x1) / 2, p.y, rnd(3, 8) * b.u);
         if (chance(0.4)) B.say(b, 'hop', { prio: 1, mood: 'happy', dur: 0.9 });
       } else if (r < 0.7) { yield* R.wallRun(B, b); }
-      else if (r < 0.82) { yield* R.handstand(B, b); }
+      else if (r < 0.82) { yield* (chance(0.5) ? R.diveRoll : R.precision)(B, b); }
       else { const x = clamp(b.x + rnd(-1, 1) * 30 * b.u, bd.x0 + 8 * b.u, bd.x1 - 8 * b.u); yield* R.jump(B, b, x, bd.y1, rnd(8, 14) * b.u); }
       yield* wait(rnd(0.15, 0.4));
     }
@@ -376,7 +423,7 @@ R.talk = function* (B, b, f, script, dawah) {
     const who = line[0] === 'c' ? b : f, other = who === b ? f : b;
     who.setFace(line[2] || 'talk', 3); other.setFace('normal', 0.1);
     other.look.tx = who.x > other.x ? 1 : -1; who.look.tx = other.x > who.x ? 1 : -1;
-    const dur = clamp(1.6 + line[1].length * 0.07, 2, 6);
+    const dur = clamp(1.6 + line[1].length * 0.07, 2, 11); // long verses and hadith stay up long enough to read
     B.sayText(who, line[1], { prio: 2, mood: who === b ? 'calm' : 'happy', dur: dur, quran: line[1].indexOf('﴿') >= 0 });
     yield* wait(dur + 0.3);
   }

@@ -6,7 +6,7 @@ const CL = window.CL, u = CL.u, R = CL.R, M = Math, PI = M.PI, TAU = PI * 2;
 const { rnd, pick, clamp, lerp, chance } = u;
 const wait = CL.wait, tween = CL.tween, until = CL.until;
 const AR = '٠١٢٣٤٥٦٧٨٩';
-const RELIGIOUS = { quran: 1, tasbih: 1, dua: 1 };
+const RELIGIOUS = { quran: 1, tasbih: 1, dua: 1, hadith: 1 };
 
 class Brain {
   constructor(world, ui, opts) {
@@ -24,6 +24,7 @@ class Brain {
     const bd = world.bounds, h = this.home();
     c.x = h.x; c.y = bd.y1; c.ground = { e: 'b' };
     tool.userPlaced = false; this.placeTool(true);
+    if (this.s.toolEdge !== false) { this.stowTool(true); tool.x = tool.homeX; tool.y = tool.homeY; } // waits behind the right edge
     this.pain = 0; this.anger = 0; this.combo = 0; this.lastHit = -9; this.hits = []; this.lastAttack = -9;
     this.rapport = CL.store('rapport') == null ? 60 : CL.store('rapport');
     this.lastUser = 0; this.nextIdle = 3; this.lastQuestion = 0; this.lastActs = []; this.activity = null;
@@ -65,6 +66,13 @@ class Brain {
   /* ---------------- each frame */
   update(dt) {
     const T = this.T, c = this.c, s = this.s, since = T - this.lastHit;
+    // cold from snowballs: he shivers and rubs his hands, then warms up
+    if (c.frozen > 0.35) { if (!this.cold) { this.cold = true; this.sayText(c, CL.lineOf(['s|برد! 🥶', 'e|ساقعة! 🥶', 'y|برد برد! 🥶', 'g|برد! 🥶', 'f|بارد! 🥶']), { prio: 2, mood: 'hurt' }); }
+      if (!c.busy(2)) { c.tremble = M.max(c.tremble, 0.3 * c.frozen); c.fwdL.t = c.fwdR.t = 0.7; c.aL.t = c.aR.t = -0.5 + M.sin(T * 14) * 0.15; } }
+    else if (this.cold && c.frozen < 0.08) { this.cold = false; c.tremble = 0; if (!c.busy(2)) { c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; }
+      c.setFace('relieved', 2); this.sayText(c, CL.lineOf(['s|الحمد لله… دفيت ☀️', 'e|الحمد لله دفيت ☀️', 'y|الحمد لله قده دفيت ☀️', 'f|الحمد لله، دفئت ☀️']), { prio: 2, mood: 'happy' }); }
+    this.usageTick(dt); this.prayT = (this.prayT || 0) + dt; if (this.prayT > 15) { this.prayT = 0; this.prayTick(); }
+    if (this.pendingKb && !(this.activity && RELIGIOUS[this.activity])) { const f = this.pendingKb; this.pendingKb = null; this.onKeyboard(true, f); }
     this.pain = M.max(0, this.pain - dt * (since > 1.5 ? 9 : 2));
     this.anger = M.max(0, this.anger - dt * (since > 2.5 ? 5 : 0));
     if (since > 0.6 && this.combo && this.tool.state !== 'attack') this.combo = 0;
@@ -73,7 +81,7 @@ class Brain {
     // tiny when left alone
     const idle = T - this.lastUser;
     const tiny = !this.arena && s.shrink && idle > s.shrinkSec && !this.typing && !this.hiding && !this.asking && !this.away && !this.f && !this.chatOpen;
-    c.scale.t = c.strollScale ? c.strollScale : tiny ? 0.34 : (this.typing ? 0.62 : 1);
+    c.scale.t = this.raging ? this.rageScale : c.strollScale ? c.strollScale : tiny ? 0.34 : (this.typing ? 0.62 : 1);
     // phone laid flat on a table: after a moment he steps "into" the screen and walks around on it
     if (this.w.gmag < 0.35 && s.td3d && s.acts.stroll !== false) { this.flatFor = (this.flatFor || 0) + dt; } else this.flatFor = 0;
     if (this.flatFor > 2.5 && c.mode !== 'top' && !c.busy(2) && !this.away && !this.hiding && !this.typing && c.ground) { this.flatFor = -30; c.play(R.stroll(this, c), 1); }
@@ -87,13 +95,60 @@ class Brain {
     // phone use reminders (they put him "in the right")
     if (s.usage && this.present && !this.arena) {
       const sess = T - this.sessionStart;
-      if (sess > s.usageMin * 60 && T - this.lastUsageAdvice > s.usageMin * 60) { this.lastUsageAdvice = T; this.advise('usage_long'); }
+      void sess; // the hourly count of today's phone use (usageTick) replaced the old per-session reminder
       const hr = new Date().getHours(), day = new Date().toDateString();
       if (s.night && hr < 4 && sess > 20 * 60 && this.nightAdvised !== day) { this.nightAdvised = day; this.advise('usage_night'); }
       if (this.videoStart != null && T - this.videoStart > s.videoMin * 60 && T - this.lastVideoAdvice > s.videoMin * 60) { this.lastVideoAdvice = T; this.advise('usage_video'); }
     }
   }
   rightful() { return this.s.dignity && (this.T < this.rightfulUntil || RELIGIOUS[this.activity] || this.dawahNow); }
+
+  /* ---------------- the tool waits behind the right edge; you pull it out, or push it back when he's doing right */
+  stowTool(quiet) {
+    const t = this.tool; if (t.stowed) return;
+    t.stowed = true; t.held = false; t.state = 'idle'; t.userPlaced = true; t.charge = 0;
+    t.homeX = this.w.W + 5 * t.u; t.homeY = this.w.bounds.y1 - 0.2 * t.u;
+    if (!quiet && !this.away && !this.hiding) {
+      const c = this.c; c.setFace(pick(['relieved', 'happy', 'serene']), 1.6);
+      this.say(c, 'tool_hidden', { prio: 2, mood: 'happy' }); this.rapport = M.min(100, this.rapport + 1);
+    }
+  }
+  unstowTool(y) {
+    const t = this.tool, c = this.c; if (!t.stowed) return;
+    t.stowed = false; t.x = this.w.W + 2 * t.u; t.y = y != null ? y : t.homeY; this.touch();
+    if (this.away || this.hiding || c.busy(3)) return;
+    c.look.tx = t.x > c.x ? 1 : -1; setTimeout(() => (c.look.tx = 0), 1500);
+    if (this.rightful()) { c.setFace('serious', 2); this.say(c, 'unjust', { prio: 2, mood: 'serious' }); }
+    else { c.setFace(pick(['nervous', 'surprised', 'skeptical', 'sideeye']), 1.6); this.say(c, 'tool_peek', { prio: 2, mood: 'scared' }); }
+  }
+  /* ---------------- thanks (a pat on the head), double tap, voice */
+  onPat() {
+    const c = this.c; this.touch(); if (this.away || this.ko || (this.activity && RELIGIOUS[this.activity])) return;
+    this.patN = (this.patN || 0) + 1;
+    c.setFace(pick(['serene', 'love', 'relieved', 'happy']), 2); c.blush = 1; c.sy.t = 0.93;
+    if (this.patN % 2 === 1) this.w.fx.heart(c.head.x + rnd(-2, 2) * c.u, c.head.y, c.u);
+    if (this.patN === 2) this.say(c, 'pat', { prio: 2, mood: 'happy' });
+  }
+  onPatEnd() {
+    const c = this.c; c.sy.t = 1;
+    if ((this.patN || 0) >= 2) { this.rapport = M.min(100, this.rapport + 3); CL.store('rapport', this.rapport); this.say(c, 'thanks', { prio: 3, mood: 'happy' }); this.log('صاحبه شكره وملّس على راسه'); }
+    this.patN = 0;
+  }
+  onChatOpenTap() { this.touch(); this.c.setFace('wideHappy', 1.2); }
+  canListen() { return !this.away && !this.ko && !this.hiding && !(this.activity && RELIGIOUS[this.activity]); }
+  onVoiceStart() {
+    const c = this.c; this.touch(); c.setFace('think', 10); c.look.ty = -0.4;
+    this.sayText(c, '🎙️ ' + (CL.line('voice_listen').text || 'تفضّل، سامعك…'), { prio: 3, dur: 10, mood: 'calm' });
+  }
+  voiceHeard(text) {
+    const c = this.c;
+    if (!text) { c.look.ty = 0; c.setFace('puzzled', 2); this.sayText(c, CL.lineOf(['s|ما سمعت منيح، عيدها؟', 'e|مسمعتش كويس، عيدها تاني؟', 'y|ما سمعتش زين، عيدها؟', 'f|لم أسمع جيداً، أعد من فضلك']), { prio: 3, mood: 'calm' }); return; }
+    c.setFace('think', 12); this.sayText(c, '«' + text + '» …', { prio: 3, dur: 12, mood: 'calm', small: true });
+  }
+  voiceReply(text, face) {
+    const c = this.c; c.look.ty = 0; if (face && CL.FACES[face]) c.setFace(face, 4);
+    this.sayText(c, text, { prio: 3, mood: 'calm', dur: M.min(14, 2.5 + text.length * 0.08) });
+  }
 
   placeTool(force) {
     const t = this.tool, c = this.c;
@@ -128,10 +183,10 @@ class Brain {
   }
   chooseActivity(tiny) {
     const s = this.s, hr = new Date().getHours();
-    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, exercise: R.exercise,
+    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, hadith: R.hadith, martial: R.martial, study: R.study, exercise: R.exercise,
       book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
-    const small = { tasbih: 1, dua: 1, quran: 1, study: 1, book: 1, tea: 1, sleep: 1 };
-    const w = { tasbih: 3, dua: 2, quran: 3, martial: 2, study: 2, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1.5, plant: 1, friend: 2, stroll: 1.6 };
+    const small = { tasbih: 1, dua: 1, quran: 1, hadith: 1, study: 1, book: 1, tea: 1, sleep: 1 };
+    const w = { tasbih: 3, dua: 2, quran: 3, hadith: 2, martial: 2, study: 2, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1.5, plant: 1, friend: 2, stroll: 1.6 };
     if (hr >= 4 && hr < 9) { w.tasbih += 3; w.quran += 3; w.dua += 2; }
     if (hr >= 16 && hr < 19) { w.tasbih += 2; w.dua += 1; }
     if (hr >= 22 || hr < 4) { w.sleep += 5; w.martial = 0.5; }
@@ -144,14 +199,14 @@ class Brain {
     return keys[0];
   }
   startActivity(k) {
-    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, exercise: R.exercise,
+    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, hadith: R.hadith, martial: R.martial, study: R.study, exercise: R.exercise,
       book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
     if (!map[k]) return;
     this.lastActs.push(k); if (this.lastActs.length > 4) this.lastActs.shift();
-    const names = { tasbih: 'عم يسبّح', dua: 'عم يدعي', quran: 'عم يقرأ قرآن', martial: 'عم يتمرن قتال', study: 'عم يذاكر', exercise: 'عم يعمل رياضة',
+    const names = { tasbih: 'عم يسبّح', dua: 'عم يدعي', quran: 'عم يقرأ قرآن', hadith: 'عم يقرأ حديث', martial: 'عم يتمرن قتال', study: 'عم يذاكر', exercise: 'عم يعمل رياضة',
       book: 'عم يقرأ كتاب', tea: 'عم يشرب شاي', sleep: 'نايم', juggle: 'عم يلعب بالطابات', plant: 'عم يسقي نبتته', friend: 'صاحبه بكسل زاره', stroll: 'عم يتمشى فوق التطبيقات' };
     this.log('كلود ' + names[k]);
-    this.c.play(map[k](this, this.c), 1);
+    this.c.play(map[k](this, this.c), RELIGIOUS[k] ? 3 : 1); // worship isn't interrupted by pokes and play
   }
 
   /* ---------------- friend */
@@ -259,6 +314,10 @@ class Brain {
   }
   onCharDragStart() {
     const c = this.c; this.touch(); if (this.away) return;
+    if (this.activity && RELIGIOUS[this.activity]) { // not a time for play: he stays put and says so (now and then)
+      if (this.T - (this.busySaid || -9) > 5) { this.busySaid = this.T; c.setFace('serious', 1.5); this.say(c, 'quran_busy', { prio: 3, mood: 'calm' }); }
+      return;
+    }
     if (this.ko) this.revive();
     c.stop(); c.held = true; c.mode = 'side'; c.pv.t = 0.12; c.rollOverride = null; this.hiding = false; c.noClip = false;
     c.setFace(pick(['surprised', 'wideHappy', 'scared', 'joy']), 30); this.say(c, 'drag', { prio: 2, mood: 'scared' });
@@ -279,7 +338,7 @@ class Brain {
   onLand(b, vn, air, trick) {
     if (b !== this.c || this.ko) return;
     if ((trick || air > 0.55) && !b.busy(2)) b.play(R.landing(this, b, vn, air, trick), 2);
-    else if (vn > 900 * this.w.U / 7 && !b.busy(2)) { b.setFace(pick(['ouch', 'hurt', 'dizzy']), 1); this.say(b, 'land', { prio: 1 }); this.sfx('land'); }
+    else if (vn > 900 * this.w.U / 7 && !b.busy(2)) { b.setFace(pick(['ouch', 'hurt', 'dizzy']), 1); this.say(b, chance(0.5) ? 'dhikr_land' : 'land', { prio: 1 }); this.sfx('land'); }
   }
   onWall(b, e, v) {
     if (b !== this.c) return;
@@ -289,13 +348,13 @@ class Brain {
   onTilt(big) {
     const c = this.c; this.touch();
     if (!this.s.gravity) return;
-    if (big && !c.busy(3) && chance(0.6)) this.say(c, this.w.gdir.y < -0.6 ? 'upside' : 'tilt', { prio: 2, mood: 'scared' });
+    if (big && !c.busy(3) && chance(0.65)) this.say(c, chance(0.55) ? 'dhikr_flip' : this.w.gdir.y < -0.6 ? 'upside' : 'tilt', { prio: 2, mood: 'calm' });
     if (big) { c.setFace(pick(['surprised', 'scared', 'wideHappy', 'shocked']), 1.5); this.log('صاحبه قلب التلفون'); }
     if (!c.ground && c.airTime < 0.1 && this.s.parkour && !c.trick) c.trick = R.trick(c, 0.7);
   }
   onShake() {
     const c = this.c; this.touch(); if (this.ko) return;
-    this.dizzyUntil = this.T + 2.2; c.setFace('dizzy', 2.2); c.roll.vel += 8; this.say(c, 'dizzy', { prio: 3, mood: 'hurt' }); this.vib(80);
+    this.dizzyUntil = this.T + 2.2; c.setFace('dizzy', 2.2); c.roll.vel += 8; this.say(c, chance(0.5) ? 'dhikr_shake' : 'dizzy', { prio: 3, mood: 'hurt' }); this.vib(80);
     this.log('صاحبه هزّ التلفون ودوّخ كلود');
   }
 
@@ -432,7 +491,8 @@ class Brain {
     const s = this.s, t = this.tool;
     if (!CL.TOOLS[kind]) return false;
     if (s.tools[kind] === false) { s.tools[kind] = true; }
-    if (t.kind === kind && !t.hidden) return true;
+    if (t.kind === kind && !t.hidden && !t.stowed) return true;
+    if (t.stowed) { t.stowed = false; t.userPlaced = false; this.placeTool(true); }
     t.kind = kind; t.scale.v = 0.2; t.hidden = this.confiscated; this.sfx('pop');
     s.tool = kind; if (this.ui.saveSetting) this.ui.saveSetting('tool', kind);
     this.w.fx.mark(CL.TOOLS[kind].name, t.x, t.y - t.def.len * t.u - 10, 16, '#141413');
@@ -457,7 +517,7 @@ class Brain {
   targetPoint(loc, side) {
     const c = this.c, P = CL.makeProjector(c, c.u), o = [0, 0, 0];
     if (this.hiding) { P(rnd(-2, 2), 8, 0, o); return { x: o[0], y: o[1] }; }
-    const pts = { head: [rnd(-1.5, 2), 8.4, 0], face: [2.6 * side, 6.4, 2.5], arm: [5.2 * side, 5, 0], belly: [2.6 * side, 3.6, 2.5], legs: [2.6 * side, 1, 1] };
+    const pts = { head: [rnd(-1, 1.2), 10.0, 0], face: [1.5 * side, 8.0, 2.1], arm: [3.9 * side, 6.6, 0], belly: [1.5 * side, 4.5, 2.1], legs: [1.8 * side, 1, 0.8] };
     const p = pts[loc] || pts.belly;
     if (this.ko) P(0, 4, 2, o); else P(p[0], p[1], p[2], o);
     return { x: o[0], y: o[1] };
@@ -475,6 +535,7 @@ class Brain {
     const db = this.defenseBias;
     if (db && T < db.until && chance(db.p)) { this.defenseBias = null; return 'dodge'; }
     if (!rapid && power < 0.2 && this.combo === 0 && this.hits.length > 4 && chance(0.08)) return 'dodge';
+    if (this.hits.filter((h) => T - h < 12).length >= 6 && chance(0.22)) return chance(0.6) ? 'tryCatch' : 'block';
     return 'ok';
   }
   attack(power, opts) {
@@ -490,12 +551,12 @@ class Brain {
     if (!rapid && far > 0.15) power = M.max(power, far);
     const side = t.x >= cx ? 1 : -1;
     const def = this.defense(power, rapid);
-    const loc = def === 'catch' || def === 'block' || def === 'confiscate' ? 'arm' : this.chooseLoc(power, t.kind);
+    const loc = def === 'catch' || def === 'block' || def === 'confiscate' || def === 'tryCatch' ? 'arm' : this.chooseLoc(power, t.kind);
     const target = this.targetPoint(loc, side);
     if (this.running && def === 'ok' && chance(0.55)) { this.runFreeze = T + 0.8; c.walk = 0; c.tv *= 0.15; c.setFace('shocked', 0.8); }
     t.attack(target, power, { loc: loc, def: def, rapid: rapid, side: side, far: far });
     if (def === 'dodge') c.play(this.r_dodge(side), 3);
-    else if (def === 'catch' || def === 'block' || def === 'confiscate') { c.stop(); c.setFace(def === 'block' ? 'determined' : 'serious', 1.5); (side > 0 ? c.aR : c.aL).t = -2.0; (side > 0 ? c.fwdR : c.fwdL).t = 0.3; c.yaw.t = 0.35 * side; }
+    else if (def === 'catch' || def === 'block' || def === 'confiscate' || def === 'tryCatch') { c.stop(); c.setFace(def === 'block' ? 'determined' : 'serious', 1.5); (side > 0 ? c.aR : c.aL).t = -2.0; (side > 0 ? c.fwdR : c.fwdL).t = 0.3; c.yaw.t = 0.35 * side; }
     else if (def === 'friend' && this.f) { this.f.aL.t = this.f.aR.t = -2; }
   }
   r_dodge(side) {
@@ -512,6 +573,13 @@ class Brain {
     const c = this.c, o = info.opts || {}, t = this.tool;
     if (o.def === 'dodge') { this.sfx('whiff'); this.w.fx.word('ووووش', info.x, info.y, c.u * 1.4, '#fff'); return; }
     if (o.def === 'catch') return this.catchAndThrow(o.side);
+    if (o.def === 'tryCatch') { // he goes for it: half the time he gets it, otherwise it lands and he owns it
+      if (chance(0.5)) return this.catchAndThrow(o.side);
+      c.aL.t = c.aR.t = 0; c.fwdL.t = c.fwdR.t = 0; c.yaw.t = 0;
+      this.impact('arm', info.power, { x: info.x, y: info.y });
+      c.setFace('determined', 1.6); this.sayText(c, CL.lineOf(['s|كانت رح تمسك! المرة الجاية', 'e|كنت هلقطها! المرة الجاية', 'y|كدت أمسكها! المرة الجاية', 'f|كدتُ أمسكها! في المرة القادمة']), { prio: 3, mood: 'serious' });
+      return;
+    }
     if (o.def === 'confiscate') return this.confiscate();
     if (o.def === 'block') {
       this.sfx('catch'); this.vib(30); this.w.fx.burst(info.x, info.y, 6, 0.2, c.u, ['#fff', '#ddd']);
@@ -561,6 +629,8 @@ class Brain {
     if (this.fakeSleep) { this.fakeSleep = false; c.stop(); c.play(this.r_wake(), 3); return; }
     // he is in the right: takes it, but tells you off
     if (info.complain) { c.stop(); c.play(this.r_unjust(), 3); return; }
+    // enough is enough: he grows big and defends himself (not every time)
+    if (!this.raging && !this.hiding && T > (this.rageCool || 0) && (this.combo >= 12 || this.hits.filter((h) => T - h < 20).length >= 18) && chance(0.6)) { c.stop(); c.play(this.r_rage(), 4); return; }
     if (this.combo >= 26 || this.pain >= 120) { this.knockOut(); return; }
     if (mega) { c.stop(); c.play(this.r_mega(), 3); return; }
     // dignity: too many hits in a short time and he leaves for a while
@@ -574,7 +644,8 @@ class Brain {
     else if (heavy) this.say(c, chance(0.5) ? 'hit_heavy' : 'hit_' + loc, { prio: 3, mood: 'hurt' });
     else if (n === 1 || (n < 8 && chance(0.25))) this.say(c, kind === 'hammer' && chance(0.5) ? 'hammer' : kind === 'glove' && chance(0.4) ? 'glove' : chance(0.55) ? 'hit_' + loc : 'hit_light', { prio: 1, mood: 'hurt' });
     if (n === 8 || (n > 8 && n < 16 && n % 5 === 0)) this.say(c, 'combo_angry', { prio: 3, mood: 'angry' });
-    if (n === 16 || (n > 16 && n % 6 === 0)) this.say(c, 'combo_cry', { prio: 3, mood: 'sad' });
+    if (n === 16 || (n > 16 && n % 6 === 0)) this.say(c, 'dhikr_hit', { prio: 3, mood: 'serious' });
+    else if (n > 3 && n % 7 === 0) this.say(c, 'dhikr_hit', { prio: 2, mood: 'serious' });
     clearTimeout(this.afterTimer);
     this.afterTimer = setTimeout(() => this.aftermath(), 1700);
   }
@@ -653,7 +724,7 @@ class Brain {
       if (recent >= 15 && chance(0.55)) {
         yield* wait(0.6);
         B.ask(c, CL.lineOf(['s|حاسس إنك متضايق من شي… بدك نحكي؟', 'e|حاسس إنك متضايق… تحب نتكلم؟', 'g|كأنك متضايق… تبي نسولف؟', 'f|يبدو أنك متضايق… هل تريد أن نتحدث؟']),
-          ['إي، بدي احكي', 'لا، فشّيت خلقي 😄'], (i) => { if (i === 0) B.ui.openChat('متضايق من شي وبدي احكي'); else { c.setFace('joy', 2); B.say(c, 'calm', { prio: 2, mood: 'happy' }); } });
+          ['إي، بدي احكي', 'لا، الحمد لله تمام'], (i) => { if (i === 0) B.ui.openChat('متضايق من شي وبدي احكي'); else { c.setFace('joy', 2); B.say(c, 'calm', { prio: 2, mood: 'happy' }); } });
       } else { yield* wait(0.5); if (chance(0.6)) B.say(c, 'calm', { prio: 1, mood: 'calm' }); }
     })(this), 2);
   }
@@ -675,12 +746,35 @@ class Brain {
       yield* R.loop(0.6, () => { t.x = c.head.x + side * 6 * c.u; t.y = c.head.y + 2 * c.u; t.a = side * 0.4; });
       B.say(c, 'catch_throw', { prio: 3, mood: 'serious' });
       yield* tween(0.25, (e) => { hand.t = -2.4 + e * 3.4; });
-      t.state = 'fly'; t.thrownByClawd = true; t.vx = -side * rnd(1200, 1800) * (B.w.U / 7); t.vy = -rnd(900, 1300) * (B.w.U / 7); t.va = -side * 18; t.userPlaced = true;
-      t.onLanded = () => { t.thrownByClawd = false; };
+      const off = B.s.toolEdge !== false; // with the edge on, it goes behind the screen and you pull it out again
+      t.state = 'fly'; t.thrownByClawd = true; t.vx = (off ? 1 : -side) * rnd(1300, 1900) * (B.w.U / 7); t.vy = -rnd(900, 1300) * (B.w.U / 7); t.va = (off ? 1 : -side) * 18; t.userPlaced = true;
+      t.onLanded = () => { t.thrownByClawd = false; if (off) B.stowTool(true); };
+      if (off) setTimeout(() => { if (t.state === 'fly' || t.x > B.w.W - 2 * t.u) { t.state = 'idle'; t.thrownByClawd = false; B.stowTool(true); } }, 1300);
       B.sfx('throwAway');
       yield* wait(0.8); hand.t = 0; c.yaw.t = 0;
       if (chance(0.6)) { yield* wait(0.6); B.say(c, B.activity && RELIGIOUS[B.activity] ? 'unjust_worship' : 'unjust', { prio: 3, mood: 'serious' }); }
     })(), 3);
+  }
+  r_rage() { // he grows big, stamps, boxes at the screen and knocks the tool away, then calms down
+    const B = this, c = this.c, t = this.tool;
+    return (function* () {
+      B.raging = true; B.rageScale = 1; B.rageCool = B.T + 90; B.combo = 0; c.outfit.gloves = 1;
+      try {
+        c.setFace('determined', 8); B.say(c, 'rage', { prio: 4, mood: 'angry', dur: 2.4 }); B.sfx('stomp'); B.vib(80);
+        yield* tween(0.7, (k) => { B.rageScale = 1 + k * 1.3; });
+        for (let i = 0; i < 3; i++) { if (c.ground) { c.vy = -18 * c.u; c.ground = null; } yield* until(() => c.ground, 1); B.w.shake = c.u * 1.6; B.sfx('stomp'); B.vib(70); yield* wait(0.15); }
+        for (let i = 0; i < 3; i++) {
+          yield* R.move(B, c, i % 2 ? 'punchR' : 'punchL');
+          B.screenPunch = { t0: B.T, side: i % 2 ? 1 : -1, x: c.head.x, y: c.head.y + 3 * c.u }; B.w.shake = c.u * 2.6; B.sfx('punch'); B.vib(90);
+          yield* wait(0.5);
+        }
+        if (!t.stowed && !t.hidden) { t.state = 'fly'; t.thrownByClawd = true; t.vx = rnd(1500, 2000) * (B.w.U / 7); t.vy = -rnd(900, 1200) * (B.w.U / 7); t.va = 20; t.onLanded = () => { t.thrownByClawd = false; B.stowTool(true); };
+          setTimeout(() => { if (!t.stowed) { t.state = 'idle'; t.thrownByClawd = false; B.stowTool(true); } }, 1300); B.sfx('throwAway'); }
+        yield* wait(0.8);
+        yield* tween(0.8, (k) => { B.rageScale = 2.3 - k * 1.3; });
+        c.setFace('serious', 3); B.say(c, 'rage_end', { prio: 3, mood: 'serious' });
+      } finally { B.raging = false; B.rageScale = 1; c.outfit.gloves = 0; }
+    })();
   }
   confiscate() {
     const B = this, c = this.c, t = this.tool;
@@ -749,7 +843,7 @@ class Brain {
       B.running = true; B.runFreeze = 0;
       const t0 = B.T;
       let released = B.T, nextSay = B.T + rnd(1.6, 2.4), lastJump = -9, dust = 0, cower = 0, cowerFor = 0, nearSaid = -9, lastCh = 0, ph = 0, escapes = 0;
-      const flail = (on) => { c.aL.t = on ? -2.5 + M.sin(ph * 16) * 0.45 : 0; c.aR.t = on ? -2.5 - M.sin(ph * 16) * 0.45 : 0; };
+      const flail = (on) => { c.aL.t = on ? -1.3 - M.sin(ph * 16) * 0.4 : 0; c.aR.t = on ? -1.3 + M.sin(ph * 16) * 0.4 : 0; };
       try {
         c.setFace(pick(['shocked', 'scared', 'surprised']), 0.9);
         B.say(c, 'run_start', { prio: 3, mood: 'scared', dur: 1.5 });
@@ -783,7 +877,7 @@ class Brain {
               if (cowerFor > 1) { B.say(c, 'run_corner', { prio: 3, mood: 'scared', dur: 1.8 }); c.setFace(pick(['pleading', 'scared', 'nervous']), 3); }
             }
             cower += dt;
-            if (cowerFor > 1) { c.sit.t = 0.35; c.aL.t = c.aR.t = -2.7; c.fwdL.t = c.fwdR.t = 0.3; c.tremble = 0.6 + (t.state === 'charge' ? t.charge * 0.6 : 0); }
+            if (cowerFor > 1) { c.sit.t = 0.35; c.aL.t = c.aR.t = -2.5; c.fwdL.t = c.fwdR.t = 0.3; c.tremble = 0.6 + (t.state === 'charge' ? t.charge * 0.6 : 0); }
             if (!near && cower > 1) { cower = 0; c.sit.t = 0; c.tremble = 0; c.fwdL.t = c.fwdR.t = 0; continue; }
             if (cower > cowerFor && B.T - lastJump > 1.2) {
               cower = 0; c.sit.t = 0; c.tremble = 0; c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; lastJump = B.T; escapes++;
@@ -862,7 +956,7 @@ class Brain {
       B.sayText(c, CL.lineOf(['s|بتخبّى!', 'e|هستخبى!', 'g|بتخبّى!', 'f|سأختبئ!']), { prio: 3, mood: 'scared' });
       const H = B.w.H, y0 = c.y;
       try {
-        yield* tween(0.6, (e) => { c.y = lerp(y0, H + 9 * c.u, e); });
+        yield* tween(0.6, (e) => { c.y = lerp(y0, H + 10.6 * c.u, e); });
         yield* wait(1.2);
         let n = 0, done = false;
         B.hideAsk = () => {
@@ -873,19 +967,19 @@ class Brain {
           });
         };
         while (!done && n < 6) {
-          yield* tween(0.5, (e) => { c.y = lerp(H + 9 * c.u, H + 6.3 * c.u, e); c.look.ty = -1; });
+          yield* tween(0.5, (e) => { c.y = lerp(H + 10.6 * c.u, H + 7.9 * c.u, e); c.look.ty = -1; });
           c.setFace(pick(['pleading', 'nervous', 'scared']), 3);
           if (n === 0 || chance(0.6)) B.say(c, 'hide_peek', { prio: 3, mood: 'scared', dur: 2.5 });
           let w = 0; B.hideDuck = false;
           while (w < 3 && !done && !B.hideDuck) w += yield;
           if (done) break;
-          yield* tween(0.3, (e) => { c.y = lerp(H + 6.3 * c.u, H + 9 * c.u, e); });
+          yield* tween(0.3, (e) => { c.y = lerp(H + 7.9 * c.u, H + 10.6 * c.u, e); });
           yield* wait(B.hideDuck ? 1.6 : rnd(0.8, 1.6)); n++;
         }
         if (done === 'scared') yield* wait(3);
         B.ui.cancelAsk && B.ui.cancelAsk(); B.asking = null;
         // come back up
-        c.noClip = false; c.ground = null; c.y = H + 6 * c.u; c.vy = -70 * c.u; c.vx = 0;
+        c.noClip = false; c.ground = null; c.y = H + 7.6 * c.u; c.vy = -70 * c.u; c.vx = 0;
         yield* until(() => c.ground, 3);
         c.setFace(done === 'ok' ? 'joy' : 'nervous', 2);
       } finally { B.hiding = false; B.hideAsk = null; c.noClip = false; c.look.ty = 0; if (c.y > B.w.bounds.y1 + 1) { c.y = B.w.bounds.y1; c.ground = { e: 'b' }; } }
@@ -963,6 +1057,8 @@ class Brain {
   onKeyboard(open, field) {
     if (!this.s.typing) return;
     const c = this.c;
+    if (!open) this.pendingKb = null;
+    else if (this.activity && RELIGIOUS[this.activity]) { this.pendingKb = field; return; } // after his reading
     if (open && field) {
       const first = !this.typing; this.typing = true; this.field = field; if (first) { this.longSaid = false; this.typeStart = 0; this.lastTypeAt = 0; }
       const W = this.w.W, x0 = clamp(field.x + field.w * 0.12, 30, W - 60), x1 = x0 + M.min(field.w * 0.3, 120);
@@ -998,6 +1094,64 @@ class Brain {
     if (chance(0.35)) { c.setFace(pick(['suspicious', 'think', 'wideHappy', 'sideeye', 'happy', 'wink']), 1.8); this.say(c, 'typing_watch', { prio: 1, mood: 'calm' }); }
     else c.setFace(pick(['think', 'normal', 'happy', 'sideeye']), 1.2);
   }
+  /* ---------------- prayer times: a reminder when it's time, and an hour later "did you pray it on time?" */
+  prayTick() {
+    if (this.arena || this.s.prayOn === false || !CL.PRAY) return;
+    const now = new Date(), day = now.toDateString();
+    if (this.prayDay !== day) { this.prayDay = day; this.prayList = CL.PRAY.today(this.s, now) || []; this.prayDone = CL.store('prayDone:' + day) || {}; }
+    if (!this.prayList.length || !this.present || this.asking || this.away || this.ko || (this.activity && RELIGIOUS[this.activity])) return;
+    for (const p of this.prayList) {
+      const d = now.getTime() - p.at.getTime(), st = this.prayDone[p.k] || 0;
+      if (st === 0 && d >= 0 && d < 40 * 60000) { this.prayDone[p.k] = 1; CL.store('prayDone:' + day, this.prayDone); this.announcePrayer(p); return; }
+      if (st <= 1 && d >= 60 * 60000 && d < 4 * 3600000) { this.prayDone[p.k] = 2; CL.store('prayDone:' + day, this.prayDone); this.askPrayed(p); return; }
+    }
+  }
+  prayLine(key, p) { return (CL.line(key).text || '').replace(/\{p\}/g, p.name); }
+  announcePrayer(p) {
+    const c = this.c; c.scale.t = 1;
+    c.play((function* (B) {
+      c.setFace('serene', 3); B.sfx('chime');
+      B.sayText(c, '🕌 ' + (B.prayLine('prayer_now', p) || 'حان وقت صلاة ' + p.name), { prio: 4, mood: 'calm', dur: 5 });
+      yield* wait(5.2);
+      B.sayText(c, CL.lineOf(['s|قوم توضّا وصلّي، وأنا بستناك 🤲', 'e|قوم اتوضى وصلّي، أنا مستنيك', 'y|قم توضّأ وصلِّ، وأنا أنتظرك', 'f|قم فتوضأ وصلِّ، وأنا في انتظارك']), { prio: 3, mood: 'calm', dur: 4 });
+    })(this), 3);
+    this.log('ذكّر صاحبه بصلاة ' + p.name);
+  }
+  askPrayed(p) {
+    const c = this.c; c.scale.t = 1;
+    this.ask(c, this.prayLine('prayer_check', p) || ('صلّيت ' + p.name + ' بوقتها؟'), ['الحمد لله صلّيتها بوقتها', 'لسّا، رح صلّي هلّق', 'فاتتني'], (i) => {
+      if (i === 0) { c.setFace('proud', 2.5); this.say(c, 'prayer_yes', { prio: 3, mood: 'happy' }); this.w.fx.burst(c.head.x, c.head.y, 10, 0.3, c.u); this.rapport = M.min(100, this.rapport + 2); }
+      else { c.setFace(i === 1 ? 'determined' : 'pleading', 2.5); this.say(c, 'prayer_no', { prio: 3, mood: 'calm' }); this.rightfulUntil = this.T + 120; }
+      this.log('سأل صاحبه عن صلاة ' + p.name);
+    });
+    this.ui.showOptions();
+  }
+  /* ---------------- today's phone use (screen on time): every full hour he says how long and reminds of Allah's question */
+  usageTick(dt) {
+    if (this.arena || !this.present) return;
+    const day = new Date().toDateString();
+    if (this.useDay !== day) { this.useDay = day; this.useSec = +(CL.store('use:' + day) || 0); this.useHour = M.floor(this.useSec / 3600); }
+    this.useSec += dt; this.useSave = (this.useSave || 0) + dt;
+    if (this.useSave > 15) { this.useSave = 0; CL.store('use:' + day, M.round(this.useSec)); }
+    const h = M.floor(this.useSec / 3600);
+    if (h > this.useHour) { this.useHour = h; if (this.s.usage !== false) this.usageNag(h); }
+  }
+  usageNag(h) {
+    const c = this.c; c.scale.t = 1;
+    const head = h === 1 ? 'ساعة كاملة على الهاتف اليوم ⏱️' : h === 2 ? 'ساعتين على الهاتف اليوم! ⏱️' : this.num(h) + ' ساعات على الهاتف اليوم! ⏱️';
+    const H = [{ t: 'نعمتان مغبون فيهما كثير من الناس: الصحة والفراغ', r: 'رواه البخاري' },
+      { t: 'اغتنم خمساً قبل خمس: شبابك قبل هرمك، وصحتك قبل سقمك، وغناك قبل فقرك، وفراغك قبل شغلك، وحياتك قبل موتك', r: 'رواه الحاكم وصححه الألباني' },
+      { t: 'لا تزول قدما عبد يوم القيامة حتى يُسأل عن عمره فيمَ أفناه، وعن علمه فيمَ فعل، وعن ماله من أين اكتسبه وفيمَ أنفقه، وعن جسمه فيمَ أبلاه', r: 'رواه الترمذي' }];
+    const hd = H[CL.bag('useHadith', H.length)];
+    c.play((function* (B) {
+      c.setFace('serious', 3); B.sayText(c, head, { prio: 4, mood: 'serious', dur: 3.2 }); yield* wait(3.4);
+      B.say(c, h >= 3 ? 'usage_3h' : h === 2 ? 'usage_2h' : 'usage_1h', { prio: 4, mood: 'serious', dur: 4.5 }); yield* wait(4.7);
+      B.sayText(c, '«' + hd.t + '» ' + hd.r, { prio: 4, mood: 'calm', dur: clamp(2 + hd.t.length * 0.06, 5, 10) });
+    })(this), 3);
+    this.log('نبّه صاحبه إنه صار له ' + h + ' ساعة على الهاتف');
+  }
+  usageToday() { return M.round(this.useSec || +(CL.store('use:' + new Date().toDateString()) || 0)); }
+
   onScreen(state, awayMs) {
     const T = this.T, c = this.c;
     if (state === 'off') { this.present = false; if (T - this.adviceAt < 180) this.praisePending = true; return; }
@@ -1044,6 +1198,19 @@ class Brain {
   drawExtras(ctx, layer) {
     if (layer !== 'front') return;
     const c = this.c, T = this.T;
+    if (this.screenPunch) { // his glove flies at the screen and cracks the glass
+      const sp = this.screenPunch, k = (T - sp.t0) / 0.9;
+      if (k >= 1) this.screenPunch = null;
+      else {
+        const W = this.w.W, H = this.w.H, cx = W / 2 + sp.side * W * 0.12, cy = H * 0.42, g = M.min(1, k * 3.2);
+        if (k > 0.3) { ctx.save(); ctx.globalAlpha = M.min(1, (1 - k) * 2.2); ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2.2;
+          for (let i = 0; i < 9; i++) { const a = i * 0.7 + sp.side, r1 = 18 + (i % 3) * 30, r2 = r1 + 40 + (i % 2) * 50; ctx.beginPath(); ctx.moveTo(cx + M.cos(a) * 8, cy + M.sin(a) * 8); ctx.lineTo(cx + M.cos(a + 0.12) * r1, cy + M.sin(a + 0.12) * r1); ctx.lineTo(cx + M.cos(a - 0.05) * r2, cy + M.sin(a - 0.05) * r2); ctx.stroke(); }
+          ctx.restore(); }
+        ctx.save(); ctx.globalAlpha = k < 0.6 ? 1 : (1 - k) / 0.4;
+        ctx.translate(lerp(sp.x, cx, g), lerp(sp.y, cy, g)); ctx.rotate(sp.side * 0.3); const s = lerp(c.u * 0.9, c.u * 9, g * g); ctx.translate(0, CL.TOOLS.glove.len * s * 0.5);
+        CL.drawTool(ctx, 'glove', s, 0, T); ctx.restore();
+      }
+    }
     if (T < this.dizzyUntil || (this.ko && c.alpha > 0)) {
       for (let i = 0; i < 4; i++) { const a = T * 4 + i * PI / 2; CL.glyph(ctx, CL.STAR, c.head.x + M.cos(a) * 4 * c.u, c.head.y - 0.8 * c.u + M.sin(a) * 1.1 * c.u, c.u * 0.28); }
     }

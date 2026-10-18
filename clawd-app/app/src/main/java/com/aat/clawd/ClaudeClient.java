@@ -25,12 +25,13 @@ public final class ClaudeClient {
     }
 
     /** history: {role ("u"/"a"), text} pairs oldest first. Blocks until the reply ends. */
-    public void stream(String model, String system, List<String[]> history, String userText, Listener l) {
+    public void stream(String model, String system, List<String[]> history, String userText, Listener l) { stream(model, system, history, userText, 1024, l); }
+    public void stream(String model, String system, List<String[]> history, String userText, int maxTokens, Listener l) {
         HttpURLConnection con = null;
         try {
             JSONObject body = new JSONObject();
             body.put("model", model);
-            body.put("max_tokens", 1024);
+            body.put("max_tokens", maxTokens);
             body.put("stream", true);
             body.put("system", system);
             JSONObject oc = new JSONObject(); oc.put("effort", "low"); body.put("output_config", oc);

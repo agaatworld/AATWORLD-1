@@ -242,6 +242,7 @@ const FACES = (CL.FACES = {
   mischief: { L: 'squint', R: 'happy', m: 'grin' },
   relieved: { L: 'happy', R: 'happy', m: 'os' },
   serene: { L: 'happy', R: 'happy', m: 'smiles' },
+  reverent: { L: 'half', R: 'half', m: 'flat', look: { x: 0, y: 0.8 } }, // reading Allah's words: lowered eyes, still mouth
   starry: { L: 'star', R: 'star', m: 'O' },
   determined: { L: 'sq', R: 'sq', b: 'focus', m: 'teeth' },
   nervous: { L: 'sq', R: 'sq', b: 'worried', m: 'wave', ex: ['sweat'] },
@@ -269,14 +270,14 @@ function drawFaceTex(ctx, b, T) {
   let lookX = b.look.x, lookY = b.look.y;
   if (f.look) { lookX = f.look.x * b.lookSide; lookY = f.look.y; }
   const s = 0.25, ex = 0.42 * lookX, ey = 0.38 * lookY;
-  const lx = -2.5 + ex, rx = 2.5 + ex, y = -6.5 + ey;
+  const lx = -1.5 + ex, rx = 1.5 + ex, y = -8.0 + ey;
   let L = f.L, R = f.R;
   if (b.blinking && (L === 'sq' || L === 'wide' || L === 'big' || L === 'small')) L = 'blink';
   if (b.blinking && (R === 'sq' || R === 'wide' || R === 'big' || R === 'small')) R = 'blink';
   if (f.shades || b.outfit.shades) {
     ctx.fillStyle = COL.ink;
-    ctx.fillRect(-4.1, -7.0, 8.2, 0.45); ctx.fillRect(-3.7, -7.0, 2.6, 1.25); ctx.fillRect(1.1, -7.0, 2.6, 1.25);
-    ctx.fillStyle = '#fff'; ctx.fillRect(-3.35, -6.7, 0.45, 0.28); ctx.fillRect(1.45, -6.7, 0.45, 0.28);
+    ctx.fillRect(-2.75, -8.5, 5.5, 0.45); ctx.fillRect(-2.55, -8.5, 2.0, 1.2); ctx.fillRect(0.55, -8.5, 2.0, 1.2);
+    ctx.fillStyle = '#fff'; ctx.fillRect(-2.25, -8.2, 0.42, 0.26); ctx.fillRect(0.85, -8.2, 0.42, 0.26);
   } else {
     const off = (g) => (g === 'half' || g === 'squint' ? 0.25 : g === 'blink' || g === 'line' ? 0.35 : g === 'sleepy' ? 0.3 : 0);
     glyph(ctx, G[L] || G.sq, lx, y + off(L), s);
@@ -294,19 +295,19 @@ function drawFaceTex(ctx, b, T) {
   let m = f.m;
   if (b.talkT > 0 && (!m || m === 'flat' || m === 'smirk' || m === 'smiles')) m = (M.sin(T * 26) > 0) ? 'os' : (m || null);
   if (m === 'wave') m = M.sin(T * 30) > 0 ? 'waveA' : 'waveB';
-  if (m && MOUTH[m]) glyph(ctx, MOUTH[m], 0 + ex * 0.6, -4.35, s);
+  if (m && MOUTH[m]) glyph(ctx, MOUTH[m], 0 + ex * 0.6, -6.5, s);
   // extras
   const ext = f.ex || [];
-  if (ext.indexOf('blush') >= 0 || b.blush > 0.1) { ctx.fillStyle = COL.pink; ctx.fillRect(-3.7, -5.35, 1.2, 0.5); ctx.fillRect(2.5, -5.35, 1.2, 0.5); }
-  if (ext.indexOf('sweat') >= 0) { const k = (T * 0.8) % 1; glyph(ctx, DROP, 3.55, -7.4 + k * 1.6, 0.22); }
-  if (ext.indexOf('vein') >= 0) { ctx.fillStyle = COL.red; const v = [[0, 0], [0.5, 0], [0.25, -0.3], [0.25, 0.3]]; v.forEach((p) => ctx.fillRect(2.6 + p[0] - 0.12, -7.45 + p[1] - 0.12, 0.3, 0.3)); ctx.fillRect(2.6, -7.75, 0.25, 0.9); ctx.fillRect(2.3, -7.45, 0.9, 0.25); }
+  if (ext.indexOf('blush') >= 0 || b.blush > 0.1) { ctx.fillStyle = COL.pink; ctx.fillRect(-2.6, -7.05, 1.0, 0.5); ctx.fillRect(1.6, -7.05, 1.0, 0.5); }
+  if (ext.indexOf('sweat') >= 0) { const k = (T * 0.8) % 1; glyph(ctx, DROP, 2.3, -8.9 + k * 1.6, 0.22); }
+  if (ext.indexOf('vein') >= 0) { ctx.fillStyle = COL.red; const v = [[0, 0], [0.5, 0], [0.25, -0.3], [0.25, 0.3]]; v.forEach((p) => ctx.fillRect(1.6 + p[0] - 0.12, -9.0 + p[1] - 0.12, 0.3, 0.3)); ctx.fillRect(1.6, -9.3, 0.25, 0.9); ctx.fillRect(1.3, -9.0, 0.9, 0.25); }
   if (ext.indexOf('tears') >= 0) {
     ctx.fillStyle = COL.blue;
     for (let i = 0; i < 3; i++) { const k = ((T * 2.2 + i / 3) % 1); ctx.fillRect(lx - 0.4, y + 0.6 + k * 2.6, 0.32, 0.45); ctx.fillRect(rx + 0.1, y + 0.6 + ((k + 0.5) % 1) * 2.6, 0.32, 0.45); }
   }
-  if (b.cheek > 0.05) { ctx.globalAlpha = b.cheek * 0.8; ctx.fillStyle = COL.red; ctx.fillRect(2.2, -5.25, 1.6, 0.7); ctx.globalAlpha = 1; }
+  if (b.cheek > 0.05) { ctx.globalAlpha = b.cheek * 0.8; ctx.fillStyle = COL.red; ctx.fillRect(1.3, -6.95, 1.2, 0.7); ctx.globalAlpha = 1; }
   if (b.bandage > 0.05) {
-    ctx.save(); ctx.globalAlpha = M.min(1, b.bandage * 3); ctx.translate(2.4, -7.55); ctx.rotate(0.5);
+    ctx.save(); ctx.globalAlpha = M.min(1, b.bandage * 3); ctx.translate(1.6, -9.0); ctx.rotate(0.5);
     ctx.fillStyle = '#F4E9DA'; ctx.fillRect(-1.3, -0.35, 2.6, 0.7); ctx.fillRect(-0.35, -1.3, 0.7, 2.6);
     ctx.fillStyle = '#D8C6AE'; ctx.fillRect(-0.15, -0.15, 0.3, 0.3); ctx.restore();
   }
@@ -327,10 +328,10 @@ function drawFriendFace(ctx, b, T) {
 }
 
 function drawRobeFront(ctx) { // jalabiya front: collar, placket, buttons, pocket
-  ctx.fillStyle = '#E4DFD3'; ctx.fillRect(-1.2, -3.98, 2.4, 0.28);
-  ctx.fillStyle = '#DCD6C8'; ctx.fillRect(-0.12, -3.7, 0.24, 2.5);
-  ctx.fillStyle = '#B9B2A2'; [-3.45, -2.85, -2.25].forEach((y) => ctx.fillRect(-0.18, y, 0.36, 0.3));
-  ctx.fillStyle = '#E9E4D8'; ctx.fillRect(1.6, -2.6, 1.3, 0.12);
+  ctx.fillStyle = '#E4DFD3'; ctx.fillRect(-1.0, -6.2, 2.0, 0.28);
+  ctx.fillStyle = '#DCD6C8'; ctx.fillRect(-0.12, -5.95, 0.24, 3.4);
+  ctx.fillStyle = '#B9B2A2'; [-5.6, -4.9, -4.2, -3.5].forEach((y) => ctx.fillRect(-0.18, y, 0.36, 0.3));
+  ctx.fillStyle = '#E9E4D8'; ctx.fillRect(1.0, -4.6, 1.1, 0.12);
 }
 function drawCapFront(ctx) { // taqiyah embroidery
   ctx.fillStyle = '#D7D2C4';
@@ -385,36 +386,55 @@ function preRot(px, py, a) { // rotation about the z axis around a pivot (should
 function buildBoxes(b, T) {
   const out = [], col = b.bodyColor(), fr = b.kind === 'friend';
   const sit = b.sit.v, walk = b.walkAmt, ph = b.walkPhase;
-  const bodyDrop = sit * 1.7, w = fr ? 3.5 : 4, d = fr ? 2.2 : 2.5, top = fr ? 7.6 : 8;
+  // Clawd is slim and a little taller than wide (not a square block); his friend keeps the old chunky shape
+  const bodyDrop = sit * 1.7, w = fr ? 3.5 : 2.8, d = fr ? 2.2 : 2.1, top = fr ? 7.6 : 9.6, legH = 2;
   const robe = b.outfit.robe;
-  const shY = (fr ? 4.6 : 5) - bodyDrop;
+  const shY = (fr ? 4.6 : 6.8) - bodyDrop, armT = fr ? 1 : 0.58, armL = fr ? 2 : 1.45, hs = fr ? 0 : 0.6;
   // the jalabiya is its own block under the arms, and the body block starts where it ends: no overlapping boxes,
   // so the depth sort can't flip between them (that made the robe flicker on and off while rocking or tilting)
-  const robeY0 = M.max(0.05, 0.35 - bodyDrop), cut = robe ? M.min(2 - bodyDrop + 2.7, shY - 1.02) : 2 - bodyDrop;
+  const robeY0 = M.max(0.05, 0.35 - bodyDrop), cut = robe ? (fr ? M.min(legH - bodyDrop + 2.7, shY - armT - 0.02) : shY - armT - 0.02) : legH - bodyDrop;
   // legs
-  const legX = fr ? [-3, -1.2, 0.2, 2] : [-4, -2, 1, 3];
+  const legX = fr ? [-3, -1.2, 0.2, 2] : [-2.5, -1.25, 0.25, 1.5], legW = 1, legD = fr ? 2 : 1.6;
   for (let i = 0; i < 4; i++) {
     const swing = M.sin(ph + (i % 2) * PI) * walk;
     let lift = b.legs[i] + M.max(0, -swing) * 0.8 * walk;
-    let h = 2 * (1 - sit) + 0.35 * sit, z0 = -1 + swing * 0.9 + sit * 1.4;
+    let h = legH * (1 - sit) + 0.35 * sit, z0 = -legD / 2 + swing * 0.9 + sit * 1.2;
     let y0 = lift * (1 - sit), y1 = y0 + h;
     if (robe) { if (sit >= 0.5 || y0 >= robeY0 - 0.02) continue; y1 = robeY0; } // only the feet show under the hem
-    out.push({ x0: legX[i], x1: legX[i] + 1, y0: y0, y1: y1, z0: z0, z1: z0 + 2, col: robe ? '#B9583A' : col });
+    out.push({ x0: legX[i], x1: legX[i] + legW, y0: y0, y1: y1, z0: z0, z1: z0 + legD, col: robe ? '#B9583A' : col });
   }
-  const by0 = 2 - bodyDrop, by1 = top - bodyDrop;
+  const by0 = legH - bodyDrop, by1 = top - bodyDrop;
   // body (front face is textured with the face)
   out.push({ x0: -w, x1: w, y0: robe ? cut : by0, y1: by1, z0: -d, z1: d, col: col, tex: fr ? 'friendFace' : 'face', body: true });
   // robe (jalabiya): the lower body down to the ground, a little wider than the body
   if (robe) out.push({ x0: -w - 0.2, x1: w + 0.2, y0: robeY0, y1: cut, z0: -d - 0.2, z1: d + 0.2, col: COL.robe, tex: 'robe' });
-  // arms (rotate at the shoulders; fwd brings them to the front to hold things)
+  // arms (rotate at the shoulders; fwd brings them to the front to hold things). The arm comes out in front of the body
+  // before it moves inward, so a hand holding something is never hidden behind the body (that made his right hand vanish)
+  b.hand = b.hand || { L: {}, R: {} };
+  const skin = mixHex(col, '#FFFFFF', 0.15);
   [[-1, b.aL.v, b.fwdL.v], [1, b.aR.v, b.fwdR.v]].forEach(function (a) {
-    const side = a[0], ang = a[1] * side, fwd = a[2];
-    const x0 = side < 0 ? -w - 2 : w, x1 = side < 0 ? -w : w + 2;
-    const shift = fwd * 1.4 * -side;
-    const box = { x0: x0 + shift, x1: x1 + shift, y0: shY - 1, y1: shY + 1, z0: -1 + fwd * 2.2, z1: 1 + fwd * 2.2, col: robe ? COL.robe : col, rot: ang, pre: preRot(side * w + shift, shY, ang) };
-    if (robe) box.col = mixHex(COL.robe, col, 0.0);
-    out.push(box);
-    if (b.outfit.gloves) out.push({ x0: (side < 0 ? x0 - 0.6 : x1 - 0.2) + shift, x1: (side < 0 ? x0 + 0.6 : x1 + 0.6) + shift, y0: shY - 1.2, y1: shY + 1.2, z0: -1.2 + fwd * 2.2, z1: 1.2 + fwd * 2.2, col: '#D7263D', rot: ang, pre: preRot(side * w + shift, shY, ang) });
+    // Clawd's arms hang down by his sides at rest; they only rise when a pose asks for it (holding, waving, defending)
+    // poses are written screen-style (negative = raise the arm) while the model is y-up, so flip once here. Without
+    // the arm in front (fwd) it may not fold into the body, or it would be hidden behind it (his "vanishing hand")
+    const fwd = a[2];
+    let aIn = -a[1];
+    if (!fr && fwd < 0.3) { const lim = 2.1; if (aIn > lim) aIn = lim + (aIn - lim) * 0.5; else if (aIn < -lim) aIn = -lim + (aIn + lim) * 0.5; }
+    const lifted = fr ? 0 : clamp((M.abs(aIn) - 1.3) / 0.6, 0, 1); // a raised arm moves a little in front so it stays visible
+    const rest = fr ? 0 : (1 - M.min(1, fwd)) * M.max(0, 1 - M.abs(aIn) / 0.7);
+    const side = a[0], ang = (aIn - 1.35 * rest + (fr ? 0 : M.sin(ph + (side > 0 ? PI : 0)) * 0.22 * walk * rest)) * side;
+    const shift = fwd * (fr ? 1.4 : 1.3) * -side + side * armT * 0.95 * rest;
+    const zc = fr ? fwd * 2.2 : (d + armT + 0.1) * M.max(M.min(1, fwd * 2), lifted);
+    const px = side * w + shift, rot = preRot(px, shY, ang);
+    const x0 = side < 0 ? -w - armL : w, x1 = side < 0 ? -w : w + armL;
+    out.push({ x0: x0 + shift, x1: x1 + shift, y0: shY - armT, y1: shY + armT, z0: zc - armT, z1: zc + armT, col: robe ? COL.robe : col, rot: ang, pre: rot });
+    if (!fr) { // a hand at the end of the arm (a glove replaces it)
+      const g = b.outfit.gloves, s2 = g ? hs * 1.45 : hs, hx0 = side < 0 ? -w - armL - 2 * s2 : w + armL, hx1 = hx0 + 2 * s2;
+      out.push({ x0: hx0 + shift, x1: hx1 + shift, y0: shY - s2 * 1.05, y1: shY + s2 * 1.05, z0: zc - s2, z1: zc + s2, col: g ? '#D7263D' : skin, rot: ang, pre: rot });
+      const L = armL + s2, c = M.cos(ang), sn = M.sin(ang), h = b.hand[side > 0 ? 'R' : 'L'];
+      h.x = px + side * L * c; h.v = -(shY + side * L * sn + bodyDrop); h.z = zc; h.a = ang;
+    } else if (b.outfit.gloves) {
+      out.push({ x0: (side < 0 ? x0 - 0.6 : x1 - 0.2) + shift, x1: (side < 0 ? x0 + 0.6 : x1 + 0.6) + shift, y0: shY - 1.2, y1: shY + 1.2, z0: zc - 1.2, z1: zc + 1.2, col: '#D7263D', rot: ang, pre: rot });
+    }
   });
   // accessories on the head
   if (b.outfit.cap) {
@@ -543,7 +563,7 @@ const PROPS = (CL.PROPS = {
     if (p.turn > 0) { ctx.fillStyle = COL.paper; const w = 2.9 * M.cos(p.turn * PI); ctx.fillRect(0.1, -2.75, w, 1.6); }
   },
   tasbih: function (ctx, b, T, p) { // string of beads hanging from the right hand
-    const n = 11, cx = 2.6, cy = -4.3;
+    const hd = b.hand && b.hand.R, n = 11, cx = hd && hd.x != null ? hd.x : 2.6, cy = hd && hd.v != null ? hd.v + 0.5 : -4.3;
     ctx.strokeStyle = '#6B4A2A'; ctx.lineWidth = 0.08;
     const pts = [];
     for (let i = 0; i < n; i++) { const a = PI * (i / (n - 1)); pts.push([cx + M.cos(a) * 1.0 - 0.0, cy + M.sin(a) * 1.9]); }
@@ -566,20 +586,25 @@ const PROPS = (CL.PROPS = {
     ctx.fillStyle = '#F2C230'; ctx.fillRect(-0.15, -1.8, 0.3, 1.6); ctx.fillStyle = '#F5D0B5'; ctx.fillRect(-0.15, -0.2, 0.3, 0.25); ctx.fillStyle = '#333'; ctx.fillRect(-0.05, 0.05, 0.1, 0.12);
     ctx.fillStyle = '#E88'; ctx.fillRect(-0.15, -2.05, 0.3, 0.25); ctx.restore();
   },
-  tea: function (ctx, b, T, p) { // Arabic tea glass on a saucer, held in the right hand
-    const x = 4.3 + (p.sip || 0) * -2.6, y = -4.4 - (p.sip || 0) * 1.6;
-    ctx.fillStyle = '#C8C8C8'; ctx.fillRect(x - 0.9, y + 0.75, 1.8, 0.2);
-    ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(x - 0.55, y - 0.9, 1.1, 1.65);
-    ctx.fillStyle = '#B5541C'; ctx.fillRect(x - 0.48, y - 0.5, 0.96, 1.2);
-    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(x - 0.45, y - 0.85, 0.15, 1.5);
+  tea: function (ctx, b, T, p) { // Arabic tea glass held in the right hand (the saucer waits on the floor); tilts when he sips
+    const hd = b.hand && b.hand.R, sip = p.sip || 0;
+    const x = hd && hd.x != null ? hd.x - 0.15 : 3.4, y = hd && hd.v != null ? hd.v - 0.75 + sip * 0.8 : -5.2;
+    ctx.fillStyle = '#C8C8C8'; ctx.fillRect(-4.2, -0.25, 2.0, 0.22); // saucer by his side
+    ctx.save(); ctx.translate(x, y); ctx.rotate(-sip * 0.9);
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(-0.5, -0.85, 1.0, 1.6);
+    ctx.fillStyle = '#B5541C'; ctx.fillRect(-0.43, -0.45 + sip * 0.25, 0.86, 1.12 - sip * 0.25);
+    ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fillRect(-0.42, -0.8, 0.14, 1.45);
+    ctx.fillStyle = '#E4C46A'; ctx.fillRect(-0.52, -0.1, 1.04, 0.12); // the gold band of an istikana
+    ctx.restore();
+    if (!sip) { ctx.fillStyle = 'rgba(255,255,255,.55)'; for (let i = 0; i < 3; i++) { const k = (T * 0.9 + i / 3) % 1; ctx.globalAlpha = 0.6 * (1 - k); ctx.fillRect(x - 0.3 + M.sin(T * 3 + i) * 0.3, y - 1.1 - k * 2.2, 0.22, 0.5); } ctx.globalAlpha = 1; }
   },
   dumbbells: function (ctx, b, T, p) {
-    [-1, 1].forEach((s) => { const x = s * 5.2, y = -4 - (p.up || 0) * 2.2 * (s < 0 ? 1 : 1);
+    [-1, 1].forEach((s) => { const hd = b.hand && b.hand[s < 0 ? 'L' : 'R'], x = hd && hd.x != null ? hd.x : s * 5.2, y = hd && hd.v != null ? hd.v : -4 - (p.up || 0) * 2.2;
       ctx.fillStyle = '#333'; ctx.fillRect(x - 0.8, y - 0.15, 1.6, 0.3); ctx.fillRect(x - 0.9, y - 0.6, 0.35, 1.2); ctx.fillRect(x + 0.55, y - 0.6, 0.35, 1.2); });
   },
   juggle: function (ctx, b, T, p) {
     const cols = ['#E94F37', '#3F88C5', '#F6AE2D'];
-    for (let i = 0; i < 3; i++) { const ph = T * 4.2 + i * (TAU / 3); const x = M.cos(ph) * 2.6; const y = -9 - M.abs(M.sin(ph)) * 4;
+    for (let i = 0; i < 3; i++) { const ph = T * 4.2 + i * (TAU / 3); const x = M.cos(ph) * 2.6; const y = -11 - M.abs(M.sin(ph)) * 4;
       ctx.fillStyle = cols[i]; ctx.fillRect(x - 0.45, y - 0.45, 0.9, 0.9); }
   },
   plant: function (ctx, b, T, p) { // pot to the right of Clawd; grows over days
@@ -595,7 +620,8 @@ const PROPS = (CL.PROPS = {
     ctx.fillStyle = '#AEB6BF'; ctx.fillRect(2.2, -7.2, 3.6, 4.6); ctx.fillStyle = '#8D959E'; ctx.fillRect(2.6, -6.8, 2.8, 3.8);
     ctx.fillStyle = '#3B3F45'; ctx.fillRect(3.6, -5.2, 0.8, 0.6);
   },
-  phoneSelfie: function (ctx) { ctx.fillStyle = '#222'; ctx.fillRect(4.4, -7.6, 1.4, 2.4); ctx.fillStyle = '#7FD1F7'; ctx.fillRect(4.55, -7.4, 1.1, 1.9); },
+  phoneSelfie: function (ctx, b) { const hd = b.hand && b.hand.R, x = hd && hd.x != null ? hd.x - 0.7 : 4.4, y = hd && hd.v != null ? hd.v - 2.2 : -7.6;
+    ctx.fillStyle = '#222'; ctx.fillRect(x, y, 1.4, 2.4); ctx.fillStyle = '#7FD1F7'; ctx.fillRect(x + 0.15, y + 0.2, 1.1, 1.9); },
   dua: function () {}, // hands only
   sign: function (ctx, b, T, p) { // little board with text
     ctx.fillStyle = COL.woodD; ctx.fillRect(-0.15, -12.5, 0.3, 4.5);
@@ -627,11 +653,20 @@ function drawTool(ctx, kind, u, glow, T) {
     ctx.fillStyle = mixHex(COL.woodL, '#FF8A50', glow * 0.7); px(-0.8, -L - 0.2, 0.4, 2.2);
     ctx.fillStyle = COL.woodD; px(0.5, -L - 0.2, 0.3, 2.2); px(-0.2, -L + 1, 0.45, 0.3); px(-0.1, -L * 0.55, 0.4, 0.4);
     for (let i = 0; i < 4; i++) { ctx.fillStyle = i % 2 ? COL.gripD : COL.grip; px(-0.62, -2.4 + i * 0.6, 1.25, 0.6); }
-  } else if (kind === 'pillow') {
-    ctx.fillStyle = '#E9E4F7'; px(-0.3, -1.7, 0.6, 1.7); ctx.shadowBlur = 0;
-    ctx.fillStyle = '#B7A9E8'; px(-1.4, -L, 2.8, 3.0); ctx.fillStyle = '#CFC4F2'; px(-1.25, -L + 0.15, 2.5, 2.7);
-    ctx.fillStyle = '#9C8BDB'; px(-1.6, -L - 0.15, 0.45, 0.45); px(1.15, -L - 0.15, 0.45, 0.45); px(-1.6, -L + 2.7, 0.45, 0.45); px(1.15, -L + 2.7, 0.45, 0.45);
-    ctx.fillStyle = '#fff'; px(-0.8, -L + 0.6, 0.6, 0.3);
+  } else if (kind === 'pillow') { // a soft pillow held by one corner: it hangs as a puffy diamond
+    ctx.save(); ctx.scale(u, u); ctx.lineJoin = 'round';
+    const mid = -(L + 0.5) / 2, hw = 2.05;
+    const body = () => { ctx.beginPath(); ctx.moveTo(0, -0.45);
+      ctx.quadraticCurveTo(-hw * 0.95, mid + 1.35, -hw, mid); ctx.quadraticCurveTo(-hw * 0.95, mid - 1.35, 0, -L);
+      ctx.quadraticCurveTo(hw * 0.95, mid - 1.35, hw, mid); ctx.quadraticCurveTo(hw * 0.95, mid + 1.35, 0, -0.45); ctx.closePath(); };
+    ctx.fillStyle = mixHex('#F4F2FB', '#FFB08A', glow * 0.6); body(); ctx.fill(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#B3A9D9'; ctx.lineWidth = 0.14; body(); ctx.stroke();
+    ctx.save(); ctx.translate(0, mid); ctx.scale(0.8, 0.8); ctx.translate(0, -mid); ctx.setLineDash([0.28, 0.2]); ctx.lineWidth = 0.08; ctx.strokeStyle = '#C9C1E6'; body(); ctx.stroke(); ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.ellipse(-0.7, mid - 0.5, 0.55, 0.9, -0.5, 0, PI * 2); ctx.fill();
+    ctx.strokeStyle = '#C9C1E6'; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, -0.6); ctx.lineTo(-0.5, -1.5); ctx.moveTo(0, -0.6); ctx.lineTo(0.45, -1.4); ctx.stroke(); // folds at the pinch
+    ctx.fillStyle = '#B3A9D9'; [[0, -L], [-hw, mid], [hw, mid]].forEach((c) => { ctx.beginPath(); ctx.arc(c[0], c[1], 0.2, 0, PI * 2); ctx.fill(); }); // corner tufts
+    ctx.fillStyle = '#E2DCF3'; ctx.beginPath(); ctx.moveTo(-0.32, 0.15); ctx.lineTo(0.32, 0.15); ctx.lineTo(0.42, -0.55); ctx.lineTo(-0.42, -0.55); ctx.closePath(); ctx.fill(); // the corner in his hand
+    ctx.restore();
   } else if (kind === 'hammer') {
     ctx.fillStyle = '#F6C445'; px(-0.4, -L + 2, 0.8, L - 2); ctx.shadowBlur = 0;
     ctx.fillStyle = '#E8473B'; px(-2.4, -L, 4.8, 2.4); ctx.fillStyle = '#FF6B5E'; px(-2.4, -L, 4.8, 0.6);
@@ -647,11 +682,22 @@ function drawTool(ctx, kind, u, glow, T) {
   } else if (kind === 'snow') {
     ctx.fillStyle = '#FFFFFF'; px(-1.4, -3.2, 2.8, 2.6); px(-1.0, -3.6, 2.0, 3.4); ctx.shadowBlur = 0;
     ctx.fillStyle = '#D6E9F5'; px(0.2, -1.6, 1.0, 0.8); px(-1.0, -1.2, 0.6, 0.5);
-  } else if (kind === 'feather') {
-    ctx.fillStyle = '#C9A26B'; px(-0.12, -L, 0.24, L); ctx.shadowBlur = 0;
-    for (let i = 0; i < 9; i++) { const y = -L + 0.4 + i * 0.6, w = 1.6 * M.sin(((i + 1) / 10) * PI);
-      ctx.fillStyle = i % 2 ? '#F4D9A8' : '#FFFFFF'; px(-w, y, w, 0.55); px(0.12, y, w, 0.55); }
-    ctx.fillStyle = '#E57C3A'; px(-0.6, -L, 1.2, 0.7);
+  } else if (kind === 'feather') { // a real feather: curved quill, two tapering vanes with barbs and a few splits
+    ctx.save(); ctx.scale(u, u); ctx.lineCap = 'round';
+    const qx = (t) => 0.55 * t * t, qy = (t) => -L * t; // the shaft bends slightly to one side
+    const vane = (side, t0, t1) => { ctx.beginPath(); ctx.moveTo(qx(t0), qy(t0));
+      for (let t = t0; t <= t1 + 1e-6; t += 0.05) { const w = side * (t < 0.55 ? 0.35 + t * 1.6 : 1.23 * (1 - (t - 0.55) / 0.45) + 0.08) * (side < 0 ? 1 : 0.78); ctx.lineTo(qx(t) + w, qy(t) - 0.35 * M.abs(w)); }
+      for (let t = t1; t >= t0 - 1e-6; t -= 0.05) ctx.lineTo(qx(t), qy(t)); ctx.closePath(); };
+    ctx.fillStyle = mixHex('#FFFFFF', '#FFC27A', glow * 0.6);
+    [[-1, 0.2, 0.52], [-1, 0.55, 0.98], [1, 0.22, 0.7], [1, 0.73, 0.98]].forEach((v) => { vane(v[0], v[1], v[2]); ctx.fill(); });
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 0.05; // barbs
+    for (let t = 0.24; t < 0.96; t += 0.045) { const wl = (t < 0.55 ? 0.35 + t * 1.6 : 1.23 * (1 - (t - 0.55) / 0.45)) * 0.9;
+      ctx.beginPath(); ctx.moveTo(qx(t), qy(t)); ctx.lineTo(qx(t) - wl, qy(t) - 0.35 * wl); ctx.moveTo(qx(t), qy(t)); ctx.lineTo(qx(t) + wl * 0.75, qy(t) - 0.3 * wl); ctx.stroke(); }
+    ctx.strokeStyle = '#CBB48A'; ctx.lineWidth = 0.16; ctx.beginPath(); ctx.moveTo(0, 0.1); // quill / shaft
+    for (let t = 0; t <= 1; t += 0.05) ctx.lineTo(qx(t), qy(t)); ctx.stroke();
+    ctx.fillStyle = '#EDE3CF'; ctx.fillRect(-0.12, -0.05, 0.24, -L * 0.2); // bare base of the quill
+    ctx.restore();
   }
   ctx.shadowBlur = 0;
 }
@@ -707,6 +753,7 @@ class FX {
 CL.FX = FX;
 
 /* ---------------------------------------------------------------- the bot (Clawd or his friend) */
+const TEMP_FIT = ['gloves', 'shades', 'headband', 'nightcap', 'glasses'];
 class Bot {
   constructor(world, kind) {
     this.world = world; this.kind = kind || 'clawd';
@@ -744,18 +791,21 @@ class Bot {
     prio = prio || 1;
     if (this.task && this.taskPrio > prio) return false;
     this.stop();
+    this.fitBefore = {}; TEMP_FIT.forEach((k) => { this.fitBefore[k] = this.outfit[k] || 0; });
     this.task = gen; this.taskPrio = prio;
     try { const r = gen.next(0); if (r.done) this.task = null; } catch (e) { console.error(e); this.task = null; }
     return true;
   }
-  stop() { if (this.task) { const t = this.task; this.task = null; try { t.return(); } catch (e) {} } this.taskPrio = 0; }
+  stop() { if (this.task) { const t = this.task; this.task = null; try { t.return(); } catch (e) {} this.restoreFit(); } this.taskPrio = 0; }
+  // gloves, sunglasses, headbands… belong to the routine that put them on: when it ends or is interrupted they come off
+  restoreFit() { const f = this.fitBefore; if (!f) return; TEMP_FIT.forEach((k) => { this.outfit[k] = f[k] || 0; }); this.fitBefore = null; }
   busy(p) { return this.task && this.taskPrio >= (p || 1); }
   poseReset() {
     this.aL.t = 0; this.aR.t = 0; this.fwdL.t = 0; this.fwdR.t = 0; this.sit.t = 0; this.sx.t = 1; this.sy.t = 1;
     this.yaw.t = 0; this.rollOverride = null; this.walk = 0; this.tremble = 0;
   }
   bodyBoxFront(P, lx, ly) { // plane slightly in front of the body, for props; same coordinates as the face
-    const d = (this.kind === 'friend' ? 2.2 : 2.5) + 0.9;
+    const d = 2.2 + 0.9;
     const o = P(0, 0, d, [0, 0, 0]), a = P(1, 0, d, [0, 0, 0]), c = P(0, -1, d, [0, 0, 0]);
     return { ex: [a[0] - o[0], a[1] - o[1]], ey: [c[0] - o[0], c[1] - o[1]], O: [o[0] + lx, o[1] + ly], drop: this.sit.v * 1.7 };
   }
@@ -821,13 +871,13 @@ class World {
     b.look.x = lerp(b.look.x, b.look.tx, M.min(1, dt * 10)); b.look.y = lerp(b.look.y, b.look.ty, M.min(1, dt * 10));
     if (T > b.blinkAt) { b.blinking = true; if (T > b.blinkAt + 0.12) { b.blinking = false; b.blinkAt = T + rnd(2, 5.5); } }
     b.talkT = M.max(0, b.talkT - dt);
-    b.cheek = M.max(0, b.cheek - dt * 0.5); b.wet = M.max(0, b.wet - dt * 0.05); b.frozen = M.max(0, b.frozen - dt * 0.06);
+    b.cheek = M.max(0, b.cheek - dt * 0.5); b.wet = M.max(0, b.wet - dt * 0.05); b.frozen = M.max(0, b.frozen - dt * 0.12);
     b.blush = M.max(0, b.blush - dt * 0.4); b.bandage = M.max(0, b.bandage - dt / 40);
     b.lumps = b.lumps.filter((l) => { l.pop = M.max(0, l.pop - dt * 4); return T - l.born < 20; });
     for (let i = 0; i < 4; i++) b.legs[i] = lerp(b.legs[i], 0, M.min(1, dt * 6));
     if (b.tremble > 0) b.ox = rnd(-1, 1) * b.tremble * 0.25 * b.u; else b.ox = 0;
     // task
-    if (b.task) { try { const r = b.task.next(dt); if (r.done) { b.task = null; b.taskPrio = 0; } } catch (e) { console.error(e); b.task = null; } }
+    if (b.task) { try { const r = b.task.next(dt); if (r.done) { b.task = null; b.taskPrio = 0; b.restoreFit(); } } catch (e) { console.error(e); b.task = null; b.restoreFit(); } }
     if (b.held) { b.ground = null; b.vx = b.vy = 0; b.walkAmt = lerp(b.walkAmt, 0, dt * 8); return; }
     if (b.mode === 'top') return this.stepTop(b, dt);
     this.stepSide(b, dt);
@@ -845,7 +895,7 @@ class World {
   stepSide(b, dt) {
     const g = this.gravity(), bd = this.bounds, u = b.u, gd = this.gdir;
     const Gm = M.hypot(g.x, g.y) || 1;
-    const hw = 6 * u, hh = 8.5 * u;
+    const hw = 6 * u, hh = 9.8 * u;
     if (b.ground) {
       let n, t;
       if (b.ground.plat != null) {

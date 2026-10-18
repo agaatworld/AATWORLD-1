@@ -22,6 +22,10 @@ public final class Prefs {
     public static void setApiKey(Context c, String k) { p(c).edit().putString("apiKey", k == null ? "" : k).apply(); }
     public static boolean hasApiKey(Context c) { return !apiKey(c).isEmpty(); }
 
+    public static String geminiKey(Context c) { return p(c).getString("geminiKey", ""); }
+    public static void setGeminiKey(Context c, String k) { p(c).edit().putString("geminiKey", k == null ? "" : k).apply(); }
+    public static boolean hasGeminiKey(Context c) { return !geminiKey(c).isEmpty(); }
+
     public static String chatHistory(Context c) { return p(c).getString("chatHistory", "[]"); }
     public static void setChatHistory(Context c, String json) { p(c).edit().putString("chatHistory", json).apply(); }
 

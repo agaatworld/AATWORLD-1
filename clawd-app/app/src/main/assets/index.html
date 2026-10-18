@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>فشّة خلق</title>
+<title>صاحبي</title>
 <link rel="stylesheet" href="css/cl.css">
 <style>
 :root{ --bg:#F3F2EE; --ink:#141413; --muted:#6B6A66; --card:#FFFFFF; --line:#141413; --orange:#D97757; --soft:#EAE7DF; --good:#2E7D4F; --bad:#C2412F; }
@@ -67,6 +67,10 @@ input[type=number]{width:90px;text-align:center}
 .st{font-weight:900;font-size:16px;padding:4px 10px;border-radius:14px;white-space:nowrap}
 .st.ok{background:#DDF1E4;color:#1E5C38}.st.no{background:#F8DCD6;color:#8E2A1C}
 .note{color:var(--muted);font-size:15px;line-height:1.6;padding:6px 0 10px}
+.note.big{font-size:17px;color:var(--ink)}
+.ptimes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:6px 0 10px}.ptimes div{border:2px solid var(--soft);border-radius:10px;text-align:center;padding:6px 2px;font-size:15px}.ptimes b{display:block;font-size:16px}.ptimes span{font-weight:800}
+.hint.use{font-size:17px;color:var(--ink);opacity:.8;padding-top:2px}.note ol{margin:6px 0;padding-inline-start:22px}.note li{margin:3px 0}
+.memit{display:flex;align-items:center;gap:8px;border:2px solid var(--soft);border-radius:10px;padding:6px 10px;margin-top:6px;font-size:16px;font-weight:700}.memit span{flex:1}.memit .x{border:0;background:transparent;font-size:18px;font-weight:900;color:var(--muted)}
 .help li{margin:8px 0;line-height:1.6}
 .help b{color:var(--orange)}
 /* splash */
@@ -82,13 +86,14 @@ input[type=number]{width:90px;text-align:center}
 <body>
 <div class="app">
   <header>
-    <div class="brand">فشّة خلق<small>كلود معك… بكل الأحوال</small></div>
+    <div class="brand">صاحبي<small>رفيقك على الشاشة… يذكّرك بالله</small></div>
     <div class="stats"><div class="stat" id="sHits">0 <span>ضربة</span></div><div class="stat" style="font-size:17px" id="sLove">المودّة: 60</div></div>
   </header>
   <div class="meter"><div class="lbl"><span>الطاقة اللي فرّغتها</span><span id="sRank">مبتدئ</span></div><div class="bar"><i id="sBar"></i></div></div>
   <div id="arena"><canvas id="acv"></canvas></div>
   <div class="toolbar" id="toolbar"></div>
-  <div class="hint" id="hint">اضغط العصا: ضربة · اضغط طويلاً: ضربة أقوى · اسحب العصا بعيد واضرب: أقوى · اضغط كلود: يتفاعل · اسحبه وارميه</div>
+  <div class="hint use" id="useToday"></div>
+  <div class="hint" id="hint">مرّر إصبعك من طرف الساحة اليمين لتطلع الأداة · اضغطها: ضربة · مطوّل: أقوى · امسح على راسه: شكر · ضغطتين عليه: دردشة · مطوّل عليه: احكي بصوتك</div>
   <div class="dock">
     <button class="btn primary" id="bFloat">▶ تشغيل كلود العائم</button>
     <button class="btn half" id="bSet">⚙️ الإعدادات</button>
@@ -106,6 +111,7 @@ input[type=number]{width:90px;text-align:center}
   <div class="body help">
     <div class="sec">العصا والأدوات</div>
     <ul>
+      <li><b>الأداة مخبّاية ورا طرف الشاشة اليمين</b>: مرّر إصبعك من طرف الشاشة اليمين لجوّا وبتطلع الأداة (وصاحبك بينتبه). رجّعها لطرف اليمين أو ارميها لهناك وبترجع تتخبّى، خصوصاً لما يكون ماشي صح.</li>
       <li><b>ضغطة على العصا</b>: ضربة سريعة بمكان مختلف كل مرة.</li>
       <li><b>ضغطة طويلة</b>: العصا تتشحن وكلود يترجّاك… اترك = ضربة قوية. شحنة كاملة = ساحقة.</li>
       <li><b>ضغطات متتالية</b>: كومبو. يعصّب، بعدين يبكي، وبالآخر K.O.</li>
@@ -116,9 +122,11 @@ input[type=number]{width:90px;text-align:center}
     </ul>
     <div class="sec">كلود نفسه</div>
     <ul>
-      <li><b>ضغطة</b>: يتفاعل بطرق كثيرة. <b>ضغطات سريعة</b>: زكزكة وضحك. <b>ضغطة طويلة</b>: تملّس على راسه.</li>
+      <li><b>ضغطة</b>: يتفاعل بطرق كثيرة. <b>ضغطتين ورا بعض</b>: تفتح الدردشة معه.</li>
+      <li><b>امسح على راسه</b> (حرّك إصبعك يمين ويسار فوقه): هيك بتشكره، وبيفرح ويدعيلك.</li>
+      <li><b>ضغطة طويلة</b>: احكي معه بصوتك، ولما ترفع إصبعك بيرد عليك (بالمرة الأولى بيطلب إذن المايك).</li>
       <li><b>اسحبه</b>: تحمله. <b>ارميه</b>: بيطير ويعمل حركات باركور.</li>
-      <li><b>اسحبه لفوق بسرعة</b> أو اضغط 💬 جنبه: تفتح الدردشة مع Claude بنافذة عائمة.</li>
+      <li><b>اسحبه لفوق بسرعة</b> أو اضغطه ضغطتين: تفتح الدردشة بنافذة عائمة، وهو بيظهر فوق الدردشة وبيتفاعل مع كلامك.</li>
       <li><b>هز التلفون</b>: بيدوخ. <b>اقلب التلفون</b>: بيوقع للجهة التانية ويعمل حركات. <b>حط التلفون مسطّح</b>: أحياناً بيتمشى فوق التطبيقات بشكل ثلاثي الأبعاد.</li>
       <li>إذا تركته نص دقيقة بيصغر كتير وبيكمّل نشاطاته: تسبيح، قرآن بالجلابية والطاقية، مذاكرة بالنضارة، تمارين قتالية، شاي، ونوم…</li>
       <li>أحياناً بيسألك سؤال: اضغط الفقاعة وبتطلع الأجوبة.</li>
@@ -136,6 +144,7 @@ input[type=number]{width:90px;text-align:center}
 
 <script src="js/engine.js"></script>
 <script src="js/content.js"></script>
+<script src="js/prayer.js"></script>
 <script src="js/lines1.js"></script>
 <script src="js/lines2.js"></script>
 <script src="js/acts.js"></script>

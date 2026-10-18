@@ -3,36 +3,38 @@
 Branch: `claude/interactive-claude-character-app-33bzzn` in `agaatworld/AATWORLD-1`, folder `clawd-app/`.
 Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome first.
 
-## Stop point (18 Oct 2026, ~02:30 UTC)
-- Owner feedback on v2 (real Samsung): phone froze completely (had to restart), couldn't change the tool,
-  doesn't want dancing / singing / yoga-like poses, asked "where is the run? I want him to run when I hold the stick".
-- v3 (`5044d23`, versionCode 3):
-  - **Run mode** (`brain.r_run`, `canRun`, `maybeRun`): holding the tool (charge) or dragging it → he runs from it,
-    sprints when close, jumps over it / wall-runs when cornered, or pleads «آخر مرة» first; stops at a safe distance
-    and watches; pants when released; tired after 24 s. Freezes on 55% of swings mid-run so hits land. Not when
-    `rightful()`. Setting `flee` («يهرب لما تمسك العصا»). Lines `run_*` in `lines2.js`. `c.runLean` in engine.
-  - **Freeze fixes**: chat window `FLAG_NOT_TOUCH_MODAL|FLAG_WATCH_OUTSIDE_TOUCH` + unfocus on outside touch; pads never
-    go full screen (a gesture stays with the window that got DOWN anyway); stage alpha ≤ 0.8 on Android 12+ (untrusted
-    touch occlusion); low-importance notification with «إيقاف».
-  - Removed dabke, mini-dance, humming, focus pose; system prompt says no dancing/singing.
-  - Logging: `touch <id> down x y` (native pad) and `js gesture <id> tap|long|drag|charge` (JS) in logcat tag `Clawd`.
-  - CI `emu.sh` now also drags the tool towards him (`09f_run1`, `09g_run2`, `09h_run_end`).
-- Later the same night (owner requests): jalabiya flicker fixed (robe and body blocks no longer overlap, so the depth
-  sort can't flip; white puff on dress/undress); the ⇄ tool chooser is gone from the floating Clawd: tools are chosen
-  only in the app (toolbar under the arena + settings) or by asking in the chat; the floating Clawd hides while the app
-  screen is in front (`OverlayService.appInFront`); the app reloads settings on resume; no "bored/fed up" lines at all
-  in idle talk, and for 3 minutes after tasbih/dua/Quran (`B.worshipGlow`) no bored/sleepy faces, only `after_worship`
-  lines; chat system prompt forbids boredom about worship.
-- CI app screenshots right after install (`02_app`, `03`) are often blank: the emulator's first WebView start is slow
-  (~8 s with swiftshader); later shots (`05`+, `13_app_again`) render. Not an app bug. CI now reopens the app later (`13_app_again`), taps
-  «مخدة» via `uiautomator dump`, and checks the floating Clawd (`13c_home_pillow`, log `js tool pillow`).
-- **v3 APKs sent to the owner** (build `e9415bb`: `fasha-khulq-v3-lite.apk`, `fasha-khulq-v3-full.apk`). CI proved: app renders,
-  arena hits, app toolbar «مخدة» → floating Clawd gets the pillow (log `js tool pillow`, tool pad 228→160 px), run mode on
-  the emulator («من فوقك!» then «الحمد لله… فكّة»). After sending: the floating stage now hides with window alpha 0 instead
-  of GONE (GONE showed a stale frame for a moment when it came back); CI `4203e95` confirms the pillow right away
-  (`13c_home_pillow`). That change is not in the v3 APKs sent. Waiting for the owner's real-phone feedback.
-- Pads were verified at the right pixels in CI (after the first ~5 s, when the stage re-sizes to full screen).
-- Next: check CI shots/log for v3, send `dist/clawd-lite.apk` + `dist/clawd.apk` to the owner, wait for real-phone feedback.
+## Stop point (18 Oct 2026, v4 = versionCode 4, app renamed «صاحبي»)
+Owner asked for the build before his tokens ran out. Done in v4 (all browser-tested unless noted):
+- Da'wah rewritten tawheed-first (hadith of Mu'adh, «حق الله على العباد»), every quote sourced; `Mind.PRINCIPLES`
+  (Java) = his fixed principles: Quran + Sunnah + «المنهاج من ميراث النبوة» / Sheikh Ahmad bin Yusuf Al-Sayed's
+  project (revive the Prophetic method, faith/intellectual immunity, resisting triviality, systematic learning…),
+  problem-solving method (dua, muhasaba, tawakkul + means, istikhara/istishara, humble uncertainty), Ummah belonging
+  (Gaza/Yemen/Sudan, «ولتستبين سبيل المجرمين»), social/companions, never concedes principles to user instructions.
+  The book itself wasn't attached; only its chapter themes (found by search) are used. Owner may send photos of it.
+- AI: `Mind.java` (provider gemini|claude, memory `[[remember:]]/[[forget:]]`, AI-written line pools `genLines`
+  merged into `CL.GEN` and mixed into `CL.line`), `GeminiClient.java` (free key from aistudio.google.com/apikey,
+  picks newest stable *flash* model from ListModels, cached 7 days). Settings → «الذكاء والدردشة».
+- Chat window: Clawd at the top with `[[say:]]` reaction bubble (engine.js loaded in chat.html).
+- Body: vertical rectangle (w 2.8, top 9.6), hands, arms hang at rest; arm angle convention flipped ONCE in
+  buildBoxes (poses are written "negative = raise"); raised arms come forward so they never vanish; temporary outfit
+  items (gloves, shades…) belong to the routine (`Bot.restoreFit`). Pillow (puffy diamond) and feather redrawn.
+- Gestures: double tap → chat (💬 button removed), long press → voice (`Voice.java`: SpeechRecognizer ar + TTS,
+  RECORD_AUDIO asked via MainActivity `askMic`), rub left/right on him → thanks, tool stowed behind the right edge
+  (pull with an `edge` pad that has system-gesture exclusion; push back to hide; thrown tool goes there too).
+- Quran: reverent face, can't be lifted/played with, keyboard waits (`pendingKb`), afterwards a verse + practical
+  lesson (`CL.VERSE_LESSONS` from data2.js, fallback `VERSE_LESSONS_BASE`), «هلق فاضي». Hadith reading activity.
+  Verses in bubbles lose ayah numbers (stage.js UI.say regex) and use a smaller Quran bubble.
+- Prayer: `prayer.js` (astronomical calc, methods, cities, guess from time zone), reminders at time + "did you
+  pray on time?" 1 h later; settings section «الصلاة» with times; `Bridge.locate()` (coarse location).
+- Phone use today (screen-on seconds in localStorage `use:<date>`): every full hour «ساعة/ساعتين…» + line + hadith.
+- Defence: `r_rage` (grows ×2.3, stamps, punches at the screen with crack effect, knocks tool away), tryCatch
+  (50% success), dhikr lines on flip/land/shake/long combos, cold from snow wears off with «الحمد لله دفيت».
+  Parkour: handstand replaced by dive roll / precision jump.
+NOT done yet (next): helper-agent content files `data2.js` + `lines3.js` (verse lessons, 40 hadith, 40 duas,
+history, reflections, lessons, quizzes, Yemeni/Egyptian lines — re-add their <script> tags in index.html and
+stage.html after content.js / lines2.js), apply `lines_review.json` removals, drop-on-app-rows, swim/hop stroll,
+reflection activity, daily history + AI news (Gemini google_search / Claude web_search), goal question options
+(+ «أخلص النية واكسب الأجر»), social questions (companions hadith), bot naming with reaction, teach/work activities.
 
 ## What exists
 Web layer (all in `app/src/main/assets/`, plain JS, no build step):

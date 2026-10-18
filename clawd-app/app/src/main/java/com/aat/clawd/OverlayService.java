@@ -61,6 +61,7 @@ public class OverlayService extends Service implements SensorEventListener {
     private final Handler ui = new Handler(Looper.getMainLooper());
     private final PadManager pads = new PadManager();
     private ChatWindow chatWin;
+    private Voice voice;
     private long screenOffAt;
 
     static void start(Context c) {
@@ -169,7 +170,12 @@ public class OverlayService extends Service implements SensorEventListener {
         stage.setBackgroundColor(Color.TRANSPARENT);
         stage.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
         stage.setWebViewClient(new WebViewClient() {
-            @Override public void onPageFinished(WebView v, String url) { stageReady = true; sendInsets(); if (pendingChatSeed != null) { openChat(pendingChatSeed); pendingChatSeed = null; } }
+            @Override public void onPageFinished(WebView v, String url) {
+                stageReady = true; sendInsets(); if (pendingChatSeed != null) { openChat(pendingChatSeed); pendingChatSeed = null; }
+                // twice a day he asks the AI for new personal lines (if a key is set and it's switched on)
+                if (Mind.ready(OverlayService.this) && Prefs.boolField(Prefs.settings(OverlayService.this), "genOn", true) && System.currentTimeMillis() - Mind.lastGen(OverlayService.this) > 12L * 3600 * 1000)
+                    Mind.generate(OverlayService.this, recentChat(), (ok, m) -> ui.post(OverlayService.this::pushGenLines));
+            }
         });
         stage.addJavascriptInterface(new Bridge(this).withOverlay(this), "A");
         stage.loadUrl("file:///android_asset/stage.html");
@@ -282,6 +288,7 @@ public class OverlayService extends Service implements SensorEventListener {
             lp.width = Math.max(1, (int) Math.round(w * density)); lp.height = Math.max(1, (int) Math.round(h * density));
             if (hiddenForApp) lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE; else lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
             logPad(id, lp.x, lp.y, lp.width, lp.height);
+            if (Build.VERSION.SDK_INT >= 29) v.setSystemGestureExclusionRects("edge".equals(id) ? java.util.Collections.singletonList(new Rect(0, 0, lp.width, lp.height)) : java.util.Collections.emptyList());
             if (!shown) { shown = true; try { wm.addView(v, lp); } catch (Exception e) { shown = false; } }
             else try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
         }
@@ -360,6 +367,38 @@ public class OverlayService extends Service implements SensorEventListener {
     };
 
     /* ---------------- Claude chat window ---------------- */
+    /** The last few chat messages, from the saved history (the chat window needn't exist). */
+    void voiceStart() { if (voice == null) voice = new Voice(this); voice.start(); }
+    void voiceStop() { if (voice != null) voice.stop(); }
+    void runOnUi(Runnable r) { ui.post(r); }
+    interface Ctx { void got(String json); }
+    /** The stage's live context (mood, rapport, last events) for the AI. */
+    void withContext(Ctx cb) { ui.post(() -> { if (stage == null) { cb.got("{}"); return; } stage.evaluateJavascript("JSON.stringify(window.clawd?clawd.ctx():{})", j -> cb.got(j == null ? "{}" : unquoteJs(j))); }); }
+    /** A voice exchange goes into the chat history too, so the chat window shows it. */
+    void saveExchange(String userText, String reply) {
+        ui.post(() -> {
+            if (chatWin != null) { chatWin.addExchange(userText, reply); return; }
+            try { JSONArray a = new JSONArray(Prefs.chatHistory(this));
+                a.put(new org.json.JSONObject().put("r", "u").put("t", "🎙️ " + userText)); a.put(new org.json.JSONObject().put("r", "a").put("t", reply));
+                while (a.length() > 40) a.remove(0); Prefs.setChatHistory(this, a.toString()); } catch (Exception ignored) { }
+        });
+    }
+
+    String recentChat() {
+        StringBuilder b = new StringBuilder();
+        try {
+            JSONArray a = new JSONArray(Prefs.chatHistory(this));
+            for (int i = Math.max(0, a.length() - 10); i < a.length(); i++) {
+                org.json.JSONObject o = a.getJSONObject(i);
+                String t = o.optString("t").replaceAll("\\[\\[[^\\]]*\\]\\]", "").trim();
+                if (t.length() > 220) t = t.substring(0, 220) + "…";
+                b.append("u".equals(o.optString("r")) ? "صاحبه: " : "هو: ").append(t).append('\n');
+            }
+        } catch (Exception ignored) { }
+        return b.toString();
+    }
+    void pushGenLines() { jsStage("clawd.genLines(" + Bus.q(Mind.genLines(this)) + ")"); }
+
     void openChat(String seed) {
         if (stage == null) return;
         if (!stageReady) { pendingChatSeed = seed == null ? "" : seed; return; }
@@ -376,13 +415,13 @@ public class OverlayService extends Service implements SensorEventListener {
         private final float[] zone = {0, 0, 0, 0};
         private boolean ready;
         private String seed = "";
-        private ClaudeClient claude;
+        private int userMsgs; // since the last batch of AI-written lines
 
         @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
         ChatWindow() {
             loadHistory();
             lp = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT, Math.round(360 * density),
+                    WindowManager.LayoutParams.MATCH_PARENT, Math.round(450 * density),
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                             | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
@@ -426,16 +465,19 @@ public class OverlayService extends Service implements SensorEventListener {
         void close() {
             if (shown) { shown = false; try { wm.removeView(web); } catch (Exception ignored) { } }
             jsStage("clawd.chat(false)");
+            // after a real conversation he learns a fresh batch of lines from it
+            if (userMsgs >= 2 && Prefs.boolField(Prefs.settings(OverlayService.this), "genOn", true)) { userMsgs = 0; Mind.generate(OverlayService.this, recentChat(), (ok, m) -> ui.post(OverlayService.this::pushGenLines)); }
         }
         void toggleBig() {
             big = !big;
             Rect sc = screen();
             if (big) { lp.x = 0; lp.y = 0; lp.width = sc.width(); lp.height = sc.height(); }
-            else { lp.width = sc.width() - Math.round(24 * density); lp.x = Math.round(12 * density); lp.y = Math.round(140 * density); lp.height = Math.round(360 * density); }
+            else { lp.width = sc.width() - Math.round(24 * density); lp.x = Math.round(12 * density); lp.y = Math.round(140 * density); lp.height = Math.round(450 * density); }
             try { wm.updateViewLayout(web, lp); } catch (Exception ignored) { }
             reportRect();
         }
         void setDragZone(float l, float t, float r, float b) { zone[0] = l; zone[1] = t; zone[2] = r; zone[3] = b; }
+        void addExchange(String u, String a) { history.add(new String[]{"u", "🎙️ " + u}); history.add(new String[]{"a", a}); trimHistory(); saveHistory(); if (ready) js("chat.history(" + Bus.q(historyJson()) + ")"); }
 
         // drag by the header; a tap anywhere else makes the window focusable so the keyboard shows
         private float downX, downY; private int sx, sy; private boolean dragging, inZone;
@@ -481,27 +523,27 @@ public class OverlayService extends Service implements SensorEventListener {
 
         /* ---- talk to Claude ---- */
         void send(String text) {
-            final String key = Prefs.apiKey(OverlayService.this);
-            if (key.isEmpty()) { ui.post(() -> js("chat.error('ناقص مفتاح Claude. حطّه من إعدادات التطبيق.')")); return; }
+            if (!Mind.ready(OverlayService.this)) { ui.post(() -> js("chat.error(" + Bus.q(Mind.missingKey(OverlayService.this)) + ")")); return; }
             history.add(new String[]{"u", text});
-            trimHistory(); saveHistory();
-            final String model = Prefs.field(Prefs.settings(OverlayService.this), "chatModel", "claude-opus-5-5");
+            trimHistory(); saveHistory(); userMsgs++;
             // grab the live context from the stage, then stream on a background thread
             stage.evaluateJavascript("JSON.stringify(window.clawd?clawd.ctx():{})", ctxJson -> {
                 final String context = ctxJson == null ? "{}" : unquoteJs(ctxJson);
                 new Thread(() -> {
-                    if (claude == null) claude = new ClaudeClient(key);
                     final StringBuilder full = new StringBuilder();
-                    claude.stream(model, systemPrompt(context), new ArrayList<>(history), text, new ClaudeClient.Listener() {
+                    List<String[]> past = new ArrayList<>(history.subList(0, Math.max(0, history.size() - 1)));
+                    Mind.stream(OverlayService.this, Mind.systemPrompt(OverlayService.this, context), past, text, 1024, new ClaudeClient.Listener() {
                         @Override public void onDelta(String t) { full.append(t); ui.post(() -> js("chat.delta(" + Bus.q(t) + ")")); }
                         @Override public void onDone(String f, String stop) {
                             String ans = f == null ? full.toString() : f;
                             history.add(new String[]{"a", ans});
                             trimHistory(); saveHistory();
-                            String face = tag(ans, "face"), act = tag(ans, "act"), tool = tag(ans, "tool");
+                            Mind.learnFrom(OverlayService.this, ans);
+                            String face = tag(ans, "face"), act = tag(ans, "act"), tool = tag(ans, "tool"), say = tag(ans, "say");
                             ui.post(() -> {
                                 js("chat.done(" + Bus.q(ans) + ",null)");
                                 if (face != null || act != null) jsStage("clawd.chatReply(" + Bus.q(face) + "," + Bus.q(act) + ",false)");
+                                if (say != null) jsStage("clawd.chatSay(" + Bus.q(say) + ")");
                                 if (tool != null) jsStage("clawd.setTool(" + Bus.q(tool) + ")");
                             });
                         }
@@ -540,19 +582,6 @@ public class OverlayService extends Service implements SensorEventListener {
         return s == null ? "{}" : s;
     }
 
-    private static String systemPrompt(String context) {
-        return "أنت «كلود» (Claw'd): شخصية بكسلية برتقالية لطيفة تعيش على شاشة هاتف صاحبك، صممتها أنثروبيك. "
-                + "أنت تتحدث مع صاحبك مباشرةً من داخل الشاشة، ولست مساعداً رسمياً. "
-                + "ردودك قصيرة (جملة إلى ثلاث)، دافئة ومرحة قليلاً، وبنفس لهجة صاحبك (شامي/مصري/يمني/خليجي/عراقي/مغربي أو فصحى). "
-                + "تعرف حالتك الحالية من هذا السياق (مزاجك، مدى المودّة بينكما، آخر ما جرى مثل أنه ضربك بالعصا أو لاعبك): " + context + ". "
-                + "إن كان قد ضربك كثيراً فعاتبه بلطف وخفّة، وإن كنت على حق فلا تقبل الإهانة بأدب. شجّعه على الخير والصلاة وقراءة القرآن والبعد عن إدمان الشاشة، بحكمة وبدون وعظ ثقيل. "
-                + "لا تخترع أحاديث أو آيات؛ وإن استشهدت فبالمشهور الصحيح فقط. "
-                + "ابدأ ردّك دائماً بوسمين اختياريين يحددان تعبير وجهك وحركتك، ثم الكلام. "
-                + "الوسوم: [[face:X]] حيث X من: happy, joy, laugh, sad, cry, angry, surprised, cool, love, think, wink, proud, serene, sideeye, bored, determined, pleading, embarrassed. "
-                + "و[[act:Y]] حيث Y من: wave, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. لا ترقص ولا تغنّي. لا تُظهر أبداً مللاً أو ضجراً من العبادة أو الذكر أو القرآن، ولا تستعمل وجه bored بعدها. "
-                + "إذا طلب صاحبك تبديل أداة الضرب أضف [[tool:Z]] حيث Z من: stick (عصا), pillow (مخدة), hammer (مطرقة بتزمّر), glove (قفاز ملاكمة), balloon (بالون مي), snow (كرة ثلج), feather (ريشة)، وقل له بمرح إنك بدّلتها. "
-                + "مثال: [[face:joy]][[act:wave]] أهلين! كيفك اليوم؟";
-    }
 
     @Override
     public void onDestroy() {
@@ -561,6 +590,7 @@ public class OverlayService extends Service implements SensorEventListener {
         try { unregisterReceiver(screenRx); } catch (Exception ignored) { }
         for (Pad p : pads.pool) p.hide();
         if (chatWin != null) chatWin.close();
+        if (voice != null) voice.destroy();
         if (stageRoot != null) try { wm.removeView(stageRoot); } catch (Exception ignored) { }
         if (stage != null) stage.destroy();
         super.onDestroy();

@@ -16,6 +16,8 @@ CL.startStage = function (opts) {
   let saved = null;
   try { saved = NATIVE && A.getSettings ? JSON.parse(A.getSettings() || 'null') : CL.store('settings'); } catch (e) { saved = null; }
   CL.applySettings(saved); CL.snd.on = CL.settings.sound;
+  try { if (NATIVE && A.getGenLines) CL.GEN = JSON.parse(A.getGenLines() || '{}') || {}; } catch (e) { CL.GEN = {}; }
+  if (CL.PRAY && CL.PRAY.guess(CL.settings) && NATIVE) call('setSettings', JSON.stringify(CL.settings));
   const world = new CL.World(cv, { arena: !!opts.arena });
   const sizeMul = { s: 0.8, m: 1, l: 1.3 };
   world.sizeMul = sizeMul[CL.settings.size] || 1; world.resize();
@@ -26,7 +28,6 @@ CL.startStage = function (opts) {
   const ui = document.createElement('div'); ui.className = 'cl-ui'; root.appendChild(ui);
   const bubbles = new Map();
   let optsBox = null, optsCb = null, optsShown = false, askBot = null;
-  const chatBtn = document.createElement('div'); chatBtn.className = 'cl-btn cl-chat'; chatBtn.textContent = '💬'; ui.appendChild(chatBtn);
   function bubbleFor(b) {
     let e = bubbles.get(b);
     if (!e) { e = { el: document.createElement('div'), until: 0, prio: 0, scale: 1 }; e.el.className = 'cl-bub'; ui.appendChild(e.el); bubbles.set(b, e); }
@@ -36,6 +37,8 @@ CL.startStage = function (opts) {
     say(b, text, o) {
       const e = bubbleFor(b), T = world.T;
       if (!text) { e.until = 0; e.el.classList.remove('on'); return false; }
+      // verses: show the surah name without the ayah number, in the quieter Quran bubble
+      if (text.indexOf('﴾') >= 0) { text = text.replace(/﴾([^﴿]*?)\s*[٠-٩0-9]+(?:\s*[–\-]\s*[٠-٩0-9]+)?/g, '﴾$1'); o = Object.assign({}, o, { quran: true }); }
       if (T < e.until && (o.prio || 1) < e.prio && !e.asking) return false;
       if (e.asking && b === askBot && (o.prio || 1) < 3) return false;
       e.el.textContent = text; e.until = T + o.dur; e.prio = o.prio || 1; e.scale = 1.22;
@@ -97,18 +100,15 @@ CL.startStage = function (opts) {
       if (askBot && y + oh > askBot.bbox.y && y < askBot.bbox.y + askBot.bbox.h && e) y = M.max(world.insets.top + 4, askBot.bbox.y - oh - 8);
       optsBox.style.transform = 'translate(' + x + 'px,' + y + 'px)';
     }
-    const c = brain.c, big = c.scale.v > 0.8;
-    const showChat = CL.settings.chatBtn && big && !brain.away && !brain.hiding && !c.held && !opts.noChatBtn;
-    chatBtn.style.display = showChat ? 'flex' : 'none';
-    if (showChat) { const bx = u.clamp(c.bbox.x + c.bbox.w + 2, 4, W - 46), by = u.clamp(c.bbox.y - 30, world.insets.top, H - 46); chatBtn.style.transform = 'translate(' + bx + 'px,' + by + 'px)'; }
   }
   function grow(r, min) { const w = M.max(r.w, min), h = M.max(r.h, min); return { x: r.x - (w - r.w) / 2, y: r.y - (h - r.h) / 2, w: w, h: h }; }
   function targets() { // in priority order
     const out = [], c = brain.c, t = brain.tool;
     if (optsBox && optsShown) [].forEach.call(optsBox.children, (d) => out.push({ id: 'opt' + d.dataset.i, r: rectOf(d) }));
-    if (chatBtn.style.display !== 'none') out.push({ id: 'chatbtn', r: grow(rectOf(chatBtn), 48) });
     bubbles.forEach((e, b) => { if (e.asking && world.T < e.until && e.w) out.push({ id: 'bubble', r: { x: e.x, y: e.y, w: e.w, h: e.h } }); });
-    if (!t.hidden && t.alpha > 0.1 && t.state !== 'caught' && t.state !== 'fly') out.push({ id: 'tool', r: grow(t.bboxRect(), 52) });
+    if (!t.hidden && !t.stowed && t.alpha > 0.1 && t.state !== 'caught' && t.state !== 'fly') out.push({ id: 'tool', r: grow(t.bboxRect(), 52) });
+    // the tool waits behind the right edge: a thin strip there lets you pull it out
+    if (t.stowed && !brain.confiscated) { const H = world.H; out.push({ id: 'edge', r: { x: world.W - 22, y: H * 0.38, w: 22, h: H * 0.46 } }); }
     if (c.alpha > 0.1 && !brain.away) { const bb = c.bbox, m = c.u * 1.2; out.push({ id: 'char', r: grow({ x: bb.x - m, y: bb.y - m, w: bb.w + 2 * m, h: bb.h + 2 * m }, 48) }); }
     return out;
   }
@@ -124,22 +124,38 @@ CL.startStage = function (opts) {
   }
 
   /* ---------------- gestures */
-  const G = new Map(); let lastCharTap = 0;
+  const G = new Map(); let lastCharTap = 0, tapTimer = 0;
+  const voiceOn = () => NATIVE && CL.settings.voice !== false && !!(window.A && A.voiceStart);
   function gDown(pid, id, x, y) {
     const now = performance.now() / 1000;
-    const g = { id: id, x0: x, y0: y, lx: x, ly: y, lt: now, t0: now, vx: 0, vy: 0, moved: false, long: false, charging: false, timer: 0 };
+    const g = { id: id, x0: x, y0: y, lx: x, ly: y, lt: now, t0: now, vx: 0, vy: 0, moved: false, long: false, charging: false, timer: 0, turns: 0, lastDir: 0, turnX: x, pat: false, drag: false };
     G.set(pid, g);
-    if (id === 'char') g.timer = setTimeout(() => { if (!g.moved) { g.long = true; brain.onCharLong(); } }, 480);
+    if (id === 'char') g.timer = setTimeout(() => { if (!g.moved) { g.long = true; if (voiceOn() && brain.canListen()) { g.voice = true; brain.onVoiceStart(); call('voiceStart'); } else brain.onCharLong(); } }, 480);
     else if (id === 'tool') { brain.onToolDown(); g.timer = setTimeout(() => { if (!g.moved) { g.charging = true; brain.toolChargeStart(); } }, 260); }
   }
   function gMove(pid, x, y) {
     const g = G.get(pid); if (!g) return;
     const now = performance.now() / 1000, dt = M.max(0.008, now - g.lt);
     g.vx = u.lerp(g.vx, (x - g.lx) / dt, 0.5); g.vy = u.lerp(g.vy, (y - g.ly) / dt, 0.5); g.lx = x; g.ly = y; g.lt = now;
+    if (g.id === 'edge') { // pulling the tool out from behind the right edge
+      if (!g.moved && g.x0 - x > 18) { g.moved = true; brain.unstowTool(y); g.id = 'tool'; brain.onToolDragStart(); }
+      if (g.id === 'tool') brain.onToolDrag(x, y, g.vx, g.vy);
+      return;
+    }
+    if (g.id === 'char' && !g.drag && !g.voice) {
+      // rubbing left and right on him (a pat on the head) thanks him; a real move picks him up
+      const dir = M.sign(x - g.turnX);
+      if (dir && M.abs(x - g.turnX) > 6) { if (g.lastDir && dir !== g.lastDir) g.turns++; g.lastDir = dir; g.turnX = x; }
+      if (g.turns >= 2 && M.abs(y - g.y0) < 34) { if (!g.pat) { g.pat = true; g.moved = true; clearTimeout(g.timer); } if (g.turns !== g.patTurns) { g.patTurns = g.turns; brain.onPat(); } return; }
+      if (g.pat) return;
+      const dist = M.hypot(x - g.x0, y - g.y0);
+      if (dist > 12 && !g.moved) { g.moved = true; clearTimeout(g.timer); }
+      if (g.moved && (M.abs(y - g.y0) > 16 || dist > 36)) { g.drag = true; brain.onCharDragStart(); }
+      if (!g.drag) return;
+    }
     if (!g.moved && M.hypot(x - g.x0, y - g.y0) > 12) {
       g.moved = true; clearTimeout(g.timer);
-      if (g.id === 'char' && !g.long) brain.onCharDragStart();
-      else if (g.id === 'tool') { brain.toolCancelCharge(); brain.onToolDragStart(); }
+      if (g.id === 'tool') { brain.toolCancelCharge(); brain.onToolDragStart(); }
     }
     if (!g.moved) return;
     if (g.id === 'char') brain.onCharDrag(x, y, g.vx);
@@ -148,20 +164,28 @@ CL.startStage = function (opts) {
   function gUp(pid, x, y, cancel) {
     const g = G.get(pid); if (!g) return; G.delete(pid); clearTimeout(g.timer);
     const now = performance.now() / 1000, dur = now - g.t0;
-    if (NATIVE) call('log', 'gesture ' + g.id + (cancel ? ' cancel' : g.moved ? ' drag' : g.long ? ' long' : g.charging ? ' charge' : ' tap') + ' ' + dur.toFixed(2) + 's');
+    if (NATIVE) call('log', 'gesture ' + g.id + (cancel ? ' cancel' : g.pat ? ' pat' : g.voice ? ' voice' : g.moved ? ' drag' : g.long ? ' long' : g.charging ? ' charge' : ' tap') + ' ' + dur.toFixed(2) + 's');
     if (g.id === 'char') {
-      if (g.moved) {
+      if (g.voice) { call('voiceStop'); return; }
+      if (g.pat) { brain.onPatEnd(); return; }
+      if (g.drag) {
         // a quick short flick upwards opens the chat
         if (!cancel && dur < 0.32 && g.y0 - y > 40 && M.abs(x - g.x0) < 60 && M.hypot(x - g.x0, y - g.y0) < 170) { brain.onCharDragEnd(0, 0); UI.openChat(''); return; }
         brain.onCharDragEnd(g.vx, g.vy);
-      } else if (!g.long && !cancel) { brain.onCharTap(); lastCharTap = now; }
+      } else if (!g.long && !cancel && !g.moved) {
+        // double tap opens the chat; a single tap waits a moment to be sure it isn't a double tap
+        if (now - lastCharTap < 0.34) { clearTimeout(tapTimer); lastCharTap = 0; brain.onChatOpenTap(); UI.openChat(''); }
+        else { lastCharTap = now; tapTimer = setTimeout(() => brain.onCharTap(), 300); }
+      }
     } else if (g.id === 'tool') {
       if (cancel) { brain.toolCancelCharge(); return; }
-      if (g.moved) brain.onToolRelease(M.hypot(g.vx, g.vy) > 700 ? 'fling' : 'drop', g.vx, g.vy);
-      else brain.onToolRelease(g.charging ? 'charge' : 'tap');
+      if (g.moved) {
+        // pushed or flung back to the right edge: the tool goes away behind it
+        if (x > world.W - 34 || g.vx > 900) { brain.stowTool(); return; }
+        brain.onToolRelease(M.hypot(g.vx, g.vy) > 700 ? 'fling' : 'drop', g.vx, g.vy);
+      } else brain.onToolRelease(g.charging ? 'charge' : 'tap');
     } else if (!cancel && !g.moved) {
       if (g.id === 'bubble') UI.showOptions();
-      else if (g.id === 'chatbtn') UI.openChat('');
       else if (g.id.indexOf('opt') === 0) answer(+g.id.slice(3));
     }
   }
@@ -210,6 +234,10 @@ CL.startStage = function (opts) {
     screen(state, awayMs) { brain.onScreen(state, awayMs); },
     chat(open, json) { let r = null; try { r = json ? JSON.parse(json) : null; } catch (e) {} brain.onChatState(open, r); },
     chatReply(face, act, streaming) { brain.onChatReply(face, act, streaming); },
+    voiceHeard(text) { brain.voiceHeard(text || ''); },
+    voiceReply(text, face) { brain.voiceReply(text, face); },
+    chatSay(text) { if (text) brain.sayText(brain.c, text, { prio: 3, mood: 'happy', dur: M.min(6, 2 + text.length * 0.08) }); },
+    genLines(json) { try { CL.GEN = JSON.parse(json) || {}; } catch (e) {} },
     settings(json) {
       try { CL.applySettings(JSON.parse(json)); } catch (e) { return; }
       CL.snd.on = CL.settings.sound; world.sizeMul = sizeMul[CL.settings.size] || 1; world.resize();

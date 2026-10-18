@@ -43,19 +43,21 @@ public class MainActivity extends Activity {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
         if (getIntent() != null && getIntent().getBooleanExtra("float", false)) web.postDelayed(this::startFloating, 1200);
+        if (getIntent() != null && getIntent().getBooleanExtra("askMic", false)) askMic();
     }
 
     @Override
     protected void onNewIntent(Intent i) {
         super.onNewIntent(i);
         setIntent(i);
+        if (i != null && i.getBooleanExtra("askMic", false)) askMic();
         if (i != null && i.getBooleanExtra("float", false)) web.postDelayed(this::startFloating, 300);
     }
 
     void startFloating() {
         if (!Settings.canDrawOverlays(this)) {
             wantFloating = true;
-            Toast.makeText(this, "فعّل «الظهور فوق التطبيقات» لـ فشّة خلق، ثم ارجع", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "فعّل «الظهور فوق التطبيقات» لـ «صاحبي»، ثم ارجع", Toast.LENGTH_LONG).show();
             openPerm("overlay");
             return;
         }
@@ -63,6 +65,21 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "كلود صار معك فوق كل التطبيقات 👇", Toast.LENGTH_SHORT).show();
         moveTaskToBack(true);
     }
+
+    /** Voice talk needs the microphone; Android only lets a screen ask for it. */
+    void askMic() {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) { moveTaskToBack(true); return; }
+        micAsked = true; requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 2);
+    }
+    private boolean micAsked;
+    @Override public void onRequestPermissionsResult(int code, String[] p, int[] r) {
+        super.onRequestPermissionsResult(code, p, r);
+        if (code == 2 && micAsked) { micAsked = false; boolean ok = r.length > 0 && r[0] == PackageManager.PERMISSION_GRANTED;
+            Toast.makeText(this, ok ? "تمام! هلق اضغط مطوّل على صاحبك واحكي معه 🎙️" : "بدون المايك ما بيقدر يسمعك", Toast.LENGTH_LONG).show(); if (ok) moveTaskToBack(true); }
+        if (code == 3) web.evaluateJavascript("window.app&&app.locate&&app.locate()", null);
+    }
+
+    void js(String code) { if (web != null) web.evaluateJavascript(code, null); }
 
     void openPerm(String which) {
         try { startActivity(Perms.intentFor(this, which)); }
