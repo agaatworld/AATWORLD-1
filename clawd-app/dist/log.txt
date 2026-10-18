@@ -1,18 +1,18 @@
-10-18 01:11:26.742   881   881 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
-10-18 01:12:00.982   483  1959 W ActivityManager: Permission Denial: Accessing service com.aat.clawd/.OverlayService from pid=3970, uid=2000 that is not exported from uid 10174
-10-18 01:12:01.199   483  1562 W ActivityManager: Permission Denial: Accessing service com.aat.clawd/.OverlayService from pid=3981, uid=2000 that is not exported from uid 10174
-10-18 01:12:01.657  3007  3241 D Clawd   : stage ready {"w":412.19049072265625,"h":480.23809814453125,"dpr":2.625}
+10-18 01:20:18.942   869   869 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 01:20:46.033   483   518 I ActivityManager: Start proc 3674:com.aat.clawd/u0a174 for service {com.aat.clawd/com.aat.clawd.ClawdEyes}
+10-18 01:20:53.321  3674  3914 D Clawd   : stage ready {"w":412.19049072265625,"h":480.23809814453125,"dpr":2.625}
+10-18 01:21:07.411  3674  3914 D Clawd   : stage ready {"w":412.19049072265625,"h":915.047607421875,"dpr":2.625}
 === services ===
 ACTIVITY MANAGER SERVICES (dumpsys activity services)
   User 0 active services:
-  * ServiceRecord{279e42c u0 com.aat.clawd/.ClawdEyes}
+  * ServiceRecord{3d8b661 u0 com.aat.clawd/.ClawdEyes}
     intent={cmp=com.aat.clawd/.ClawdEyes}
     packageName=com.aat.clawd
     processName=com.aat.clawd
     permission=android.permission.BIND_ACCESSIBILITY_SERVICE
-    baseDir=/data/app/~~B8IO1r-f1tt1HRxeMFIqfw==/com.aat.clawd-0hH2LEACeExD3AtKepKrzQ==/base.apk
+    baseDir=/data/app/~~JCq_WR3LXJfP9eP5E0oSzA==/com.aat.clawd-jcLJYjpzZptoj9OnbMe68Q==/base.apk
     dataDir=/data/user/0/com.aat.clawd
-    app=ProcessRecord{c6f229 3007:com.aat.clawd/u0a174}
+    app=ProcessRecord{6f1274c 3674:com.aat.clawd/u0a174}
     mIsAllowedBgActivityStartsByBinding=true
     allowWhileInUsePermissionInFgs=true
     recentCallingPackage=android
@@ -20,8 +20,8 @@ ACTIVITY MANAGER SERVICES (dumpsys activity services)
     allowStartForeground=PROC_STATE_PERSISTENT
     startForegroundCount=0
     infoAllowStartForeground=[callingPackage: android; callingUid: 1000; uidState: PER ; intent: Intent { cmp=com.aat.clawd/.ClawdEyes }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<broadcast:1000:android.intent.action.LOCKED_BOOT_COMPLETED,reason:,reasonCode:LOCKED_BOOT_COMPLETED,duration:20000,callingUid:1000>; targetSdkVersion:34; callerTargetSdkVersion:33; startForegroundCount:0; bindFromPackage:null]
-    createTime=-38s360ms startingBgTimeout=--
-    lastActivity=-38s261ms restartTime=-38s261ms createdFromFg=true
+    createTime=-55s219ms startingBgTimeout=--
+    lastActivity=-55s5ms restartTime=-55s5ms createdFromFg=true
     Bindings:
 === accessibility ===
 com.aat.clawd/com.aat.clawd.ClawdEyes
