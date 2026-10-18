@@ -122,7 +122,8 @@ class Brain {
       if (s.roam && this.w.gdir.y > 0.7) { c.play(R.roam(this, c), 1); this.nextIdle = T + rnd(3, 6); return; } // small walks even when he is tiny
     }
     if (!tiny && !this.arena && M.abs(c.x - this.home().x) > 40 * c.u && chance(0.5)) { c.play(R.goHome(this, c), 1); return; }
-    if (T - this.lastUser > 30 && chance(0.12)) this.say(c, 'idle', { mood: 'calm' });
+    if (this.worshipGlow > T) { if (chance(0.25)) this.say(c, 'after_worship', { mood: 'calm' }); }
+    else if (T - this.lastUser > 30 && chance(0.12)) this.say(c, 'idle', { mood: 'calm' });
     c.play(R.idleSmall[CL.bag('idleSmall', R.idleSmall.length)](this, c), 1);
   }
   chooseActivity(tiny) {
@@ -416,7 +417,6 @@ class Brain {
       return;
     }
     t.state = 'idle'; t.homeX = t.x; t.homeY = t.y;
-    if (this.ui.toolHint) this.ui.toolHint();
   }
   toolFlyStep() {
     const t = this.tool, c = this.c; if (t.flyHit || t.thrownByClawd) return;
@@ -439,20 +439,6 @@ class Brain {
     if (!quiet && chance(0.7)) this.say(this.c, 'tool_switch', { prio: 2, mood: 'scared' });
     this.log('صاحبه بدّل الأداة لـ' + CL.TOOLS[kind].name);
     return true;
-  }
-  chooseTool() { // the ⇄ button: a list of every tool
-    const ks = Object.keys(CL.TOOLS);
-    this.ask(this.c, CL.lineOf(['s|شو بدك أداة؟ 😅', 'e|عايز أنهي أداة؟ 😅', 'g|وش تبي أداة؟ 😅', 'f|أي أداة تريد؟ 😅']), ks.map((k) => CL.TOOLS[k].name), (i) => this.setTool(ks[i]));
-    this.ui.showOptions();
-  }
-  switchTool() {
-    const s = this.s, ks = Object.keys(CL.TOOLS).filter((k) => s.tools[k] !== false);
-    if (!ks.length) return;
-    const t = this.tool, i = ks.indexOf(t.kind);
-    t.kind = ks[(i + 1) % ks.length]; t.scale.v = 0.2; this.sfx('pop');
-    s.tool = t.kind; if (this.ui.saveSetting) this.ui.saveSetting('tool', t.kind);
-    this.w.fx.mark(CL.TOOLS[t.kind].name, t.x, t.y - t.def.len * t.u - 10, 16, '#141413');
-    if (chance(0.6)) this.say(this.c, 'tool_switch', { prio: 2, mood: 'scared' });
   }
 
   chooseLoc(power, kind) {

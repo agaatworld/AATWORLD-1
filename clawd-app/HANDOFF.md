@@ -17,6 +17,15 @@ Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome
   - Removed dabke, mini-dance, humming, focus pose; system prompt says no dancing/singing.
   - Logging: `touch <id> down x y` (native pad) and `js gesture <id> tap|long|drag|charge` (JS) in logcat tag `Clawd`.
   - CI `emu.sh` now also drags the tool towards him (`09f_run1`, `09g_run2`, `09h_run_end`).
+- Later the same night (owner requests): jalabiya flicker fixed (robe and body blocks no longer overlap, so the depth
+  sort can't flip; white puff on dress/undress); the ⇄ tool chooser is gone from the floating Clawd: tools are chosen
+  only in the app (toolbar under the arena + settings) or by asking in the chat; the floating Clawd hides while the app
+  screen is in front (`OverlayService.appInFront`); the app reloads settings on resume; no "bored/fed up" lines at all
+  in idle talk, and for 3 minutes after tasbih/dua/Quran (`B.worshipGlow`) no bored/sleepy faces, only `after_worship`
+  lines; chat system prompt forbids boredom about worship.
+- CI app screenshots (`02_app`…`07`) were blank in the last two runs although the arena JS ran ("stage ready" h=466);
+  looks like an emulator draw flake (an older build had it too). CI now reopens the app later (`13_app_again`), taps
+  «مخدة» via `uiautomator dump`, and checks the floating Clawd (`13c_home_pillow`, log `js tool pillow`).
 - Pads were verified at the right pixels in CI (after the first ~5 s, when the stage re-sizes to full screen).
 - Next: check CI shots/log for v3, send `dist/clawd-lite.apk` + `dist/clawd.apk` to the owner, wait for real-phone feedback.
 

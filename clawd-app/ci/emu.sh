@@ -53,11 +53,7 @@ sleep 0.8; shot 09_home_tap
 read TXP TYP <<< "$(pad tool)"; echo "tool pad at $TXP $TYP"
 if [ -n "$TXP" ]; then for i in $(seq 1 6); do adb shell input tap ${TXP%.*} ${TYP%.*} & sleep 0.15; done; wait; fi
 sleep 0.3; shot 09b_home_hits
-sleep 3   # let the tool settle so the switch button is back
-read SXP SYP <<< "$(pad switch)"; echo "switch pad at $SXP $SYP"
-if [ -n "$SXP" ]; then adb shell input tap ${SXP%.*} ${SYP%.*}; fi
-sleep 0.8; shot 09c_tool_list
-adb shell input keyevent 4; sleep 2
+sleep 3
 # hold the tool and drag it towards Clawd: he should run away from it
 read TXP TYP <<< "$(pad tool)"; read CXP CYP <<< "$(pad char)"
 if [ -n "$TXP" ] && [ -n "$CXP" ]; then
@@ -65,6 +61,23 @@ if [ -n "$TXP" ] && [ -n "$CXP" ]; then
   sleep 1.3; shot 09f_run1; sleep 1.2; shot 09g_run2; wait; sleep 0.6; shot 09h_run_end
 fi
 sleep 2
+# ---- the tool is chosen in the app only: open the app, tap «مخدة», go home, the floating Clawd should hold the pillow
+adb shell am start -n $P/.MainActivity; sleep 4; shot 13_app_again
+adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb shell cat /sdcard/ui.xml > "$OUT/ui.xml" 2>/dev/null
+POS=$(python3 - "$OUT/ui.xml" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding='utf-8', errors='ignore').read()
+for n in re.findall(r'<node [^>]*>', s):
+    if 'مخدة' in n:
+        b = re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', n)
+        if b:
+            x1, y1, x2, y2 = map(int, b.groups()); print((x1 + x2) // 2, (y1 + y2) // 2); break
+PY
+)
+echo "pillow button at $POS"
+if [ -n "$POS" ]; then adb shell input tap $POS; fi
+sleep 1; shot 13b_app_pillow
+adb shell input keyevent 3; sleep 3; shot 13c_home_pillow
 # typing: open a message compose box with the keyboard
 adb shell am start -a android.intent.action.SENDTO -d sms:5551234 --es sms_body " "; sleep 4; shot 09d_keyboard
 adb shell input text "salam"; sleep 2; shot 09e_typing
@@ -82,7 +95,7 @@ adb shell input text "مرحبا"; sleep 0.5
 adb shell input tap $(( W*8/100 )) $(( H*45/100 )); sleep 2; shot 12_chat_send
 
 # ---- diagnostics ----
-adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught|Clawd|OverlayService|ntrusted touch|occlu" > "$OUT/log.txt" || true
+adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught|Clawd|OverlayService|ntrusted touch|occlu|CONSOLE" > "$OUT/log.txt" || true
 echo "=== services ===" >> "$OUT/log.txt"
 adb shell dumpsys activity services $P | head -20 >> "$OUT/log.txt"
 echo "=== accessibility ===" >> "$OUT/log.txt"

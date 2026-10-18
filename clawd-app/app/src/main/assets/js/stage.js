@@ -25,9 +25,8 @@ CL.startStage = function (opts) {
   /* ---------------- UI layer: bubbles, answer buttons, little buttons */
   const ui = document.createElement('div'); ui.className = 'cl-ui'; root.appendChild(ui);
   const bubbles = new Map();
-  let optsBox = null, optsCb = null, optsShown = false, askBot = null, hintUntil = 0;
+  let optsBox = null, optsCb = null, optsShown = false, askBot = null;
   const chatBtn = document.createElement('div'); chatBtn.className = 'cl-btn cl-chat'; chatBtn.textContent = '💬'; ui.appendChild(chatBtn);
-  const swBtn = document.createElement('div'); swBtn.className = 'cl-btn cl-switch'; swBtn.textContent = '⇄'; ui.appendChild(swBtn);
   function bubbleFor(b) {
     let e = bubbles.get(b);
     if (!e) { e = { el: document.createElement('div'), until: 0, prio: 0, scale: 1 }; e.el.className = 'cl-bub'; ui.appendChild(e.el); bubbles.set(b, e); }
@@ -64,7 +63,6 @@ CL.startStage = function (opts) {
     vib(ms) { if (NATIVE) call('vibrate', ms | 0); else try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} },
     openChat(seed) { if (NATIVE) call('openChat', seed || ''); else if (opts.onChat) opts.onChat(seed || ''); },
     log(txt) { call('logEvent', txt); },
-    toolHint() { hintUntil = world.T + 3.5; },
     saveSetting(k, v) { CL.settings[k] = v; persist(); },
     stat(d) { if (opts.onStat) opts.onStat(d); }
   };
@@ -103,15 +101,11 @@ CL.startStage = function (opts) {
     const showChat = CL.settings.chatBtn && big && !brain.away && !brain.hiding && !c.held && !opts.noChatBtn;
     chatBtn.style.display = showChat ? 'flex' : 'none';
     if (showChat) { const bx = u.clamp(c.bbox.x + c.bbox.w + 2, 4, W - 46), by = u.clamp(c.bbox.y - 30, world.insets.top, H - 46); chatBtn.style.transform = 'translate(' + bx + 'px,' + by + 'px)'; }
-    const t = brain.tool, showSw = !t.hidden && t.state === 'idle' && !t.held && !brain.asking && (big || T < hintUntil);
-    swBtn.style.display = showSw ? 'flex' : 'none';
-    if (showSw) { const r = t.bboxRect(); swBtn.style.transform = 'translate(' + u.clamp(r.x + r.w + 4, 4, W - 50) + 'px,' + u.clamp(r.y - 10, world.insets.top, H - 50) + 'px)'; }
   }
   function grow(r, min) { const w = M.max(r.w, min), h = M.max(r.h, min); return { x: r.x - (w - r.w) / 2, y: r.y - (h - r.h) / 2, w: w, h: h }; }
   function targets() { // in priority order
     const out = [], c = brain.c, t = brain.tool;
     if (optsBox && optsShown) [].forEach.call(optsBox.children, (d) => out.push({ id: 'opt' + d.dataset.i, r: rectOf(d) }));
-    if (swBtn.style.display !== 'none') out.push({ id: 'switch', r: grow(rectOf(swBtn), 48) });
     if (chatBtn.style.display !== 'none') out.push({ id: 'chatbtn', r: grow(rectOf(chatBtn), 48) });
     bubbles.forEach((e, b) => { if (e.asking && world.T < e.until && e.w) out.push({ id: 'bubble', r: { x: e.x, y: e.y, w: e.w, h: e.h } }); });
     if (!t.hidden && t.alpha > 0.1 && t.state !== 'caught' && t.state !== 'fly') out.push({ id: 'tool', r: grow(t.bboxRect(), 52) });
@@ -168,7 +162,6 @@ CL.startStage = function (opts) {
     } else if (!cancel && !g.moved) {
       if (g.id === 'bubble') UI.showOptions();
       else if (g.id === 'chatbtn') UI.openChat('');
-      else if (g.id === 'switch') { brain.chooseTool(); hintUntil = 0; }
       else if (g.id.indexOf('opt') === 0) answer(+g.id.slice(3));
     }
   }
@@ -220,7 +213,7 @@ CL.startStage = function (opts) {
     settings(json) {
       try { CL.applySettings(JSON.parse(json)); } catch (e) { return; }
       CL.snd.on = CL.settings.sound; world.sizeMul = sizeMul[CL.settings.size] || 1; world.resize();
-      const t = brain.tool; if (CL.settings.tools[CL.settings.tool] !== false && t.kind !== CL.settings.tool) { t.kind = CL.settings.tool; t.scale.v = 0.2; }
+      const t = brain.tool; if (CL.settings.tools[CL.settings.tool] !== false && t.kind !== CL.settings.tool) { t.kind = CL.settings.tool; t.scale.v = 0.2; call('log', 'tool ' + t.kind); }
       if (!Object.keys(CL.TOOLS).some((k) => CL.settings.tools[k] !== false)) t.hidden = true; else if (!brain.confiscated) t.hidden = false;
       document.documentElement.style.setProperty('--fs', (CL.settings.font || 16) + 'px');
     },

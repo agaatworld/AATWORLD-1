@@ -71,6 +71,16 @@ public class OverlayService extends Service implements SensorEventListener {
         Prefs.setFlag(c, "floating", false);
         c.stopService(new Intent(c, OverlayService.class));
     }
+    /** The app screen has its own Clawd: hide the floating one (and its touch pads) while the app is in front. */
+    static void appInFront(boolean front) { if (inst != null) inst.setHiddenForApp(front); }
+    private boolean hiddenForApp;
+    void setHiddenForApp(boolean h) {
+        if (hiddenForApp == h) return;
+        hiddenForApp = h;
+        if (stageRoot != null) stageRoot.setVisibility(h ? View.GONE : View.VISIBLE);
+        pads.setTouchable(!h);
+    }
+
     static void startThenChat(Context c, String seed) {
         Prefs.setFlag(c, "floating", true);
         c.startForegroundService(new Intent(c, OverlayService.class).setAction(ACTION_CHAT).putExtra("seed", seed == null ? "" : seed));
@@ -240,6 +250,7 @@ public class OverlayService extends Service implements SensorEventListener {
             }
         }
         void clearCapture() { capturing = null; }
+        void setTouchable(boolean on) { for (Pad p : pool) p.setTouchable(on); }
     }
 
     private final class Pad {
@@ -266,11 +277,16 @@ public class OverlayService extends Service implements SensorEventListener {
             int[] o = stageOrigin();
             lp.x = (int) Math.round(x * density) + o[0]; lp.y = (int) Math.round(y * density) + o[1];
             lp.width = Math.max(1, (int) Math.round(w * density)); lp.height = Math.max(1, (int) Math.round(h * density));
+            if (hiddenForApp) lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE; else lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
             logPad(id, lp.x, lp.y, lp.width, lp.height);
             if (!shown) { shown = true; try { wm.addView(v, lp); } catch (Exception e) { shown = false; } }
             else try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
         }
         void hide() { if (shown) { shown = false; try { wm.removeView(v); } catch (Exception ignored) { } } }
+        void setTouchable(boolean on) {
+            if (on) lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE; else lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            if (shown) try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
+        }
         boolean onTouch(View view, MotionEvent e) {
             int a = e.getActionMasked();
             float rx = e.getRawX(), ry = e.getRawY();
@@ -530,7 +546,7 @@ public class OverlayService extends Service implements SensorEventListener {
                 + "لا تخترع أحاديث أو آيات؛ وإن استشهدت فبالمشهور الصحيح فقط. "
                 + "ابدأ ردّك دائماً بوسمين اختياريين يحددان تعبير وجهك وحركتك، ثم الكلام. "
                 + "الوسوم: [[face:X]] حيث X من: happy, joy, laugh, sad, cry, angry, surprised, cool, love, think, wink, proud, serene, sideeye, bored, determined, pleading, embarrassed. "
-                + "و[[act:Y]] حيث Y من: wave, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. لا ترقص ولا تغنّي. "
+                + "و[[act:Y]] حيث Y من: wave, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. لا ترقص ولا تغنّي. لا تُظهر أبداً مللاً أو ضجراً من العبادة أو الذكر أو القرآن، ولا تستعمل وجه bored بعدها. "
                 + "إذا طلب صاحبك تبديل أداة الضرب أضف [[tool:Z]] حيث Z من: stick (عصا), pillow (مخدة), hammer (مطرقة بتزمّر), glove (قفاز ملاكمة), balloon (بالون مي), snow (كرة ثلج), feather (ريشة)، وقل له بمرح إنك بدّلتها. "
                 + "مثال: [[face:joy]][[act:wave]] أهلين! كيفك اليوم؟";
     }

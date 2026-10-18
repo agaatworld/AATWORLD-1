@@ -327,10 +327,10 @@ function drawFriendFace(ctx, b, T) {
 }
 
 function drawRobeFront(ctx) { // jalabiya front: collar, placket, buttons, pocket
-  ctx.fillStyle = '#DCD6C8'; ctx.fillRect(-0.12, -4.6, 0.24, 2.6);
-  ctx.fillStyle = '#B9B2A2'; [-4.25, -3.55, -2.85].forEach((y) => ctx.fillRect(-0.18, y, 0.36, 0.3));
-  ctx.fillStyle = '#E4DFD3'; ctx.fillRect(-1.2, -4.75, 2.4, 0.3);
-  ctx.fillStyle = '#E9E4D8'; ctx.fillRect(1.6, -3.2, 1.3, 0.12);
+  ctx.fillStyle = '#E4DFD3'; ctx.fillRect(-1.2, -3.98, 2.4, 0.28);
+  ctx.fillStyle = '#DCD6C8'; ctx.fillRect(-0.12, -3.7, 0.24, 2.5);
+  ctx.fillStyle = '#B9B2A2'; [-3.45, -2.85, -2.25].forEach((y) => ctx.fillRect(-0.18, y, 0.36, 0.3));
+  ctx.fillStyle = '#E9E4D8'; ctx.fillRect(1.6, -2.6, 1.3, 0.12);
 }
 function drawCapFront(ctx) { // taqiyah embroidery
   ctx.fillStyle = '#D7D2C4';
@@ -387,22 +387,26 @@ function buildBoxes(b, T) {
   const sit = b.sit.v, walk = b.walkAmt, ph = b.walkPhase;
   const bodyDrop = sit * 1.7, w = fr ? 3.5 : 4, d = fr ? 2.2 : 2.5, top = fr ? 7.6 : 8;
   const robe = b.outfit.robe;
+  const shY = (fr ? 4.6 : 5) - bodyDrop;
+  // the jalabiya is its own block under the arms, and the body block starts where it ends: no overlapping boxes,
+  // so the depth sort can't flip between them (that made the robe flicker on and off while rocking or tilting)
+  const robeY0 = M.max(0.05, 0.35 - bodyDrop), cut = robe ? M.min(2 - bodyDrop + 2.7, shY - 1.02) : 2 - bodyDrop;
   // legs
   const legX = fr ? [-3, -1.2, 0.2, 2] : [-4, -2, 1, 3];
   for (let i = 0; i < 4; i++) {
     const swing = M.sin(ph + (i % 2) * PI) * walk;
     let lift = b.legs[i] + M.max(0, -swing) * 0.8 * walk;
     let h = 2 * (1 - sit) + 0.35 * sit, z0 = -1 + swing * 0.9 + sit * 1.4;
-    if (robe && sit < 0.5) { h = 0.55; }
-    out.push({ x0: legX[i], x1: legX[i] + 1, y0: lift * (1 - sit), y1: lift * (1 - sit) + h, z0: z0, z1: z0 + 2, col: robe && sit < 0.5 ? '#B9583A' : col });
+    let y0 = lift * (1 - sit), y1 = y0 + h;
+    if (robe) { if (sit >= 0.5 || y0 >= robeY0 - 0.02) continue; y1 = robeY0; } // only the feet show under the hem
+    out.push({ x0: legX[i], x1: legX[i] + 1, y0: y0, y1: y1, z0: z0, z1: z0 + 2, col: robe ? '#B9583A' : col });
   }
   const by0 = 2 - bodyDrop, by1 = top - bodyDrop;
   // body (front face is textured with the face)
-  out.push({ x0: -w, x1: w, y0: by0, y1: by1, z0: -d, z1: d, col: col, tex: fr ? 'friendFace' : 'face', body: true });
-  // robe (jalabiya) wraps the lower body down to the ground
-  if (robe) out.push({ x0: -w - 0.3, x1: w + 0.3, y0: M.max(0.05, 0.35 - bodyDrop), y1: by0 + 2.7, z0: -d - 0.3, z1: d + 0.3, col: COL.robe, tex: 'robe' });
+  out.push({ x0: -w, x1: w, y0: robe ? cut : by0, y1: by1, z0: -d, z1: d, col: col, tex: fr ? 'friendFace' : 'face', body: true });
+  // robe (jalabiya): the lower body down to the ground, a little wider than the body
+  if (robe) out.push({ x0: -w - 0.2, x1: w + 0.2, y0: robeY0, y1: cut, z0: -d - 0.2, z1: d + 0.2, col: COL.robe, tex: 'robe' });
   // arms (rotate at the shoulders; fwd brings them to the front to hold things)
-  const shY = (fr ? 4.6 : 5) - bodyDrop;
   [[-1, b.aL.v, b.fwdL.v], [1, b.aR.v, b.fwdR.v]].forEach(function (a) {
     const side = a[0], ang = a[1] * side, fwd = a[2];
     const x0 = side < 0 ? -w - 2 : w, x1 = side < 0 ? -w : w + 2;

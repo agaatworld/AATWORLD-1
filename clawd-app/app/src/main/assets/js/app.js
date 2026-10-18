@@ -115,7 +115,7 @@ function renderSettings() {
       });
       r.appendChild(ch); box().appendChild(r);
     } else if (type === 'toolpick') {
-      const r = row('الأداة الحالية', 'وكمان: زر ⇄ جنب الأداة وهو عائم، أو قلّه بالدردشة «بدّلها لمطرقة»', null); r.style.flexWrap = 'wrap';
+      const r = row('الأداة الحالية', 'اختارها من هون أو من الأزرار تحت الساحة. وكمان فيك تقلّه بالدردشة «بدّلها لمطرقة»', null); r.style.flexWrap = 'wrap';
       const ch = el('div', 'chips'); ch.style.width = '100%';
       Object.keys(CL.TOOLS).forEach((k) => { const c = el('button', 'chip' + (S().tool === k ? ' on' : ''), (TOOL_ICON[k] || '') + ' ' + CL.TOOLS[k].name);
         c.onclick = () => { pickTool(k); [].forEach.call(ch.children, (x) => x.classList.toggle('on', x === c)); }; ch.appendChild(c); });
@@ -167,7 +167,11 @@ function openSheet(id) { $(id).classList.add('on'); if (id === 'set') renderSett
 document.querySelectorAll('[data-close]').forEach((b) => (b.onclick = () => b.closest('.sheet').classList.remove('on')));
 $('bSet').onclick = () => openSheet('set');
 $('bHelp').onclick = () => openSheet('help');
-window.app = { onResume: () => { floatLabel(); if ($('set').classList.contains('on')) renderSettings(); } };
+window.app = { onResume: () => {
+  // the floating Clawd may have changed settings (e.g. a tool picked in the chat): reload them so the app never writes old ones back
+  if (NATIVE) { try { const s = JSON.parse(call('getSettings') || 'null'); if (s) { CL.applySettings(s); if (window.clawd && window.clawd.settings) window.clawd.settings(JSON.stringify(CL.settings)); } } catch (e) {} }
+  floatLabel(); renderToolbar(); if ($('set').classList.contains('on')) renderSettings();
+} };
 
 /* ---------------- splash: "Welcome, Claw'd" */
 function splash(done) {

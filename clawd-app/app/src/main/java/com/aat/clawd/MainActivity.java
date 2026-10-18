@@ -78,10 +78,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         web.onResume();
+        OverlayService.appInFront(true);
         if (wantFloating && Settings.canDrawOverlays(this)) { wantFloating = false; startFloating(); return; }
         web.evaluateJavascript("window.app&&app.onResume()", null);
     }
 
-    @Override protected void onPause() { web.onPause(); super.onPause(); }
+    @Override protected void onPause() { OverlayService.appInFront(false); web.onPause(); super.onPause(); }
     @Override protected void onDestroy() { web.destroy(); super.onDestroy(); }
 }

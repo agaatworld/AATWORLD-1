@@ -24,7 +24,8 @@ R.stretch = function* (B, b) {
   b.setFace('relieved', 1.6); b.aL.t = -2.6; b.aR.t = -2.6; b.sy.t = 1.18; b.sx.t = 0.9;
   yield* wait(0.9); b.sy.t = 1; b.sx.t = 1; b.aL.t = 0; b.aR.t = 0; yield* wait(0.3);
 };
-R.yawn = function* (B, b) { b.setFace('sleepy', 0.4); yield* wait(0.3); b.setFace('laugh', 1); b.sy.t = 1.08; b.aR.t = -1.2; b.fwdR.t = 0.6; yield* wait(1); b.sy.t = 1; b.aR.t = 0; b.fwdR.t = 0; };
+const calm = (B) => B.worshipGlow > B.T; // a few minutes after worship: peaceful, never bored or sleepy-looking
+R.yawn = function* (B, b) { if (calm(B)) { yield* R.lookAround(B, b); return; } b.setFace('sleepy', 0.4); yield* wait(0.3); b.setFace('laugh', 1); b.sy.t = 1.08; b.aR.t = -1.2; b.fwdR.t = 0.6; yield* wait(1); b.sy.t = 1; b.aR.t = 0; b.fwdR.t = 0; };
 R.scratch = function* (B, b) { b.setFace(pick(['puzzled', 'think', 'skeptical']), 1.6); B.mark(b, '؟'); yield* loop(1.4, (t) => { b.aR.t = -2.5 + M.sin(t * 22) * 0.18; b.fwdR.t = 0.3; }); b.aR.t = 0; b.fwdR.t = 0; };
 R.hop = function* (B, b) { if (!b.ground || b.ground.e !== 'b' && b.ground.plat == null) return; b.vy = -55 * b.u; b.vx = 0; b.ground = null; CL.sfx.jump(); yield* until(() => b.ground, 3); };
 R.sideEyeTool = function* (B, b) {
@@ -39,8 +40,8 @@ R.sneeze = function* (B, b) {
   b.sy.t = 0.8; b.vx = 0; B.w.fx.puff(b.head.x, b.head.y + 4 * b.u, b.u, '#fff', 2); B.w.fx.word('عطس!', b.head.x, b.head.y, b.u * 1.3, '#fff');
   CL.sfx.whiff(); yield* wait(0.3); b.sy.t = 1; B.sayText(b, CL.lineOf(['s|الحمد لله', 'e|الحمد لله', 'f|الحمد لله']), { prio: 1, mood: 'calm' });
 };
-R.stare = function* (B, b) { b.look.tx = 0; b.look.ty = 0.3; b.setFace(pick(['bored', 'suspicious', 'skeptical', 'smug']), 2.5); b.pv.t = 0.3; yield* wait(2.5); b.pv.t = 0.12; };
-R.sitAWhile = function* (B, b) { b.sit.t = 1; b.setFace(pick(['bored', 'normal', 'sideeye']), 3); b.look.tx = pick([-1, 1]); yield* wait(rnd(3, 5)); b.look.tx = 0; b.sit.t = 0; };
+R.stare = function* (B, b) { b.look.tx = 0; b.look.ty = 0.3; b.setFace(pick(calm(B) ? ['serene', 'happy', 'relieved'] : ['bored', 'suspicious', 'skeptical', 'smug']), 2.5); b.pv.t = 0.3; yield* wait(2.5); b.pv.t = 0.12; };
+R.sitAWhile = function* (B, b) { b.sit.t = 1; b.setFace(pick(calm(B) ? ['serene', 'happy', 'normal'] : ['bored', 'normal', 'sideeye']), 3); b.look.tx = pick([-1, 1]); yield* wait(rnd(3, 5)); b.look.tx = 0; b.sit.t = 0; };
 R.pushups = function* (B, b) { yield* R.exercise(B, b, 'pushups', 6); };
 R.peekCamera = function* (B, b) { b.pv.t = 0.36; b.setFace(pick(['wideHappy', 'surprised', 'tongue']), 1.6); b.look.ty = -1; yield* wait(1.6); b.pv.t = 0.12; b.look.ty = 0; };
 R.turnAround = function* (B, b) { b.lockYaw = true; yield* tween(0.9, (k) => { b.yaw.t = k * TAU; }); b.yaw.set(0); b.lockYaw = false; };
@@ -48,7 +49,12 @@ R.idleSmall = [R.lookAround, R.wave, R.stretch, R.yawn, R.scratch, R.hop, R.side
 
 /* ---------------------------------------------------------------- dressing helpers */
 function dress(B, b, o) { const prev = Object.assign({}, b.outfit); Object.keys(o).forEach((k) => { b.outfit[k] = o[k]; }); return prev; }
-function religious(B, b) { if (B.s.outfit) dress(B, b, { robe: 1, cap: 1 }); }
+function dressFx(B, b) { // a little white puff so changing clothes looks deliberate, not like a glitch
+  const bb = b.bbox; if (!bb || !B.w.fx) return;
+  for (let i = 0; i < 7; i++) B.w.fx.puff(bb.x + rnd(0.1, 0.9) * bb.w, bb.y + rnd(0.3, 1) * bb.h, b.u, '#FFFFFF', rnd(1, 3));
+}
+function religious(B, b) { if (B.s.outfit && !b.outfit.robe) { dress(B, b, { robe: 1, cap: 1 }); dressFx(B, b); } }
+function undress(B, b) { if (b.outfit.robe || b.outfit.cap) { b.outfit.robe = b.outfit.cap = 0; dressFx(B, b); } }
 
 /* ---------------------------------------------------------------- activities (long, interruptible) */
 R.tasbih = function* (B, b) {
@@ -65,7 +71,7 @@ R.tasbih = function* (B, b) {
       }
     }
     B.sayText(b, CL.DHIKR[9], { prio: 1, mood: 'calm', dur: 4 }); yield* wait(4);
-  } finally { b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.aR.t = 0; b.fwdR.t = 0; b.outfit.robe = b.outfit.cap = 0; B.activity = null; }
+  } finally { b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.aR.t = 0; b.fwdR.t = 0; undress(B, b); B.worshipGlow = B.T + 180; B.activity = null; }
 };
 R.dua = function* (B, b) {
   B.activity = 'dua'; religious(B, b);
@@ -77,7 +83,7 @@ R.dua = function* (B, b) {
     B.sayText(b, 'آمين 🤲', { prio: 1, mood: 'calm', dur: 1.6 });
     yield* tween(1.2, (k) => { b.aL.t = b.aR.t = -0.9 - k * 1.2; }); // wiping face
     yield* wait(0.4);
-  } finally { b.sit.t = 0; b.baseFace = 'normal'; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; b.outfit.robe = b.outfit.cap = 0; B.activity = null; }
+  } finally { b.sit.t = 0; b.baseFace = 'normal'; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; undress(B, b); B.worshipGlow = B.T + 180; B.activity = null; }
 };
 R.quran = function* (B, b) {
   B.activity = 'quran'; religious(B, b); B.say(b, 'act_quran', { mood: 'calm' });
@@ -91,7 +97,7 @@ R.quran = function* (B, b) {
       if (t > nextVerse) { nextVerse = t + rnd(14, 20); const v = CL.verse(); B.sayText(b, '﴿' + v.t + '﴾  ' + v.r, { prio: 1, mood: 'calm', dur: 5, quran: true }); }
     });
     B.say(b, 'act_done', { mood: 'calm' });
-  } finally { b.flip = 0; b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdL.t = b.fwdR.t = 0; b.outfit.robe = b.outfit.cap = 0; B.activity = null; }
+  } finally { b.flip = 0; b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdL.t = b.fwdR.t = 0; undress(B, b); B.worshipGlow = B.T + 180; B.activity = null; }
 };
 R.study = function* (B, b) {
   B.activity = 'study'; b.outfit.glasses = 1; B.say(b, 'act_study');
