@@ -38,8 +38,11 @@ adb shell input keyevent 4  # back out of settings
 # ---- floating overlay (start the service directly, over the home screen) ----
 adb shell input keyevent 3   # home
 sleep 1
-adb shell am start-foreground-service -n $P/.OverlayService || adb shell am startforegroundservice -n $P/.OverlayService
-sleep 6; shot 08_home_floating
+# the service isn't exported, so start it the way the app's button does: through the activity
+adb shell am start -n $P/.MainActivity --ez float true
+sleep 6
+adb shell input keyevent 3   # back to home, Clawd should stay floating
+sleep 4; shot 08_home_floating
 adb shell dumpsys window windows | grep -iE "clawd|TYPE_APPLICATION_OVERLAY|Window #" | head -40 > "$OUT/windows.txt" || true
 adb shell dumpsys window windows | grep -iE "clawd|Window #" | head -40 > "$OUT/windows.txt" || true
 # tap where Clawd starts (bottom-left) to make him react over the home screen

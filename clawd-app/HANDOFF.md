@@ -3,15 +3,21 @@
 Branch: `claude/interactive-claude-character-app-33bzzn` in `agaatworld/AATWORLD-1`, folder `clawd-app/`.
 Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome first.
 
-## Stop point (18 Oct 2026, ~01:15 UTC)
-- Build #9 (commit `e902b4e`) was running on GitHub Actions: it starts the floating overlay
-  **directly as a service over the home screen** to finally confirm the character renders over other apps.
-- **First thing next session:** open `clawd-app/dist/08_home_floating.png`, `09_home_tap.png`, `10_over_settings.png`
-  and `dist/windows.txt` / `dist/log.txt` from the latest `clawd-ci` commit.
-  - If Clawd is visible over home/settings → the overlay is confirmed. Move to polish (below).
-  - If not: check `log.txt` for a second `stage ready {...}` line (the overlay's; the first one is the in-app arena,
-    ~412×480dp). No overlay line = the window was never added (look for exceptions / FGS start problems).
-    A line with full screen size but nothing visible = rendering issue in a transparent NOT_TOUCHABLE window.
+## Stop point (18 Oct 2026, ~01:20 UTC)
+- Build #9 showed the CI shell **cannot start the overlay service directly** (`Permission Denial … not exported`
+  in `dist/log.txt`), so the floating overlay has **never been exercised in CI yet**. Not an app bug: the app's
+  "start floating" button starts the service from inside the app.
+- Fix pushed in `ci/emu.sh`: start it through `MainActivity --ez float true` (now handled in `onNewIntent`).
+  That push triggers build #10.
+- **First thing next session:** open the latest `clawd-ci` commit's `dist/08_home_floating.png`, `09_home_tap.png`,
+  `10_over_settings.png`, `dist/windows.txt`, `dist/log.txt`.
+  - Look for a **second** `stage ready {...}` line in log.txt (the overlay's, about full screen 412×914dp); the
+    ~412×480dp one is the in-app arena.
+  - Overlay window present + Clawd visible over home/settings → confirmed; go to polish.
+  - Window missing → look for exceptions when the window is added or the foreground service starts.
+  - Window present but nothing visible → rendering issue of a transparent NOT_TOUCHABLE WebView window
+    (try `stage.setLayerType(View.LAYER_TYPE_HARDWARE, null)` or a tiny non-zero alpha background).
+- Delivered to the owner: `dist/clawd.apk` from build #8 (152 KB, raw-HTTP chat) + single-file browser preview.
 
 ## What exists
 Web layer (all in `app/src/main/assets/`, plain JS, no build step):
