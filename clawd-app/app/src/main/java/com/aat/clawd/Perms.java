@@ -13,6 +13,15 @@ public final class Perms {
         return pm != null && pm.isIgnoringBatteryOptimizations(c.getPackageName());
     }
 
+    /** True in the full build, which declares the accessibility service. */
+    public static boolean eyesAvailable(Context c) {
+        try {
+            android.content.pm.PackageInfo pi = c.getPackageManager().getPackageInfo(c.getPackageName(), android.content.pm.PackageManager.GET_SERVICES);
+            if (pi.services != null) for (android.content.pm.ServiceInfo s : pi.services) if (s.name.endsWith(".ClawdEyes")) return true;
+        } catch (Exception ignored) { }
+        return false;
+    }
+
     /** Returns the intent to send for a permission key, or null if nothing to do. */
     public static Intent intentFor(Context c, String which) {
         String pkg = c.getPackageName();

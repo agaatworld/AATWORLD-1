@@ -55,7 +55,8 @@ public class Bridge {
         boolean notif = true;
         if (Build.VERSION.SDK_INT >= 33) notif = ctx.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED;
         boolean battery = Perms.ignoringBattery(ctx);
-        return "{\"overlay\":" + overlay + ",\"a11y\":" + a11y + ",\"notif\":" + notif + ",\"battery\":" + battery + "}";
+        boolean eyes = Perms.eyesAvailable(ctx);
+        return "{\"overlay\":" + overlay + ",\"a11y\":" + a11y + ",\"eyes\":" + eyes + ",\"notif\":" + notif + ",\"battery\":" + battery + "}";
     }
     @JavascriptInterface public void openPerm(String which) { if (activity != null) ui.post(() -> activity.openPerm(which)); }
     @JavascriptInterface public boolean hasApiKey() { return Prefs.hasApiKey(ctx); }

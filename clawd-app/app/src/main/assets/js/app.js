@@ -116,10 +116,13 @@ function renderPerms(card) {
   };
   if (!NATIVE) { card.appendChild(el('div', 'note', 'هاد العرض بالمتصفح. الأذونات بتظهر بتطبيق الأندرويد.')); return; }
   item('overlay', 'الظهور فوق التطبيقات', 'لازم لحتى يضل كلود عائم معك', p.overlay);
+  if (p.eyes === false) {
+    card.appendChild(row('عيون كلود', 'غير موجودة بالنسخة الخفيفة: Google Play Protect بيمنع تثبيت التطبيقات يلي فيها هالميزة من برّا المتجر. كل شي تاني شغّال. إذا بدك تفاعله مع الكيبورد والتطبيقات، نزّل النسخة الكاملة (بدها إيقاف Play Protect لدقيقة وقت التثبيت).', el('span', 'st no', 'غير متوفرة')));
+  } else
   item('a11y', 'عيون كلود', 'لحتى يعرف إنو الكيبورد مفتوح ووين مربع الكتابة، والشاشة الرئيسية، والمقاطع، ويتنطط فوق التطبيقات. ما بيقرأ الكلام اللي بتكتبه وما بيبعت شي برّا هاتفك. إذا الخيار رمادي: معلومات التطبيق ← ⋮ ← «السماح بالإعدادات المقيّدة»', p.a11y);
   item('notif', 'الإشعارات', 'إشعار صغير فيه زر إيقاف', p.notif);
   item('battery', 'يضل شغّال بالخلفية', 'لحتى ما يسكّره النظام', p.battery);
-  if (!p.a11y) { const b = el('button', 'btn', 'معلومات التطبيق (للإعدادات المقيّدة)'); b.onclick = () => call('openPerm', 'appinfo'); card.appendChild(row('', '', b)); }
+  if (!p.a11y && p.eyes !== false) { const b = el('button', 'btn', 'معلومات التطبيق (للإعدادات المقيّدة)'); b.onclick = () => call('openPerm', 'appinfo'); card.appendChild(row('', '', b)); }
 }
 function renderChat(card) {
   const has = NATIVE ? !!call('hasApiKey') : !!CL.store('keyset');
