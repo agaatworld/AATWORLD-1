@@ -167,7 +167,7 @@ function openSheet(id) { $(id).classList.add('on'); if (id === 'set') renderSett
 document.querySelectorAll('[data-close]').forEach((b) => (b.onclick = () => b.closest('.sheet').classList.remove('on')));
 $('bSet').onclick = () => openSheet('set');
 $('bHelp').onclick = () => openSheet('help');
-window.app = { onResume: () => {
+window.app = { back: () => { const s = document.querySelector('.sheet.on'); if (s) { s.classList.remove('on'); return true; } return false; }, onResume: () => {
   // the floating Clawd may have changed settings (e.g. a tool picked in the chat): reload them so the app never writes old ones back
   if (NATIVE) { try { const s = JSON.parse(call('getSettings') || 'null'); if (s) { CL.applySettings(s); if (window.clawd && window.clawd.settings) window.clawd.settings(JSON.stringify(CL.settings)); } } catch (e) {} }
   floatLabel(); renderToolbar(); if ($('set').classList.contains('on')) renderSettings();

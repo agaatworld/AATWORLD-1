@@ -83,6 +83,11 @@ public class MainActivity extends Activity {
         web.evaluateJavascript("window.app&&app.onResume()", null);
     }
 
+    @Override
+    public void onBackPressed() { // Back closes an open settings/help page first
+        web.evaluateJavascript("window.app&&app.back()", (r) -> { if (!"true".equals(r)) super.onBackPressed(); });
+    }
+
     @Override protected void onPause() { OverlayService.appInFront(false); web.onPause(); super.onPause(); }
     @Override protected void onDestroy() { web.destroy(); super.onDestroy(); }
 }

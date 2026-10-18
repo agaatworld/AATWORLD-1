@@ -31,9 +31,9 @@ shot 03_arena_hits
 # long-press for a charged hit
 adb shell input swipe $AX $AY $AX $AY 1400 & sleep 1.1; shot 04_charge; wait; sleep 0.2; shot 05_after
 # settings
-adb shell input tap $(( W*30/100 )) $(( H*95/100 )); sleep 1; shot 06_settings
+adb shell input tap $(( W*75/100 )) $(( H*95/100 )); sleep 1; shot 06_settings
 adb shell input swipe $(( W/2 )) $(( H*70/100 )) $(( W/2 )) $(( H*25/100 )) 400; sleep 0.5; shot 07_settings2
-adb shell input keyevent 4  # back out of settings
+adb shell input keyevent 4  # back closes the settings page
 
 # ---- floating overlay (start the service directly, over the home screen) ----
 adb shell input keyevent 3   # home
@@ -62,7 +62,7 @@ if [ -n "$TXP" ] && [ -n "$CXP" ]; then
 fi
 sleep 2
 # ---- the tool is chosen in the app only: open the app, tap «مخدة», go home, the floating Clawd should hold the pillow
-adb shell am start -n $P/.MainActivity; sleep 4; shot 13_app_again
+adb shell am start -n $P/.MainActivity; sleep 4; adb shell input keyevent 4; sleep 1; adb shell am start -n $P/.MainActivity; sleep 2; shot 13_app_again
 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb shell cat /sdcard/ui.xml > "$OUT/ui.xml" 2>/dev/null
 POS=$(python3 - "$OUT/ui.xml" <<'PY'
 import re, sys
