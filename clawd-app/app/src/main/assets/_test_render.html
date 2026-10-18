@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#F3F2EE}canvas{width:100vw;height:100vh;display:block}</style></head>
+<body><canvas id="c"></canvas><script src="js/engine.js"></script><script>
+const w = new CL.World(document.getElementById('c'), {arena:false}); w.sizeMul = 1.6; w.resize(); w.U = 7*1.6;
+const specs = [
+ {face:'normal'}, {face:'happy', yaw:0.6}, {face:'sideeye'}, {face:'bored', pv:0.4}, {face:'puzzled'}, {face:'cool'},
+ {face:'serene', outfit:{robe:1,cap:1}, sit:1, prop:'mushaf'}, {face:'serene', outfit:{robe:1,cap:1}, prop:'tasbih', aR:-0.6},
+ {face:'focus', outfit:{glasses:1}, prop:'study', sit:1}, {face:'determined', outfit:{headband:1}, aL:-1.2, aR:0.8},
+ {face:'love'}, {face:'scared'}, {face:'ko', roll:-1.5}, {face:'surprised', flip:0.6}, {face:'normal', pv:1.0, yaw:0.8},
+ {face:'normal', pv:1.0, yaw:3.1}, {kind:'friend', face:'happy'}, {kind:'friend', face:'puzzled', yaw:-0.5},
+ {face:'cry'}, {face:'angry', flush:1}, {face:'starry'}, {face:'sleep', outfit:{nightcap:1}}, {face:'pleading', outfit:{helmet:1}}, {face:'joy', prop:'tea', aR:-0.4}
+];
+const cols = 6;
+specs.forEach((s,i)=>{ const b = w.addBot(s.kind||'clawd'); b.x = (i%cols+0.5)*w.W/cols; b.y = (Math.floor(i/cols)+1)*w.H/4.3; b.ground={e:'x'}; b.mode='show';
+  b.baseFace=s.face; b.yaw.set(s.yaw||0); b.pv.set(s.pv==null?0.12:s.pv); b.roll.set(s.roll||0); b.flip=s.flip||0; b.outfit=s.outfit||{}; if(s.prop) b.prop={kind:s.prop, count:3, grow:0.9};
+  b.sit.set(s.sit||0); b.aL.set(s.aL||0); b.aR.set(s.aR||0); b.flush=s.flush||0; b.blinkAt=1e9; if (s.aR) b.fwdR.set(0.3); });
+w.stepBot = function(){};
+w.draw();
+</script></body></html>

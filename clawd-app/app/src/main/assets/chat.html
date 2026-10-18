@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>دردشة كلود</title>
+<style>
+:root{ --bg:#FBFAF7; --ink:#141413; --muted:#6B6A66; --me:#D97757; --him:#FFFFFF; --line:#141413; --soft:#EAE7DF; --fs:17px; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#1F1E1C; --ink:#F3F2EE; --muted:#A8A69F; --him:#2C2B28; --line:#F3F2EE; --soft:#3A3833; } }
+:root[data-theme="dark"]{ --bg:#1F1E1C; --ink:#F3F2EE; --muted:#A8A69F; --him:#2C2B28; --line:#F3F2EE; --soft:#3A3833; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",Tahoma,sans-serif}
+.win{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);border:3px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#D97757;color:#fff;touch-action:none}
+.av{width:30px;height:24px;flex:0 0 auto}
+.head b{font-size:18px;flex:1}
+.head small{display:block;font-size:12px;font-weight:600;opacity:.9}
+.hb{width:38px;height:38px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.15);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
+.m{max-width:86%;padding:8px 12px;border-radius:14px;font-size:var(--fs);line-height:1.55;white-space:pre-wrap;word-wrap:break-word;border:2px solid var(--soft)}
+.m.u{align-self:flex-start;background:var(--me);color:#fff;border-color:transparent;border-top-right-radius:4px}
+.m.a{align-self:flex-end;background:var(--him);border-top-left-radius:4px}
+.m.sys{align-self:center;background:transparent;border:0;color:var(--muted);font-size:14px;text-align:center}
+.m.err{align-self:center;background:#F8DCD6;color:#8E2A1C;border:0;font-size:15px}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-4px);opacity:.5}}
+.bar{display:flex;gap:6px;padding:8px;border-top:2px solid var(--soft);background:var(--bg)}
+textarea{flex:1;resize:none;border:2px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;font-size:var(--fs);max-height:110px;min-height:44px;background:var(--him);color:var(--ink)}
+.send{width:48px;border:0;border-radius:12px;background:#D97757;color:#fff;font-size:20px;font-weight:900}
+.send:disabled{opacity:.5}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="head" id="head">
+    <canvas class="av" id="av" width="60" height="48"></canvas>
+    <b>كلود<small id="sub">صاحبك عالشاشة · Claude</small></b>
+    <button class="hb" id="bBig" title="تكبير">⤢</button>
+    <button class="hb" id="bMin" title="تصغير">—</button>
+    <button class="hb" id="bClose" title="إغلاق">✕</button>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <div class="bar"><textarea id="inp" rows="1" placeholder="اكتب لكلود…" dir="auto"></textarea><button class="send" id="send">➤</button></div>
+</div>
+<script src="js/chat.js"></script>
+</body>
+</html>
