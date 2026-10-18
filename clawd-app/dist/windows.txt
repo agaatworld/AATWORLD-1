@@ -1,27 +1,37 @@
-  Window #0 Window{d0ac3a6 u0 ScreenDecorOverlayBottom}:
-  Window #1 Window{b9cfefc u0 ScreenDecorOverlay}:
-  Window #2 Window{e5f604c u0 SecondaryHomeHandle0}:
-  Window #3 Window{f2f2fa8 u0 EdgeBackGestureHandler0}:
-  Window #4 Window{f904459 u0 NavigationBar0}:
-  Window #5 Window{d9a5f u0 NotificationShade}:
-  Window #6 Window{9f14d3 u0 StatusBar}:
-  Window #7 Window{ce8e9f1 u0 com.aat.clawd}:
+  Window #0 Window{fd882b3 u0 ScreenDecorOverlayBottom}:
+  Window #1 Window{c3fc775 u0 ScreenDecorOverlay}:
+  Window #2 Window{a13dbf4 u0 SecondaryHomeHandle0}:
+  Window #3 Window{640208b u0 EdgeBackGestureHandler0}:
+  Window #4 Window{dcb3f9a u0 NavigationBar0}:
+  Window #5 Window{2f6fdc3 u0 NotificationShade}:
+  Window #6 Window{12d3435 u0 StatusBar}:
+  Window #7 Window{57f9c60 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #8 Window{c88685f u0 com.aat.clawd}:
+  Window #8 Window{3bb6a3a u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #9 Window{bfe3e3d u0 com.aat.clawd}:
+  Window #9 Window{e7c83 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #10 Window{e9bdafe u0 com.aat.clawd}:
+  Window #10 Window{b0efed6 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #11 Window{7d3b36a u0 ShellDropTarget}:
-  Window #12 Window{ee3b489 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #13 Window{11b4da2 u0 InputMethod}:
-  Window #14 Window{e7d355b u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #15 Window{e78d3a5 u0 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #11 Window{db865db u0 ShellDropTarget}:
+  Window #12 Window{220a589 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #13 Window{e11902 u0 InputMethod}:
+  Window #14 Window{adf585b u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #15 Window{603b375 u0 PopupWindow:b49f4a3}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=NONE
-    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{ff198f7 u0 com.aat.clawd/.MainActivity} t9}
-    mActivityRecord=ActivityRecord{ff198f7 u0 com.aat.clawd/.MainActivity} t9}
-    WindowStateAnimator{c337290 com.aat.clawd/com.aat.clawd.MainActivity}:
-  Window #16 Window{db1350b u0 com.android.systemui.wallpapers.ImageWallpaper}:
-      topApp=ActivityRecord{ff198f7 u0 com.aat.clawd/.MainActivity} t9}
-      snapshot=TaskSnapshot{ mId=1792290621974 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@fd5e7af (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
+    mParentWindow=Window{8a3716 u0 com.aat.clawd/com.aat.clawd.MainActivity} mLayoutAttached=true
+    mBaseLayer=21000 mSubLayer=2    mToken=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+    mActivityRecord=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+  Window #16 Window{f2bf18a u0 PopupWindow:479c921}:
+    mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=NONE
+    mParentWindow=Window{8a3716 u0 com.aat.clawd/com.aat.clawd.MainActivity} mLayoutAttached=true
+    mBaseLayer=21000 mSubLayer=2    mToken=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+    mActivityRecord=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+  Window #17 Window{8a3716 u0 com.aat.clawd/com.aat.clawd.MainActivity}:
+    mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=NONE
+    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+    mActivityRecord=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+    WindowStateAnimator{217bee9 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #18 Window{94a654a u0 com.android.systemui.wallpapers.ImageWallpaper}:
+      topApp=ActivityRecord{eab316 u0 com.aat.clawd/.MainActivity} t9}
+      snapshot=TaskSnapshot{ mId=1792291129273 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@9c63e9c (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
