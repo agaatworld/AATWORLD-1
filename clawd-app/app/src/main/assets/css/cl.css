@@ -1,0 +1,30 @@
+/* shared styles: speech bubbles, answer buttons, small round buttons */
+/* fonts shipped with the app (SIL Open Font License, see fonts/): a clear Naskh for all text, Amiri Quran for verses */
+@font-face{font-family:"Naskh";src:url("../fonts/naskh.ttf") format("truetype");font-weight:400 700;font-display:swap}
+@font-face{font-family:"QuranFont";src:url("../fonts/amiri-quran.ttf") format("truetype");font-display:swap}
+:root{ --fs:16px; --ink:#141413; --paper:#fff; --orange:#D97757; }
+[hidden]{display:none!important}
+.cl-ui{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5;
+  font-family:"Naskh","Noto Naskh Arabic",system-ui,sans-serif}
+.cl-bub{position:absolute;left:0;top:0;max-width:min(78vw,340px);padding:.4em .7em;background:var(--paper);color:var(--ink);
+  font-weight:700;font-size:calc(var(--fs) * 1.1);line-height:1.6;border:2.5px solid var(--ink);border-radius:6px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.2);opacity:0;transform-origin:50% 100%;transition:opacity .12s;direction:rtl;text-align:right;white-space:normal}
+.cl-bub.on{opacity:1}
+.cl-bub:after{content:"";position:absolute;bottom:-8px;left:var(--tail,50%);width:10px;height:10px;background:inherit;
+  border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
+.cl-bub.shout{background:#FFE14D}
+.cl-bub.small{font-size:calc(var(--fs) * .85);padding:.25em .55em;background:#F2FBF6;border-color:#1E6B47;color:#14432D}
+.cl-bub.small:after{border-color:#1E6B47}
+.cl-bub.quran{background:#FBF7EC;border-color:#8A6D2B;color:#2B2410;font-weight:400;font-size:calc(var(--fs) * 1.12);line-height:2;
+  font-family:"QuranFont","Naskh",serif;max-width:min(84vw,340px)}
+.cl-bub.quran:after{border-color:#8A6D2B}
+.cl-bub.asking{background:#FFF6D8;box-shadow:0 0 0 4px rgba(217,119,87,.35),3px 3px 0 rgba(0,0,0,.2);animation:clPulse 1.4s infinite}
+.cl-hint{display:block;font-size:.72em;font-weight:700;color:#9A5A2E;margin-top:2px}
+@keyframes clPulse{50%{box-shadow:0 0 0 8px rgba(217,119,87,.15),3px 3px 0 rgba(0,0,0,.2)}}
+.cl-opts{position:absolute;left:0;top:0;display:flex;flex-direction:column;gap:8px;max-width:min(86vw,330px)}
+.cl-opts.many{flex-direction:row;flex-wrap:wrap;max-width:min(92vw,400px)}
+.cl-opts.many .cl-opt{flex:1 1 44%;padding:.5em .5em}
+.cl-opt{background:var(--orange);color:#fff;font-weight:700;font-size:calc(var(--fs) * 1.05);padding:.55em .9em;border:2.5px solid var(--ink);
+  border-radius:8px;box-shadow:3px 3px 0 var(--ink);text-align:center;direction:rtl}
+.cl-btn{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);
+  box-shadow:2px 2px 0 rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;font-size:20px}

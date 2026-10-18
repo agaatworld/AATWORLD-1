@@ -66,3 +66,7 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - Brand data in the magazine is keyed by company (`brOf()`), not by page.
 - Shell `rm` with variables/globs can be blocked by the safety check; use explicit paths.
 - Zips over ~30 MB can't be sent in chat; split them.
+
+## Side project on this branch: Clawd app ("فشّة خلق")
+Branch `claude/interactive-claude-character-app-33bzzn` also holds `clawd-app/`, an Android floating-character app
+(not part of the website). **Read `clawd-app/HANDOFF.md` first** — it has the stop point and next steps.

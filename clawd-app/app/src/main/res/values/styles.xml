@@ -1,0 +1,11 @@
+<resources>
+    <style name="Clawd" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    <color name="bg">#F3F2EE</color>
+    <color name="orange">#D97757</color>
+</resources>

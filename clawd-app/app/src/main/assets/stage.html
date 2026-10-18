@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>كلود العائم</title>
+<link rel="stylesheet" href="css/cl.css">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:transparent}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#stage{position:absolute;inset:0}
+/* browser mock of a phone home screen */
+body.mock{background:linear-gradient(165deg,#24335C 0%,#5B4A8B 50%,#D97757 100%)}
+#mockHome{position:absolute;inset:0;display:none;color:#fff;font-family:system-ui,sans-serif}
+body.mock #mockHome{display:block}
+#mockHome .clock{text-align:center;font-size:58px;font-weight:300;margin-top:64px;direction:ltr}
+#mockHome .date{text-align:center;font-size:16px;opacity:.85}
+#mockIcons{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 8px;padding:44px 20px}
+#mockIcons div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;font-weight:600}
+#mockIcons i{width:56px;height:56px;border-radius:15px;display:block;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.mock-bar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;gap:4px;flex-wrap:wrap;padding:4px;background:rgba(0,0,0,.35)}
+.mock-bar button{font:700 12px system-ui;padding:4px 6px;border:0;border-radius:6px;background:#fff;color:#141413}
+.mock-kb{position:fixed;left:0;right:0;bottom:0;z-index:4;background:#ECEEF1}
+.mock-input{display:block;width:calc(100% - 20px);margin:8px 10px;font:16px system-ui;padding:10px;border:1px solid #bbb;border-radius:20px;box-sizing:border-box}
+.mock-chat{position:fixed;z-index:6;left:12px;right:12px;top:230px;height:330px;border:0;background:transparent}
+.mock-keys{height:220px;background:repeating-linear-gradient(90deg,#D5D8DD 0 34px,#ECEEF1 34px 38px)}
+</style>
+</head>
+<body>
+<div id="mockHome"><div class="clock" id="mClock">12:00</div><div class="date">صاحبي · تجربة الشاشة العائمة</div><div id="mockIcons"></div></div>
+<div id="stage"><canvas id="cv"></canvas></div>
+<script src="js/engine.js"></script>
+<script src="js/content.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/prayer.js"></script>
+<script src="js/lines1.js"></script>
+<script src="js/lines2.js"></script>
+<script src="js/lines3.js"></script>
+<script src="js/acts.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/stage.js"></script>
+<script>
+(function(){
+  var Q = new URLSearchParams(location.search), mock = Q.get('mock') === '1';
+  if (mock) {
+    document.body.classList.add('mock');
+    var names = ['الرسائل','الكاميرا','الصور','واتساب','الخرائط','الإعدادات','التقويم','يوتيوب','الساعة','الملاحظات','المتجر','الطقس','القرآن','الأذكار','البريد','الهاتف'];
+    var cols = ['#34C759','#555','#FF9F0A','#25D366','#0A84FF','#8E8E93','#FF3B30','#FF0000','#1C1C1E','#FFD60A','#0A84FF','#64D2FF','#1F6B45','#2E7D4F','#5856D6','#34C759'];
+    var g = document.getElementById('mockIcons');
+    names.forEach(function(n, i){ var d = document.createElement('div'); d.innerHTML = '<i style="background:' + cols[i] + '"></i>' + n; g.appendChild(d); });
+    var d = new Date(); document.getElementById('mClock').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  CL.startStage({ canvas: document.getElementById('cv'), root: document.getElementById('stage'), mock: mock, quiet: Q.get('quiet') === '1',
+    onChat: openChat });
+  // browser preview: the floating chat window
+  var fr = null;
+  function openChat(seed){
+    if (fr) return;
+    fr = document.createElement('iframe'); fr.className = 'mock-chat'; fr.src = 'chat.html?seed=' + encodeURIComponent(seed || '');
+    document.body.appendChild(fr);
+    setTimeout(function(){ var r = fr.getBoundingClientRect(); window.clawd.chat(true, JSON.stringify({ x: r.left, y: r.top, w: r.width, h: r.height })); }, 200);
+  }
+  window.addEventListener('message', function(e){
+    if (!e.data) return;
+    if (e.data.clawd === 'chatClose' && fr) { fr.remove(); fr = null; window.clawd.chat(false); }
+    if (e.data.clawd === 'reply') window.clawd.chatReply(e.data.face, e.data.act, false);
+  });
+})();
+</script>
+</body>
+</html>

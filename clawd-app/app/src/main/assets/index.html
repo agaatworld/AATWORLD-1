@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>صاحبي</title>
+<link rel="stylesheet" href="css/cl.css">
+<style>
+:root{ --bg:#F3F2EE; --ink:#141413; --muted:#6B6A66; --card:#FFFFFF; --line:#141413; --orange:#D97757; --soft:#EAE7DF; --good:#2E7D4F; --bad:#C2412F; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#1C1B19; --ink:#F3F2EE; --muted:#A8A69F; --card:#2A2926; --line:#F3F2EE; --soft:#33312D; } }
+:root[data-theme="dark"]{ --bg:#1C1B19; --ink:#F3F2EE; --muted:#A8A69F; --card:#2A2926; --line:#F3F2EE; --soft:#33312D; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+  font-family:"Naskh","Noto Naskh Arabic",system-ui,sans-serif;font-size:18px}
+button,input,select{font:inherit;color:inherit}
+.app{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+header{display:flex;align-items:center;gap:12px;padding:12px 16px 4px}
+.brand{font-weight:900;font-size:27px}
+.brand small{display:block;font-size:16px;font-weight:700;color:var(--muted)}
+.stats{margin-inline-start:auto;text-align:left}
+.stat{font-weight:900;font-size:21px}
+.stat span{font-size:16px;color:var(--muted);font-weight:700}
+.meter{padding:2px 16px 6px}
+.meter .lbl{display:flex;justify-content:space-between;font-weight:800;font-size:16px;margin-bottom:5px}
+.bar{height:16px;border:3px solid var(--line);background:var(--card);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--orange);transition:width .25s}
+#arena{position:relative;flex:1;min-height:260px;overflow:hidden;touch-action:none;border-top:2px solid var(--soft);border-bottom:2px solid var(--soft);
+  background:linear-gradient(180deg,transparent 0 82%,var(--soft) 82% 100%)}
+#arena canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.dock{display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));flex-wrap:wrap}
+.btn{appearance:none;border:3px solid var(--line);background:var(--card);font-weight:900;font-size:19px;padding:12px 16px;min-height:56px;
+  box-shadow:4px 4px 0 var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--line)}
+.btn.primary{background:var(--orange);color:#fff;border-color:#141413;box-shadow:4px 4px 0 #141413;flex:1 1 100%}
+.btn.half{flex:1 1 40%}
+.toolbar{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.toolbar::-webkit-scrollbar{display:none}
+.toolbar button{flex:0 0 auto;border:2.5px solid var(--line);background:var(--card);border-radius:22px;padding:8px 14px;font-weight:800;font-size:17px;color:var(--ink)}
+.toolbar button.on{background:var(--orange);color:#fff;border-color:#141413}
+.hint{padding:0 16px;color:var(--muted);font-weight:700;font-size:16px;text-align:center}
+/* sheets */
+.sheet{position:absolute;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.sheet.on{display:flex}
+.sheet .top{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:3px solid var(--line)}
+.sheet .top h2{margin:0;font-size:24px;flex:1}
+.sheet .body{flex:1;overflow:auto;padding:8px 16px calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.sec{margin:18px 0 6px;font-size:21px;font-weight:900;color:var(--orange)}
+.card{background:var(--card);border:2px solid var(--soft);border-radius:10px;padding:4px 14px;margin:6px 0}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--soft);min-height:58px}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;font-weight:800;font-size:18px}
+.row .t small{display:block;font-weight:600;font-size:15px;color:var(--muted);line-height:1.45}
+.sw{position:relative;width:58px;height:32px;flex:0 0 auto}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;background:#BDB8AD;border-radius:20px;transition:.2s}
+.sw i:after{content:"";position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--good)}
+.sw input:checked+i:after{right:30px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}
+.chip{border:2.5px solid var(--line);border-radius:22px;padding:7px 14px;font-weight:800;background:var(--card)}
+.chip.on{background:var(--ink);color:var(--bg)}
+.seg{display:flex;gap:6px}
+.seg button{border:2.5px solid var(--line);background:var(--card);padding:7px 12px;border-radius:8px;font-weight:800}
+.seg button.on{background:var(--ink);color:var(--bg)}
+input[type=text],input[type=password],select,input[type=number]{width:100%;border:2.5px solid var(--line);border-radius:8px;padding:10px;background:var(--card);font-size:18px}
+input[type=number]{width:90px;text-align:center}
+.st{font-weight:900;font-size:16px;padding:4px 10px;border-radius:14px;white-space:nowrap}
+.st.ok{background:#DDF1E4;color:#1E5C38}.st.no{background:#F8DCD6;color:#8E2A1C}
+.note{color:var(--muted);font-size:15px;line-height:1.6;padding:6px 0 10px}
+.note.big{font-size:17px;color:var(--ink)}
+.ptimes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:6px 0 10px}.ptimes div{border:2px solid var(--soft);border-radius:10px;text-align:center;padding:6px 2px;font-size:15px}.ptimes b{display:block;font-size:16px}.ptimes span{font-weight:800}
+.hint.use{font-size:17px;color:var(--ink);opacity:.8;padding-top:2px}.note ol{margin:6px 0;padding-inline-start:22px}.note li{margin:3px 0}
+.memit{display:flex;align-items:center;gap:8px;border:2px solid var(--soft);border-radius:10px;padding:6px 10px;margin-top:6px;font-size:16px;font-weight:700}.memit span{flex:1}.memit .x{border:0;background:transparent;font-size:18px;font-weight:900;color:var(--muted)}
+.help li{margin:8px 0;line-height:1.6}
+.help b{color:var(--orange)}
+/* splash */
+#splash{position:absolute;inset:0;z-index:30;background:#F3F2EE;color:#141413;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s}
+#splash canvas{width:min(70vw,340px);height:min(56vw,272px)}
+#splash h1{font-size:32px;margin:18px 0 6px;font-weight:800;direction:ltr;min-height:42px}
+#splash p{margin:0;font-size:19px;font-weight:700;color:#6B6A66;min-height:28px}
+#splash .load{margin-top:22px;width:min(60vw,260px);height:16px;border:3px solid #141413;position:relative}
+#splash .load i{position:absolute;inset:2px auto 2px 2px;width:0;background:#D97757}
+#splash.off{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">صاحبي<small>رفيقك على الشاشة… يذكّرك بالله</small></div>
+    <div class="stats"><div class="stat" id="sHits">0 <span>ضربة</span></div><div class="stat" style="font-size:17px" id="sLove">المودّة: 60</div></div>
+  </header>
+  <div class="meter"><div class="lbl"><span>الطاقة اللي فرّغتها</span><span id="sRank">مبتدئ</span></div><div class="bar"><i id="sBar"></i></div></div>
+  <div id="arena"><canvas id="acv"></canvas></div>
+  <div class="toolbar" id="toolbar"></div>
+  <div class="hint use" id="useToday"></div>
+  <div class="hint" id="hint">مرّر إصبعك من طرف الساحة اليمين لتطلع الأداة · اضغطها: ضربة · مطوّل: أقوى · امسح على راسه: شكر · ضغطتين عليه: دردشة · مطوّل عليه: احكي بصوتك</div>
+  <div class="dock">
+    <button class="btn primary" id="bFloat">▶ تشغيل كلود العائم</button>
+    <button class="btn half" id="bSet">⚙️ الإعدادات</button>
+    <button class="btn half" id="bHelp">؟ المساعدة</button>
+  </div>
+</div>
+
+<div class="sheet" id="set">
+  <div class="top"><h2>الإعدادات</h2><button class="btn" data-close>تم</button></div>
+  <div class="body" id="setBody"></div>
+</div>
+
+<div class="sheet" id="help">
+  <div class="top"><h2>كيف تتعامل مع كلود</h2><button class="btn" data-close>تم</button></div>
+  <div class="body help">
+    <div class="sec">العصا والأدوات</div>
+    <ul>
+      <li><b>الأداة مخبّاية ورا طرف الشاشة اليمين</b>: مرّر إصبعك من طرف الشاشة اليمين لجوّا وبتطلع الأداة (وصاحبك بينتبه). رجّعها لطرف اليمين أو ارميها لهناك وبترجع تتخبّى، خصوصاً لما يكون ماشي صح.</li>
+      <li><b>ضغطة على العصا</b>: ضربة سريعة بمكان مختلف كل مرة.</li>
+      <li><b>ضغطة طويلة</b>: العصا تتشحن وكلود يترجّاك… اترك = ضربة قوية. شحنة كاملة = ساحقة.</li>
+      <li><b>ضغطات متتالية</b>: كومبو. يعصّب، بعدين يبكي، وبالآخر K.O.</li>
+      <li><b>اسحب العصا لأي مكان</b>: كل ما كانت أبعد عنه كانت الضربة أقوى. وإذا رميتها عليه بتصيبه.</li>
+      <li><b>غيّر الأداة</b>: من الأزرار تحت الساحة هون بالتطبيق، أو من الإعدادات، أو قلّه بالدردشة «بدّلها لمخدة». الأدوات: عصا، مخدة، مطرقة بتزمّر، قفاز ملاكمة، بالون مي، كرة ثلج، ريشة.</li>
+      <li><b>لما تمسك العصا</b> (ضغطة طويلة أو سحب) بيركض ويهرب منك، وكل ما قرّبت أسرع. إذا حصرته بالزاوية بيقفز من فوقها أو بيترجّاك «آخر مرة!». وأحياناً بيتخبّى تحت الشاشة ويطلّع راسه، أو يلبس طنجرة عراسه!</li>
+      <li><b>كلود ما بيقبل الظلم</b>: إذا نصحك أو كان عم يقرأ قرآن أو يسبّح وضربته، أحياناً بيمسك العصا ويرميها بعيد، أو بيصادرها، أو بيصدّها ويقلك: ليش تضربني؟ أنا قلت شي غلط؟</li>
+    </ul>
+    <div class="sec">كلود نفسه</div>
+    <ul>
+      <li><b>ضغطة</b>: يتفاعل بطرق كثيرة. <b>ضغطتين ورا بعض</b>: تفتح الدردشة معه.</li>
+      <li><b>امسح على راسه</b> (حرّك إصبعك يمين ويسار فوقه): هيك بتشكره، وبيفرح ويدعيلك.</li>
+      <li><b>ضغطة طويلة</b>: احكي معه بصوتك، ولما ترفع إصبعك بيرد عليك (بالمرة الأولى بيطلب إذن المايك).</li>
+      <li><b>اسحبه</b>: تحمله. <b>ارميه</b>: بيطير ويعمل حركات باركور.</li>
+      <li><b>اسحبه لفوق بسرعة</b> أو اضغطه ضغطتين: تفتح الدردشة بنافذة عائمة، وهو بيظهر فوق الدردشة وبيتفاعل مع كلامك.</li>
+      <li><b>هز التلفون</b>: بيدوخ. <b>اقلب التلفون</b>: بيوقع للجهة التانية ويعمل حركات. <b>حط التلفون مسطّح</b>: أحياناً بيتمشى فوق التطبيقات بشكل ثلاثي الأبعاد.</li>
+      <li>إذا تركته نص دقيقة بيصغر كتير وبيكمّل نشاطاته: تسبيح، قرآن بالجلابية والطاقية، مذاكرة بالنضارة، تمارين قتالية، شاي، ونوم…</li>
+      <li>أحياناً بيسألك سؤال: اضغط الفقاعة وبتطلع الأجوبة.</li>
+    </ul>
+    <div class="sec">مع هاتفك (بعد تفعيل عيون كلود)</div>
+    <ul>
+      <li>لما تكتب، بيركض لفوق مربع الكتابة وبيقعد يتفرّج ويتفاعل مع كتابتك. ما بيشوف الكلام نفسه.</li>
+      <li>لما تفتح تطبيق رسائل بيجي يتطلّع. وعالشاشة الرئيسية بيتنطط من تطبيق لتطبيق.</li>
+      <li>إذا طوّلت عالمقاطع القصيرة أو عالتلفون بيعاتبك وبينصحك. ولما ترجع بعد غياب بيسلّم عليك ويطمّن عنك.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="splash" hidden><canvas id="spc" width="340" height="272"></canvas><h1 id="spT"></h1><p id="spS"></p><div class="load"><i id="spL"></i></div></div>
+
+<script src="js/engine.js"></script>
+<script src="js/content.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/prayer.js"></script>
+<script src="js/lines1.js"></script>
+<script src="js/lines2.js"></script>
+<script src="js/lines3.js"></script>
+<script src="js/acts.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/stage.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+10-18 11:30:54.379   878   878 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:31:20.697  3649  3830 D Clawd   : stage ready {"w":412.19049072265625,"h":436.8095397949219,"dpr":2.625}
+10-18 11:31:35.173  3649  3830 D Clawd   : stage ready {"w":412.19049072265625,"h":915.047607421875,"dpr":2.625}
+10-18 11:31:35.184  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:35.402  3649  3649 D Clawd   : pad char 42 2074 210 226
+10-18 11:31:36.771  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:37.411  3649  3649 D Clawd   : pad char 42 2137 189 226
+10-18 11:31:38.437  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:38.949  3649  3649 D Clawd   : pad char 42 2137 186 226
+10-18 11:31:40.096  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:40.605  3649  3649 D Clawd   : pad char 42 2137 228 226
+10-18 11:31:42.291  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:42.291  3649  3649 D Clawd   : pad char 42 2137 210 226
+10-18 11:31:44.330  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:44.330  3649  3649 D Clawd   : pad char 45 2134 213 226
+10-18 11:31:45.845  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:45.845  3649  3649 D Clawd   : pad char 84 2129 200 231
+10-18 11:31:46.469  3649  3649 D Clawd   : touch char down 184 2244
+10-18 11:31:46.713  3649  3830 D Clawd   : js gesture char tap 0.05s
+10-18 11:31:47.442  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:47.442  3649  3649 D Clawd   : pad char 158 2100 202 231
+10-18 11:31:49.185  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:49.201  3649  3649 D Clawd   : pad char 168 2132 210 231
+10-18 11:31:50.880  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:50.880  3649  3649 D Clawd   : pad char 257 2132 194 231
+10-18 11:31:52.597  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:52.598  3649  3649 D Clawd   : pad char 312 2129 197 234
+10-18 11:31:54.397  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:54.397  3649  3649 D Clawd   : pad char 420 2129 197 231
+10-18 11:31:56.066  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:56.067  3649  3649 D Clawd   : pad char 512 2132 194 231
+10-18 11:31:57.755  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:57.755  3649  3649 D Clawd   : pad char 583 2129 200 234
+10-18 11:31:59.261  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:31:59.261  3649  3649 D Clawd   : pad char 683 2132 194 231
+10-18 11:32:00.941  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:00.941  3649  3649 D Clawd   : pad char 772 2132 194 231
+10-18 11:32:02.524  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:02.524  3649  3649 D Clawd   : pad char 816 2129 194 231
+10-18 11:32:05.638  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:05.638  3649  3649 D Clawd   : pad char 872 2129 194 231
+10-18 11:32:07.371  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:07.373  3649  3649 D Clawd   : pad char 840 2129 213 231
+10-18 11:32:08.953  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:08.953  3649  3649 D Clawd   : pad char 743 2132 194 231
+10-18 11:32:09.518  5464  5464 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-18 11:32:09.538  5464  5464 I AndroidRuntime: Using default boot image
+10-18 11:32:09.538  5464  5464 I AndroidRuntime: Leaving lock profiling enabled
+10-18 11:32:10.076  5464  5464 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-18 11:32:10.488  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:10.488  3649  3649 D Clawd   : pad char 677 2129 194 231
+10-18 11:32:12.098  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:12.124  3649  3649 D Clawd   : pad char 596 2129 200 234
+10-18 11:32:12.751  5464  5464 D AndroidRuntime: Shutting down VM
+10-18 11:32:13.623  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:13.623  3649  3649 D Clawd   : pad char 494 2132 197 231
+10-18 11:32:14.663  3649  3830 D Clawd   : js tool pillow
+10-18 11:32:15.247  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:15.247  3649  3649 D Clawd   : pad char 412 2132 194 231
+10-18 11:32:16.835  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:16.835  3649  3649 D Clawd   : pad char 360 2132 194 228
+10-18 11:32:18.452  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:18.452  3649  3649 D Clawd   : pad char 281 2132 194 231
+10-18 11:32:20.104  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:20.104  3649  3649 D Clawd   : pad char 142 2132 194 231
+10-18 11:32:21.616  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:21.616  3649  3649 D Clawd   : pad char 71 2129 197 234
+10-18 11:32:23.385  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:23.385  3649  3649 D Clawd   : pad char 37 2134 213 228
+10-18 11:32:27.021  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:27.021  3649  3649 D Clawd   : pad char 24 2137 234 223
+10-18 11:32:28.703  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:28.707  3649  3649 D Clawd   : pad char 45 2163 192 197
+10-18 11:32:34.313  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:34.314  3649  3649 D Clawd   : pad char 45 1352 194 184
+10-18 11:32:35.981  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:35.982  3649  3649 D Clawd   : pad char 95 1179 137 142
+10-18 11:32:37.677  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:37.677  3649  3649 D Clawd   : pad char 108 1213 129 134
+10-18 11:32:39.414  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:39.414  3649  3649 D Clawd   : pad char 63 1166 184 181
+10-18 11:32:41.447  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:41.447  3649  3649 D Clawd   : pad char 5 2184 221 155
+10-18 11:32:42.614  4764  4764 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:42.971  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:42.971  3649  3649 D Clawd   : pad char 18 2181 207 134
+10-18 11:32:43.566  5935  5935 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:43.924  5957  5957 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:44.246  6019  6019 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:45.597  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:45.597  3649  3649 D Clawd   : pad char 18 2137 210 226
+10-18 11:32:46.235  6045  6045 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:46.733  6072  6072 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:47.158  6090  6090 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:47.508  6108  6108 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:47.736  6126  6126 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:48.018  6144  6144 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:48.555  6166  6166 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:48.995  6188  6188 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:49.252  6217  6217 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:49.529  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:49.529  3649  3649 D Clawd   : pad char 18 2134 215 226
+10-18 11:32:49.545  6234  6234 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:49.980  6252  6252 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:50.570  6271  6271 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:51.012  6293  6293 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:51.214  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:51.216  3649  3649 D Clawd   : pad char 18 2134 213 226
+10-18 11:32:51.682  6317  6317 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:51.892  6335  6335 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-18 11:32:56.222  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:56.222  3649  3649 D Clawd   : pad char 18 2137 221 226
+10-18 11:32:57.803  3649  3649 D Clawd   : pad edge 1024 914 58 1105
+10-18 11:32:57.803  3649  3649 D Clawd   : pad char 18 2137 215 226
+=== services ===
+ACTIVITY MANAGER SERVICES (dumpsys activity services)
+  User 0 active services:
+  * ServiceRecord{429a991 u0 com.aat.clawd/.ClawdEyes}
+    intent={cmp=com.aat.clawd/.ClawdEyes}
+    packageName=com.aat.clawd
+    processName=com.aat.clawd
+    permission=android.permission.BIND_ACCESSIBILITY_SERVICE
+    baseDir=/data/app/~~dG8zLnO6Pa_JzaHHStXhLg==/com.aat.clawd-NdR8ybEG-TXo_9ngfTCvdQ==/base.apk
+    dataDir=/data/user/0/com.aat.clawd
+    app=ProcessRecord{5a808ff 3649:com.aat.clawd/u0a174}
+    mIsAllowedBgActivityStartsByBinding=true
+    allowWhileInUsePermissionInFgs=true
+    recentCallingPackage=android
+    recentCallingUid=1000
+    allowStartForeground=PROC_STATE_PERSISTENT
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: android; callingUid: 1000; uidState: PER ; intent: Intent { cmp=com.aat.clawd/.ClawdEyes }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<null>; targetSdkVersion:34; callerTargetSdkVersion:33; startForegroundCount:0; bindFromPackage:null]
+    createTime=-47s684ms startingBgTimeout=--
+    lastActivity=-47s528ms restartTime=-47s528ms createdFromFg=true
+    Bindings:
+=== accessibility ===
+com.aat.clawd/com.aat.clawd.ClawdEyes
