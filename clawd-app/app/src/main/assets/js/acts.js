@@ -352,7 +352,13 @@ R.stroll = function* (B, b) { // dive "into" the phone and walk over the apps, s
     while (t < dur || (B.w.gmag < 0.35 && t < 90)) { // phone lying flat: he keeps walking around on it
       const dt = yield; t += dt; b.walk = 4.2 * b.u;
       if (chance(dt * 0.45)) b.heading += rnd(-1.3, 1.3);
-      if (chance(dt * 0.1)) { b.walk = 0; b.setFace(pick(['surprised', 'puzzled', 'wideHappy', 'sideeye']), 1.2); yield* wait(rnd(0.8, 1.4)); }
+      if (chance(dt * 0.2)) { // stop, turn to face you, then carry on
+        b.walk = 0; const h = b.heading; b.heading = 0;
+        b.setFace(pick(['wideHappy', 'happy', 'surprised', 'wink', 'joy', 'puzzled']), 1.6);
+        if (chance(0.4)) b.aR.t = -2.2;
+        yield* wait(rnd(1.1, 1.8)); b.aR.t = 0;
+        b.heading = chance(0.6) ? rnd(-1.2, 1.2) : h;
+      }
     }
     b.walk = 0; b.mode = 'side'; b.pv.t = 0.12; b.yaw.t = 0; b.ground = null; b.vy = -35 * b.u; b.vx = 0;
     yield* until(() => b.ground, 4);
