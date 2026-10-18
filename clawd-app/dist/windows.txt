@@ -1,29 +1,27 @@
-  Window #0 Window{ad1974b u0 ScreenDecorOverlayBottom}:
-  Window #1 Window{9459df8 u0 ScreenDecorOverlay}:
-  Window #2 Window{25e8276 u0 SecondaryHomeHandle0}:
-  Window #3 Window{87ce45 u0 EdgeBackGestureHandler0}:
-  Window #4 Window{18ceff7 u0 NavigationBar0}:
-  Window #5 Window{10eb033 u0 NotificationShade}:
-  Window #6 Window{2c1709e u0 StatusBar}:
-  Window #7 Window{35e7e6b u0 com.aat.clawd}:
+  Window #0 Window{e5822fa u0 ScreenDecorOverlayBottom}:
+  Window #1 Window{6f035f0 u0 ScreenDecorOverlay}:
+  Window #2 Window{1f30f57 u0 SecondaryHomeHandle0}:
+  Window #3 Window{db60ed7 u0 EdgeBackGestureHandler0}:
+  Window #4 Window{92f4172 u0 NavigationBar0}:
+  Window #5 Window{a77b095 u0 NotificationShade}:
+  Window #6 Window{1608149 u0 StatusBar}:
+  Window #7 Window{bcb62c3 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #8 Window{706329 u0 com.aat.clawd}:
+  Window #8 Window{b6bf974 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #9 Window{7b6cc44 u0 com.aat.clawd}:
+  Window #9 Window{6c8e229 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #10 Window{430807b u0 com.aat.clawd}:
+  Window #10 Window{b59dd27 u0 com.aat.clawd}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #11 Window{b3141c5 u0 com.aat.clawd}:
-    mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=SYSTEM_ALERT_WINDOW
-  Window #12 Window{7c0a96f u0 ShellDropTarget}:
-  Window #13 Window{82aa491 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #14 Window{5bfb0a2 u0 InputMethod}:
-  Window #15 Window{2b9f260 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
-  Window #16 Window{cf394df u0 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #11 Window{5d6402d u0 ShellDropTarget}:
+  Window #12 Window{c7e4cee u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #13 Window{71b36a4 u0 InputMethod}:
+  Window #14 Window{5ad9c78 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}:
+  Window #15 Window{4358a3e u0 com.aat.clawd/com.aat.clawd.MainActivity}:
     mOwnerUid=10174 showForAllUsers=false package=com.aat.clawd appop=NONE
-    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
-    mActivityRecord=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
-    WindowStateAnimator{8f8eb80 com.aat.clawd/com.aat.clawd.MainActivity}:
-  Window #17 Window{1e7be8 u0 com.android.systemui.wallpapers.ImageWallpaper}:
-      topApp=ActivityRecord{6d5a4fb u0 com.aat.clawd/.MainActivity} t9}
-      snapshot=TaskSnapshot{ mId=1792288598332 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@d0029e0 (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
+    mBaseLayer=21000 mSubLayer=0    mToken=ActivityRecord{c3bfceb u0 com.aat.clawd/.MainActivity} t9}
+    mActivityRecord=ActivityRecord{c3bfceb u0 com.aat.clawd/.MainActivity} t9}
+    WindowStateAnimator{8b98c42 com.aat.clawd/com.aat.clawd.MainActivity}:
+  Window #16 Window{d77709d u0 com.android.systemui.wallpapers.ImageWallpaper}:
+      topApp=ActivityRecord{c3bfceb u0 com.aat.clawd/.MainActivity} t9}
+      snapshot=TaskSnapshot{ mId=1792289757955 mTopActivityComponent=com.aat.clawd/.MainActivity mSnapshot=android.hardware.HardwareBuffer@16eca89 (864x1920) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2400) mContentInsets=[0,128][0,63] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=24 mIsTranslucent=false mHasImeSurface=false
