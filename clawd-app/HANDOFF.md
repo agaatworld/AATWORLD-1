@@ -3,18 +3,22 @@
 Branch: `claude/interactive-claude-character-app-33bzzn` in `agaatworld/AATWORLD-1`, folder `clawd-app/`.
 Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome first.
 
-## Stop point (18 Oct 2026, ~01:25 UTC)
-- **Floating overlay confirmed on the emulator** (build of `be60ced`): second `stage ready` at full screen
-  (412×915dp), overlay + pad windows present, Clawd visible over home, Phone app and Settings
-  (`dist/08_home_floating.png`, `09_home_tap.png`, `10_over_settings.png`).
-- **Play Protect** on the owner's Samsung blocked v2 ("App blocked to protect your device"): its enhanced fraud
-  protection blocks sideloaded apps that declare an accessibility service. So there are now two flavors:
-  - `lite` (`dist/clawd-lite.apk`): no `ClawdEyes`; installs normally. Settings show «عيون كلود» as unavailable.
-  - `full` (`dist/clawd.apk`): with `ClawdEyes`; needs Play Protect scanning off for the install.
-  The service declaration lives in `app/src/full/AndroidManifest.xml`. Both were sent to the owner.
-- CI can't open the chat window (`am startservice` → service not exported). Chat is only tested in the browser mock.
-- Next: wait for the owner's feedback from the real phone (lite first). Small polish noticed: on the home screen
-  Clawd stands on the Google search bar at the very bottom; consider a higher resting spot.
+## Stop point (18 Oct 2026, ~02:30 UTC)
+- Owner feedback on v2 (real Samsung): phone froze completely (had to restart), couldn't change the tool,
+  doesn't want dancing / singing / yoga-like poses, asked "where is the run? I want him to run when I hold the stick".
+- v3 (`5044d23`, versionCode 3):
+  - **Run mode** (`brain.r_run`, `canRun`, `maybeRun`): holding the tool (charge) or dragging it → he runs from it,
+    sprints when close, jumps over it / wall-runs when cornered, or pleads «آخر مرة» first; stops at a safe distance
+    and watches; pants when released; tired after 24 s. Freezes on 55% of swings mid-run so hits land. Not when
+    `rightful()`. Setting `flee` («يهرب لما تمسك العصا»). Lines `run_*` in `lines2.js`. `c.runLean` in engine.
+  - **Freeze fixes**: chat window `FLAG_NOT_TOUCH_MODAL|FLAG_WATCH_OUTSIDE_TOUCH` + unfocus on outside touch; pads never
+    go full screen (a gesture stays with the window that got DOWN anyway); stage alpha ≤ 0.8 on Android 12+ (untrusted
+    touch occlusion); low-importance notification with «إيقاف».
+  - Removed dabke, mini-dance, humming, focus pose; system prompt says no dancing/singing.
+  - Logging: `touch <id> down x y` (native pad) and `js gesture <id> tap|long|drag|charge` (JS) in logcat tag `Clawd`.
+  - CI `emu.sh` now also drags the tool towards him (`09f_run1`, `09g_run2`, `09h_run_end`).
+- Pads were verified at the right pixels in CI (after the first ~5 s, when the stage re-sizes to full screen).
+- Next: check CI shots/log for v3, send `dist/clawd-lite.apk` + `dist/clawd.apk` to the owner, wait for real-phone feedback.
 
 ## What exists
 Web layer (all in `app/src/main/assets/`, plain JS, no build step):
@@ -26,7 +30,7 @@ Web layer (all in `app/src/main/assets/`, plain JS, no build step):
   sources), dhikr, question trees with answers, quiz, riddles, jokes, friend talks + gentle da'wah talks.
 - `js/lines1.js`, `js/lines2.js` — big speech database, 7 dialects (s شامي, e مصري, y يمني, g خليجي, i عراقي, m مغربي, f فصحى).
 - `js/acts.js` — generator routines: idle moves, activities (tasbih, dua, Quran in jalabiya+taqiyah, study with
-  glasses, focus, martial arts, exercise, book, tea, sleep, juggle, plant, dabke), parkour, 3D top-down stroll,
+  glasses, martial arts, exercise, book, tea, sleep, juggle, plant), parkour, 3D top-down stroll, run-away mode,
   friend Pixel visit (spar / talk / da'wah).
 - `js/brain.js` — moods, rapport, every reaction (touch, hits, combos, KO, dodge, flee, hide-under-screen with
   answer options, helmet/shield, call friend), dignity ("in the right" after advice or during worship → sometimes
@@ -41,7 +45,7 @@ Web layer (all in `app/src/main/assets/`, plain JS, no build step):
 
 Android (`app/src/main/java/com/aat/clawd/`):
 - `OverlayService` — full-screen pass-through (NOT_TOUCHABLE) WebView with `stage.html`, plus small touchable
-  pad windows over Clawd/tool/buttons (pad goes full-screen during a drag); accelerometer → gravity/shake;
+  pad windows over Clawd/tool/buttons (the gesture stays with the pad that got DOWN); accelerometer → gravity/shake;
   screen on/off; floating chat window (`ChatWindow`, focusable, drag by header, back closes).
 - `ClaudeClient` — raw HTTPS + SSE to the Messages API (no SDK; small, Android-safe). Model from settings
   (default `claude-opus-5-5`), effort low, server-side fallback header for Opus/Sonnet.
