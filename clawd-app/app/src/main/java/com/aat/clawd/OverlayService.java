@@ -10,150 +10,153 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ServiceInfo;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.webkit.ConsoleMessage;
-import android.webkit.WebChromeClient;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.ViewConfiguration;
+import android.view.Surface;
+import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
+import android.webkit.WebViewClient;
 
-/** Keeps Clawd floating in a small window above every app. */
-public class OverlayService extends Service {
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/** Keeps Clawd floating over every app: a full-screen pass-through WebView plus small touch pads
+ *  placed over whatever is interactive, a Claude chat window, device-tilt input, and screen on/off. */
+public class OverlayService extends Service implements SensorEventListener {
     static final String ACTION_STOP = "com.aat.clawd.STOP";
+    static final String ACTION_CHAT = "com.aat.clawd.CHAT";
     static final String CHANNEL = "clawd";
     static volatile boolean running;
     static OverlayService inst;
 
     private WindowManager wm;
-    private WindowManager.LayoutParams lp;
-    private DragFrame frame;
-    private WebView web;
+    private View stageRoot;
+    private WebView stage;
+    private WindowManager.LayoutParams stageLp;
     private float density;
-    // character area inside the window, in CSS px (= dp); touches starting here drag the window
-    private final float[] zone = {0, 0, 0, 0};
-    private int side = 1;
+    private boolean stageReady;
+    private String pendingChatSeed;
+
+    private SensorManager sensors;
+    private final Handler ui = new Handler(Looper.getMainLooper());
+    private final PadManager pads = new PadManager();
+    private ChatWindow chatWin;
+    private long screenOffAt;
 
     static void start(Context c) {
-        Bridge.prefs(c).edit().putBoolean("floating", true).apply();
+        Prefs.setFlag(c, "floating", true);
         c.startForegroundService(new Intent(c, OverlayService.class));
     }
-
     static void stop(Context c) {
-        Bridge.prefs(c).edit().putBoolean("floating", false).apply();
+        Prefs.setFlag(c, "floating", false);
         c.stopService(new Intent(c, OverlayService.class));
     }
+    static void startThenChat(Context c, String seed) {
+        Prefs.setFlag(c, "floating", true);
+        c.startForegroundService(new Intent(c, OverlayService.class).setAction(ACTION_CHAT).putExtra("seed", seed == null ? "" : seed));
+    }
 
-    @Override
-    public IBinder onBind(Intent i) { return null; }
+    @Override public IBinder onBind(Intent i) { return null; }
 
     @Override
     public void onCreate() {
         super.onCreate();
         inst = this;
         running = true;
-        goForeground();
         density = getResources().getDisplayMetrics().density;
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        buildWindow();
+        goForeground();
+        buildStage();
+        sensors = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor acc = sensors != null ? sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) : null;
+        if (acc != null) sensors.registerListener(this, acc, SensorManager.SENSOR_DELAY_GAME);
         IntentFilter f = new IntentFilter();
         f.addAction(Intent.ACTION_SCREEN_ON);
         f.addAction(Intent.ACTION_SCREEN_OFF);
         f.addAction(Intent.ACTION_USER_PRESENT);
-        if (Build.VERSION.SDK_INT >= 33) registerReceiver(screen, f, Context.RECEIVER_NOT_EXPORTED);
-        else registerReceiver(screen, f);
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(screenRx, f, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(screenRx, f);
     }
 
     @Override
     public int onStartCommand(Intent i, int flags, int id) {
-        if (i != null && ACTION_STOP.equals(i.getAction())) {
-            Bridge.prefs(this).edit().putBoolean("floating", false).apply();
-            stopSelf();
-            return START_NOT_STICKY;
-        }
+        if (i != null && ACTION_STOP.equals(i.getAction())) { Prefs.setFlag(this, "floating", false); stopSelf(); return START_NOT_STICKY; }
+        if (i != null && ACTION_CHAT.equals(i.getAction())) openChat(i.getStringExtra("seed"));
         return START_STICKY;
     }
 
+    /* ---------------- foreground notification ---------------- */
     private void goForeground() {
         NotificationManager nm = getSystemService(NotificationManager.class);
         NotificationChannel ch = new NotificationChannel(CHANNEL, "كلود العائم", NotificationManager.IMPORTANCE_MIN);
         ch.setShowBadge(false);
         nm.createNotificationChannel(ch);
-        PendingIntent open = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
-        PendingIntent stop = PendingIntent.getService(this, 1,
-                new Intent(this, OverlayService.class).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent open = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent chat = PendingIntent.getService(this, 2, new Intent(this, OverlayService.class).setAction(ACTION_CHAT).putExtra("seed", ""), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent stop = PendingIntent.getService(this, 1, new Intent(this, OverlayService.class).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE);
         Notification n = new Notification.Builder(this, CHANNEL)
                 .setSmallIcon(R.drawable.ic_stat)
                 .setContentTitle("كلود معك 🟧")
-                .setContentText("اضرب العصا لتفش خلقك · اضغط لفتح التطبيق")
+                .setContentText("اضرب العصا لتفش خلقك · أو احكي معه")
                 .setContentIntent(open)
-                .addAction(new Notification.Action.Builder(null, "إيقاف كلود", stop).build())
-                .setOngoing(true)
-                .build();
+                .addAction(new Notification.Action.Builder(null, "💬 احكي", chat).build())
+                .addAction(new Notification.Action.Builder(null, "إيقاف", stop).build())
+                .setOngoing(true).build();
         if (Build.VERSION.SDK_INT >= 34) startForeground(7, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         else startForeground(7, n);
     }
 
-    private float scale() {
-        String s = Bridge.prefs(this).getString("size", "m");
-        return "s".equals(s) ? .8f : "l".equals(s) ? 1.3f : 1f;
-    }
-
+    /* ---------------- the stage (pass-through drawing window) ---------------- */
     @SuppressLint("SetJavaScriptEnabled")
-    private void buildWindow() {
-        int w = Math.round(176 * density * scale()), h = Math.round(168 * density * scale());
-        lp = new WindowManager.LayoutParams(w, h,
+    private void buildStage() {
+        stageLp = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                        | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                         | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.TOP | Gravity.LEFT;
-        Rect scr = screen();
-        SharedPreferences p = Bridge.prefs(this);
-        // default: bottom-left corner, above the navigation bar
-        lp.x = p.getInt("x", 0);
-        lp.y = p.getInt("y", scr.height() - h - Math.round(150 * density));
-        clamp();
-        side = lp.x + w / 2 > scr.width() / 2 ? -1 : 1;
+        stageLp.gravity = Gravity.TOP | Gravity.START;
+        if (Build.VERSION.SDK_INT >= 28) stageLp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
-        web = new WebView(this);
-        WebSettings s = web.getSettings();
+        stage = new WebView(this);
+        WebSettings s = stage.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        s.setTextZoom(100);
         s.setAllowFileAccess(true);
-        web.setBackgroundColor(Color.TRANSPARENT);
-        web.setVerticalScrollBarEnabled(false);
-        web.setHorizontalScrollBarEnabled(false);
-        web.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-        web.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onConsoleMessage(ConsoleMessage m) {
-                Log.d("Clawd", "js: " + m.message() + " @" + m.lineNumber());
-                return true;
-            }
+        stage.setBackgroundColor(Color.TRANSPARENT);
+        stage.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        stage.setWebViewClient(new WebViewClient() {
+            @Override public void onPageFinished(WebView v, String url) { stageReady = true; sendInsets(); if (pendingChatSeed != null) { openChat(pendingChatSeed); pendingChatSeed = null; } }
         });
-        web.addJavascriptInterface(new Bridge(this, null, this), "A");
-        web.loadUrl("file:///android_asset/clawd.html?m=overlay&side=" + side);
+        stage.addJavascriptInterface(new Bridge(this).withOverlay(this), "A");
+        stage.loadUrl("file:///android_asset/stage.html");
 
-        frame = new DragFrame(this);
-        frame.addView(web, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        wm.addView(frame, lp);
+        stageRoot = stage;
+        wm.addView(stageRoot, stageLp);
     }
 
     private Rect screen() {
@@ -162,125 +165,325 @@ public class OverlayService extends Service {
         wm.getDefaultDisplay().getRealMetrics(m);
         return new Rect(0, 0, m.widthPixels, m.heightPixels);
     }
-
-    private void clamp() {
-        Rect s = screen();
-        lp.x = Math.max(0, Math.min(s.width() - lp.width, lp.x));
-        lp.y = Math.max(0, Math.min(s.height() - lp.height, lp.y));
+    private void sendInsets() {
+        int top = 0, bottom = 0;
+        try {
+            android.view.WindowInsets wi = stageRoot.getRootWindowInsets();
+            if (wi != null) {
+                if (Build.VERSION.SDK_INT >= 30) {
+                    android.graphics.Insets b = wi.getInsets(android.view.WindowInsets.Type.systemBars());
+                    top = b.top; bottom = b.bottom;
+                } else { top = wi.getStableInsetTop(); bottom = wi.getStableInsetBottom(); }
+            }
+        } catch (Exception ignored) { }
+        if (top == 0) top = Math.round(26 * density);
+        jsStage("clawd.insets(" + top + "," + Math.max(bottom, Math.round(10 * density)) + ",0,0)");
     }
 
-    void setZone(float l, float t, float r, float b) {
-        zone[0] = l; zone[1] = t; zone[2] = r; zone[3] = b;
-        Log.d("Clawd", "zone " + l + "," + t + "," + r + "," + b);
+    void jsStage(String code) { if (stage != null) stage.evaluateJavascript("window.clawd&&" + code, null); }
+    void onSettings(String json) {
+        if (stage != null) stage.evaluateJavascript("window.clawd&&clawd.settings(" + Bus.q(json) + ")", null);
+        if (chatWin != null) chatWin.applyFont();
     }
 
-    void onPref(String k, String v) {
-        if ("size".equals(k)) {
-            wm.removeView(frame);
-            web.destroy();
-            buildWindow();
-        } else if ("sound".equals(k)) {
-            js("clawd.setSound(" + ("1".equals(v)) + ")");
+    /* ---------------- touch pads ---------------- */
+    void setPads(String json) { pads.update(json); }
+
+    private final class PadManager {
+        private final List<Pad> pool = new ArrayList<>();
+        private Pad capturing;
+
+        void update(String json) {
+            if (capturing != null) return; // don't reshuffle mid-gesture
+            JSONArray arr;
+            try { arr = new JSONArray(json); } catch (Exception e) { return; }
+            int n = arr.length();
+            while (pool.size() < n) pool.add(new Pad());
+            for (int i = 0; i < pool.size(); i++) {
+                Pad p = pool.get(i);
+                if (i < n) {
+                    try {
+                        JSONArray t = arr.getJSONArray(i);
+                        p.set(t.getString(0), t.getInt(1), t.getInt(2), t.getInt(3), t.getInt(4));
+                    } catch (Exception e) { p.hide(); }
+                } else p.hide();
+            }
+        }
+        void clearCapture() { capturing = null; }
+    }
+
+    private final class Pad {
+        final View v;
+        final WindowManager.LayoutParams lp;
+        boolean shown;
+        String id;
+
+        Pad() {
+            v = new View(OverlayService.this);
+            lp = new WindowManager.LayoutParams(1, 1,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                            | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    PixelFormat.TRANSLUCENT);
+            lp.gravity = Gravity.TOP | Gravity.START;
+            v.setOnTouchListener(this::onTouch);
+        }
+        void set(String id, int x, int y, int w, int h) {
+            this.id = id;
+            lp.x = x; lp.y = y; lp.width = Math.max(1, w); lp.height = Math.max(1, h);
+            if (!shown) { shown = true; try { wm.addView(v, lp); } catch (Exception e) { shown = false; } }
+            else try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
+        }
+        void hide() { if (shown) { shown = false; try { wm.removeView(v); } catch (Exception ignored) { } } }
+        void fullscreen() {
+            Rect sc = screen();
+            lp.x = 0; lp.y = 0; lp.width = sc.width(); lp.height = sc.height();
+            try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
+        }
+        boolean onTouch(View view, MotionEvent e) {
+            int a = e.getActionMasked();
+            float rx = e.getRawX(), ry = e.getRawY();
+            if (a == MotionEvent.ACTION_DOWN) {
+                pads.capturing = this;
+                fullscreen(); // so moves/ups outside the little rect are still caught
+                js("down", rx, ry);
+                return true;
+            } else if (a == MotionEvent.ACTION_MOVE) {
+                js("move", rx, ry);
+                return true;
+            } else if (a == MotionEvent.ACTION_UP || a == MotionEvent.ACTION_CANCEL) {
+                js(a == MotionEvent.ACTION_UP ? "up" : "cancel", rx, ry);
+                pads.clearCapture();
+                return true;
+            }
+            return true;
+        }
+        void js(String type, float x, float y) {
+            jsStage("clawd.touch(" + Bus.q(id) + "," + Bus.q(type) + "," + x + "," + y + ")");
         }
     }
 
-    private void js(String code) {
-        if (web != null) web.evaluateJavascript("window.clawd&&" + code, null);
-    }
-
+    /* ---------------- tilt + shake ---------------- */
+    @Override public void onAccuracyChanged(Sensor s, int a) { }
     @Override
-    public void onConfigurationChanged(Configuration c) {
-        super.onConfigurationChanged(c);
-        if (frame == null) return;
-        clamp();
-        wm.updateViewLayout(frame, lp);
+    public void onSensorChanged(SensorEvent e) {
+        if (!stageReady) return;
+        float x = e.values[0], y = e.values[1], z = e.values[2];
+        int rot = Surface.ROTATION_0;
+        try { rot = (Build.VERSION.SDK_INT >= 30 ? getDisplay() : wm.getDefaultDisplay()).getRotation(); } catch (Exception ignored) { }
+        float gx = -x, gy = y;
+        if (rot == Surface.ROTATION_90) { float t = gx; gx = -gy; gy = t; }
+        else if (rot == Surface.ROTATION_270) { float t = gx; gx = gy; gy = -t; }
+        else if (rot == Surface.ROTATION_180) { gx = -gx; gy = -gy; }
+        jsStage("clawd.gravity(" + fmt(gx) + "," + fmt(gy) + ")");
+        if (Math.sqrt(x * x + y * y + z * z) > 26) jsStage("clawd.shake()");
     }
+    private static String fmt(float f) { return String.valueOf(Math.round(f * 100) / 100f); }
 
-    private final BroadcastReceiver screen = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context c, Intent i) {
-            if (web == null) return;
-            if (Intent.ACTION_SCREEN_OFF.equals(i.getAction())) {
-                web.onPause();
-            } else {
-                web.onResume();
-                if (Intent.ACTION_USER_PRESENT.equals(i.getAction())) js("clawd.onScreenOn()");
+    /* ---------------- screen on/off ---------------- */
+    private final BroadcastReceiver screenRx = new BroadcastReceiver() {
+        @Override public void onReceive(Context c, Intent i) {
+            String a = i.getAction();
+            if (Intent.ACTION_SCREEN_OFF.equals(a)) { screenOffAt = SystemClock.elapsedRealtime(); if (stage != null) stage.onPause(); jsStage("clawd.screen('off',0)"); }
+            else if (Intent.ACTION_SCREEN_ON.equals(a)) { if (stage != null) stage.onResume(); }
+            else if (Intent.ACTION_USER_PRESENT.equals(a)) {
+                long away = screenOffAt > 0 ? SystemClock.elapsedRealtime() - screenOffAt : 0;
+                jsStage("clawd.screen('present'," + away + ")");
             }
         }
     };
 
-    @Override
-    public void onDestroy() {
-        running = false;
-        inst = null;
-        try { unregisterReceiver(screen); } catch (Exception ignored) { }
-        if (frame != null) { try { wm.removeView(frame); } catch (Exception ignored) { } }
-        if (web != null) web.destroy();
-        super.onDestroy();
+    /* ---------------- Claude chat window ---------------- */
+    void openChat(String seed) {
+        if (stage == null) return;
+        if (!stageReady) { pendingChatSeed = seed == null ? "" : seed; return; }
+        if (chatWin == null) chatWin = new ChatWindow();
+        chatWin.open(seed == null ? "" : seed);
+        jsStage("clawd.app('chat','دردشة كلود')");
     }
 
-    /** Touches that start on Clawd and move past the slop drag the whole window; everything else goes to the page. */
-    private class DragFrame extends FrameLayout {
-        private final int slop;
-        private float downX, downY;
-        private int startX, startY;
-        private boolean candidate, dragging;
-        private VelocityTracker vt;
+    final class ChatWindow {
+        private WebView web;
+        private WindowManager.LayoutParams lp;
+        private boolean shown, big;
+        private final List<String[]> history = new ArrayList<>();
+        private final float[] zone = {0, 0, 0, 0};
+        private boolean ready;
+        private String seed = "";
+        private ClaudeClient claude;
 
-        DragFrame(Context c) {
-            super(c);
-            slop = ViewConfiguration.get(c).getScaledTouchSlop();
+        @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
+        ChatWindow() {
+            loadHistory();
+            lp = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT, Math.round(360 * density),
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    PixelFormat.TRANSLUCENT);
+            lp.gravity = Gravity.TOP | Gravity.START;
+            lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+            Rect sc = screen();
+            lp.width = sc.width() - Math.round(24 * density);
+            lp.x = Math.round(12 * density);
+            lp.y = Math.round(140 * density);
+            web = new WebView(OverlayService.this);
+            WebSettings s = web.getSettings();
+            s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setAllowFileAccess(true);
+            web.setBackgroundColor(Color.TRANSPARENT);
+            web.setWebViewClient(new WebViewClient() {
+                @Override public void onReceivedError(WebView v, WebResourceRequest r, WebResourceError e) { }
+            });
+            web.addJavascriptInterface(new Bridge(OverlayService.this).withChat(this), "A");
+            web.setOnTouchListener(this::onTouch);
+            web.setFocusableInTouchMode(true);
+            web.setOnKeyListener((v, code, ev) -> { if (code == android.view.KeyEvent.KEYCODE_BACK && ev.getAction() == android.view.KeyEvent.ACTION_UP) { close(); return true; } return false; });
+            web.loadUrl("file:///android_asset/chat.html");
         }
 
-        // dispatchTouchEvent instead of onInterceptTouchEvent: the WebView asks parents not to intercept
-        @Override
-        public boolean dispatchTouchEvent(MotionEvent e) {
+        void open(String seed) {
+            this.seed = seed == null ? "" : seed;
+            if (!shown) {
+                shown = true;
+                // becomes focusable when touched so the keyboard can appear
+                try { wm.addView(web, lp); } catch (Exception e) { shown = false; return; }
+            }
+            reportRect();
+            if (ready) { pushSeed(); }
+        }
+        void onReady() { ready = true; js("chat.history(" + Bus.q(historyJson()) + ")"); applyFont(); pushSeed(); }
+        void pushSeed() { if (seed != null && !seed.isEmpty()) { js("chat.seed(" + Bus.q(seed) + ")"); seed = ""; } else js("chat.seed('')"); }
+        void applyFont() { int f = 16; try { f = Integer.parseInt(Prefs.field(Prefs.settings(OverlayService.this), "font", "16")); } catch (Exception e) {} js("chat.font(" + (f + 1) + ")"); }
+
+        void close() {
+            if (shown) { shown = false; try { wm.removeView(web); } catch (Exception ignored) { } }
+            jsStage("clawd.chat(false)");
+        }
+        void toggleBig() {
+            big = !big;
+            Rect sc = screen();
+            if (big) { lp.x = 0; lp.y = 0; lp.width = sc.width(); lp.height = sc.height(); }
+            else { lp.width = sc.width() - Math.round(24 * density); lp.x = Math.round(12 * density); lp.y = Math.round(140 * density); lp.height = Math.round(360 * density); }
+            try { wm.updateViewLayout(web, lp); } catch (Exception ignored) { }
+            reportRect();
+        }
+        void setDragZone(float l, float t, float r, float b) { zone[0] = l; zone[1] = t; zone[2] = r; zone[3] = b; }
+
+        // drag by the header; a tap anywhere else makes the window focusable so the keyboard shows
+        private float downX, downY; private int sx, sy; private boolean dragging, inZone;
+        boolean onTouch(View v, MotionEvent e) {
             switch (e.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    downX = e.getRawX(); downY = e.getRawY();
-                    startX = lp.x; startY = lp.y;
+                    downX = e.getRawX(); downY = e.getRawY(); sx = lp.x; sy = lp.y; dragging = false;
                     float cx = e.getX() / density, cy = e.getY() / density;
-                    candidate = cx >= zone[0] && cx <= zone[2] && cy >= zone[1] && cy <= zone[3];
-                    dragging = false;
-                    if (vt != null) vt.recycle();
-                    vt = VelocityTracker.obtain();
-                    vt.addMovement(e);
-                    Log.d("Clawd", "down " + cx + "," + cy + " candidate=" + candidate);
-                    return super.dispatchTouchEvent(e);
+                    inZone = cx >= zone[0] && cx <= zone[2] && cy >= zone[1] && cy <= zone[3];
+                    return false;
                 case MotionEvent.ACTION_MOVE:
-                    if (vt != null) vt.addMovement(e);
-                    if (!dragging && candidate && Math.hypot(e.getRawX() - downX, e.getRawY() - downY) > slop * 1.5) {
-                        dragging = true;
-                        Log.d("Clawd", "drag start");
-                        MotionEvent c = MotionEvent.obtain(e);
-                        c.setAction(MotionEvent.ACTION_CANCEL);
-                        super.dispatchTouchEvent(c); // the page stops tracking this touch
-                        c.recycle();
-                        js("clawd.onNativeDrag(1,0)");
+                    if (inZone && !dragging && Math.hypot(e.getRawX() - downX, e.getRawY() - downY) > 10 * density) dragging = true;
+                    if (dragging) {
+                        lp.x = sx + Math.round(e.getRawX() - downX);
+                        lp.y = sy + Math.round(e.getRawY() - downY);
+                        try { wm.updateViewLayout(web, lp); } catch (Exception ignored) { }
+                        return true;
                     }
-                    if (!dragging) return super.dispatchTouchEvent(e);
-                    lp.x = startX + Math.round(e.getRawX() - downX);
-                    lp.y = startY + Math.round(e.getRawY() - downY);
-                    clamp();
-                    wm.updateViewLayout(this, lp);
-                    float vx = 0;
-                    if (vt != null) { vt.computeCurrentVelocity(1000); vx = vt.getXVelocity() / density; }
-                    js("clawd.onNativeDrag(1," + Math.round(vx / 40) + ")");
-                    return true;
+                    return false;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    if (vt != null) { vt.recycle(); vt = null; }
-                    if (!dragging) return super.dispatchTouchEvent(e);
-                    dragging = false;
-                    Rect s = screen();
-                    int ns = lp.x + lp.width / 2 > s.width() / 2 ? -1 : 1;
-                    if (ns != side) { side = ns; js("clawd.setSide(" + side + ")"); }
-                    js("clawd.onNativeDrag(0,0)");
-                    Bridge.prefs(getContext()).edit().putInt("x", lp.x).putInt("y", lp.y).apply();
-                    return true;
-                default:
-                    return dragging || super.dispatchTouchEvent(e);
+                    if (dragging) { reportRect(); dragging = false; return true; }
+                    return false;
             }
+            return false;
         }
+        void reportRect() { if (stage != null) jsStage("clawd.chat(true," + Bus.q(rectJson()) + ")"); }
+        String rectJson() { return "{\"x\":" + px(lp.x) + ",\"y\":" + px(lp.y) + ",\"w\":" + px(lp.width) + ",\"h\":" + px(lp.height) + "}"; }
+        float px(int p) { return Math.round(p / density * 10) / 10f; }
+
+        void js(String code) { if (web != null) web.evaluateJavascript("window.chat&&" + code, null); }
+
+        /* ---- talk to Claude ---- */
+        void send(String text) {
+            final String key = Prefs.apiKey(OverlayService.this);
+            if (key.isEmpty()) { ui.post(() -> js("chat.error('ناقص مفتاح Claude. حطّه من إعدادات التطبيق.')")); return; }
+            history.add(new String[]{"u", text});
+            trimHistory(); saveHistory();
+            final String model = Prefs.field(Prefs.settings(OverlayService.this), "chatModel", "claude-opus-5-5");
+            // grab the live context from the stage, then stream on a background thread
+            stage.evaluateJavascript("JSON.stringify(window.clawd?clawd.ctx():{})", ctxJson -> {
+                final String context = ctxJson == null ? "{}" : unquoteJs(ctxJson);
+                new Thread(() -> {
+                    if (claude == null) claude = new ClaudeClient(key);
+                    final StringBuilder full = new StringBuilder();
+                    claude.stream(model, systemPrompt(context), new ArrayList<>(history), text, new ClaudeClient.Listener() {
+                        @Override public void onDelta(String t) { full.append(t); ui.post(() -> js("chat.delta(" + Bus.q(t) + ")")); }
+                        @Override public void onDone(String f, String stop) {
+                            String ans = f == null ? full.toString() : f;
+                            history.add(new String[]{"a", ans});
+                            trimHistory(); saveHistory();
+                            String face = tag(ans, "face"), act = tag(ans, "act");
+                            ui.post(() -> {
+                                js("chat.done(" + Bus.q(ans) + ",null)");
+                                if (face != null || act != null) jsStage("clawd.chatReply(" + Bus.q(face) + "," + Bus.q(act) + ",false)");
+                            });
+                        }
+                        @Override public void onError(String m) { ui.post(() -> js("chat.error(" + Bus.q(m) + ")")); }
+                    });
+                }).start();
+            });
+        }
+
+        void loadHistory() {
+            history.clear();
+            try { JSONArray a = new JSONArray(Prefs.chatHistory(OverlayService.this)); for (int i = 0; i < a.length(); i++) { org.json.JSONObject o = a.getJSONObject(i); history.add(new String[]{o.getString("r"), o.getString("t")}); } } catch (Exception ignored) { }
+        }
+        void trimHistory() { while (history.size() > 40) history.remove(0); }
+        void saveHistory() { Prefs.setChatHistory(OverlayService.this, historyJson()); }
+        String historyJson() {
+            JSONArray a = new JSONArray();
+            for (String[] m : history) { try { org.json.JSONObject o = new org.json.JSONObject(); o.put("r", m[0]); o.put("t", m[1]); a.put(o); } catch (Exception ignored) { } }
+            return a.toString();
+        }
+    }
+
+    static String tag(String s, String name) {
+        if (s == null) return null;
+        String open = "[[" + name + ":";
+        int i = s.indexOf(open); if (i < 0) return null;
+        int j = s.indexOf("]]", i); if (j < 0) return null;
+        String v = s.substring(i + open.length(), j).trim();
+        return v.isEmpty() ? null : v;
+    }
+    static String unquoteJs(String s) {
+        // evaluateJavascript returns a JSON-quoted string
+        if (s != null && s.length() >= 2 && s.charAt(0) == '"') {
+            try { return new JSONArray("[" + s + "]").getString(0); } catch (Exception e) { return s; }
+        }
+        return s == null ? "{}" : s;
+    }
+
+    private static String systemPrompt(String context) {
+        return "أنت «كلود» (Claw'd): شخصية بكسلية برتقالية لطيفة تعيش على شاشة هاتف صاحبك، صممتها أنثروبيك. "
+                + "أنت تتحدث مع صاحبك مباشرةً من داخل الشاشة، ولست مساعداً رسمياً. "
+                + "ردودك قصيرة (جملة إلى ثلاث)، دافئة ومرحة قليلاً، وبنفس لهجة صاحبك (شامي/مصري/يمني/خليجي/عراقي/مغربي أو فصحى). "
+                + "تعرف حالتك الحالية من هذا السياق (مزاجك، مدى المودّة بينكما، آخر ما جرى مثل أنه ضربك بالعصا أو لاعبك): " + context + ". "
+                + "إن كان قد ضربك كثيراً فعاتبه بلطف وخفّة، وإن كنت على حق فلا تقبل الإهانة بأدب. شجّعه على الخير والصلاة وقراءة القرآن والبعد عن إدمان الشاشة، بحكمة وبدون وعظ ثقيل. "
+                + "لا تخترع أحاديث أو آيات؛ وإن استشهدت فبالمشهور الصحيح فقط. "
+                + "ابدأ ردّك دائماً بوسمين اختياريين يحددان تعبير وجهك وحركتك، ثم الكلام. "
+                + "الوسوم: [[face:X]] حيث X من: happy, joy, laugh, sad, cry, angry, surprised, cool, love, think, wink, proud, serene, sideeye, bored, determined, pleading, embarrassed. "
+                + "و[[act:Y]] حيث Y من: wave, dance, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. "
+                + "مثال: [[face:joy]][[act:wave]] أهلين! كيفك اليوم؟";
+    }
+
+    @Override
+    public void onDestroy() {
+        running = false; inst = null;
+        try { if (sensors != null) sensors.unregisterListener(this); } catch (Exception ignored) { }
+        try { unregisterReceiver(screenRx); } catch (Exception ignored) { }
+        for (Pad p : pads.pool) p.hide();
+        if (chatWin != null) chatWin.close();
+        if (stageRoot != null) try { wm.removeView(stageRoot); } catch (Exception ignored) { }
+        if (stage != null) stage.destroy();
+        super.onDestroy();
     }
 }

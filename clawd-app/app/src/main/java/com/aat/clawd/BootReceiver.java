@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 
-/** Brings Clawd back after a reboot or app update if he was floating before. */
+/** Brings Clawd back after a reboot or an app update, if he was floating. */
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context c, Intent i) {
-        if (Bridge.prefs(c).getBoolean("floating", false) && Settings.canDrawOverlays(c)) {
+        if (Prefs.flag(c, "floating") && Settings.canDrawOverlays(c)) {
             try { OverlayService.start(c); } catch (Exception ignored) { }
         }
     }
