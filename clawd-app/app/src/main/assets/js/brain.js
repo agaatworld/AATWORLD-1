@@ -71,7 +71,7 @@ class Brain {
       if (!c.busy(2)) { c.tremble = M.max(c.tremble, 0.3 * c.frozen); c.fwdL.t = c.fwdR.t = 0.7; c.aL.t = c.aR.t = -0.5 + M.sin(T * 14) * 0.15; } }
     else if (this.cold && c.frozen < 0.08) { this.cold = false; c.tremble = 0; if (!c.busy(2)) { c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; }
       c.setFace('relieved', 2); this.sayText(c, CL.lineOf(['s|الحمد لله… دفيت ☀️', 'e|الحمد لله دفيت ☀️', 'y|الحمد لله قده دفيت ☀️', 'f|الحمد لله، دفئت ☀️']), { prio: 2, mood: 'happy' }); }
-    this.usageTick(dt); this.prayT = (this.prayT || 0) + dt; if (this.prayT > 15) { this.prayT = 0; this.prayTick(); }
+    this.usageTick(dt); this.prayT = (this.prayT || 0) + dt; if (this.prayT > 15) { this.prayT = 0; this.prayTick(); this.dailyTick(); }
     if (this.pendingKb && !(this.activity && RELIGIOUS[this.activity])) { const f = this.pendingKb; this.pendingKb = null; this.onKeyboard(true, f); }
     this.pain = M.max(0, this.pain - dt * (since > 1.5 ? 9 : 2));
     this.anger = M.max(0, this.anger - dt * (since > 2.5 ? 5 : 0));
@@ -125,13 +125,18 @@ class Brain {
   onPat() {
     const c = this.c; this.touch(); if (this.away || this.ko || (this.activity && RELIGIOUS[this.activity])) return;
     this.patN = (this.patN || 0) + 1;
-    c.setFace(pick(['serene', 'love', 'relieved', 'happy']), 2); c.blush = 1; c.sy.t = 0.93;
-    if (this.patN % 2 === 1) this.w.fx.heart(c.head.x + rnd(-2, 2) * c.u, c.head.y, c.u);
-    if (this.patN === 2) this.say(c, 'pat', { prio: 2, mood: 'happy' });
+    // a man of chivalry and discipline: he stands straight and acknowledges it, no hearts or blushing
+    c.setFace(pick(['serene', 'proud', 'relieved']), 2); c.blush = 0; c.sy.t = 1.03;
+    if (this.patN === 2) this.say(c, 'pat', { prio: 2, mood: 'calm' });
   }
   onPatEnd() {
     const c = this.c; c.sy.t = 1;
-    if ((this.patN || 0) >= 2) { this.rapport = M.min(100, this.rapport + 3); CL.store('rapport', this.rapport); this.say(c, 'thanks', { prio: 3, mood: 'happy' }); this.log('صاحبه شكره وملّس على راسه'); }
+    if ((this.patN || 0) >= 2) {
+      this.rapport = M.min(100, this.rapport + 3); CL.store('rapport', this.rapport);
+      if (!c.busy(2)) c.play((function* (B) { B.say(c, 'thanks', { prio: 3, mood: 'calm' }); yield* R.salute(B, c, 1.8); })(this), 2);
+      else this.say(c, 'thanks', { prio: 3, mood: 'calm' });
+      this.log('صاحبه شكره');
+    }
     this.patN = 0;
   }
   onChatOpenTap() { this.touch(); this.c.setFace('wideHappy', 1.2); }
@@ -168,6 +173,7 @@ class Brain {
     if (s.questions && T - this.lastQuestion > s.qEvery * 60 && T - this.lastUser < 600 && chance(0.6)) { this.askRandom(); return; }
     const tiny = c.scale.t < 0.5;
     const r = M.random();
+    if (r < 0.16 && !tiny && this.planFromChat()) return; // something he planned from your conversations
     if (r < 0.48) { const a = this.chooseActivity(tiny); if (a) { this.startActivity(a); return; } }
     if (r < 0.66) {
       if (!tiny && this.appKind === 'home' && this.w.platOn && s.parkour && this.w.gdir.y > 0.7 && chance(0.55)) { c.play(R.iconTour(this, c), 1); return; }
@@ -177,20 +183,36 @@ class Brain {
       if (s.roam && this.w.gdir.y > 0.7) { c.play(R.roam(this, c), 1); this.nextIdle = T + rnd(3, 6); return; } // small walks even when he is tiny
     }
     if (!tiny && !this.arena && M.abs(c.x - this.home().x) > 40 * c.u && chance(0.5)) { c.play(R.goHome(this, c), 1); return; }
+    if (!tiny && c.ground && chance(0.07)) { c.play(R.attention(this, c), 1); return; }
+    const talk = (CL.GEN || {}).free_talk;
     if (this.worshipGlow > T) { if (chance(0.25)) this.say(c, 'after_worship', { mood: 'calm' }); }
+    else if (talk && talk.length && T - this.lastUser > 20 && chance(0.12)) this.sayText(c, talk[CL.bag('G:free_talk', talk.length)].replace(/\{n\}/g, this.s.name || 'صاحبي'), { mood: 'calm' }); // new talk he learned from your chats
     else if (T - this.lastUser > 30 && chance(0.12)) this.say(c, 'idle', { mood: 'calm' });
     c.play(R.idleSmall[CL.bag('idleSmall', R.idleSmall.length)](this, c), 1);
+  }
+  /* the AI wrote plans for his free time from your conversations ("quran|…", "study|…"): say the line and do it */
+  planFromChat() {
+    const plans = (CL.GEN || {}).plans; if (!plans || !plans.length) return false;
+    const p = plans[CL.bag('G:plans', plans.length)], i = p.indexOf('|'); if (i < 0) return false;
+    const act = p.slice(0, i), line = p.slice(i + 1).trim();
+    const ok = { quran: 1, tasbih: 1, dua: 1, hadith: 1, study: 1, book: 1, exercise: 1, martial: 1, reflect: 1, teach: 1, swim: 1, tea: 1, plant: 1 };
+    if (!ok[act] || this.s.acts[act] === false || this.lastActs.indexOf(act) >= 0) return false;
+    if (act === 'swim' && (this.w.gdir.y < 0.7 || this.typing || this.chatOpen)) return false;
+    const c = this.c;
+    c.play((function* (B) { c.setFace('determined', 2); B.sayText(c, line.replace(/\{n\}/g, B.s.name || 'صاحبي'), { prio: 2, mood: 'calm', dur: 3 }); yield* wait(3.2); B.startActivity(act); })(this), 1);
+    return true;
   }
   chooseActivity(tiny) {
     const s = this.s, hr = new Date().getHours();
     const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, hadith: R.hadith, martial: R.martial, study: R.study, exercise: R.exercise,
-      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
-    const small = { tasbih: 1, dua: 1, quran: 1, hadith: 1, study: 1, book: 1, tea: 1, sleep: 1 };
-    const w = { tasbih: 3, dua: 2, quran: 3, hadith: 2, martial: 2, study: 2, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1.5, plant: 1, friend: 2, stroll: 1.6 };
+      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll, reflect: R.reflect, teach: R.teach, swim: R.swim };
+    const small = { tasbih: 1, dua: 1, quran: 1, hadith: 1, study: 1, book: 1, tea: 1, sleep: 1, reflect: 1 };
+    const w = { tasbih: 3, dua: 2, quran: 3, hadith: 2, martial: 2, study: 2, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1, plant: 1, friend: 2, stroll: 1.6, reflect: 2, teach: 2, swim: 2 };
     if (hr >= 4 && hr < 9) { w.tasbih += 3; w.quran += 3; w.dua += 2; }
     if (hr >= 16 && hr < 19) { w.tasbih += 2; w.dua += 1; }
     if (hr >= 22 || hr < 4) { w.sleep += 5; w.martial = 0.5; }
     if (!s.td3d || this.w.gdir.y < 0.7) w.stroll = 0;
+    if (this.w.gdir.y < 0.7 || this.typing || this.chatOpen) w.swim = 0;
     const keys = Object.keys(map).filter((k) => s.acts[k] !== false && w[k] > 0 && (!tiny || small[k]) && this.lastActs.indexOf(k) < 0);
     if (!keys.length) return null;
     let tot = 0; keys.forEach((k) => (tot += w[k]));
@@ -200,11 +222,12 @@ class Brain {
   }
   startActivity(k) {
     const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, hadith: R.hadith, martial: R.martial, study: R.study, exercise: R.exercise,
-      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
+      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll, reflect: R.reflect, teach: R.teach, swim: R.swim };
     if (!map[k]) return;
     this.lastActs.push(k); if (this.lastActs.length > 4) this.lastActs.shift();
     const names = { tasbih: 'عم يسبّح', dua: 'عم يدعي', quran: 'عم يقرأ قرآن', hadith: 'عم يقرأ حديث', martial: 'عم يتمرن قتال', study: 'عم يذاكر', exercise: 'عم يعمل رياضة',
-      book: 'عم يقرأ كتاب', tea: 'عم يشرب شاي', sleep: 'نايم', juggle: 'عم يلعب بالطابات', plant: 'عم يسقي نبتته', friend: 'صاحبه بكسل زاره', stroll: 'عم يتمشى فوق التطبيقات' };
+      book: 'عم يقرأ كتاب', tea: 'عم يشرب شاي', sleep: 'نايم', juggle: 'عم يلعب بالطابات', plant: 'عم يسقي نبتته', friend: 'صاحبه بكسل زاره', stroll: 'عم يتمشى فوق التطبيقات',
+      reflect: 'عم يتأمل في خلق الله', teach: 'عم يشرح درس', swim: 'عم يسبح بين التطبيقات' };
     this.log('كلود ' + names[k]);
     this.c.play(map[k](this, this.c), RELIGIOUS[k] ? 3 : 1); // worship isn't interrupted by pokes and play
   }
@@ -216,6 +239,7 @@ class Brain {
   /* ---------------- questions */
   askRandom() {
     this.lastQuestion = this.T;
+    if (!this.s.botName && !CL.store('nameAsked') && this.T > 300) return this.askName();
     const r = M.random();
     if (r < 0.15) return this.askQuiz(CL.QUIZ[CL.bag('quiz', CL.QUIZ.length)]);
     if (r < 0.25) return this.askQuiz(CL.RIDDLES[CL.bag('riddle', CL.RIDDLES.length)], true);
@@ -241,6 +265,7 @@ class Brain {
     if (o.advice) { this.rightfulUntil = this.T + 300; this.adviceAt = this.T; this.log('كلود نصح صاحبه: ' + (o.t || '')); }
     if (o.quiet) this.lastQuestion = this.T + o.quiet;
     const after = () => {
+      if (o.niyya) { this.sayText(c, CL.lineOf(['s|أخلص النية واكسب الأجر 🤲', 'e|أخلص النية واكسب الأجر 🤲', 'y|أخلص النية واكسب الأجر 🤲', 'f|أخلص النية واكسب الأجر 🤲']), { prio: 2, mood: 'calm', dur: 3.5 }); c.setFace('serene', 3); return; }
       if (o.verse) { const v = CL.verse(); this.sayText(c, '﴿' + v.t + '﴾  ' + v.r, { prio: 2, quran: true, dur: 5 }); }
       else if (o.hadith) { const h = CL.hadith(); this.sayText(c, '«' + h.t + '» ' + h.r, { prio: 2, dur: 5 }); }
       else if (o.next) setTimeout(() => this.askQ(o.next), 600);
@@ -252,8 +277,10 @@ class Brain {
   askQuiz(qz, riddle) {
     const c = this.c; c.scale.t = 1; c.setFace(riddle ? 'mischief' : 'think', 3);
     this.ask(c, (riddle ? 'لغز: ' : 'سؤال: ') + qz.q, qz.o, (i) => {
-      if (i === qz.a) { c.setFace('joy', 2); this.sayText(c, CL.lineOf(CL.QA.right), { prio: 2, mood: 'happy' }); this.w.fx.burst(c.head.x, c.head.y, 10, 0.3, c.u); this.sfx('chime'); }
-      else { c.setFace('skeptical', 2); this.sayText(c, CL.lineOf(CL.QA.wrong) + qz.o[qz.a], { prio: 2, mood: 'calm' }); }
+      let d;
+      if (i === qz.a) { c.setFace('joy', 2); d = this.sayText(c, CL.lineOf(CL.QA.right), { prio: 2, mood: 'happy' }); this.w.fx.burst(c.head.x, c.head.y, 10, 0.3, c.u); this.sfx('chime'); }
+      else { c.setFace('skeptical', 2); d = this.sayText(c, CL.lineOf(CL.QA.wrong) + qz.o[qz.a], { prio: 2, mood: 'calm' }); }
+      if (qz.x) setTimeout(() => { if (!this.asking) this.sayText(c, qz.x, { prio: 2, mood: 'calm', dur: clamp(2.5 + qz.x.length * 0.06, 4, 9), quran: qz.x.indexOf('﴿') >= 0 }); }, ((d || 2) + 0.4) * 1000);
     });
   }
   offerChat(seed) {
@@ -305,10 +332,8 @@ class Brain {
     const c = this.c; this.touch(); if (this.away || this.ko) return;
     this.rapport = M.min(100, this.rapport + 2); CL.store('rapport', this.rapport);
     c.play((function* (B) {
-      c.setFace(pick(['serene', 'love', 'joy', 'relieved']), 2.4); c.sy.t = 0.9; c.sx.t = 1.08; c.blush = 1;
-      B.say(c, 'pat', { prio: 2, mood: 'happy' });
-      for (let i = 0; i < 3; i++) { B.w.fx.heart(c.head.x + rnd(-3, 3) * c.u, c.head.y, c.u); yield* wait(0.5); }
-      c.sy.t = 1; c.sx.t = 1;
+      B.say(c, 'pat', { prio: 2, mood: 'calm' });
+      yield* R.salute(B, c, 1.6);
     })(this), 2);
     this.log('صاحبه ملّس على راس كلود');
   }
@@ -337,6 +362,7 @@ class Brain {
   }
   onLand(b, vn, air, trick) {
     if (b !== this.c || this.ko) return;
+    if (this.activity) return; // his own jumps inside a routine (swimming, hopping on icons…) need no landing show
     if ((trick || air > 0.55) && !b.busy(2)) b.play(R.landing(this, b, vn, air, trick), 2);
     else if (vn > 900 * this.w.U / 7 && !b.busy(2)) { b.setFace(pick(['ouch', 'hurt', 'dizzy']), 1); this.say(b, chance(0.5) ? 'dhikr_land' : 'land', { prio: 1 }); this.sfx('land'); }
   }
@@ -373,7 +399,7 @@ class Brain {
       () => (function* () { if (c.ground) { c.vy = -55 * c.u; c.ground = null; c.trick = { t: 0, dur: 0.6, flip: TAU }; B.sfx('flip'); } yield* until(() => c.ground, 2); })(),
       () => (function* () { c.setFace('proud', 1.5); c.aL.t = c.aR.t = -2.6; yield* wait(1.2); c.aL.t = c.aR.t = 0; })(),
       () => (function* () { c.setFace('puzzled', 1.6); B.mark(c, '؟'); s('poke', 'calm'); yield* wait(1.4); })(),
-      () => (function* () { c.setFace('love', 1.6); B.w.fx.heart(c.head.x, c.head.y, c.u); s('pat'); yield* wait(1.2); })(),
+      () => (function* () { s('pat'); yield* R.salute(B, c, 1.2); })(),
       () => R.sneeze(B, c),
       () => (function* () { c.setFace('sleep', 1.2); yield* wait(1.1); c.setFace('wink', 1.2); B.sayText(c, CL.lineOf(['s|شفتك 😏', 'e|شايفك 😏', 'f|رأيتك 😏']), { prio: 2, mood: 'happy' }); yield* wait(1); })(),
       () => (function* () { c.setFace('tongue', 1.4); B.sfx('giggle'); yield* wait(1.4); })(),
@@ -662,7 +688,8 @@ class Brain {
   }
   reactionFor(kind, loc, p, heavy) {
     const B = this, c = this.c, k = 1 + p * 2.2, side = this.tool.x >= c.x ? 1 : -1;
-    const hurtFace = () => pick(heavy ? ['ko', 'dizzy', 'hurt', 'shocked'] : this.combo >= 16 ? ['cry', 'crylaugh', 'pleading'] : this.combo >= 8 ? ['angry', 'furious', 'annoyed'] : ['hurt', 'ouch', 'surprised', 'shocked', 'annoyed']);
+    // a strong man: a flinch at most, then a firm face (no crying or pleading)
+    const hurtFace = () => pick(heavy ? ['ouch', 'dizzy', 'determined', 'shocked'] : this.combo >= 16 ? ['determined', 'serious', 'furious'] : this.combo >= 8 ? ['serious', 'determined', 'annoyed'] : ['ouch', 'determined', 'serious', 'surprised', 'annoyed']);
     const kick = (v) => { if (c.ground) c.tv += v; };
     if (heavy && p > 0.5) this.dizzyUntil = this.T + 1.6;
     // quick reactions during combos so it keeps up
@@ -719,8 +746,10 @@ class Brain {
     c.play((function* (B) {
       if (B.anger > 60) { c.setFace('angry', 2.6); B.say(c, 'mad', { prio: 3, mood: 'angry' }); c.flush = 1;
         yield* R.loop(2.4, (t, dt) => { c.aL.t = c.aR.t = -1.2 + M.sin(t * 22) * 0.5; if (chance(dt * 4) && c.ground) { c.vy = -20 * c.u; c.ground = null; B.sfx('stomp'); } }); c.aL.t = c.aR.t = 0; }
-      else if (B.pain > 35) { c.setFace('sad', 3); c.look.tx = -1; c.look.ty = 0.6; B.say(c, 'sulk', { prio: 2, mood: 'sad' }); c.sit.t = 0.6; yield* wait(3); c.sit.t = 0; c.look.tx = c.look.ty = 0; }
-      else { c.sx.vel += 8; c.roll.vel += 3; if (chance(0.6)) B.say(c, 'mock', { prio: 2, mood: 'happy' }); c.setFace(pick(['smug', 'cool', 'tongue']), 1.6); yield* wait(1.5); }
+      else if (B.pain > 35) { // stands his ground: straight back, arms folded, a firm word
+        c.setFace('serious', 3.2); c.look.tx = 0; c.look.ty = 0; c.yaw.t = 0; c.sy.t = 1.04; c.fwdL.t = c.fwdR.t = 0.8; c.aL.t = c.aR.t = 0.6;
+        B.say(c, 'sulk', { prio: 2, mood: 'serious' }); yield* wait(3.2); c.sy.t = 1; c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; }
+      else { c.sx.vel += 8; c.roll.vel += 3; if (chance(0.6)) B.say(c, 'mock', { prio: 2, mood: 'calm' }); c.setFace(pick(['proud', 'cool', 'serene']), 1.6); yield* wait(1.5); }
       if (recent >= 15 && chance(0.55)) {
         yield* wait(0.6);
         B.ask(c, CL.lineOf(['s|حاسس إنك متضايق من شي… بدك نحكي؟', 'e|حاسس إنك متضايق… تحب نتكلم؟', 'g|كأنك متضايق… تبي نسولف؟', 'f|يبدو أنك متضايق… هل تريد أن نتحدث؟']),
@@ -900,7 +929,7 @@ class Brain {
             continue;
           }
           // run! faster the closer it is
-          const sp = (near ? 30 : 21) * u;
+          const sp = (near ? 46 : 34) * u; // he is quick on his feet
           c.walk = away * dir * sp; c.tremble = 0; c.look.tx = 0;
           c.runLean = 0.2 * M.sign(c.walk); flail(true);
           c.setFace(near ? 'shocked' : pick(['scared', 'scared', 'wideHappy']), 0.5);
@@ -942,7 +971,7 @@ class Brain {
         if (c.hitWall || (away > 0 && c.x > bd.x1 - 9 * c.u) || (away < 0 && c.x < bd.x0 + 9 * c.u)) {
           if (B.s.parkour && chance(0.6)) yield* R.wallRun(B, c);
           else yield* R.jump(B, c, clamp(c.x - away * 30 * c.u, bd.x0 + 8 * c.u, bd.x1 - 8 * c.u), bd.y1, 10 * c.u);
-        } else c.walk = away * 13 * c.u;
+        } else c.walk = away * 24 * c.u;
         yield;
         if (M.abs(t.x - c.x) > 45 * c.u && !t.held && t.state === 'idle') break;
       }
@@ -999,7 +1028,7 @@ class Brain {
         B.friendGuard = B.T + 8; yield* wait(8);
         f.aL.t = f.aR.t = 0; B.say(c, 'friend_bye', { prio: 2, mood: 'happy' }); f.noEdge = true;
         const out = side > 0 ? bd.x1 + 12 * f.u : bd.x0 - 12 * f.u; t = 0;
-        while (M.abs(f.x - out) > f.u && t < 5) { f.walk = M.sign(out - f.x) * 8 * f.u; t += yield; }
+        while (M.abs(f.x - out) > f.u && t < 5) { f.walk = M.sign(out - f.x) * 12 * f.u; t += yield; }
       } finally { B.friendGuard = 0; B.dropFriend(); }
     })();
   }
@@ -1012,18 +1041,18 @@ class Brain {
       c.noEdge = true; c.lockYaw = false;
       try {
         let t = 0; const out = side > 0 ? bd.x1 + 14 * c.u : bd.x0 - 14 * c.u;
-        while (M.abs(c.x - out) > c.u && t < 8) { c.walk = side * 6 * c.u; t += yield; }
+        while (M.abs(c.x - out) > c.u && t < 8) { c.walk = side * 11 * c.u; t += yield; }
         c.walk = 0; c.alpha = 0;
         yield* wait(50);
         c.alpha = 1; const back = B.home().x; t = 0;
-        while (M.abs(c.x - back) > c.u && t < 8) { c.walk = M.sign(back - c.x) * 5 * c.u; t += yield; }
+        while (M.abs(c.x - back) > c.u && t < 8) { c.walk = M.sign(back - c.x) * 10 * c.u; t += yield; }
         c.walk = 0;
       } finally { c.noEdge = false; c.alpha = 1; B.away = false; B.hits = []; B.anger = 0; B.pain = 0; }
       c.setFace('serious', 3);
       B.ask(c, CL.line('dignity_back').text, ['زعلان من شي', 'كنت عم إمزح', 'آسف'], (i) => {
         if (i === 0) { c.setFace('pleading', 2); B.ui.openChat('زعلان من شي وبدي احكي'); }
         else if (i === 1) { c.setFace('smug', 2); B.sayText(c, CL.lineOf(['s|ماشي، بس المزح إلو حدود 😊', 'e|ماشي، بس الهزار ليه حدود 😊', 'f|حسناً، لكن للمزاح حدود 😊']), { prio: 3, mood: 'calm' }); }
-        else { c.setFace('love', 2); B.rapport = M.min(100, B.rapport + 6); B.say(c, 'calm', { prio: 3, mood: 'happy' }); }
+        else { c.setFace('serene', 2); B.rapport = M.min(100, B.rapport + 6); B.say(c, 'calm', { prio: 3, mood: 'happy' }); }
       });
     })();
   }
@@ -1031,7 +1060,7 @@ class Brain {
   /* ---------------- phone context (needs the accessibility helper on Android) */
   onApp(kind, label) {
     const prev = this.appKind; this.appKind = kind; this.appInfo = true;
-    this.w.platOn = kind === 'home' && this.icons.length > 0;
+    if (!this.typing && !this.chatOpen) this.w.platOn = kind === 'home' && this.icons.length > 0; // the text field stays his floor while typing
     if (kind === 'video') { if (this.videoStart == null) { this.videoStart = this.T; if (chance(0.5)) setTimeout(() => this.say(this.c, 'app_video', { prio: 2, mood: 'calm' }), 1500); } }
     else this.videoStart = null;
     if (kind === prev) return;
@@ -1048,7 +1077,7 @@ class Brain {
     const B = this, c = this.c;
     return (function* () {
       c.scale.t = 0.8; const bd = B.w.bounds;
-      yield* R.walkTo(B, c, bd.x0 + (bd.x1 - bd.x0) * 0.62, 7 * c.u);
+      yield* R.walkTo(B, c, bd.x0 + (bd.x1 - bd.x0) * 0.62, 11 * c.u);
       c.outfit.glasses = 1; c.look.ty = -1; c.look.tx = -0.4; c.pv.t = 0.35; c.setFace(pick(['suspicious', 'think', 'wideHappy']), 4);
       B.say(c, 'app_chat', { prio: 2, mood: 'happy' });
       yield* wait(5); c.outfit.glasses = 0; c.look.ty = c.look.tx = 0; c.pv.t = 0.12;
@@ -1080,7 +1109,14 @@ class Brain {
       B.say(c, 'typing_start', { prio: 2, mood: 'happy' });
       yield* R.jump(B, c, (p.x0 + p.x1) / 2, p.y, 6 * c.u, chance(0.5));
       c.sit.t = 1; c.outfit.glasses = 1; c.look.ty = 0.8; c.look.tx = 0.3; c.baseFace = 'normal';
-      while (B.typing) { yield* wait(rnd(2.5, 5)); if (!B.typing) break; c.look.tx = rnd(-0.8, 0.8); if (chance(0.25)) c.setFace(pick(['think', 'suspicious', 'normal']), 1); }
+      while (B.typing) {
+        yield* wait(rnd(2.5, 5)); if (!B.typing) break;
+        const q = B.w.platforms[0];
+        if (q && c.ground && c.ground.plat == null) { // fell off the field (it moved, or the screen changed): back up on it
+          c.sit.t = 0; B.w.platOn = true; yield* R.jump(B, c, (q.x0 + q.x1) / 2, q.y, 6 * c.u, false); c.sit.t = 1; continue;
+        }
+        c.look.tx = rnd(-0.8, 0.8); if (chance(0.25)) c.setFace(pick(['think', 'suspicious', 'normal']), 1);
+      }
     })();
   }
   onTypingActivity() { // only "the user is typing"; he never sees the words
@@ -1105,6 +1141,73 @@ class Brain {
       if (st === 0 && d >= 0 && d < 40 * 60000) { this.prayDone[p.k] = 1; CL.store('prayDone:' + day, this.prayDone); this.announcePrayer(p); return; }
       if (st <= 1 && d >= 60 * 60000 && d < 4 * 3600000) { this.prayDone[p.k] = 2; CL.store('prayDone:' + day, this.prayDone); this.askPrayed(p); return; }
     }
+  }
+  nextPrayer() {
+    const list = CL.PRAY && CL.PRAY.today(this.s); if (!list) return null; const now = Date.now();
+    return list.find((p) => p.at.getTime() > now) || null;
+  }
+  /* ---------------- once a day: a page of our history (by the Hijri month) and the day's news of the Ummah */
+  dailyTick() {
+    if (this.arena || !this.present || this.asking || this.away || this.ko || this.typing || this.chatOpen || this.activity || this.hiding || this.c.busy(2)) return;
+    if (this.T - this.lastUser > 900 || this.T < 90) return; // only while his owner is around
+    const day = new Date().toDateString();
+    if (this.newsItem && !this.newsTold && this.T - this.lastHit > 20) { this.newsTold = true; CL.store('newsDay', day); this.c.play(this.r_news(this.newsItem), 2); return; }
+    if (CL.store('histDay') !== day && this.T - this.lastHit > 20) { CL.store('histDay', day); this.c.play(this.r_history(), 2); return; }
+    if (!this.newsAsked && CL.store('newsDay') !== day && this.s.newsOn !== false) { this.newsAsked = true; if (this.ui.news) this.ui.news(); }
+  }
+  onNews(n) { if (n && n.summary && CL.store('newsDay') !== new Date().toDateString()) { this.newsItem = n; this.newsTold = false; } }
+  hijri() {
+    for (const cal of ['islamic-umalqura', 'islamic']) {
+      try { const parts = new Intl.DateTimeFormat('en-u-ca-' + cal, { month: 'numeric' }).formatToParts(new Date()); const m = +parts.find((x) => x.type === 'month').value; if (m >= 1 && m <= 12) return m; } catch (e) {}
+    }
+    return 0;
+  }
+  r_history() {
+    const B = this, c = this.c;
+    const MONTHS = ['محرّم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+    const m = this.hijri(), all = CL.HISTORY || [], pool = all.filter((h) => h.m === m), list = pool.length ? pool : all;
+    if (!list.length) return (function* () {})();
+    const h = list[CL.bag('hist:' + (pool.length ? m : 0), list.length)];
+    return (function* () {
+      c.walk = 0; c.yaw.t = 0; c.sit.t = 1; c.prop = { kind: 'book', color: '#7A0A10', turn: 0 }; c.baseFace = 'think'; c.look.ty = 0.5;
+      try {
+        let d = B.sayText(c, '📜 من تاريخنا' + (pool.length ? ' في شهر ' + MONTHS[m - 1] : '') + ':', { prio: 2, mood: 'calm', dur: 2.6 }); yield* wait(d + 0.2);
+        c.look.ty = 0; d = B.sayText(c, h.t, { prio: 2, mood: 'calm', quran: h.t.indexOf('﴿') >= 0, dur: clamp(2 + h.t.length * 0.06, 4, 10) }); yield* wait(d + 0.3);
+        c.baseFace = 'serene'; d = B.sayText(c, 'العبرة: ' + h.l, { prio: 2, mood: 'calm', quran: h.l.indexOf('﴿') >= 0, dur: clamp(2 + h.l.length * 0.06, 3.5, 8) }); yield* wait(d + 0.3);
+      } finally { c.prop = null; c.sit.t = 0; c.baseFace = 'normal'; c.look.ty = 0; }
+      B.ask(c, CL.lineOf(['s|بدك نتناقش فيها؟', 'e|تحب نتكلم فيها؟', 'y|تشتي نتناقش فيها؟', 'f|هل نتناقش فيها؟']), ['نتناقش', 'بعدين'], (i) => { if (i === 0) B.ui.openChat('حدّثني أكثر عن هذا من تاريخنا، وما العبرة لنا اليوم: ' + h.t); });
+    })();
+  }
+  r_news(n) {
+    const B = this, c = this.c;
+    return (function* () {
+      c.walk = 0; c.yaw.t = 0; c.prop = { kind: 'newspaper' }; c.fwdL.t = c.fwdR.t = 1; c.aL.t = c.aR.t = -0.5; c.baseFace = 'serious';
+      try {
+        let d = B.sayText(c, '📰 خبر اليوم للأمة: ' + (n.title || ''), { prio: 2, mood: 'serious', dur: clamp(2 + (n.title || '').length * 0.06, 3, 6) }); yield* wait(d + 0.2);
+        d = B.sayText(c, n.summary + (n.source ? ' (' + n.source + ')' : ''), { prio: 2, mood: 'calm', dur: clamp(2 + n.summary.length * 0.06, 4, 10) }); yield* wait(d + 0.3);
+        if (n.comment) { d = B.sayText(c, n.comment, { prio: 2, mood: 'serious', quran: n.comment.indexOf('﴿') >= 0, dur: clamp(2 + n.comment.length * 0.06, 4, 9) }); yield* wait(d + 0.3); }
+      } finally { c.prop = null; c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; c.baseFace = 'normal'; }
+      B.ask(c, CL.lineOf(['s|نتناقش فيه؟', 'e|نتكلم فيه؟', 'y|نتناقش فيه؟', 'f|هل نتناقش فيه؟']), ['نتناقش فيه', 'بعدين'], (i) => { if (i === 0) B.ui.openChat('خلينا نتناقش بهالخبر من منظور ﴿وَلِتَسْتَبِينَ سَبِيلُ الْمُجْرِمِينَ﴾: ' + (n.title || '') + ' — ' + n.summary); });
+    })();
+  }
+  /* his name: the owner names him (settings or the question) and he takes it with pride */
+  onNamed(name) {
+    const c = this.c; if (!name) return; this.touch();
+    c.play((function* (B) {
+      c.setFace('proud', 3);
+      B.sayText(c, '«' + name + '»… ' + CL.lineOf(['s|اسم طيب، بارك الله فيك! من اليوم اسمي ' + name + ' بإذن الله 🫡', 'e|اسم جميل، ربنا يبارك فيك! من النهارده اسمي ' + name + ' 🫡', 'y|اسم طيب، الله يجزيك خير! من اليوم اسمي ' + name + ' بإذن الله 🫡', 'f|اسم طيب، بارك الله فيك! من اليوم اسمي ' + name + ' بإذن الله 🫡']), { prio: 3, mood: 'happy', dur: 4 });
+      yield* R.salute(B, c, 1.6);
+    })(this), 3);
+    this.log('صاحبه سمّاه «' + name + '»');
+  }
+  askName() {
+    CL.store('nameAsked', 1);
+    const c = this.c; c.setFace('think', 3);
+    const opts = ['صاحبي', 'رفيقي', 'زميلي', 'اسم من عندي'];
+    this.ask(c, CL.lineOf(['s|شو بتحب تسمّيني؟ 🙂', 'e|تحب تسمّيني إيه؟ 🙂', 'y|ايش تشتي تسمّيني؟ 🙂', 'f|بماذا تحب أن تسمّيني؟ 🙂']), opts, (i) => {
+      if (i < 3) { this.ui.saveSetting('botName', opts[i]); this.onNamed(opts[i]); }
+      else this.sayText(c, 'اكتب الاسم اللي بدك ياه من التطبيق ← الإعدادات ← «اسمه» 🫡', { prio: 2, mood: 'calm', dur: 5 });
+    });
   }
   prayLine(key, p) { return (CL.line(key).text || '').replace(/\{p\}/g, p.name); }
   announcePrayer(p) {
@@ -1181,7 +1284,7 @@ class Brain {
     if (streaming) { c.talkT = 0.4; return; }
     if (face && CL.FACES[face]) c.setFace(face, 4);
     const acts = { wave: R.wave, dance: R.wave, think: R.scratch, jump: R.hop, flip: (B, b) => (function* () { if (b.ground) { b.vy = -55 * b.u; b.ground = null; b.trick = { t: 0, dur: 0.6, flip: TAU }; } yield* until(() => b.ground, 2); })(),
-      laugh: (B, b) => B.r_tickle(4), stretch: R.stretch, spin: R.turnAround, hearts: (B, b) => (function* () { for (let i = 0; i < 4; i++) { B.w.fx.heart(b.head.x + rnd(-3, 3) * b.u, b.head.y, b.u); yield* wait(0.3); } })(),
+      laugh: (B, b) => B.r_tickle(4), stretch: R.stretch, spin: R.turnAround, hearts: (B, b) => R.salute(B, b, 1.6), salute: (B, b) => R.salute(B, b, 1.6),
       sad: (B, b) => (function* () { b.sit.t = 0.6; yield* wait(2); b.sit.t = 0; })(), proud: R.stretch };
     if (act && acts[act]) c.play(acts[act](this, c), 2);
   }
@@ -1194,8 +1297,40 @@ class Brain {
     };
   }
 
+  /* ---------------- the sea between the app icons (they become islands) */
+  drawSea(ctx) {
+    const sea = this.sea; if (!sea) return;
+    sea.a += (sea.t - sea.a) * M.min(1, 0.05);
+    if (sea.a < 0.01 && sea.t === 0) { this.sea = null; return; }
+    const bd = this.w.bounds, T = this.T, A = sea.a;
+    const rr = (x, y, w, h, r) => { ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
+    ctx.save();
+    // water everywhere except the islands
+    ctx.beginPath(); ctx.rect(bd.x0, bd.y0, bd.x1 - bd.x0, bd.y1 - bd.y0);
+    sea.isl.forEach((k) => rr(k.x - k.w / 2 - 7, k.y - k.h / 2 - 7, k.w + 14, k.h + 14, 18));
+    const g = ctx.createLinearGradient(0, bd.y0, 0, bd.y1); g.addColorStop(0, 'rgba(40,150,210,' + 0.42 * A + ')'); g.addColorStop(1, 'rgba(10,80,150,' + 0.55 * A + ')');
+    ctx.fillStyle = g; ctx.fill('evenodd');
+    // waves
+    ctx.strokeStyle = 'rgba(255,255,255,' + 0.35 * A + ')'; ctx.lineWidth = 2;
+    for (let y = bd.y0 + 30; y < bd.y1; y += 46) { ctx.beginPath(); for (let x = bd.x0; x <= bd.x1; x += 8) { const yy = y + M.sin(x * 0.045 + T * 1.6 + y) * 4; if (x === bd.x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy); } ctx.stroke(); }
+    // sandy shores and foam around each island; palm trees on his own islands
+    sea.isl.forEach((k, i) => {
+      ctx.beginPath(); rr(k.x - k.w / 2 - 7, k.y - k.h / 2 - 7, k.w + 14, k.h + 14, 18); ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(240,214,150,' + 0.9 * A + ')'; ctx.stroke();
+      ctx.beginPath(); rr(k.x - k.w / 2 - 12 - M.sin(T * 2 + i) * 1.5, k.y - k.h / 2 - 12, k.w + 24, k.h + 24, 22); ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,' + 0.55 * A + ')'; ctx.stroke();
+      if (!k.icon) {
+        ctx.fillStyle = 'rgba(232,200,130,' + A + ')'; ctx.beginPath(); rr(k.x - k.w / 2, k.y - k.h / 2, k.w, k.h, 16); ctx.fill();
+        ctx.fillStyle = 'rgba(120,80,40,' + A + ')'; ctx.fillRect(k.x + 8, k.y - k.h / 2 - 26, 4, 26);
+        ctx.fillStyle = 'rgba(46,140,70,' + A + ')'; for (let j = 0; j < 4; j++) { ctx.save(); ctx.translate(k.x + 10, k.y - k.h / 2 - 26); ctx.rotate(-1.9 + j * 0.9 + M.sin(T + j) * 0.05); ctx.fillRect(0, -2.5, 18, 5); ctx.restore(); }
+      }
+    });
+    // ripples behind him
+    sea.rip = sea.rip.filter((r) => T - r.t < 1.2);
+    sea.rip.forEach((r) => { const k = (T - r.t) / 1.2; ctx.beginPath(); ctx.ellipse(r.x, r.y, 4 + k * 16, 2 + k * 6, 0, 0, M.PI * 2); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,' + 0.6 * (1 - k) * A + ')'; ctx.stroke(); });
+    ctx.restore();
+  }
   /* ---------------- extras drawn on top: dizzy stars, focus aura, ice block */
   drawExtras(ctx, layer) {
+    if (layer === 'back') { this.drawSea(ctx); return; }
     if (layer !== 'front') return;
     const c = this.c, T = this.T;
     if (this.screenPunch) { // his glove flies at the screen and cracks the glass

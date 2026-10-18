@@ -51,7 +51,7 @@ CL.startStage = function (opts) {
       e.el.textContent = text; e.until = world.T + 600; e.prio = 5; e.scale = 1.22;
       e.el.className = 'cl-bub on asking';
       const hint = document.createElement('span'); hint.className = 'cl-hint'; hint.textContent = 'اضغط لتجاوب'; e.el.appendChild(hint);
-      optsBox = document.createElement('div'); optsBox.className = 'cl-opts';
+      optsBox = document.createElement('div'); optsBox.className = 'cl-opts' + (options.length > 4 ? ' many' : '');
       options.forEach((t, i) => { const d = document.createElement('div'); d.className = 'cl-opt'; d.textContent = t; d.dataset.i = i; optsBox.appendChild(d); });
       ui.appendChild(optsBox); optsShown = !!opts.arena || CL.settings.showOptions === true;
       optsBox.style.display = optsShown ? 'flex' : 'none';
@@ -65,6 +65,7 @@ CL.startStage = function (opts) {
     },
     vib(ms) { if (NATIVE) call('vibrate', ms | 0); else try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} },
     openChat(seed) { if (NATIVE) call('openChat', seed || ''); else if (opts.onChat) opts.onChat(seed || ''); },
+    news() { if (NATIVE) call('newsToday'); },
     log(txt) { call('logEvent', txt); },
     saveSetting(k, v) { CL.settings[k] = v; persist(); },
     stat(d) { if (opts.onStat) opts.onStat(d); }
@@ -238,8 +239,11 @@ CL.startStage = function (opts) {
     voiceReply(text, face) { brain.voiceReply(text, face); },
     chatSay(text) { if (text) brain.sayText(brain.c, text, { prio: 3, mood: 'happy', dur: M.min(6, 2 + text.length * 0.08) }); },
     genLines(json) { try { CL.GEN = JSON.parse(json) || {}; } catch (e) {} },
+    news(json) { try { brain.onNews(JSON.parse(json)); } catch (e) {} },
     settings(json) {
+      const oldName = CL.settings.botName || '';
       try { CL.applySettings(JSON.parse(json)); } catch (e) { return; }
+      if (CL.settings.botName && CL.settings.botName !== oldName && brain.T > 2) brain.onNamed(CL.settings.botName);
       CL.snd.on = CL.settings.sound; world.sizeMul = sizeMul[CL.settings.size] || 1; world.resize();
       const t = brain.tool; if (CL.settings.tools[CL.settings.tool] !== false && t.kind !== CL.settings.tool) { t.kind = CL.settings.tool; t.scale.v = 0.2; call('log', 'tool ' + t.kind); }
       if (!Object.keys(CL.TOOLS).some((k) => CL.settings.tools[k] !== false)) t.hidden = true; else if (!brain.confiscated) t.hidden = false;

@@ -45,6 +45,9 @@ function add(role, text) {
   const d = document.createElement('div'); d.className = 'm ' + role; d.textContent = text; msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight; return d;
 }
+// his messages: verses ﴿…﴾ shown in the Quran font
+const esc = (t) => t.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+function fill(el, text) { el.innerHTML = esc(text).replace(/﴿[^﴾]*﴾?/g, (v) => '<span class="q">' + v + '</span>'); }
 function typing() { cur = add('a', ''); cur.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>'; curText = ''; }
 function setBusy(b) { busy = b; send.disabled = b; }
 function doSend() {
@@ -61,11 +64,11 @@ $('bMin').onclick = () => { if (NATIVE) call('chatMin'); else parent.postMessage
 $('bBig').onclick = () => call('chatBig');
 
 window.chat = {
-  delta(t) { if (!cur) typing(); curText += t; watchTags(curText); cur.textContent = clean(curText); msgs.scrollTop = msgs.scrollHeight; },
-  done(full, note) { if (!cur) typing(); watchTags(full || curText); if (!sawFace) hero.face('happy'); hero.idle(); cur.textContent = clean(full || curText) || '…'; if (note) add('sys', note); cur = null; setBusy(false); },
+  delta(t) { if (!cur) typing(); curText += t; watchTags(curText); fill(cur, clean(curText)); msgs.scrollTop = msgs.scrollHeight; },
+  done(full, note) { if (!cur) typing(); watchTags(full || curText); if (!sawFace) hero.face('happy'); hero.idle(); fill(cur, clean(full || curText) || '…'); if (note) add('sys', note); cur = null; setBusy(false); },
   error(msg) { if (cur && !curText) cur.remove(); cur = null; add('err', msg); setBusy(false); hero.face('embarrassed'); },
   seed(text) { if (text) { inp.value = text; autosize(); } setTimeout(() => inp.focus(), 150); },
-  history(json) { msgs.innerHTML = ''; let h = []; try { h = JSON.parse(json) || []; } catch (e) {} h.forEach((m) => add(m.r === 'u' ? 'u' : 'a', clean(m.t)));
+  history(json) { msgs.innerHTML = ''; let h = []; try { h = JSON.parse(json) || []; } catch (e) {} h.forEach((m) => { const d = add(m.r === 'u' ? 'u' : 'a', clean(m.t)); if (m.r !== 'u') fill(d, clean(m.t)); });
     if (!h.length) add('sys', 'أهلين! أنا ' + botName + ' 😊 احكيلي شو بدك، وإذا ضربتني بالعصا رح أعرف 😄');
     hero.face('joy'); hero.say(h.length ? 'رجعت؟ 😊' : 'أهلين! 👋'); },
   font(px) { document.documentElement.style.setProperty('--fs', px + 'px'); }

@@ -65,11 +65,12 @@ function getK(k) { const p = k.split('.'); return p.length > 1 ? S()[p[0]][p[1]]
 function setK(k, v) { const p = k.split('.'); if (p.length > 1) S()[p[0]][p[1]] = v; else S()[k] = v; save(); }
 const ACTS = [['tasbih', 'تسبيح بالمسبحة'], ['dua', 'دعاء'], ['quran', 'قراءة قرآن'], ['hadith', 'قراءة حديث'], ['martial', 'فنون قتالية'], ['study', 'مذاكرة بالنضارة'],
   ['exercise', 'رياضة'], ['book', 'قراءة كتاب'], ['tea', 'استراحة شاي'], ['sleep', 'نوم'], ['juggle', 'لعب بالطابات'], ['plant', 'سقاية نبتته (بتكبر كل يوم)'],
-  ['friend', 'زيارة صاحبه بكسل (حكي وتمارين)'], ['dawah', 'يدعو صاحبه للإسلام بالحكمة'], ['parkour', 'استعراض باركور'], ['stroll', 'مشي ثلاثي الأبعاد فوق التطبيقات']];
+  ['friend', 'زيارة صاحبه بكسل (حكي وتمارين)'], ['dawah', 'يدعو صاحبه للإسلام بالحكمة'], ['parkour', 'استعراض باركور'], ['stroll', 'مشي ثلاثي الأبعاد فوق التطبيقات'],
+  ['swim', 'يسبح بين التطبيقات (تصير جزر وبينها بحر)'], ['reflect', 'يتأمل في خلق الله (السماء، الموت، الآخرة)'], ['teach', 'يشرح دروس قصيرة: شرعية، وحساب وعلوم مرتبطة بالخالق']];
 const MODELS = [['claude-opus-5-5', 'Claude Opus 5.5 · الأذكى'], ['claude-sonnet-5-5', 'Claude Sonnet 5.5 · أسرع وأرخص'], ['claude-haiku-5-5', 'Claude Haiku 5.5 · الأرخص']];
 const SCHEMA = [
   ['sec', 'التشغيل والأذونات'], ['perms'],
-  ['sec', 'عنك'], ['text', 'name', 'اسمك', 'بيناديك فيه كلود (اختياري)'], ['dialects'],
+  ['sec', 'عنك'], ['text', 'name', 'اسمك', 'بيناديك فيه (اختياري)'], ['text', 'botName', 'اسمه', 'سمّيه اللي بدك: صاحبي، رفيقي… وبيفرح فيه'], ['dialects'],
   ['sec', 'الشكل والصوت'],
   ['seg', 'size', 'حجم كلود', [['s', 'صغير'], ['m', 'وسط'], ['l', 'كبير']]],
   ['seg', 'font', 'حجم خط الكلام', [[14, 'صغير'], [16, 'وسط'], [19, 'كبير'], [22, 'أكبر']]],
@@ -212,6 +213,22 @@ function renderChat(card) { // the AI: who answers (Gemini free / Claude paid), 
   card.appendChild(mr);
   card.appendChild(row('احكي معه بصوتك', 'اضغط عليه مطوّل واحكي، ولما ترفع إصبعك بيرد عليك. الدردشة المكتوبة: اضغطه ضغطتين', sw('voice')));
   card.appendChild(row('يرد بصوت مسموع', 'بيحتاج صوت عربي بالهاتف (إعدادات ← تحويل النص إلى كلام)', sw('voiceSpeak')));
+  // his voice: a man's voice. Pick one of the phone's Arabic voices and a depth, and listen
+  const vr = row('صوته', 'اختار صوت رجالي من أصوات هاتفك، واضغط «اسمع» لتجرّب', null); vr.style.flexDirection = 'column'; vr.style.alignItems = 'stretch';
+  const pseg = el('div', 'seg'); pseg.style.marginTop = '8px';
+  [[0.7, 'أعمق'], [0.8, 'رجالي'], [0.95, 'عادي']].forEach((o) => { const b = el('button', +S().voicePitch === o[0] ? 'on' : '', o[1]); b.onclick = () => { setK('voicePitch', o[0]); [].forEach.call(pseg.children, (x) => x.classList.toggle('on', x === b)); if (NATIVE) call('tryVoice'); }; pseg.appendChild(b); });
+  vr.appendChild(pseg);
+  const vsel = el('select'); vsel.id = 'voiceSel'; vsel.style.marginTop = '8px';
+  const fillVoices = () => {
+    let vs = []; try { vs = NATIVE ? JSON.parse(call('voices') || '[]') : []; } catch (e) { vs = []; }
+    vsel.innerHTML = ''; const o0 = el('option', null, 'تلقائي (رجالي إذا موجود)'); o0.value = ''; vsel.appendChild(o0);
+    vs.forEach((v, i) => { const o = el('option', null, 'صوت ' + (i + 1) + (v.net ? ' (بالإنترنت)' : '') + ' · ' + v.n); o.value = v.n; if (S().voiceName === v.n) o.selected = true; vsel.appendChild(o); });
+  };
+  fillVoices(); window.app && (window.app.voicesReady = fillVoices);
+  vsel.onchange = () => { setK('voiceName', vsel.value); if (NATIVE) call('tryVoice'); };
+  const tryB = el('button', 'btn', '🔊 اسمع صوته'); tryB.style.marginTop = '8px'; tryB.onclick = () => { if (NATIVE) call('tryVoice'); };
+  vr.appendChild(vsel); vr.appendChild(tryB); card.appendChild(vr);
+  card.appendChild(row('خبر يومي عن الأمة', 'مرة باليوم بيبحث بالإنترنت عن أهم خبر للمسلمين ويحكيلك ياه، واضغط «نتناقش» لتحكوا فيه', sw('newsOn')));
   const t = el('button', 'btn', '💬 جرّب الدردشة'); t.onclick = () => { if (NATIVE) call('openChat', ''); else location.href = 'stage.html?mock=1'; };
   card.appendChild(row('', '', t));
   card.appendChild(el('div', 'note', 'المفاتيح بتتخزّن بس على هاتفك، وبتنبعت بس للشركة اللي اخترتها مع كل رسالة. مع الرسالة بينبعت ملخّص قصير عن حالة كلود واللي بيعرفه عنك.'));
@@ -225,6 +242,7 @@ $('bHelp').onclick = () => openSheet('help');
 window.app = {
   locate: () => { if (!NATIVE) return; const r = call('locate'); if (r) { const p = r.split(','); window.app.located(+p[0], +p[1]); } },
   located: (lat, lng) => { Object.assign(S(), { lat: +lat.toFixed(4), lng: +lng.toFixed(4), city: 'موقعي' }); save(); renderSettings(); },
+  voicesReady: () => {},
   genDone: (ok, msg) => { const st = $('genSt'); if (st) st.textContent = (ok ? '✓ ' : '') + msg; }, back: () => { const s = document.querySelector('.sheet.on'); if (s) { s.classList.remove('on'); return true; } return false; }, onResume: () => {
   // the floating Clawd may have changed settings (e.g. a tool picked in the chat): reload them so the app never writes old ones back
   if (NATIVE) { try { const s = JSON.parse(call('getSettings') || 'null'); if (s) { CL.applySettings(s); if (window.clawd && window.clawd.settings) window.clawd.settings(JSON.stringify(CL.settings)); } } catch (e) {} }

@@ -421,7 +421,7 @@ function buildBoxes(b, T) {
     if (!fr && fwd < 0.3) { const lim = 2.1; if (aIn > lim) aIn = lim + (aIn - lim) * 0.5; else if (aIn < -lim) aIn = -lim + (aIn + lim) * 0.5; }
     const lifted = fr ? 0 : clamp((M.abs(aIn) - 1.3) / 0.6, 0, 1); // a raised arm moves a little in front so it stays visible
     const rest = fr ? 0 : (1 - M.min(1, fwd)) * M.max(0, 1 - M.abs(aIn) / 0.7);
-    const side = a[0], ang = (aIn - 1.35 * rest + (fr ? 0 : M.sin(ph + (side > 0 ? PI : 0)) * 0.22 * walk * rest)) * side;
+    const side = a[0], ang = (aIn - 1.35 * rest + (fr ? 0 : M.sin(ph + (side > 0 ? PI : 0)) * 0.45 * walk * rest)) * side; // a firm, upright stride with the arms swinging
     const shift = fwd * (fr ? 1.4 : 1.3) * -side + side * armT * 0.95 * rest;
     const zc = fr ? fwd * 2.2 : (d + armT + 0.1) * M.max(M.min(1, fwd * 2), lifted);
     const px = side * w + shift, rot = preRot(px, shY, ang);
@@ -622,6 +622,24 @@ const PROPS = (CL.PROPS = {
   },
   phoneSelfie: function (ctx, b) { const hd = b.hand && b.hand.R, x = hd && hd.x != null ? hd.x - 0.7 : 4.4, y = hd && hd.v != null ? hd.v - 2.2 : -7.6;
     ctx.fillStyle = '#222'; ctx.fillRect(x, y, 1.4, 2.4); ctx.fillStyle = '#7FD1F7'; ctx.fillRect(x + 0.15, y + 0.2, 1.1, 1.9); },
+  board: function (ctx, b, T, p) { // a small teaching board on a stand to his right; one line of chalk per step
+    const x0 = 4.6, x1 = 12.4, y0 = -10.6, y1 = -5.4;
+    ctx.fillStyle = COL.woodD; ctx.fillRect(x0 + 0.8, y1, 0.35, -y1); ctx.fillRect(x1 - 1.15, y1, 0.35, -y1);
+    ctx.fillStyle = '#8A5A35'; ctx.fillRect(x0 - 0.3, y0 - 0.3, x1 - x0 + 0.6, y1 - y0 + 0.6);
+    ctx.fillStyle = '#2E5E4E'; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    ctx.fillStyle = '#F4F1E8'; ctx.fillRect(x0 + 2.2, y0 + 0.5, 3.4, 0.35); // the title
+    const n = M.min(4, p.lines || 0);
+    for (let i = 0; i < n; i++) { const w = 5.6 - (i % 2) * 1.4; ctx.fillStyle = 'rgba(244,241,232,.85)'; ctx.fillRect(x1 - 0.6 - w, y0 + 1.5 + i * 0.95, w, 0.22); }
+  },
+  newspaper: function (ctx, b, T, p) { // held open in front of him while he tells the news
+    const x0 = -3.6, y0 = -5.9;
+    ctx.fillStyle = '#F2EFE6'; ctx.fillRect(x0, y0, 7.2, 3.6);
+    ctx.fillStyle = '#C9C3B3'; ctx.fillRect(-0.05, y0, 0.1, 3.6);
+    ctx.fillStyle = '#2B2B2B'; ctx.fillRect(x0 + 0.4, y0 + 0.35, 2.9, 0.45); ctx.fillRect(0.4, y0 + 0.35, 2.9, 0.45);
+    ctx.fillStyle = '#8E8A80';
+    for (let i = 0; i < 4; i++) { ctx.fillRect(x0 + 0.4, y0 + 1.1 + i * 0.55, 2.9, 0.12); ctx.fillRect(0.4, y0 + 1.1 + i * 0.55, 2.9, 0.12); }
+    ctx.fillStyle = '#C4141C'; ctx.fillRect(0.4, y0 + 1.05, 1.1, 0.8); // a photo
+  },
   dua: function () {}, // hands only
   sign: function (ctx, b, T, p) { // little board with text
     ctx.fillStyle = COL.woodD; ctx.fillRect(-0.15, -12.5, 0.3, 4.5);
@@ -879,6 +897,7 @@ class World {
     // task
     if (b.task) { try { const r = b.task.next(dt); if (r.done) { b.task = null; b.taskPrio = 0; b.restoreFit(); } } catch (e) { console.error(e); b.task = null; b.restoreFit(); } }
     if (b.held) { b.ground = null; b.vx = b.vy = 0; b.walkAmt = lerp(b.walkAmt, 0, dt * 8); return; }
+    if (b.swim) { b.ground = null; b.vx = b.vy = 0; b.walkAmt = 0; setRoll(b, b.rollOverride != null ? b.rollOverride : 0); return; } // moved by the swim routine
     if (b.mode === 'top') return this.stepTop(b, dt);
     this.stepSide(b, dt);
   }

@@ -20,6 +20,14 @@ R.wave = function* (B, b) {
   yield* loop(1.3, (t) => { b.aR.t = -2.3 + M.sin(t * 16) * 0.45; });
   b.aR.t = 0;
 };
+/* stands to attention and salutes: chivalry and discipline, not hearts and blushing */
+R.salute = function* (B, b, dur) {
+  b.setFace(pick(['proud', 'serious', 'serene']), (dur || 1.6) + 0.4); b.blush = 0;
+  b.walk = 0; b.yaw.t = 0; b.look.tx = 0; b.look.ty = 0; b.sy.t = 1.04; b.sx.t = 0.98;
+  b.aL.t = 0; b.fwdL.t = 0; b.aR.t = -1.95; b.fwdR.t = 0.1; // right hand up at the temple
+  yield* wait(dur || 1.6);
+  b.aR.t = 0; b.fwdR.t = 0; b.sy.t = 1; b.sx.t = 1;
+};
 R.stretch = function* (B, b) {
   b.setFace('relieved', 1.6); b.aL.t = -2.6; b.aR.t = -2.6; b.sy.t = 1.18; b.sx.t = 0.9;
   yield* wait(0.9); b.sy.t = 1; b.sx.t = 1; b.aL.t = 0; b.aR.t = 0; yield* wait(0.3);
@@ -108,7 +116,97 @@ R.quranReflect = function* (B, b) {
   B.sayText(b, '﴿' + v.t + '﴾ ' + v.s, { prio: 2, mood: 'calm', dur: clamp(2 + v.t.length * 0.06, 4, 9), quran: true }); yield* wait(clamp(2 + v.t.length * 0.06, 4, 9) + 0.2);
   b.baseFace = 'normal';
   B.sayText(b, 'الفائدة العملية: ' + v.lesson, { prio: 2, mood: 'calm', dur: clamp(2 + v.lesson.length * 0.06, 4, 8) }); yield* wait(clamp(2 + v.lesson.length * 0.06, 4, 8) + 0.3);
-  b.baseFace = 'normal'; B.say(b, 'quran_free', { prio: 2, mood: 'happy' });
+  b.baseFace = 'normal';
+  yield* R.applyBenefit(B, b, v.act); // and he does it right away
+  if (chance(0.45)) yield* R.resolveMove(B, b);
+  B.say(b, 'quran_free', { prio: 2, mood: 'happy' });
+};
+/* acting on what he just learned (العلم للعمل) */
+R.applyBenefit = function* (B, b, act) {
+  if (!act) return;
+  const say = (t, o) => { const d = B.sayText(b, t, Object.assign({ prio: 2, mood: 'calm' }, o || {})); return wait(d + 0.3); };
+  B.say(b, 'apply_now', { prio: 2, mood: 'calm', dur: 2.4 }); yield* wait(2.6);
+  const beads = function* (text, n) {
+    b.prop = { kind: 'tasbih', count: 0 }; b.aR.t = -0.4; b.fwdR.t = 0.5; b.baseFace = 'serene';
+    B.sayText(b, text, { prio: 2, mood: 'calm', small: true, dur: n * 0.5 + 1 });
+    for (let i = 0; i < n; i++) { yield* wait(0.5); b.prop.count++; if (B.s.sound && i % 3 === 0) CL.sfx.click(); }
+    b.prop = null; b.aR.t = 0; b.fwdR.t = 0;
+  };
+  try {
+    if (act === 'dhikr') yield* beads('سبحان الله وبحمده، سبحان الله العظيم', 11);
+    else if (act === 'istighfar') yield* beads('أستغفر الله العظيم وأتوب إليه', 11);
+    else if (act === 'hamd') { b.setFace('serene', 4); yield* say('الحمد لله على نعمة الإسلام، والحمد لله على العافية، والحمد لله على كل حال'); }
+    else if (act === 'dua') {
+      b.fwdL.t = b.fwdR.t = 1; b.aL.t = b.aR.t = -0.9; b.baseFace = 'serene';
+      yield* say((CL.DUA[CL.bag('dua', CL.DUA.length)] || '').split(' — ')[0]); yield* say('آمين 🤲', { dur: 1.4 });
+      yield* tween(1, (k) => { b.aL.t = b.aR.t = -0.9 - k * 1.2; }); b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0;
+    } else if (act === 'niyya') { yield* say('نويت أن يكون يومي كله لله: عملي ونومي وأكلي وكلامي'); yield* R.salute(B, b, 1.2); }
+    else if (act === 'pray') {
+      const next = B.nextPrayer && B.nextPrayer();
+      yield* say(next ? 'إن شاء الله أول ما يدخل وقت ' + next.name + ' (' + CL.PRAY.fmt(next.at) + ') أقوم للصلاة وأذكّرك' : 'إن شاء الله أصلّي الصلاة القادمة في أول وقتها، وأذكّرك');
+    } else if (act === 'study') {
+      b.sit.t = 1; b.prop = { kind: 'study', lines: 0 }; b.baseFace = 'focus'; b.look.ty = 0.8; b.fwdR.t = 0.6; b.aR.t = 0.3;
+      B.sayText(b, 'أكتبها وأحفظها ذلحين إن شاء الله ✍️', { prio: 2, mood: 'calm', dur: 3 });
+      yield* loop(5, (t) => { b.prop.lines = (t * 3) | 0; });
+      b.prop = null; b.sit.t = 0; b.look.ty = 0; b.fwdR.t = 0; b.aR.t = 0;
+    } else if (act === 'dawah') {
+      b.yaw.t = 0; b.look.tx = 0; b.setFace('proud', 4);
+      yield* say('وبلّغتها لك يا ' + (B.s.name || 'صاحبي') + '، بلّغها أنت لغيرك: «بلّغوا عني ولو آية» رواه البخاري');
+    } else if (act === 'exercise') {
+      B.sayText(b, 'بسم الله: «المؤمن القوي خير وأحب إلى الله» 💪', { prio: 2, mood: 'calm', dur: 3 });
+      yield* loop(4, (t) => { const k = M.sin(t * 7); b.sy.t = 1 - M.max(0, k) * 0.22; b.aL.t = b.aR.t = -1.4; b.fwdL.t = b.fwdR.t = 1; });
+      b.sy.t = 1; b.aL.t = b.aR.t = 0; b.fwdL.t = b.fwdR.t = 0;
+    } else if (act === 'reflect') { b.look.ty = -1; b.setFace('think', 3); yield* wait(2.5); b.look.ty = 0; yield* say('سبحان الله… اللهم أعنّا على أنفسنا'); }
+    else if (act === 'now') { yield* say('ما بأجّلها، أبدأ الآن بإذن الله'); yield* R.salute(B, b, 1); }
+    else if (act === 'firm') { yield* R.resolveMove(B, b, 'عاهدت الله أن أعمل بها، بإذن الله'); }
+  } finally { b.prop = null; b.baseFace = 'normal'; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; b.sy.t = 1; }
+};
+/* lofty resolve: a firm stance, the right fist raised, a stamp, and a strong word */
+R.resolveMove = function* (B, b, text) {
+  b.walk = 0; b.yaw.t = 0; b.look.tx = 0; b.setFace('determined', 3.2); b.blush = 0;
+  yield* tween(0.35, (k) => { b.aR.t = -2.7 * k; b.fwdR.t = 0.35 * k; b.sy.t = 1 + 0.06 * k; });
+  if (b.ground) { b.vy = -26 * b.u; b.ground = null; CL.sfx.jump && B.s.sound && CL.sfx.jump(); }
+  yield* until(() => b.ground, 1.5); B.sfx('stomp'); B.w.fx.puff(b.x, b.y, b.u, '#e9e7e1', 3);
+  if (text) B.sayText(b, text, { prio: 2, mood: 'serious', dur: 3.4 }); else B.say(b, 'resolve', { prio: 2, mood: 'serious', dur: 4 });
+  yield* wait(3.4); b.aR.t = 0; b.fwdR.t = 0; b.sy.t = 1;
+};
+/* tafakkur: he sits and looks up at the sky, asks about creation, reads a verse, and glorifies the Creator */
+R.reflect = function* (B, b) {
+  B.activity = 'reflect';
+  try {
+    b.sit.t = 1; yield* wait(0.8); b.baseFace = 'think'; b.look.ty = -1; b.look.tx = 0.3; yield* wait(2.4);
+    const r = CL.REFLECT[CL.bag('reflect', CL.REFLECT.length)];
+    let d = B.sayText(b, r.q, { prio: 1, mood: 'calm', dur: clamp(2 + r.q.length * 0.06, 3.5, 7) }); yield* wait(d + 0.6);
+    b.look.ty = -0.5; b.look.tx = 0;
+    d = B.sayText(b, '﴿' + r.v + '﴾ ' + r.r, { prio: 1, mood: 'calm', quran: true, dur: clamp(2 + r.v.length * 0.06, 4, 9) }); yield* wait(d + 0.4);
+    b.baseFace = 'serene'; b.look.ty = 0;
+    d = B.sayText(b, r.end || 'سبحان الله الخالق', { prio: 1, mood: 'calm', dur: 2.8 }); yield* wait(d + 0.3);
+  } finally { b.sit.t = 0; b.baseFace = 'normal'; b.look.tx = b.look.ty = 0; B.worshipGlow = B.T + 180; B.activity = null; }
+};
+/* a short lesson on a little board: Sharia first, then numbers and nature tied to their Creator */
+R.teach = function* (B, b) {
+  B.activity = 'teach';
+  const L = CL.LESSONS[CL.bag('lessons', CL.LESSONS.length)];
+  try {
+    b.outfit.glasses = 1; b.prop = { kind: 'board', lines: 0 }; b.yaw.t = -0.25; b.lockYaw = true;
+    let d = B.sayText(b, 'درس صغير بإذن الله: ' + L.title, { prio: 1, mood: 'calm', dur: 3 }); yield* wait(d + 0.3);
+    for (const st of L.steps) {
+      b.prop.lines++; b.aR.t = -1.7; b.fwdR.t = 0.2; b.setFace(pick(['think', 'focus', 'serious']), 2);
+      d = B.sayText(b, st, { prio: 1, mood: 'calm', dur: clamp(2 + st.length * 0.06, 3, 7) }); yield* wait(d + 0.3);
+      b.aR.t = 0; b.fwdR.t = 0;
+    }
+    b.setFace('serene', 3);
+    d = B.sayText(b, L.end, { prio: 1, mood: 'calm', quran: L.end.indexOf('﴿') >= 0, dur: clamp(2 + L.end.length * 0.06, 3.5, 8) }); yield* wait(d + 0.3);
+    B.say(b, 'act_done', { mood: 'happy' });
+  } finally { b.prop = null; b.outfit.glasses = 0; b.lockYaw = false; b.yaw.t = 0; b.aR.t = 0; b.fwdR.t = 0; B.activity = null; }
+};
+/* discipline in meaning: stands to attention, marks time, salutes, and says a word about time and duty */
+R.attention = function* (B, b) {
+  if (!b.ground) return;
+  b.walk = 0; b.yaw.t = 0; b.look.tx = 0; b.setFace('serious', 5); b.sy.t = 1.05;
+  for (let i = 0; i < 4; i++) { b.legs[i % 2 ? 0 : 3] = -1.1; yield* wait(0.22); b.legs[0] = b.legs[3] = 0; B.sfx('stomp'); yield* wait(0.18); }
+  yield* R.salute(B, b, 1.3);
+  B.say(b, 'discipline', { prio: 1, mood: 'serious', dur: 4 }); yield* wait(3.5); b.sy.t = 1;
 };
 R.hadith = function* (B, b) { // reading hadith from a book, each with its source and a practical lesson
   B.activity = 'hadith'; B.say(b, 'hadith_read', { mood: 'calm' });
@@ -122,6 +220,7 @@ R.hadith = function* (B, b) { // reading hadith from a book, each with its sourc
       const d1 = clamp(2 + h.t.length * 0.06, 4, 9);
       B.sayText(b, '«' + h.t + '» ' + h.r, { prio: 1, mood: 'calm', dur: d1 }); yield* wait(d1 + 0.3);
       if (h.b) { const d2 = clamp(2 + h.b.length * 0.06, 3.5, 7); B.sayText(b, 'الفائدة: ' + h.b, { prio: 1, mood: 'calm', dur: d2 }); yield* wait(d2 + 0.3); }
+      if (i === 1 && h.act) { b.prop = null; b.sit.t = 0; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; yield* R.applyBenefit(B, b, h.act); }
     }
     B.say(b, 'quran_free', { prio: 1, mood: 'happy' });
   } finally { b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdL.t = b.fwdR.t = 0; b.aL.t = b.aR.t = 0; B.worshipGlow = B.T + 180; B.activity = null; }
@@ -258,9 +357,9 @@ R.jump = function* (B, b, tx, ty, apex, trick) {
   yield* until(() => b.ground, T + 2);
 };
 R.walkTo = function* (B, b, x, speed) {
-  speed = speed || 5 * b.u;
+  speed = speed || 10 * b.u; // a brisk, steady walk
   let t = 0;
-  while (b.ground && M.abs(b.x - x) > b.u * 0.8 && t < 10) { b.walk = M.sign(x - b.x) * speed; t += yield; if (b.hitWall) break; }
+  while (b.ground && M.abs(b.x - x) > b.u * 0.8 && t < 10) { b.walk = M.sign(x - b.x) * speed; t += yield; if (b.hitWall && b.hitWall === M.sign(b.walk)) break; } // walking away from a wall is fine
   b.walk = 0;
 };
 R.wallRun = function* (B, b) {
@@ -352,17 +451,84 @@ R.iconTour = function* (B, b) { // hop from app icon to app icon on the home scr
     if (b.ground && b.ground.plat != null) yield* R.jump(B, b, B.home().x, B.w.bounds.y1, 4 * b.u);
   } finally { B.activity = null; }
 };
+/* the apps become islands in a sea: he shrinks, dives in, swims through the channels between them and climbs out */
+R.swim = function* (B, b) {
+  const bd = B.w.bounds, W = bd.x1 - bd.x0, H = bd.y1 - bd.y0;
+  if (!b.ground || B.w.gdir.y < 0.7 || H < 300) return;
+  // islands: the home-screen icons when we know them, otherwise a few little islands of his own
+  let isl = (B.appKind === 'home' || !B.appInfo) && B.icons && B.icons.length >= 3
+    ? B.icons.map((r) => ({ x: r.x + r.w / 2, y: r.y + r.h / 2, w: r.w, h: r.h, icon: true }))
+    : null;
+  if (!isl) {
+    isl = []; const cols = 3, rows = 3, cw = W / cols, rh = H * 0.55 / rows, top = bd.y0 + H * 0.22;
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) if ((i + j) % 2 === 0) isl.push({ x: bd.x0 + cw * (i + 0.5) + rnd(-12, 12), y: top + rh * (j + 0.5), w: 70, h: 44, icon: false });
+  }
+  const saved = { plats: B.w.platforms, platOn: B.w.platOn };
+  B.activity = 'swim'; B.sea = { a: 0, t: 1, isl: isl, rip: [] };
+  b.strollScale = 0.4;
+  const top = (k) => k.y - k.h / 2 - (k.icon ? 2 : 6);
+  B.w.platforms = isl.map((k) => ({ x0: k.x - k.w * 0.32, x1: k.x + k.w * 0.32, y: top(k) })); B.w.platOn = true;
+  const swimTo = function* (x, y) { // straight stroke to (x, y)
+    const sp = 34 * b.u * 0.4 + 26; let t = 0;
+    while (t < 12) {
+      const dx = x - b.x, dy = y - b.y, d = M.hypot(dx, dy); if (d < 3) break;
+      const dt = yield; t += dt;
+      const st = M.min(d, sp * dt); b.x += dx / d * st; b.y += dy / d * st + M.sin(B.T * 6) * 0.15;
+      const dir = M.abs(dx) > M.abs(dy) ? M.sign(dx) : (dy < 0 ? 1 : -1);
+      b.rollOverride = -dir * PI / 2; b.yaw.t = 0;
+      const k = B.T * 7; b.aL.t = -2.6 * M.max(0, M.sin(k)); b.aR.t = -2.6 * M.max(0, -M.sin(k)); b.legs[0] = M.sin(k * 2) * 0.6; b.legs[3] = -M.sin(k * 2) * 0.6;
+      if (chance(dt * 5)) B.sea.rip.push({ x: b.x, y: b.y, t: B.T });
+    }
+  };
+  try {
+    b.setFace('wideHappy', 2);
+    B.sayText(b, CL.lineOf(['s|البحر بين التطبيقات! بسم الله 🌊', 'e|بحر بين التطبيقات! بسم الله 🌊', 'y|بحر بين التطبيقات! بسم الله 🌊', 'f|بحر بين التطبيقات! بسم الله 🌊']), { prio: 1, mood: 'happy', dur: 2.6 });
+    yield* wait(1.2);
+    // onto the nearest island
+    let cur = isl.reduce((a, k) => (M.hypot(k.x - b.x, k.y - b.y) < M.hypot(a.x - b.x, a.y - b.y) ? k : a), isl[0]);
+    yield* R.jump(B, b, cur.x, top(cur), 10 * b.u, false);
+    const n = 2 + ((M.random() * 3) | 0);
+    for (let i = 0; i < n; i++) {
+      const others = isl.filter((k) => k !== cur), next = others[(M.random() * others.length) | 0]; if (!next) break;
+      // dive in beside the island, swim along the channel between the rows, climb out on the next one
+      const side = next.x >= cur.x ? 1 : -1, lane = M.max(cur.y, next.y) + M.max(cur.h, next.h) / 2 + 14;
+      b.swim = true; b.noClip = true; b.ground = null;
+      { // a dive: an arc from the island into the water beside it, head first
+        const x0 = b.x, y0 = b.y, x1 = cur.x + side * (cur.w / 2 + 12), y1 = cur.y + cur.h / 2 + 6;
+        yield* tween(0.55, (k) => { b.x = x0 + (x1 - x0) * k; b.y = y0 + (y1 - y0) * k - M.sin(k * PI) * 28; b.rollOverride = side * k * PI * 0.9; });
+      }
+      for (let k = 0; k < 8; k++) B.w.fx.drop(b.x + rnd(-6, 6), b.y, rnd(-30, 30), -rnd(40, 90), b.u);
+      B.sea.rip.push({ x: b.x, y: b.y, t: B.T }); if (B.s.sound && CL.sfx.puff) CL.sfx.puff();
+      yield* swimTo(b.x, M.min(lane, bd.y1 - 12));
+      yield* swimTo(next.x - side * (next.w / 2 + 10), b.y);
+      yield* swimTo(b.x, next.y + next.h / 2 + 6);
+      b.swim = false; b.noClip = false; b.rollOverride = null; b.aL.t = b.aR.t = 0; b.legs[0] = b.legs[3] = 0;
+      yield* R.jump(B, b, next.x, top(next), 8 * b.u, false);
+      b.wet = 1; cur = next;
+      for (let k = 0; k < 6; k++) B.w.fx.drop(b.x + rnd(-5, 5), b.y - 8, rnd(-40, 40), -rnd(20, 50), b.u);
+      if (i === 0 && chance(0.7)) B.sayText(b, '﴿اللَّهُ الَّذِي سَخَّرَ لَكُمُ الْبَحْرَ لِتَجْرِيَ الْفُلْكُ فِيهِ بِأَمْرِهِ﴾ الجاثية ١٢', { prio: 1, mood: 'calm', quran: true, dur: 5 });
+      else if (chance(0.5)) B.sayText(b, CL.lineOf(['s|الحمد لله، وصلت الجزيرة 🏝️', 'e|الحمد لله، وصلت الجزيرة 🏝️', 'y|الحمد لله، قد وصلت الجزيرة 🏝️', 'f|الحمد لله، وصلت الجزيرة 🏝️', 's|سبحان الله، ما أوسع البحر', 'f|سبحان من سخّر البحر']), { prio: 1, mood: 'happy', dur: 2.4 });
+      yield* wait(rnd(1.4, 2.4));
+    }
+    B.sea.t = 0;
+    b.strollScale = 0; b.noClip = false;
+    yield* R.jump(B, b, clamp(b.x, bd.x0 + 10 * b.u, bd.x1 - 10 * b.u), bd.y1, 8 * b.u, false);
+  } finally {
+    b.swim = false; b.noClip = false; b.rollOverride = null; b.strollScale = 0; b.aL.t = b.aR.t = 0; b.legs[0] = b.legs[3] = 0;
+    if (B.sea) B.sea.t = 0; B.w.platforms = saved.plats; B.w.platOn = saved.platOn; if (B.onIcons) B.onIcons(B.icons); B.activity = null;
+  }
+};
 R.roam = function* (B, b) { // wander along the floor, sometimes look at things
   const bd = B.w.bounds;
   const x = clamp(rnd(bd.x0, bd.x1), bd.x0 + 8 * b.u, bd.x1 - 8 * b.u);
-  yield* R.walkTo(B, b, x, rnd(3, 6) * b.u);
+  yield* R.walkTo(B, b, x, rnd(7, 11) * b.u);
   if (chance(0.4)) yield* R.lookAround(B, b);
 };
 R.goHome = function* (B, b) {
   const h = B.home();
   if (!b.ground) yield* until(() => b.ground, 4);
   if (b.ground && b.ground.plat != null) yield* R.jump(B, b, h.x, B.w.bounds.y1, 3 * b.u);
-  if (b.ground && b.ground.e === 'b') yield* R.walkTo(B, b, h.x, 6 * b.u);
+  if (b.ground && b.ground.e === 'b') yield* R.walkTo(B, b, h.x, 10 * b.u);
 };
 R.stroll = function* (B, b) { // dive "into" the phone and walk over the apps, seen from above
   if (!B.s.td3d || !b.ground || B.w.gdir.y < 0.6) return;
@@ -375,7 +541,7 @@ R.stroll = function* (B, b) { // dive "into" the phone and walk over the apps, s
     const bd = B.w.bounds; b.y = clamp(b.y, bd.y0 + 10 * b.u, bd.y1 - 2 * b.u);
     let t = 0; const dur = rnd(14, 24);
     while (t < dur || (B.w.gmag < 0.35 && t < 90)) { // phone lying flat: he keeps walking around on it
-      const dt = yield; t += dt; b.walk = 4.2 * b.u;
+      const dt = yield; t += dt; b.walk = 6.5 * b.u;
       if (chance(dt * 0.45)) b.heading += rnd(-1.3, 1.3);
       if (chance(dt * 0.2)) { // stop, turn to face you, then carry on
         b.walk = 0; const h = b.heading; b.heading = 0;
@@ -394,17 +560,26 @@ R.stroll = function* (B, b) { // dive "into" the phone and walk over the apps, s
 R.friendVisit = function* (B, b) {
   if (!B.s.acts.friend || B.f) return;
   B.activity = 'friend';
-  const bd = B.w.bounds, f = B.spawnFriend();
+  const bd = B.w.bounds;
   try {
+  // they meet on the same floor, side by side with room between them, facing each other (never one on top of the other)
+  if (b.ground && b.ground.plat != null) { b.ground = null; b.vy = -20 * b.u; b.vx = 0; }
+  yield* until(() => b.ground && b.ground.e === 'b', 3);
+  if (!b.ground || b.ground.e !== 'b') return;
+  const gap = 19 * b.u, room = gap + 9 * b.u;
+  const spot = clamp(b.x, bd.x0 + room, bd.x1 - room);
+  if (M.abs(spot - b.x) > b.u) yield* R.walkTo(B, b, spot);
+  b.walk = 0; b.tv = 0;
+  const f = B.spawnFriend();
     const side = b.x < (bd.x0 + bd.x1) / 2 ? 1 : -1;
-    const meet = clamp(b.x + side * 13 * b.u, bd.x0 + 8 * b.u, bd.x1 - 8 * b.u);
+    const meet = clamp(b.x + side * gap, bd.x0 + 8 * b.u, bd.x1 - 8 * b.u);
     f.x = side > 0 ? bd.x1 + 10 * f.u : bd.x0 - 10 * f.u; f.y = bd.y1; f.ground = { e: 'b' }; f.noEdge = true;
+    b.facing = side; b.yaw.t = 0.6 * side; b.lockYaw = true; b.look.tx = side; // he turns to greet him as he arrives
     // walk in
     let t = 0;
-    while (M.abs(f.x - meet) > f.u && t < 8) { f.walk = M.sign(meet - f.x) * 6 * f.u; t += yield; }
+    while (M.abs(f.x - meet) > f.u && t < 8) { f.walk = M.sign(meet - f.x) * 10 * f.u; b.walk = 0; t += yield; }
     f.walk = 0; f.tv = 0; f.noEdge = false;
-    b.facing = side; f.facing = -side;
-    b.yaw.t = 0.45 * side; f.yaw.t = -0.45 * side; b.lockYaw = f.lockYaw = true;
+    f.facing = -side; f.yaw.t = -0.6 * side; f.lockYaw = true;
     B.say(b, 'friend_arrive', { mood: 'happy' }); b.setFace('joy', 2); f.setFace('joy', 2);
     yield* R.wave(B, f);
     const k = M.random(), canDawah = B.s.acts.dawah;
@@ -414,12 +589,16 @@ R.friendVisit = function* (B, b) {
     B.say(b, 'friend_bye', { mood: 'happy' }); yield* R.wave(B, f);
     f.lockYaw = false; f.noEdge = true;
     const out = side > 0 ? bd.x1 + 12 * f.u : bd.x0 - 12 * f.u;
-    t = 0; while (M.abs(f.x - out) > f.u && t < 6) { f.walk = M.sign(out - f.x) * 7 * f.u; t += yield; }
+    t = 0; while (M.abs(f.x - out) > f.u && t < 6) { f.walk = M.sign(out - f.x) * 11 * f.u; t += yield; }
   } finally { B.dropFriend(); b.lockYaw = false; b.yaw.t = 0; b.facing = 1; B.activity = null; B.dawahNow = false; }
 };
 R.talk = function* (B, b, f, script, dawah) {
   B.dawahNow = !!dawah;
+  const face = () => { // both stay put, turned to each other
+    const s = f.x > b.x ? 1 : -1; b.walk = f.walk = 0; b.lockYaw = f.lockYaw = true; b.yaw.t = 0.6 * s; f.yaw.t = -0.6 * s; b.facing = s; f.facing = -s;
+  };
   for (const line of script) {
+    face();
     const who = line[0] === 'c' ? b : f, other = who === b ? f : b;
     who.setFace(line[2] || 'talk', 3); other.setFace('normal', 0.1);
     other.look.tx = who.x > other.x ? 1 : -1; who.look.tx = other.x > who.x ? 1 : -1;

@@ -24,6 +24,7 @@ public class ClawdEyes extends AccessibilityService {
     private boolean kbOpen;
     private long lastIcons, lastType;
     private String launcherPkg;
+    private final java.util.Set<String> imePkgs = new java.util.HashSet<>();
 
     static boolean isEnabled(Context c) {
         String flat = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
@@ -37,6 +38,7 @@ public class ClawdEyes extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         launcherPkg = defaultLauncher();
+        loadImes();
     }
 
     @Override public void onInterrupt() { }
@@ -66,12 +68,22 @@ public class ClawdEyes extends AccessibilityService {
     }
 
     private void handleApp(String pkg) {
+        // the keyboard and the system bars are not apps: they used to count as "another app opened",
+        // which took away the text field he sits on, so he fell to the bottom when typing
+        if (imePkgs.contains(pkg) || pkg.equals("com.android.systemui") || pkg.contains("inputmethod") || pkg.contains("keyboard")) return;
         String kind = classify(pkg);
         if (!pkg.equals(lastPkg) || !kind.equals(lastKind)) {
             lastPkg = pkg; lastKind = kind;
             Bus.app(kind, appLabel(pkg));
         }
         if ("home".equals(kind)) scanIcons();
+    }
+
+    private void loadImes() {
+        try {
+            android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            for (android.view.inputmethod.InputMethodInfo i : im.getInputMethodList()) imePkgs.add(i.getPackageName());
+        } catch (Exception ignored) { }
     }
 
     /* ---------------- keyboard ---------------- */
@@ -144,7 +156,7 @@ public class ClawdEyes extends AccessibilityService {
         return "other";
     }
     private static final String[] VIDEO = {"youtube", "tiktok", "trill", "instagram", "snapchat", "com.facebook.katana", "kwai", "likee", "triller", "reels"};
-    private static final String[] CHAT = {"whatsapp", "telegram", "org.thoughtcrime", "signal", "com.facebook.orca", "viber", "imo", "wechat", "line", "com.google.android.apps.messaging", "com.android.mms", "discord", "slack", "skype", "com.google.android.gm"};
+    private static final String[] CHAT = {"whatsapp", "telegram", "org.thoughtcrime", "signal", "com.facebook.orca", "viber", "com.imo.", "wechat", "jp.naver.line", "com.google.android.apps.messaging", "com.android.mms", "discord", "slack", "skype", "com.google.android.gm"};
     private boolean isLauncher(String pkg) {
         return pkg.contains("launcher") || pkg.contains("home") || pkg.contains("trebuchet") || pkg.contains("nexuslauncher") || pkg.endsWith(".home");
     }

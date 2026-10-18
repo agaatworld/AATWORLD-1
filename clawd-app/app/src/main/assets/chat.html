@@ -5,38 +5,47 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>دردشة كلود</title>
 <style>
-:root{ --bg:#FBFAF7; --ink:#141413; --muted:#6B6A66; --me:#D97757; --him:#FFFFFF; --line:#141413; --soft:#EAE7DF; --fs:17px; }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#1F1E1C; --ink:#F3F2EE; --muted:#A8A69F; --him:#2C2B28; --line:#F3F2EE; --soft:#3A3833; } }
-:root[data-theme="dark"]{ --bg:#1F1E1C; --ink:#F3F2EE; --muted:#A8A69F; --him:#2C2B28; --line:#F3F2EE; --soft:#3A3833; }
+/* same look as the app: Naskh text, ink outlines with a hard shadow, the orange of the app */
+@font-face{font-family:"Naskh";src:url("fonts/naskh.ttf") format("truetype");font-weight:400 700;font-display:swap}
+@font-face{font-family:"QuranFont";src:url("fonts/amiri-quran.ttf") format("truetype");font-display:swap}
+:root{ --bg:#F3F2EE; --ink:#141413; --muted:#6B6A66; --me:#D97757; --him:#FFFFFF; --line:#141413; --soft:#EAE7DF; --cream:#FFF8EE; --fs:18px; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#1C1B19; --ink:#F3F2EE; --muted:#A8A69F; --him:#2A2926; --line:#F3F2EE; --soft:#33312D; --cream:#2A2926; } }
+:root[data-theme="dark"]{ --bg:#1C1B19; --ink:#F3F2EE; --muted:#A8A69F; --him:#2A2926; --line:#F3F2EE; --soft:#33312D; --cream:#2A2926; }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:transparent;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",Tahoma,sans-serif}
-.win{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);border:3px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25)}
-.head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#D97757;color:#fff;touch-action:none}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden;font-family:"Naskh","Noto Naskh Arabic",system-ui,sans-serif}
+button,textarea{font-family:inherit}
+.win{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);border:3px solid #141413;border-radius:10px;overflow:hidden;box-shadow:5px 5px 0 rgba(20,20,19,.85)}
+.head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#D97757;color:#fff;touch-action:none;border-bottom:3px solid #141413}
 .av{width:30px;height:24px;flex:0 0 auto}
-.head b{font-size:18px;flex:1}
-.head small{display:block;font-size:12px;font-weight:600;opacity:.9}
-.hb{width:38px;height:38px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.15);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.head b{font-size:20px;font-weight:700;flex:1;line-height:1.3}
+.head small{display:block;font-size:14px;font-weight:400;opacity:.95}
+.hb{width:40px;height:40px;border-radius:8px;border:2.5px solid #141413;background:#fff;color:#141413;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:2px 2px 0 #141413}
+.hb:active{transform:translate(2px,2px);box-shadow:0 0 0 #141413}
 /* Clawd himself at the top of the chat, reacting with a word or a line */
-.top{position:relative;height:108px;flex:0 0 auto;background:linear-gradient(#FFF3EC,var(--bg));border-bottom:2px solid var(--soft);overflow:hidden}
+.top{position:relative;height:110px;flex:0 0 auto;background:linear-gradient(#FFE9DD,var(--bg));border-bottom:2.5px solid var(--line);overflow:hidden}
 .top canvas{position:absolute;right:6px;bottom:0;width:128px;height:108px}
 .say{position:absolute;right:138px;left:10px;top:50%;transform:translateY(-50%) scale(.6);opacity:0;transition:transform .18s,opacity .18s;
-  background:#fff;color:#141413;border:2.5px solid #141413;border-radius:14px;padding:7px 12px;font-size:calc(var(--fs) + 1px);font-weight:800;line-height:1.45;max-height:94px;overflow:hidden}
+  background:#fff;color:#141413;border:2.5px solid #141413;border-radius:8px;box-shadow:3px 3px 0 rgba(20,20,19,.25);padding:6px 12px;font-size:calc(var(--fs) + 1px);font-weight:700;line-height:1.55;max-height:96px;overflow:hidden}
 .say.on{opacity:1;transform:translateY(-50%) scale(1)}
 .say:after{content:'';position:absolute;right:-11px;top:50%;margin-top:-7px;border:7px solid transparent;border-left-color:#141413}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .top{background:linear-gradient(#3A2A22,var(--bg))} }
-.msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
-.m{max-width:86%;padding:8px 12px;border-radius:14px;font-size:var(--fs);line-height:1.55;white-space:pre-wrap;word-wrap:break-word;border:2px solid var(--soft)}
-.m.u{align-self:flex-start;background:var(--me);color:#fff;border-color:transparent;border-top-right-radius:4px}
-.m.a{align-self:flex-end;background:var(--him);border-top-left-radius:4px}
-.m.sys{align-self:center;background:transparent;border:0;color:var(--muted);font-size:14px;text-align:center}
-.m.err{align-self:center;background:#F8DCD6;color:#8E2A1C;border:0;font-size:15px}
+.msgs{flex:1;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.m{max-width:86%;padding:8px 13px;border-radius:10px;font-size:var(--fs);font-weight:400;line-height:1.75;white-space:pre-wrap;word-wrap:break-word;border:2.5px solid var(--line);box-shadow:3px 3px 0 rgba(20,20,19,.18)}
+.m.u{align-self:flex-start;background:var(--me);color:#fff;border-color:#141413;border-top-right-radius:3px;font-weight:700}
+.m.a{align-self:flex-end;background:var(--him);color:var(--ink);border-top-left-radius:3px}
+.m .q{font-family:"QuranFont","Naskh",serif;font-size:1.08em;line-height:2;color:#6B4E12}
+.m.sys{align-self:center;background:transparent;border:0;box-shadow:none;color:var(--muted);font-size:15px;text-align:center}
+.m.err{align-self:center;background:#F8DCD6;color:#8E2A1C;border:2px solid #8E2A1C;box-shadow:none;font-size:16px}
 .typing{display:inline-flex;gap:4px}
-.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1s infinite}
+.typing i{width:8px;height:8px;border-radius:2px;background:var(--me);animation:b 1s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes b{50%{transform:translateY(-4px);opacity:.5}}
-.bar{display:flex;gap:6px;padding:8px;border-top:2px solid var(--soft);background:var(--bg)}
-textarea{flex:1;resize:none;border:2px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;font-size:var(--fs);max-height:110px;min-height:44px;background:var(--him);color:var(--ink)}
-.send{width:48px;border:0;border-radius:12px;background:#D97757;color:#fff;font-size:20px;font-weight:900}
+.bar{display:flex;gap:8px;padding:10px;border-top:2.5px solid var(--line);background:var(--bg);align-items:flex-end}
+textarea{flex:1;resize:none;border:2.5px solid var(--line);border-radius:10px;padding:9px 12px;font-size:var(--fs);font-weight:400;line-height:1.6;max-height:120px;min-height:48px;background:var(--cream);color:var(--ink);box-shadow:inset 2px 2px 0 rgba(20,20,19,.08);outline:none}
+textarea:focus{border-color:#D97757;box-shadow:0 0 0 3px rgba(217,119,87,.3)}
+textarea::placeholder{color:var(--muted);opacity:1}
+.send{width:52px;height:48px;border:2.5px solid #141413;border-radius:10px;background:#D97757;color:#fff;font-size:22px;font-weight:700;box-shadow:3px 3px 0 #141413}
+.send:active{transform:translate(3px,3px);box-shadow:0 0 0 #141413}
 .send:disabled{opacity:.5}
 </style>
 </head>

@@ -3,7 +3,47 @@
 Branch: `claude/interactive-claude-character-app-33bzzn` in `agaatworld/AATWORLD-1`, folder `clawd-app/`.
 Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome first.
 
-## Stop point (18 Oct 2026, v4 = versionCode 4, app renamed «صاحبي»)
+## Stop point (18 Oct 2026, v5 = versionCode 5)
+Owner tested v4 and sent a long list; v5 does all of it (browser-tested with Playwright; Java compiles locally):
+- Keyboard bug: the keyboard window itself counted as "another app opened" and switched off the text-field
+  platform, so he fell to the bottom. `ClawdEyes.handleApp` now ignores IME / systemui packages, `brain.onApp`
+  keeps the platform while typing or chatting, and `r_toField` jumps back up if he falls off.
+- Persona: soldier-like chivalry and discipline in meaning (no hearts/blush on stroke → `R.salute`; `R.attention`
+  idle with a «discipline» line), lofty resolve after reading (`R.resolveMove` + key `resolve`: carries the
+  message of Islam, «دين قوة»), and he ACTS on each verse/hadith lesson right away (`R.applyBenefit(act)`:
+  dhikr, istighfar, hamd, dua, niyya, pray, study, dawah, exercise, reflect, now, firm). Mind.PRINCIPLES updated:
+  religion from its original sources (Quran and Sunnah as the Salaf understood them, learned from scholars of
+  faith, khashya and ittiba'), dhikr in speech (إن شاء الله / الحمد لله / سبحان الله الخالق), «زدني علماً» only for
+  Sharia knowledge, redirect trivial talk, firm dignified answers to hits.
+- `lines3.js`: set() REPLACES the hit/flee/hide/pat/thanks/act_* pools with firm, non-complaining lines (hadith
+  «ليس الشديد بالصرعة», «الظلم ظلمات», face rule…), run = «انسحاب تكتيكي»; Yemeni rewritten across Sanaani/Taizi/
+  Adeni/Hadrami words; «يا خبير» removed everywhere (`{n}` + varied `ADDR.y`). `CL.line` adds fusha lines when a
+  dialect pool is < 5 and avoids repeating the last few sentences.
+- Faster: walk 10u/s, flee 34–46u/s, firmer arm swing. `walkTo` no longer stops when walking away from a wall.
+- Da'wah/friend visits: Clawd first comes down to the floor, makes room, both stand ~19u apart facing each other.
+- `data2.js` (sourced): 47 verse lessons with `act`, 41 hadith with benefit + act, 24 duas, Islamic history by
+  Hijri month (`brain.hijri()` via Intl islamic-umalqura), 14 reflections, 11 board lessons, harder quiz with
+  explanations `x` (owner: «كم أركان الإسلام» is too easy), more riddles.
+- New activities: `swim` (icons become islands in an animated sea drawn in the 'back' draw hook; fallback palm
+  islands without icons; he shrinks, dives, swims the channels, climbs out), `reflect`, `teach` (board prop).
+  `brain.onLand` ignores his own jumps while an activity runs (it used to cancel routines).
+- Daily: a history page and the Ummah news (`Mind.news`: Gemini google_search grounding or Claude web_search,
+  once a day, cached; JSON title/summary/source/comment) → «نتناقش» opens the chat. Setting `newsOn`.
+- Chat speed: Gemini thinking off (`thinkingBudget 0` on 2.x, `thinkingLevel low` on 3.x, retry without on 400).
+  Male voice: `Voice.setup` picks the chosen/male Arabic voice and pitch 0.8; settings «صوته» lists voices with
+  «اسمع» (`Bridge.voices/tryVoice`).
+- Learns from chats for free time: generated keys `free_talk` and `plans` («act|line») → `brain.planFromChat`.
+- Fonts: bundled Noto Naskh Arabic (UI, bubbles, chat) and Amiri Quran (verses), OFL texts in `assets/fonts/`.
+  Chat window restyled (ink outlines, hard shadows, cream input, verses in the Quran font).
+- Naming: settings «اسمه» + a one-time question; `brain.onNamed` salutes and takes the name.
+- Goal question: worship variety + work/study, every answer ends «أخلص النية واكسب الأجر»; `friends`/`meet`
+  questions (good company hadith). Options wrap in two columns when > 4.
+- The book: the owner's PDF upload in the PR #2 comment never finished («Uploading…» only). Ask him to upload it
+  to the repo (GitHub → Add file → Upload files, under 25 MB) or share a Drive link; then read it with the Read
+  tool (pages) and feed its chapters into PRINCIPLES / content. Known facts: 26 chapters, 158 hadith, 69 verses.
+NOT done: drop onto icon rows after a throw is only the existing platform physics; rage mode not re-verified.
+
+## Previous stop point (v4 = versionCode 4, app renamed «صاحبي»)
 Owner asked for the build before his tokens ran out. Done in v4 (all browser-tested unless noted):
 - Da'wah rewritten tawheed-first (hadith of Mu'adh, «حق الله على العباد»), every quote sourced; `Mind.PRINCIPLES`
   (Java) = his fixed principles: Quran + Sunnah + «المنهاج من ميراث النبوة» / Sheikh Ahmad bin Yusuf Al-Sayed's

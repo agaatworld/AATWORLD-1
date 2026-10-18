@@ -100,6 +100,30 @@ public class Bridge {
     }
     @JavascriptInterface public void setApiKey(String k) { Prefs.setApiKey(ctx, k == null ? "" : k.trim()); }
 
+    /* ---- his voice: list the phone's Arabic voices and let the owner hear each one ---- */
+    private android.speech.tts.TextToSpeech tts;
+    private boolean ttsReady;
+    private void ensureTts(Runnable then) {
+        if (tts != null) { if (ttsReady) then.run(); return; }
+        tts = new android.speech.tts.TextToSpeech(ctx, st -> { ttsReady = st == android.speech.tts.TextToSpeech.SUCCESS; if (ttsReady) ui.post(then); });
+    }
+    /** JSON [{n: name, net: needs internet}] — empty the first time while the speech engine starts; the page asks again. */
+    @JavascriptInterface public String voices() {
+        if (!ttsReady) { ui.post(() -> ensureTts(() -> { if (activity != null) activity.js("window.app&&app.voicesReady&&app.voicesReady()"); })); return "[]"; }
+        org.json.JSONArray a = new org.json.JSONArray();
+        for (android.speech.tts.Voice v : Voice.arabic(tts)) { try { a.put(new org.json.JSONObject().put("n", v.getName()).put("net", v.isNetworkConnectionRequired())); } catch (Exception ignored) { } }
+        return a.toString();
+    }
+    /** Says a sample sentence with the voice and pitch now in the settings. */
+    @JavascriptInterface public void tryVoice() {
+        ui.post(() -> ensureTts(() -> { if (Voice.setup(ctx, tts)) tts.speak("السلام عليكم ورحمة الله، أنا صاحبك. الحمد لله على كل حال.", android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "try"); }));
+    }
+
+    /* ---- the day's news (searched once a day by the AI), sent to the floating stage ---- */
+    @JavascriptInterface public void newsToday() {
+        Mind.news(ctx, (ok, json) -> { if (ok && json != null) ui.post(() -> { if (OverlayService.inst != null) OverlayService.inst.jsStage("clawd.news(" + Bus.q(json) + ")"); }); });
+    }
+
     /* chat is opened from the app screen, the stage, or the chat-button */
     @JavascriptInterface public void openChat(String seed) {
         ui.post(() -> {

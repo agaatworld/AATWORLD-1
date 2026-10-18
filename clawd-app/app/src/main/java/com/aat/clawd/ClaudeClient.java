@@ -16,7 +16,10 @@ import java.util.List;
  *  No third-party SDK, so it is small and runs on any Android version. */
 public final class ClaudeClient {
     private final String apiKey;
+    private boolean search;
     public ClaudeClient(String apiKey) { this.apiKey = apiKey; }
+    /** Lets Claude search the web first (server-side tool; used for the daily news). */
+    public ClaudeClient withSearch() { search = true; return this; }
 
     public interface Listener {
         void onDelta(String text);
@@ -39,6 +42,10 @@ public final class ClaudeClient {
             for (String[] m : history) msgs.put(msg("u".equals(m[0]) ? "user" : "assistant", m[1]));
             msgs.put(msg("user", userText));
             body.put("messages", msgs);
+            if (search) {
+                boolean dyn = model.matches("claude-(opus-(5|4-[678])|sonnet-(5|4-6)).*");
+                body.put("tools", new JSONArray().put(new JSONObject().put("type", dyn ? "web_search_20260209" : "web_search_20250305").put("name", "web_search").put("max_uses", 4)));
+            }
             boolean fallback = model.startsWith("claude-opus-5") || model.startsWith("claude-sonnet-5-5") || model.startsWith("claude-fable");
             if (fallback) body.put("fallbacks", "default");
 

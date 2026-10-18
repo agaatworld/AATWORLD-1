@@ -9,11 +9,11 @@ CL.DEFAULTS = {
   tools: { stick: true, pillow: true, hammer: true, glove: true, balloon: true, snow: true, feather: true }, tool: 'stick',
   roam: true, parkour: true, gravity: true, td3d: true, shrink: true, shrinkSec: 30,
   acts: { tasbih: true, dua: true, quran: true, hadith: true, martial: true, study: true, exercise: true, book: true, tea: true,
-          sleep: true, juggle: true, plant: true, friend: true, dawah: true, parkour: true, stroll: true },
+          sleep: true, juggle: true, plant: true, friend: true, dawah: true, parkour: true, stroll: true, reflect: true, teach: true, swim: true },
   outfit: true, typing: true, appsAware: true, chatRead: true,
   usage: true, usageMin: 45, videoMin: 15, night: true,
   greet: true, questions: true, qEvery: 6,
-  dignity: true, flee: true, toolEdge: true, voice: true, voiceSpeak: true, prayOn: true, city: '', lat: '', lng: '', prayMethod: 'mwl', asr: 1, chatBtn: true, chatModel: 'claude-opus-5-5', ai: '', genOn: true, botName: ''
+  dignity: true, flee: true, toolEdge: true, voice: true, voiceSpeak: true, prayOn: true, city: '', lat: '', lng: '', prayMethod: 'mwl', asr: 1, chatBtn: true, chatModel: 'claude-opus-5-5', ai: '', genOn: true, botName: '', newsOn: true, voiceName: '', voicePitch: 0.8
 };
 CL.settings = JSON.parse(JSON.stringify(CL.DEFAULTS));
 CL.applySettings = function (s) {
@@ -24,10 +24,13 @@ CL.applySettings = function (s) {
 };
 
 CL.DIALECTS = { s: 'شامي', e: 'مصري', y: 'يمني', g: 'خليجي', i: 'عراقي', m: 'مغربي', f: 'فصحى' };
-const ADDR = { s: ['صاحبي', 'غالي', 'حبيب', 'زلمة'], e: ['باشا', 'معلم', 'صاحبي', 'حبيبي'], y: ['خبير', 'صاحبي', 'غالي'],
+const ADDR = { s: ['صاحبي', 'غالي', 'حبيب', 'زلمة'], e: ['باشا', 'معلم', 'صاحبي', 'حبيبي'], y: ['صاحبي', 'غالي', 'رجّال', 'حبيب', 'خُبرة', 'ابن الحلال', 'أخي'],
   g: ['شيخ', 'الطيب', 'خوي'], i: ['عيوني', 'حبيبي', 'غالي'], m: ['خويا', 'صاحبي'], f: ['صديقي', 'عزيزي'] };
 
+let lastAddr = '';
+function addr(d) { const a = ADDR[d] || ADDR.f; let x = u.pick(a); if (x === lastAddr && a.length > 1) x = a[(a.indexOf(x) + 1) % a.length]; lastAddr = x; return x; }
 /* pick a line for a key, honouring the chosen dialects, never repeating until the pool is used up */
+const RECENT = [];
 CL.GEN = {}; // lines the AI wrote for him (grow with every conversation); mixed in with the built-in ones
 CL.line = function (key, fallback) {
   const gen = CL.GEN[key];
@@ -39,11 +42,16 @@ CL.line = function (key, fallback) {
   if (!all || !all.length) return { text: fallback || '', d: 'f' };
   const ds = CL.settings.dialects;
   let pool = all.filter((s) => s[1] !== '|' || ds.indexOf(s[0]) >= 0);
+  if (pool.length < 5) pool = pool.concat(all.filter((s) => s[0] === 'f' && s[1] === '|' && pool.indexOf(s) < 0)); // small pool: fusha lines too, so it doesn't repeat
   if (!pool.length) pool = all;
   let s = pool[CL.bag('L:' + key + ':' + ds.join(''), pool.length)];
+  // never the same sentence twice in a short while, whatever key it came from
+  const near = RECENT.slice(-Math.min(5, pool.length - 1)); // only the last few, or a small pool would never settle
+  for (let k = 0; k < 2 && near.length && near.indexOf(s) >= 0; k++) s = pool[CL.bag('L:' + key + ':' + ds.join(''), pool.length)];
+  RECENT.push(s); if (RECENT.length > 14) RECENT.shift();
   let d = 'f';
   if (s[1] === '|') { d = s[0]; s = s.slice(2); }
-  s = s.replace(/\{n\}/g, () => (CL.settings.name ? CL.settings.name : u.pick(ADDR[d] || ADDR.f)));
+  s = s.replace(/\{n\}/g, () => (CL.settings.name ? CL.settings.name : addr(d)));
   return { text: s, d: d };
 };
 /* a line from an inline array (may contain dialect prefixes) */
@@ -118,7 +126,7 @@ CL.hadith = () => CL.HADITH[CL.bag('hadith', CL.HADITH.length)];
 /* ---------------------------------------------------------------- questions he asks (tap him or the bubble to answer) */
 // r: replies (may carry dialect prefixes), face: his face after the answer, next: follow-up question id, chat: offer to continue in chat
 CL.QUESTIONS = {
-  mood: { q: ['s|كيف حالك اليوم؟', 'e|عامل إيه النهارده؟', 'y|كيف حالك اليوم يا خبير؟', 'g|كيف حالك اليوم؟', 'i|شلونك اليوم؟', 'm|كيداير اليوم؟', 'f|كيف حالك اليوم؟'], o: [
+  mood: { q: ['s|كيف حالك اليوم؟', 'e|عامل إيه النهارده؟', 'y|كيف حالك اليوم يا {n}؟', 'g|كيف حالك اليوم؟', 'i|شلونك اليوم؟', 'm|كيداير اليوم؟', 'f|كيف حالك اليوم؟'], o: [
     { t: 'الحمد لله منيح', face: 'joy', r: ['s|الحمد لله! دايماً يا رب 😊', 'e|الحمد لله، دايماً يا رب', 'f|الحمد لله، أدامها الله عليك'], next: 'goal' },
     { t: 'تعبان شوي', face: 'pleading', r: ['s|سلامتك، ارتاح شوي واشرب مي', 'e|سلامتك، ريّح شوية', 'f|سلامتك، خذ قسطاً من الراحة'], next: 'tired' },
     { t: 'زعلان', face: 'sad', r: ['s|أنا جنبك، بدك تحكيلي؟', 'e|أنا معاك، تحب تحكيلي؟', 'f|أنا بجانبك، هل تحب أن تحكي لي؟'], chat: 'حاسس إني زعلان شوي' },
@@ -126,12 +134,25 @@ CL.QUESTIONS = {
   tired: { q: ['s|نمت منيح مبارح؟', 'e|نمت كويس امبارح؟', 'f|هل نمت جيداً البارحة؟'], o: [
     { t: 'لا والله', face: 'nervous', r: ['s|الليلة نام بكير، وخلّي التلفون بعيد', 'e|النهارده نام بدري وسيب الموبايل بعيد', 'f|نم الليلة مبكراً واترك الهاتف بعيداً'] },
     { t: 'إي نمت', face: 'think', r: ['s|يمكن تعبك من الشاشة، ريّح عيونك', 'f|ربما تعبك من الشاشة، أرح عينيك'] }] },
-  goal: { q: ['s|شو أهم شي بدك تعمله اليوم؟', 'e|إيه أهم حاجة عايز تعملها النهارده؟', 'f|ما أهم شيء تريد إنجازه اليوم؟'], o: [
-    { t: 'شغل', face: 'determined', r: ['s|بالتوفيق! ابدأ بأصعب شي', 'f|بالتوفيق، ابدأ بالأصعب'] },
-    { t: 'دراسة', face: 'focus', r: ['s|﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾ طه ١١٤، يلا!', 'f|﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾ طه ١١٤'] },
-    { t: 'عبادة', face: 'serene', r: ['s|ما أحلاها! الله يتقبل', 'f|تقبل الله منك'] },
+  // every answer ends with «أخلص النية واكسب الأجر» (added in brain.askQ for options with niyya: true)
+  goal: { q: ['s|شو أهم شي بدك تعمله اليوم؟', 'e|إيه أهم حاجة عايز تعملها النهارده؟', 'y|ايش أهم شي تشتي تسويه اليوم؟', 'g|وش أهم شي تبي تسويه اليوم؟', 'f|ما أهم شيء تريد إنجازه اليوم؟'], o: [
+    { t: 'الصلاة بوقتها وورد قرآن', face: 'serene', niyya: true, r: ['f|نِعم الهدف! سُئل النبي ﷺ: أي العمل أحب إلى الله؟ قال: «الصلاة على وقتها» متفق عليه'] },
+    { t: 'طلب العلم الشرعي', face: 'focus', niyya: true, r: ['f|﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾ طه ١١٤، و«من سلك طريقاً يلتمس فيه علماً سهّل الله له به طريقاً إلى الجنة» رواه مسلم'] },
+    { t: 'ذكر ودعاء', face: 'serene', niyya: true, r: ['f|«ألا أنبئكم بخير أعمالكم… ذكر الله تعالى» رواه الترمذي وابن ماجه'] },
+    { t: 'بر الوالدين وصلة الرحم', face: 'joy', niyya: true, r: ['f|من أعظم القربات: ﴿وَبِالْوَالِدَيْنِ إِحْسَانًا﴾ الإسراء ٢٣'] },
+    { t: 'شغل', face: 'determined', niyya: true, r: ['s|اتقنه وابدأ بالأصعب، الشغل الحلال عبادة', 'e|اتقنه وابدأ بالأصعب، الشغل الحلال عبادة', 'y|اتقنه وابدأ بالأصعب، الشغل الحلال عبادة', 'f|أتقنه وابدأ بالأصعب؛ فالكسب الحلال عبادة'] },
+    { t: 'دراسة', face: 'focus', niyya: true, r: ['s|انوِ فيها نفع نفسك وأمتك، فتصير عبادة. ابدأ بالأصعب', 'e|انوي بيها تنفع نفسك وأمتك، فتبقى عبادة', 'y|انوِ فيها نفع نفسك وأمتك، فتصير عبادة', 'f|انوِ بها نفع نفسك وأمتك فتصير عبادة، وابدأ بالأصعب'] },
+    { t: 'نفع الناس والدعوة', face: 'proud', niyya: true, r: ['f|«أحب الناس إلى الله أنفعهم للناس» رواه الطبراني وحسّنه الألباني'] },
     { t: 'ما بعرف', face: 'think', r: ['s|خلّينا نرتبها سوا', 'f|لنرتبها معاً'], chat: 'ساعدني رتّب أهم شي أعمله اليوم' }] },
-  prayer: { q: ['s|صلّيت الفرض اللي فات؟', 'e|صليت الفرض اللي فات؟', 'y|صليت الفرض اللي فات يا خبير؟', 'g|صليت الفرض اللي فات؟', 'i|صليت الفرض اللي فات؟', 'm|صليتي الفرض اللي فات؟', 'f|هل صليت الفرض الماضي؟'], o: [
+  // good company: how to choose friends and how to get to know righteous people
+  friends: { q: ['s|صاحبك الأقرب، بيقرّبك من الله ولا بيبعدك؟', 'e|صاحبك الأقرب بيقرّبك من ربنا ولا بيبعدك؟', 'y|صاحبك الأقرب يقرّبك من الله ولا يبعّدك؟', 'f|صاحبك الأقرب: يقرّبك من الله أم يبعدك؟'], o: [
+    { t: 'بيقرّبني من الله', face: 'joy', r: ['f|الحمد لله، تمسّك به: «مثل الجليس الصالح والسوء كحامل المسك ونافخ الكير» متفق عليه'] },
+    { t: 'بيبعدني', face: 'serious', r: ['f|«المرء على دين خليله، فلينظر أحدكم من يخالل» رواه أبو داود والترمذي. انصحه بلطف، فإن لم يتغيّر فخفّف صحبته'] },
+    { t: 'ما عندي أصحاب', face: 'think', next: 'meet', r: ['f|لا بأس، نبدأ اليوم بإذن الله'] }] },
+  meet: { q: ['s|بدك علّمك كيف تتعرّف على ناس صالحين؟', 'e|تحب أعلّمك إزاي تتعرّف على ناس كويسين؟', 'y|تشتي أعلّمك كيف تتعرّف على ناس صالحين؟', 'f|هل تريد أن أعلّمك كيف تتعرّف على الصالحين؟'], o: [
+    { t: 'علّمني', face: 'proud', r: ['f|صلِّ في المسجد واحضر حلقات العلم، وابدأ بالسلام والابتسامة: «أفشوا السلام بينكم» رواه مسلم', 'f|اسأل عن حاله وتذكّر اسمه، وساعده في حاجة، واختر من إذا رأيته ذكّرك بالله'] },
+    { t: 'بعدين', face: 'normal', r: ['f|متى ما أردت، أنا هنا بإذن الله'] }] },
+  prayer: { q: ['s|صلّيت الفرض اللي فات؟', 'e|صليت الفرض اللي فات؟', 'y|صليت الفرض اللي فات يا ابن الحلال؟', 'g|صليت الفرض اللي فات؟', 'i|صليت الفرض اللي فات؟', 'm|صليتي الفرض اللي فات؟', 'f|هل صليت الفرض الماضي؟'], o: [
     { t: 'الحمد لله صليت', face: 'joy', r: ['s|تقبّل الله! الله يثبتك', 'f|تقبل الله منك وثبتك'] },
     { t: 'لسا', face: 'pleading', r: ['s|قوم هلق، بستناك هون 🤲', 'e|قوم دلوقتي، أنا مستنيك', 'f|قم الآن، سأنتظرك'], advice: true },
     { t: 'رح صلّي هلق', face: 'proud', r: ['s|بارك الله فيك! روح وأنا بستناك', 'f|بارك الله فيك'], advice: true }] },
@@ -209,7 +230,7 @@ CL.JOKES = [
   's|مرة بطارية قالت لرفيقتها: ليش زعلانة؟ قالتلها: ما حدا بيشحنّي معنوياً 😅'
 ];
 CL.QA = { // replies to quiz answers
-  right: ['s|صح! 👏 ذكي', 'e|صح! برافو عليك', 'y|صح يا خبير!', 'g|صح! كفو', 'i|صح! عفية', 'm|صحيح! برافو', 'f|إجابة صحيحة! أحسنت'],
+  right: ['s|صح! 👏 ذكي', 'e|صح! برافو عليك', 'y|صح يا خُبرة!', 'g|صح! كفو', 'i|صح! عفية', 'm|صحيح! برافو', 'f|إجابة صحيحة! أحسنت'],
   wrong: ['s|لأ، الجواب الصح: ', 'e|لأ، الإجابة الصح: ', 'g|لا، الجواب: ', 'f|لا، الإجابة الصحيحة: ']
 };
 
@@ -257,7 +278,7 @@ CL.DAWAH_TALKS = [
   [['p', 'شو جزاء الموحّد؟', 'puzzled'], ['c', 'قال ﷺ: «من مات وهو يعلم أنه لا إله إلا الله دخل الجنة» رواه مسلم', 'serene'], ['p', 'الله أكبر!', 'joy'],
    ['c', 'الله يحيينا ويميتنا على «لا إله إلا الله»', 'pleading'], ['p', 'آمين', 'serene']],
   [['p', 'بدي صير داعية، شو أول شي؟', 'determined'], ['c', 'العلم قبل الكلام: ﴿قُلْ هَٰذِهِ سَبِيلِي أَدْعُو إِلَى اللَّهِ ۚ عَلَىٰ بَصِيرَةٍ﴾ يوسف ١٠٨', 'serious'],
-   ['c', 'تعلّم التوحيد من القرآن والسنة الصحيحة، واسأل العلماء الثقات', 'serene'], ['p', 'مش من أي كلام عالنت؟', 'puzzled'], ['c', 'لا، الدين بالدليل الصحيح 👍', 'proud']]
+   ['c', 'تعلّم التوحيد من القرآن والسنة الصحيحة، واسأل العلماء الثقات', 'serene'], ['p', 'مش من أي كلام عالنت؟', 'puzzled'], ['c', 'لا، الدين يُؤخذ من مصادره الأصلية: القرآن والسنة بفهم سلف الأمة', 'proud'], ['c', 'ويُتعلّم على يد العلماء أهل الإيمان والخشية والاتباع', 'serene']]
 ];
 
 })();

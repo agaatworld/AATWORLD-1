@@ -24,19 +24,33 @@ public final class GeminiClient {
     private final String apiKey;
     public GeminiClient(Context ctx, String apiKey) { this.ctx = ctx.getApplicationContext(); this.apiKey = apiKey; }
 
+    private boolean search;
+    /** Lets the model look things up with Google Search first (used for the daily news). */
+    public GeminiClient withSearch() { search = true; return this; }
+
     /** Same listener as ClaudeClient. Blocks until the reply ends. */
     public void stream(String system, List<String[]> history, String userText, int maxTokens, ClaudeClient.Listener l) {
         String model = model(false);
-        int code = streamOnce(model, system, history, userText, maxTokens, l);
+        boolean fast = !search; // chat: no "thinking" step, so the first words arrive quickly
+        int code = streamOnce(model, system, history, userText, maxTokens, fast, l);
         if (code == 404) { // the remembered model was retired: pick again and retry once
             model = model(true);
-            code = streamOnce(model, system, history, userText, maxTokens, l);
+            code = streamOnce(model, system, history, userText, maxTokens, fast, l);
             if (code == 404) l.onError("ما لقيت نموذج Gemini مناسب. جرّب بعد شوي.");
         }
+        if (code == 400) streamOnce(model, system, history, userText, maxTokens, false, l); // model refused the thinking setting
     }
 
-    /** Returns 404 when the model doesn't exist (caller retries), 0 otherwise (listener already told). */
-    private int streamOnce(String model, String system, List<String[]> history, String userText, int maxTokens, ClaudeClient.Listener l) {
+    /** Thinking off (2.x) or as low as it goes (3.x and later). */
+    private static JSONObject thinking(String model) throws Exception {
+        Matcher m = Pattern.compile("gemini-(\\d+)").matcher(model);
+        int major = m.find() ? Integer.parseInt(m.group(1)) : 2;
+        return major >= 3 ? new JSONObject().put("thinkingLevel", "low") : new JSONObject().put("thinkingBudget", 0);
+    }
+
+    /** Returns 404 when the model doesn't exist and 400 when the thinking setting was refused (caller retries),
+     *  0 otherwise (listener already told). */
+    private int streamOnce(String model, String system, List<String[]> history, String userText, int maxTokens, boolean fast, ClaudeClient.Listener l) {
         HttpURLConnection con = null;
         try {
             JSONObject body = new JSONObject();
@@ -45,7 +59,10 @@ public final class GeminiClient {
             for (String[] m : history) contents.put(turn("u".equals(m[0]) ? "user" : "model", m[1]));
             contents.put(turn("user", userText));
             body.put("contents", contents);
-            body.put("generationConfig", new JSONObject().put("maxOutputTokens", maxTokens).put("temperature", 0.9));
+            JSONObject gen = new JSONObject().put("maxOutputTokens", maxTokens).put("temperature", 0.9);
+            if (fast) gen.put("thinkingConfig", thinking(model));
+            body.put("generationConfig", gen);
+            if (search) body.put("tools", new JSONArray().put(new JSONObject().put("google_search", new JSONObject())));
 
             con = (HttpURLConnection) new URL(BASE + "models/" + model + ":streamGenerateContent?alt=sse").openConnection();
             con.setRequestMethod("POST");
@@ -58,7 +75,8 @@ public final class GeminiClient {
 
             int code = con.getResponseCode();
             if (code == 404) return 404;
-            if (code < 200 || code >= 300) { l.onError(errorMessage(code, con)); return 0; }
+            if (code == 400 && fast) { String d = errorDetail(con).toLowerCase(); if (d.contains("think")) return 400; l.onError(errorMessage(code, d)); return 0; }
+            if (code < 200 || code >= 300) { l.onError(errorMessage(code, errorDetail(con))); return 0; }
 
             StringBuilder full = new StringBuilder();
             String finish = null;
@@ -152,7 +170,7 @@ public final class GeminiClient {
         try { o.put("role", role); o.put("parts", new JSONArray().put(new JSONObject().put("text", text))); } catch (Exception ignored) { }
         return o;
     }
-    private String errorMessage(int code, HttpURLConnection con) {
+    private static String errorDetail(HttpURLConnection con) {
         String detail = "";
         try (InputStream es = con.getErrorStream()) {
             if (es != null) {
@@ -163,6 +181,9 @@ public final class GeminiClient {
                 if (er != null) detail = er.optString("message");
             }
         } catch (Exception ignored) { }
+        return detail;
+    }
+    private String errorMessage(int code, String detail) {
         String d = detail.toLowerCase();
         if (code == 400 && d.contains("api key")) return "مفتاح Gemini غير صحيح. تأكد منه بالإعدادات.";
         if (code == 403 || d.contains("location")) return "خدمة Gemini مش متاحة بهالمنطقة أو المفتاح بلا صلاحية.";
