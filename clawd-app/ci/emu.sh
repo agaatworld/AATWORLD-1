@@ -35,11 +35,12 @@ adb shell input tap $(( W*30/100 )) $(( H*95/100 )); sleep 1; shot 06_settings
 adb shell input swipe $(( W/2 )) $(( H*70/100 )) $(( W/2 )) $(( H*25/100 )) 400; sleep 0.5; shot 07_settings2
 adb shell input keyevent 4  # back out of settings
 
-# ---- floating overlay ----
-adb shell am start -n $P/.MainActivity --ez float true
-sleep 5
+# ---- floating overlay (start the service directly, over the home screen) ----
 adb shell input keyevent 3   # home
-sleep 5; shot 08_home_floating
+sleep 1
+adb shell am start-foreground-service -n $P/.OverlayService || adb shell am startforegroundservice -n $P/.OverlayService
+sleep 6; shot 08_home_floating
+adb shell dumpsys window windows | grep -iE "clawd|TYPE_APPLICATION_OVERLAY|Window #" | head -40 > "$OUT/windows.txt" || true
 adb shell dumpsys window windows | grep -iE "clawd|Window #" | head -40 > "$OUT/windows.txt" || true
 # tap where Clawd starts (bottom-left) to make him react over the home screen
 adb shell input tap $(( W*16/100 )) $(( H - $(dp 150) )); sleep 0.6; shot 09_home_tap

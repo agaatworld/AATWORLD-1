@@ -45,6 +45,13 @@ public class MainActivity extends Activity {
         if (getIntent() != null && getIntent().getBooleanExtra("float", false)) web.postDelayed(this::startFloating, 1200);
     }
 
+    @Override
+    protected void onNewIntent(Intent i) {
+        super.onNewIntent(i);
+        setIntent(i);
+        if (i != null && i.getBooleanExtra("float", false)) web.postDelayed(this::startFloating, 300);
+    }
+
     void startFloating() {
         if (!Settings.canDrawOverlays(this)) {
             wantFloating = true;
