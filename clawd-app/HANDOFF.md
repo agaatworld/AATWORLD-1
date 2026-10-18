@@ -23,13 +23,14 @@ Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome
   screen is in front (`OverlayService.appInFront`); the app reloads settings on resume; no "bored/fed up" lines at all
   in idle talk, and for 3 minutes after tasbih/dua/Quran (`B.worshipGlow`) no bored/sleepy faces, only `after_worship`
   lines; chat system prompt forbids boredom about worship.
-- CI app screenshots (`02_app`…`07`) were blank in the last two runs although the arena JS ran ("stage ready" h=466);
-  looks like an emulator draw flake (an older build had it too). CI now reopens the app later (`13_app_again`), taps
+- CI app screenshots right after install (`02_app`, `03`) are often blank: the emulator's first WebView start is slow
+  (~8 s with swiftshader); later shots (`05`+, `13_app_again`) render. Not an app bug. CI now reopens the app later (`13_app_again`), taps
   «مخدة» via `uiautomator dump`, and checks the floating Clawd (`13c_home_pillow`, log `js tool pillow`).
 - **v3 APKs sent to the owner** (build `e9415bb`: `fasha-khulq-v3-lite.apk`, `fasha-khulq-v3-full.apk`). CI proved: app renders,
   arena hits, app toolbar «مخدة» → floating Clawd gets the pillow (log `js tool pillow`, tool pad 228→160 px), run mode on
   the emulator («من فوقك!» then «الحمد لله… فكّة»). After sending: the floating stage now hides with window alpha 0 instead
-  of GONE (GONE showed a stale frame for a moment when it came back). Waiting for the owner's real-phone feedback.
+  of GONE (GONE showed a stale frame for a moment when it came back); CI `4203e95` confirms the pillow right away
+  (`13c_home_pillow`). That change is not in the v3 APKs sent. Waiting for the owner's real-phone feedback.
 - Pads were verified at the right pixels in CI (after the first ~5 s, when the stage re-sizes to full screen).
 - Next: check CI shots/log for v3, send `dist/clawd-lite.apk` + `dist/clawd.apk` to the owner, wait for real-phone feedback.
 
