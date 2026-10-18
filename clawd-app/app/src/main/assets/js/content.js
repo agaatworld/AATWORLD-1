@@ -8,12 +8,12 @@ CL.DEFAULTS = {
   name: '', dialects: ['s', 'e', 'y', 'g', 'i', 'm', 'f'], sound: true, vib: true, size: 'm', font: 16,
   tools: { stick: true, pillow: true, hammer: true, glove: true, balloon: true, snow: true, feather: true }, tool: 'stick',
   roam: true, parkour: true, gravity: true, td3d: true, shrink: true, shrinkSec: 30,
-  acts: { tasbih: true, dua: true, quran: true, martial: true, study: true, focus: true, exercise: true, book: true, tea: true,
-          sleep: true, juggle: true, plant: true, dabke: true, friend: true, dawah: true, parkour: true, stroll: true },
+  acts: { tasbih: true, dua: true, quran: true, martial: true, study: true, exercise: true, book: true, tea: true,
+          sleep: true, juggle: true, plant: true, friend: true, dawah: true, parkour: true, stroll: true },
   outfit: true, typing: true, appsAware: true, chatRead: true,
   usage: true, usageMin: 45, videoMin: 15, night: true,
   greet: true, questions: true, qEvery: 6,
-  dignity: true, chatBtn: true, chatModel: 'claude-opus-5-5'
+  dignity: true, flee: true, chatBtn: true, chatModel: 'claude-opus-5-5'
 };
 CL.settings = JSON.parse(JSON.stringify(CL.DEFAULTS));
 CL.applySettings = function (s) {

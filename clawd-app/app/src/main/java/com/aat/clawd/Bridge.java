@@ -44,6 +44,7 @@ public class Bridge {
     @JavascriptInterface public void logEvent(String txt) { /* reserved for a future diary screen */ }
     @JavascriptInterface public void ready() { }
     @JavascriptInterface public void ready(String info) { android.util.Log.d("Clawd", "stage ready " + info); }
+    @JavascriptInterface public void log(String s) { android.util.Log.d("Clawd", "js " + s); }
 
     /* ---- app screen ---- */
     @JavascriptInterface public boolean overlayRunning() { return OverlayService.running; }

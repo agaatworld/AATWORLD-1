@@ -108,16 +108,16 @@ public class OverlayService extends Service implements SensorEventListener {
     /* ---------------- foreground notification ---------------- */
     private void goForeground() {
         NotificationManager nm = getSystemService(NotificationManager.class);
-        NotificationChannel ch = new NotificationChannel(CHANNEL, "كلود العائم", NotificationManager.IMPORTANCE_MIN);
+        NotificationChannel ch = new NotificationChannel(CHANNEL + "2", "كلود العائم", NotificationManager.IMPORTANCE_LOW);
         ch.setShowBadge(false);
         nm.createNotificationChannel(ch);
         PendingIntent open = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
         PendingIntent chat = PendingIntent.getService(this, 2, new Intent(this, OverlayService.class).setAction(ACTION_CHAT).putExtra("seed", ""), PendingIntent.FLAG_IMMUTABLE);
         PendingIntent stop = PendingIntent.getService(this, 1, new Intent(this, OverlayService.class).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE);
-        Notification n = new Notification.Builder(this, CHANNEL)
+        Notification n = new Notification.Builder(this, CHANNEL + "2")
                 .setSmallIcon(R.drawable.ic_stat)
                 .setContentTitle("كلود معك 🟧")
-                .setContentText("اضرب العصا لتفش خلقك · أو احكي معه")
+                .setContentText("لإيقافه بأي وقت: اضغط «إيقاف»")
                 .setContentIntent(open)
                 .addAction(new Notification.Action.Builder(null, "💬 احكي", chat).build())
                 .addAction(new Notification.Action.Builder(null, "إيقاف", stop).build())
@@ -140,6 +140,11 @@ public class OverlayService extends Service implements SensorEventListener {
                         | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
         stageLp.gravity = Gravity.TOP | Gravity.START;
+        if (Build.VERSION.SDK_INT >= 31) {
+            float max = 0.8f;
+            try { android.hardware.input.InputManager im = getSystemService(android.hardware.input.InputManager.class); if (im != null) max = im.getMaximumObscuringOpacityForTouch(); } catch (Exception ignored) { }
+            stageLp.alpha = Math.max(0.5f, Math.min(0.8f, max - 0.01f));
+        }
         if (Build.VERSION.SDK_INT >= 28) stageLp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
         stage = new WebView(this);
@@ -215,9 +220,11 @@ public class OverlayService extends Service implements SensorEventListener {
     private final class PadManager {
         private final List<Pad> pool = new ArrayList<>();
         private Pad capturing;
+        private long captureAt;
 
         void update(String json) {
-            if (capturing != null) return; // don't reshuffle mid-gesture
+            if (capturing != null && SystemClock.uptimeMillis() - captureAt < 6000) return; // don't reshuffle mid-gesture
+            capturing = null;
             JSONArray arr;
             try { arr = new JSONArray(json); } catch (Exception e) { return; }
             int n = arr.length();
@@ -247,6 +254,7 @@ public class OverlayService extends Service implements SensorEventListener {
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                             | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                             | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                             | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     PixelFormat.TRANSLUCENT);
@@ -263,17 +271,12 @@ public class OverlayService extends Service implements SensorEventListener {
             else try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
         }
         void hide() { if (shown) { shown = false; try { wm.removeView(v); } catch (Exception ignored) { } } }
-        void fullscreen() {
-            Rect sc = screen();
-            lp.x = 0; lp.y = 0; lp.width = sc.width(); lp.height = sc.height();
-            try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
-        }
         boolean onTouch(View view, MotionEvent e) {
             int a = e.getActionMasked();
             float rx = e.getRawX(), ry = e.getRawY();
             if (a == MotionEvent.ACTION_DOWN) {
-                pads.capturing = this;
-                fullscreen(); // so moves/ups outside the little rect are still caught
+                pads.capturing = this; pads.captureAt = SystemClock.uptimeMillis();
+                android.util.Log.d("Clawd", "touch " + id + " down " + (int) rx + " " + (int) ry);
                 js("down", rx, ry);
                 return true;
             } else if (a == MotionEvent.ACTION_MOVE) {
@@ -363,6 +366,8 @@ public class OverlayService extends Service implements SensorEventListener {
                     WindowManager.LayoutParams.MATCH_PARENT, Math.round(360 * density),
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                             | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     PixelFormat.TRANSLUCENT);
             lp.gravity = Gravity.TOP | Gravity.START;
@@ -415,9 +420,20 @@ public class OverlayService extends Service implements SensorEventListener {
 
         // drag by the header; a tap anywhere else makes the window focusable so the keyboard shows
         private float downX, downY; private int sx, sy; private boolean dragging, inZone;
+        void setFocusable(boolean on) {
+            boolean cur = (lp.flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE) == 0;
+            if (cur == on || !shown) return;
+            if (on) lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            else lp.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            try { wm.updateViewLayout(web, lp); } catch (Exception ignored) { }
+        }
         boolean onTouch(View v, MotionEvent e) {
             switch (e.getActionMasked()) {
+                case MotionEvent.ACTION_OUTSIDE:
+                    setFocusable(false); // the app underneath gets the keyboard and Back again
+                    return false;
                 case MotionEvent.ACTION_DOWN:
+                    setFocusable(true);
                     downX = e.getRawX(); downY = e.getRawY(); sx = lp.x; sy = lp.y; dragging = false;
                     float cx = e.getX() / density, cy = e.getY() / density;
                     inZone = cx >= zone[0] && cx <= zone[2] && cy >= zone[1] && cy <= zone[3];
@@ -514,7 +530,7 @@ public class OverlayService extends Service implements SensorEventListener {
                 + "لا تخترع أحاديث أو آيات؛ وإن استشهدت فبالمشهور الصحيح فقط. "
                 + "ابدأ ردّك دائماً بوسمين اختياريين يحددان تعبير وجهك وحركتك، ثم الكلام. "
                 + "الوسوم: [[face:X]] حيث X من: happy, joy, laugh, sad, cry, angry, surprised, cool, love, think, wink, proud, serene, sideeye, bored, determined, pleading, embarrassed. "
-                + "و[[act:Y]] حيث Y من: wave, dance, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. "
+                + "و[[act:Y]] حيث Y من: wave, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. لا ترقص ولا تغنّي. "
                 + "إذا طلب صاحبك تبديل أداة الضرب أضف [[tool:Z]] حيث Z من: stick (عصا), pillow (مخدة), hammer (مطرقة بتزمّر), glove (قفاز ملاكمة), balloon (بالون مي), snow (كرة ثلج), feather (ريشة)، وقل له بمرح إنك بدّلتها. "
                 + "مثال: [[face:joy]][[act:wave]] أهلين! كيفك اليوم؟";
     }

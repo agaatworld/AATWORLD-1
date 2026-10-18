@@ -878,7 +878,7 @@ class World {
         if (b.y < lo) { b.y = lo; if (b.tv * t.y < 0) b.tv = 0; } else if (b.y > hi) { b.y = hi; if (b.tv * t.y > 0) b.tv = 0; }
       }
       // small tilts: he leans to stay upright against the real gravity
-      const lean = b.rollOverride != null || b.task && b.taskPrio >= 2 ? 0 : clamp(this.tilt || 0, -0.5, 0.5) * (seated ? 0.25 : 0.55);
+      const lean = (b.rollOverride != null || b.task && b.taskPrio >= 2 ? 0 : clamp(this.tilt || 0, -0.5, 0.5) * (seated ? 0.25 : 0.55)) + (b.runLean || 0);
       setRoll(b, b.rollOverride != null ? b.rollOverride : M.atan2(-n.x, -n.y) + lean);
       b.walkPhase += M.abs(b.tv) * dt / (u * 1.1);
       b.walkAmt = lerp(b.walkAmt, M.min(1, M.abs(b.tv) / (u * 5)), M.min(1, dt * 8));

@@ -46,7 +46,6 @@ class Brain {
   log(txt) { this.events.push({ t: Date.now(), txt: txt }); if (this.events.length > 14) this.events.shift(); if (this.ui.log) this.ui.log(txt); }
   sfx(name, a) { if (this.s.sound && CL.sfx[name]) CL.sfx[name](a); }
   vib(ms) { if (this.s.vib && this.ui.vib) this.ui.vib(ms); }
-  fxNote(b) { this.w.fx.note(b.head.x + rnd(-3, 3) * b.u, b.head.y, b.u); }
   mark(b, txt) { this.w.fx.mark(txt, b.head.x, b.head.y - b.u, M.max(13, b.u * 1.5), '#6B4E2E'); }
   toolPos() { return this.tool.hidden ? null : { x: this.tool.x, y: this.tool.y }; }
   touch() { this.lastUser = this.T; if (this.c.scale.t < 1 && !this.arena) this.c.scale.t = 1; }
@@ -128,13 +127,13 @@ class Brain {
   }
   chooseActivity(tiny) {
     const s = this.s, hr = new Date().getHours();
-    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, focus: R.focus, exercise: R.exercise,
-      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, dabke: R.dabke, friend: R.friendVisit, stroll: R.stroll };
-    const small = { tasbih: 1, dua: 1, quran: 1, study: 1, focus: 1, book: 1, tea: 1, sleep: 1 };
-    const w = { tasbih: 3, dua: 2, quran: 3, martial: 2, study: 2, focus: 1, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1.5, plant: 1, dabke: 1.2, friend: 2, stroll: 1.6 };
+    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, exercise: R.exercise,
+      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
+    const small = { tasbih: 1, dua: 1, quran: 1, study: 1, book: 1, tea: 1, sleep: 1 };
+    const w = { tasbih: 3, dua: 2, quran: 3, martial: 2, study: 2, exercise: 2, book: 2, tea: 2, sleep: 1, juggle: 1.5, plant: 1, friend: 2, stroll: 1.6 };
     if (hr >= 4 && hr < 9) { w.tasbih += 3; w.quran += 3; w.dua += 2; }
     if (hr >= 16 && hr < 19) { w.tasbih += 2; w.dua += 1; }
-    if (hr >= 22 || hr < 4) { w.sleep += 5; w.martial = 0.5; w.dabke = 0.3; }
+    if (hr >= 22 || hr < 4) { w.sleep += 5; w.martial = 0.5; }
     if (!s.td3d || this.w.gdir.y < 0.7) w.stroll = 0;
     const keys = Object.keys(map).filter((k) => s.acts[k] !== false && w[k] > 0 && (!tiny || small[k]) && this.lastActs.indexOf(k) < 0);
     if (!keys.length) return null;
@@ -144,11 +143,12 @@ class Brain {
     return keys[0];
   }
   startActivity(k) {
-    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, focus: R.focus, exercise: R.exercise,
-      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, dabke: R.dabke, friend: R.friendVisit, stroll: R.stroll };
+    const map = { tasbih: R.tasbih, dua: R.dua, quran: R.quran, martial: R.martial, study: R.study, exercise: R.exercise,
+      book: R.book, tea: R.tea, sleep: R.sleep, juggle: R.juggle, plant: R.plant, friend: R.friendVisit, stroll: R.stroll };
+    if (!map[k]) return;
     this.lastActs.push(k); if (this.lastActs.length > 4) this.lastActs.shift();
-    const names = { tasbih: 'عم يسبّح', dua: 'عم يدعي', quran: 'عم يقرأ قرآن', martial: 'عم يتمرن قتال', study: 'عم يذاكر', focus: 'عم يركّز', exercise: 'عم يعمل رياضة',
-      book: 'عم يقرأ كتاب', tea: 'عم يشرب شاي', sleep: 'نايم', juggle: 'عم يلعب بالطابات', plant: 'عم يسقي نبتته', dabke: 'عم يدبك', friend: 'صاحبه بكسل زاره', stroll: 'عم يتمشى فوق التطبيقات' };
+    const names = { tasbih: 'عم يسبّح', dua: 'عم يدعي', quran: 'عم يقرأ قرآن', martial: 'عم يتمرن قتال', study: 'عم يذاكر', exercise: 'عم يعمل رياضة',
+      book: 'عم يقرأ كتاب', tea: 'عم يشرب شاي', sleep: 'نايم', juggle: 'عم يلعب بالطابات', plant: 'عم يسقي نبتته', friend: 'صاحبه بكسل زاره', stroll: 'عم يتمشى فوق التطبيقات' };
     this.log('كلود ' + names[k]);
     this.c.play(map[k](this, this.c), 1);
   }
@@ -233,7 +233,6 @@ class Brain {
     this.taps = this.taps.filter((t) => T - t < 2.2); this.taps.push(T);
     const n = this.taps.length;
     if (this.activity && RELIGIOUS[this.activity]) { c.setFace(pick(['serene', 'happy', 'wink']), 1.2); this.say(c, 'quran_tap', { prio: 2, mood: 'calm' }); return; }
-    if (this.activity === 'focus') { c.setFace(pick(['sideeye', 'annoyed', 'focus']), 1.2); this.say(c, 'focus_tap', { prio: 2, mood: 'serious' }); return; }
     if (this.activity === 'sleep') { c.stop(); c.play(this.r_wake(), 2); return; }
     if (this.anger > 55) { c.setFace('annoyed', 1.2); this.say(c, 'notnow', { prio: 2, mood: 'angry' }); c.vy = -20 * c.u; c.ground = null; this.sfx('stomp'); return; }
     if (n >= 4) { this.rapport = M.min(100, this.rapport + 0.5); c.play(this.r_tickle(n), 2); return; }
@@ -316,7 +315,6 @@ class Brain {
       () => (function* () { c.setFace('puzzled', 1.6); B.mark(c, '؟'); s('poke', 'calm'); yield* wait(1.4); })(),
       () => (function* () { c.setFace('love', 1.6); B.w.fx.heart(c.head.x, c.head.y, c.u); s('pat'); yield* wait(1.2); })(),
       () => R.sneeze(B, c),
-      () => R.miniDance(B, c),
       () => (function* () { c.setFace('sleep', 1.2); yield* wait(1.1); c.setFace('wink', 1.2); B.sayText(c, CL.lineOf(['s|شفتك 😏', 'e|شايفك 😏', 'f|رأيتك 😏']), { prio: 2, mood: 'happy' }); yield* wait(1); })(),
       () => (function* () { c.setFace('tongue', 1.4); B.sfx('giggle'); yield* wait(1.4); })(),
       () => (function* () { c.setFace('cool', 2); B.sayText(c, CL.lineOf(['s|أنا كول اليوم 😎', 'e|أنا روش النهارده 😎', 'f|أنا رائع اليوم 😎']), { prio: 2, mood: 'happy' }); yield* wait(2); })(),
@@ -356,7 +354,7 @@ class Brain {
     const list = [
       () => { c.setFace('pleading', 2.5); c.fwdL.t = c.fwdR.t = 1; c.aL.t = c.aR.t = -1.2; B.say(c, 'tool_grab', { prio: 2, mood: 'scared' }); setTimeout(() => { c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; }, 2200); },
       () => { c.setFace('determined', 3); c.sit.t = 0.35; B.defenseBias = { kind: 'dodge', until: B.T + 4, p: 0.6 }; B.say(c, 'dodge', { prio: 2, mood: 'happy' }); setTimeout(() => (c.sit.t = 0), 3000); },
-      () => c.play(B.r_flee(), 3),
+      () => B.maybeRun(),
       () => c.play(B.r_hide(), 3),
       () => { c.outfit.helmet = 1; B.helmetUntil = B.T + 20; c.setFace('cool', 2); B.say(c, 'helmet', { prio: 2, mood: 'happy' }); B.sfx('pop'); },
       () => { c.prop = { kind: 'shield' }; B.shieldUntil = B.T + 15; c.setFace('determined', 2); B.say(c, 'shield', { prio: 2, mood: 'happy' }); B.sfx('pop'); },
@@ -373,7 +371,8 @@ class Brain {
     t.state = 'charge'; t.charge = 0; this.touch();
     if (this.hiding || this.ko || c.busy(3)) return;
     if (this.rightful()) { c.setFace('serious', 3); this.say(c, 'unjust', { prio: 2, mood: 'serious' }); return; }
-    if (chance(0.18)) { c.play(chance(0.5) ? this.r_flee() : this.r_hide(), 3); return; }
+    if (chance(0.1)) { c.play(this.r_hide(), 3); return; }
+    if (this.maybeRun(0.75)) return; // holding the tool = he runs for it (most of the time)
     c.play((function* (B) {
       let lastPlea = -9;
       while (t.state === 'charge') {
@@ -388,13 +387,18 @@ class Brain {
     })(this), 2);
   }
   toolCancelCharge() { if (this.tool.state === 'charge') { this.tool.state = 'idle'; this.tool.charge = 0; } }
-  onToolDragStart() { const t = this.tool; this.touch(); if (t.state === 'charge') t.state = 'idle'; t.held = true; t.userPlaced = true; t.state = 'idle'; }
+  onToolDragStart() { const t = this.tool; this.touch(); if (t.state === 'charge') t.state = 'idle'; t.held = true; t.userPlaced = true; t.state = 'idle'; this.maybeRun(0.85); }
   onToolDrag(x, y, vx, vy) {
     const t = this.tool, c = this.c;
     t.x = x; t.y = y + t.def.len * t.u * 0.45; t.homeX = t.x; t.homeY = t.y;
     t.a = lerp(t.a, clamp(vx * 0.0009, -1.1, 1.1), 0.3);
     // swinging the tool straight into him hits too
     const sp = M.hypot(vx, vy), h = t.headPoint(), bb = c.bbox;
+    // bringing the tool close while he isn't running: off he goes
+    if (!this.running && this.T > (this.runRetry || 0)) {
+      this.runRetry = this.T + 1.2;
+      if (M.hypot(h.x - (bb.x + bb.w / 2), h.y - (bb.y + bb.h / 2)) < this.w.W * 0.38) this.maybeRun(0.7);
+    }
     if (sp > 900 && this.T - (this.lastSmash || 0) > 0.3 && h.x > bb.x && h.x < bb.x + bb.w && h.y > bb.y && h.y < bb.y + bb.h) {
       this.lastSmash = this.T;
       const rel = (h.y - bb.y) / (bb.h || 1);
@@ -502,6 +506,7 @@ class Brain {
     const def = this.defense(power, rapid);
     const loc = def === 'catch' || def === 'block' || def === 'confiscate' ? 'arm' : this.chooseLoc(power, t.kind);
     const target = this.targetPoint(loc, side);
+    if (this.running && def === 'ok' && chance(0.55)) { this.runFreeze = T + 0.8; c.walk = 0; c.tv *= 0.15; c.setFace('shocked', 0.8); }
     t.attack(target, power, { loc: loc, def: def, rapid: rapid, side: side, far: far });
     if (def === 'dodge') c.play(this.r_dodge(side), 3);
     else if (def === 'catch' || def === 'block' || def === 'confiscate') { c.stop(); c.setFace(def === 'block' ? 'determined' : 'serious', 1.5); (side > 0 ? c.aR : c.aL).t = -2.0; (side > 0 ? c.fwdR : c.fwdL).t = 0.3; c.yaw.t = 0.35 * side; }
@@ -745,6 +750,107 @@ class Brain {
       B.sayText(c, CL.lineOf(['s|طلعت! 💪', 'e|خرجت! 💪', 'f|حررت نفسي! 💪']), { prio: 3, mood: 'happy' });
     })();
   }
+  /* ---------------- running away while the tool is held (charging or dragging it) */
+  canRun() {
+    const c = this.c;
+    return this.s.flee !== false && this.T > (this.runCool || 0) && !(this.away || this.ko || this.hiding || c.held || this.running ||
+      this.fakeSleep || this.confiscated || this.typing || this.rightful() || c.busy(3));
+  }
+  maybeRun(p) { if (this.canRun() && chance(p == null ? 1 : p)) { this.c.play(this.r_run(), 3); return true; } return false; }
+  r_run() {
+    const B = this, c = this.c, t = this.tool, u = c.u;
+    return (function* () {
+      B.running = true; B.runFreeze = 0;
+      const t0 = B.T;
+      let released = B.T, nextSay = B.T + rnd(1.6, 2.4), lastJump = -9, dust = 0, cower = 0, cowerFor = 0, nearSaid = -9, lastCh = 0, ph = 0, escapes = 0;
+      const flail = (on) => { c.aL.t = on ? -2.5 + M.sin(ph * 16) * 0.45 : 0; c.aR.t = on ? -2.5 - M.sin(ph * 16) * 0.45 : 0; };
+      try {
+        c.setFace(pick(['shocked', 'scared', 'surprised']), 0.9);
+        B.say(c, 'run_start', { prio: 3, mood: 'scared', dur: 1.5 });
+        if (c.ground && (c.ground.e === 'b' || c.ground.plat != null) && B.w.gdir.y > 0.7) { c.vy = -30 * u; c.vx = 0; c.ground = null; B.sfx('jump'); }
+        yield* until(() => c.ground, 2.5);
+        while (true) {
+          const dt = yield; ph += dt;
+          const held = t.held || t.state === 'charge';
+          if (held) released = B.T;
+          else if (B.T - released > 0.9 && t.state !== 'attack' && t.state !== 'fly') break;
+          if (B.T - t0 > 24) { yield* B.runTired(); return; }
+          // charge sound keeps telling you how strong the hit will be
+          if (t.state === 'charge') { const k = (t.charge * 10) | 0; if (k !== lastCh) { lastCh = k; B.sfx('charge', t.charge); } }
+          if (!c.ground) continue;
+          if (B.T < B.runFreeze) { c.walk = 0; c.runLean = 0; c.tremble = 0.5; flail(false); continue; }
+          // the line he runs along (the floor he stands on) and where the tool is on it
+          const e = c.ground.plat != null ? 'b' : c.ground.e, bd = B.w.bounds;
+          const horiz = e === 'b' || e === 't', dir = e === 'b' || e === 'l' ? 1 : -1;
+          const me = horiz ? c.x : c.y, lo = (horiz ? bd.x0 : bd.y0) + 6 * u, hi = (horiz ? bd.x1 : bd.y1) - 6 * u;
+          const ty = t.y - t.def.len * t.u * 0.5, tp = horiz ? t.x : ty;
+          const away = me >= tp ? 1 : -1;
+          const d2 = M.hypot(c.x - t.x, c.y - 4 * u - ty), W = M.min(B.w.W, B.w.H);
+          const cornered = (away > 0 && me > hi - 5 * u) || (away < 0 && me < lo + 5 * u);
+          const near = d2 < W * 0.3, mid = d2 < W * 0.6;
+          if (cornered && (near || cower > 0)) {
+            // nowhere left to run: escape over the tool / up the wall, or plead with hands up first
+            c.walk = 0; c.runLean = 0; flail(false);
+            const canJump = e === 'b' && B.w.gdir.y > 0.7;
+            if (cower === 0) {
+              cowerFor = canJump && (escapes === 0 || chance(0.45)) ? 0.25 : rnd(1.3, 2.4);
+              if (cowerFor > 1) { B.say(c, 'run_corner', { prio: 3, mood: 'scared', dur: 1.8 }); c.setFace(pick(['pleading', 'scared', 'nervous']), 3); }
+            }
+            cower += dt;
+            if (cowerFor > 1) { c.sit.t = 0.35; c.aL.t = c.aR.t = -2.7; c.fwdL.t = c.fwdR.t = 0.3; c.tremble = 0.6 + (t.state === 'charge' ? t.charge * 0.6 : 0); }
+            if (!near && cower > 1) { cower = 0; c.sit.t = 0; c.tremble = 0; c.fwdL.t = c.fwdR.t = 0; continue; }
+            if (cower > cowerFor && B.T - lastJump > 1.2) {
+              cower = 0; c.sit.t = 0; c.tremble = 0; c.fwdL.t = c.fwdR.t = 0; c.aL.t = c.aR.t = 0; lastJump = B.T; escapes++;
+              if (e === 'b' && B.w.gdir.y > 0.7) {
+                B.say(c, 'run_jump', { prio: 3, mood: 'happy', dur: 1.3 });
+                if (B.s.parkour && chance(0.35)) yield* R.wallRun(B, c);
+                else yield* R.jump(B, c, clamp(t.x - away * 20 * u, bd.x0 + 8 * u, bd.x1 - 8 * u), bd.y1, rnd(14, 20) * u, true);
+                c.setFace(pick(['mischief', 'wideHappy', 'smug']), 1.2);
+              }
+            }
+            continue;
+          }
+          cower = 0; c.sit.t = 0; c.fwdL.t = c.fwdR.t = 0;
+          if (!mid && !held) { c.walk = 0; continue; }
+          if (cornered || !mid && t.state === 'charge' || !mid && d2 > W * 0.75) {
+            // far enough: stop and keep an eye on it, trembling more as the charge grows
+            c.walk = 0; c.runLean = 0; flail(false); c.look.tx = t.x > c.x ? 1 : -1;
+            c.tremble = 0.2 + (t.state === 'charge' ? t.charge * 0.8 : 0); c.setFace(t.charge > 0.7 ? 'shocked' : 'nervous', 0.4);
+            if (B.T > nextSay) { nextSay = B.T + rnd(2.2, 3.4); B.say(c, t.state === 'charge' ? 'tool_charge' : 'run_go', { prio: 3, mood: 'scared', dur: 1.3 }); }
+            continue;
+          }
+          // run! faster the closer it is
+          const sp = (near ? 30 : 21) * u;
+          c.walk = away * dir * sp; c.tremble = 0; c.look.tx = 0;
+          c.runLean = 0.2 * M.sign(c.walk); flail(true);
+          c.setFace(near ? 'shocked' : pick(['scared', 'scared', 'wideHappy']), 0.5);
+          if (near && B.T - nearSaid > 3.5) { nearSaid = B.T; B.say(c, 'run_near', { prio: 3, mood: 'scared', dur: 1.2 }); nextSay = B.T + 2; }
+          else if (B.T > nextSay) { nextSay = B.T + rnd(2.4, 3.6); B.say(c, 'run_go', { prio: 3, mood: 'happy', dur: 1.3 }); }
+          dust += dt;
+          if (dust > 0.11 && M.abs(c.tv) > 14 * u) {
+            dust = 0; const n = B.w.fx;
+            n.puff(c.x - M.sign(c.tv) * 3 * u * (horiz ? 1 : 0), c.y - (horiz ? 0 : M.sign(c.tv) * 3 * u), u * 0.8, '#E9E4DA', rnd(1, 2.5));
+            if (chance(0.35)) n.drop(c.head.x, c.head.y - u, -M.sign(c.tv) * rnd(4, 8) * u, -rnd(3, 6) * u, u);
+          }
+        }
+        // the tool is down: catch his breath
+        c.walk = 0; c.runLean = 0; flail(false); c.tremble = 0; c.sit.t = 0;
+        c.setFace(pick(['relieved', 'relieved', 'embarrassed']), 2.2);
+        B.say(c, 'run_safe', { prio: 3, mood: 'happy', dur: 2 });
+        yield* R.loop(1.6, (k) => { c.sy.t = 1 + M.sin(k * 14) * 0.05; c.fwdL.t = c.fwdR.t = 0.4; });
+      } finally {
+        B.running = false; c.runLean = 0; c.walk = 0; c.tremble = 0; c.sit.t = 0; c.sy.t = 1;
+        c.aL.t = c.aR.t = 0; c.fwdL.t = c.fwdR.t = 0; c.look.tx = 0;
+      }
+    })();
+  }
+  *runTired() {
+    const c = this.c; this.runCool = this.T + 10;
+    c.walk = 0; c.runLean = 0; c.aL.t = c.aR.t = 0; c.sit.t = 1; c.setFace('relieved', 4);
+    this.say(c, 'run_tired', { prio: 3, mood: 'calm', dur: 2.6 });
+    yield* R.loop(3, (k) => { c.sy.t = 1 + M.sin(k * 12) * 0.06; });
+    c.sit.t = 0; c.sy.t = 1;
+  }
   r_flee() {
     const B = this, c = this.c, t = this.tool;
     return (function* () {
@@ -934,7 +1040,7 @@ class Brain {
     const c = this.c; this.touch();
     if (streaming) { c.talkT = 0.4; return; }
     if (face && CL.FACES[face]) c.setFace(face, 4);
-    const acts = { wave: R.wave, dance: R.miniDance, think: R.scratch, jump: R.hop, flip: (B, b) => (function* () { if (b.ground) { b.vy = -55 * b.u; b.ground = null; b.trick = { t: 0, dur: 0.6, flip: TAU }; } yield* until(() => b.ground, 2); })(),
+    const acts = { wave: R.wave, dance: R.wave, think: R.scratch, jump: R.hop, flip: (B, b) => (function* () { if (b.ground) { b.vy = -55 * b.u; b.ground = null; b.trick = { t: 0, dur: 0.6, flip: TAU }; } yield* until(() => b.ground, 2); })(),
       laugh: (B, b) => B.r_tickle(4), stretch: R.stretch, spin: R.turnAround, hearts: (B, b) => (function* () { for (let i = 0; i < 4; i++) { B.w.fx.heart(b.head.x + rnd(-3, 3) * b.u, b.head.y, b.u); yield* wait(0.3); } })(),
       sad: (B, b) => (function* () { b.sit.t = 0.6; yield* wait(2); b.sit.t = 0; })(), proud: R.stretch };
     if (act && acts[act]) c.play(acts[act](this, c), 2);

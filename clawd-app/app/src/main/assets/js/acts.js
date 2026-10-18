@@ -27,12 +27,6 @@ R.stretch = function* (B, b) {
 R.yawn = function* (B, b) { b.setFace('sleepy', 0.4); yield* wait(0.3); b.setFace('laugh', 1); b.sy.t = 1.08; b.aR.t = -1.2; b.fwdR.t = 0.6; yield* wait(1); b.sy.t = 1; b.aR.t = 0; b.fwdR.t = 0; };
 R.scratch = function* (B, b) { b.setFace(pick(['puzzled', 'think', 'skeptical']), 1.6); B.mark(b, '؟'); yield* loop(1.4, (t) => { b.aR.t = -2.5 + M.sin(t * 22) * 0.18; b.fwdR.t = 0.3; }); b.aR.t = 0; b.fwdR.t = 0; };
 R.hop = function* (B, b) { if (!b.ground || b.ground.e !== 'b' && b.ground.plat == null) return; b.vy = -55 * b.u; b.vx = 0; b.ground = null; CL.sfx.jump(); yield* until(() => b.ground, 3); };
-R.miniDance = function* (B, b) {
-  b.setFace(pick(['joy', 'happy', 'wink']), 2.2);
-  yield* loop(2, (t) => { for (let i = 0; i < 4; i++) b.legs[i] = M.max(0, M.sin(t * 14 + (i % 2) * PI)) * 0.7; b.aL.t = M.sin(t * 7) * 0.8; b.aR.t = -M.sin(t * 7) * 0.8; b.yaw.t = M.sin(t * 3.5) * 0.4; });
-  b.aL.t = b.aR.t = 0; b.yaw.t = 0;
-  if (chance(0.5)) B.fxNote(b);
-};
 R.sideEyeTool = function* (B, b) {
   const tp = B.toolPos(); if (!tp) return;
   b.look.tx = tp.x > b.x ? 1 : -1; b.look.ty = 0; b.setFace(tp.x > b.x ? 'sideeye' : 'sideeyeL', 2.2);
@@ -45,13 +39,12 @@ R.sneeze = function* (B, b) {
   b.sy.t = 0.8; b.vx = 0; B.w.fx.puff(b.head.x, b.head.y + 4 * b.u, b.u, '#fff', 2); B.w.fx.word('عطس!', b.head.x, b.head.y, b.u * 1.3, '#fff');
   CL.sfx.whiff(); yield* wait(0.3); b.sy.t = 1; B.sayText(b, CL.lineOf(['s|الحمد لله', 'e|الحمد لله', 'f|الحمد لله']), { prio: 1, mood: 'calm' });
 };
-R.hum = function* (B, b) { b.setFace('serene', 3); yield* loop(3, (t, dt) => { if (chance(dt * 1.6)) B.fxNote(b); b.yaw.t = M.sin(t * 2) * 0.2; }); b.yaw.t = 0; };
 R.stare = function* (B, b) { b.look.tx = 0; b.look.ty = 0.3; b.setFace(pick(['bored', 'suspicious', 'skeptical', 'smug']), 2.5); b.pv.t = 0.3; yield* wait(2.5); b.pv.t = 0.12; };
-R.sitAWhile = function* (B, b) { b.sit.t = 1; b.setFace(pick(['relieved', 'serene', 'bored']), 3); yield* wait(rnd(3, 5)); b.sit.t = 0; };
+R.sitAWhile = function* (B, b) { b.sit.t = 1; b.setFace(pick(['bored', 'normal', 'sideeye']), 3); b.look.tx = pick([-1, 1]); yield* wait(rnd(3, 5)); b.look.tx = 0; b.sit.t = 0; };
 R.pushups = function* (B, b) { yield* R.exercise(B, b, 'pushups', 6); };
 R.peekCamera = function* (B, b) { b.pv.t = 0.36; b.setFace(pick(['wideHappy', 'surprised', 'tongue']), 1.6); b.look.ty = -1; yield* wait(1.6); b.pv.t = 0.12; b.look.ty = 0; };
 R.turnAround = function* (B, b) { b.lockYaw = true; yield* tween(0.9, (k) => { b.yaw.t = k * TAU; }); b.yaw.set(0); b.lockYaw = false; };
-R.idleSmall = [R.lookAround, R.wave, R.stretch, R.yawn, R.scratch, R.hop, R.miniDance, R.sideEyeTool, R.watch, R.sneeze, R.hum, R.stare, R.sitAWhile, R.peekCamera, R.turnAround];
+R.idleSmall = [R.lookAround, R.wave, R.stretch, R.yawn, R.scratch, R.hop, R.sideEyeTool, R.watch, R.sneeze, R.stare, R.sitAWhile, R.peekCamera, R.turnAround];
 
 /* ---------------------------------------------------------------- dressing helpers */
 function dress(B, b, o) { const prev = Object.assign({}, b.outfit); Object.keys(o).forEach((k) => { b.outfit[k] = o[k]; }); return prev; }
@@ -111,13 +104,6 @@ R.study = function* (B, b) {
       if (!done && t > aha) { done = true; b.setFace('starry', 1.5); B.say(b, 'study_aha', { prio: 1, mood: 'happy' }); b.vy = -40 * b.u; b.ground = null; }
     });
   } finally { b.prop = null; b.sit.t = 0; b.baseFace = 'normal'; b.look.ty = 0; b.fwdR.t = 0; b.aR.t = 0; b.outfit.glasses = 0; B.activity = null; }
-};
-R.focus = function* (B, b) {
-  B.activity = 'focus'; B.say(b, 'act_focus', { mood: 'serious' });
-  try {
-    b.sit.t = 1; b.baseFace = 'focus'; b.aL.t = 0.5; b.aR.t = 0.5; b.fwdL.t = 0.7; b.fwdR.t = 0.7;
-    yield* loop(rnd(20, 35), (t, dt) => { b.focusAura = 0.5 + M.sin(t * 3) * 0.2; if (chance(dt * 0.15)) b.setFace('determined', 1); });
-  } finally { b.focusAura = 0; b.sit.t = 0; b.baseFace = 'normal'; b.aL.t = b.aR.t = 0; b.fwdL.t = b.fwdR.t = 0; B.activity = null; }
 };
 R.martial = function* (B, b) {
   B.activity = 'martial'; b.outfit.headband = 1; B.say(b, 'act_martial');
@@ -223,20 +209,6 @@ R.plant = function* (B, b) {
     yield* wait(2.5);
   } finally { b.prop = null; b.aR.t = 0; b.fwdR.t = 0; b.baseFace = 'normal'; b.yaw.t = 0; B.activity = null; }
 };
-R.dabke = function* (B, b) {
-  B.activity = 'dabke'; B.say(b, 'act_dabke', { mood: 'happy' });
-  try {
-    b.baseFace = 'joy';
-    yield* loop(rnd(6, 9), (t, dt) => {
-      const beat = (t * 2.6) % 1;
-      for (let i = 0; i < 4; i++) b.legs[i] = beat < 0.5 && i === 3 ? -1.2 * M.sin(beat * 2 * PI) : 0;
-      if (beat < dt * 2.6 && B.s.sound) CL.sfx.stomp();
-      b.aL.t = 0.7; b.aR.t = 0.7; b.yaw.t = M.sin(t * 2.6 * PI) * 0.35; b.walk = M.sin(t * 1.3) * 1.5 * b.u;
-      if (chance(dt * 1.2)) B.fxNote(b);
-    });
-  } finally { b.walk = 0; b.baseFace = 'normal'; b.aL.t = b.aR.t = 0; b.yaw.t = 0; B.activity = null; }
-};
-
 /* ---------------------------------------------------------------- parkour and moving around */
 R.trick = function (b, T) { // pick an air trick that fits the time in the air
   const s = b.vx >= 0 ? 1 : -1;

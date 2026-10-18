@@ -154,6 +154,7 @@ CL.startStage = function (opts) {
   function gUp(pid, x, y, cancel) {
     const g = G.get(pid); if (!g) return; G.delete(pid); clearTimeout(g.timer);
     const now = performance.now() / 1000, dur = now - g.t0;
+    if (NATIVE) call('log', 'gesture ' + g.id + (cancel ? ' cancel' : g.moved ? ' drag' : g.long ? ' long' : g.charging ? ' charge' : ' tap') + ' ' + dur.toFixed(2) + 's');
     if (g.id === 'char') {
       if (g.moved) {
         // a quick short flick upwards opens the chat

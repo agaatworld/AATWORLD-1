@@ -53,10 +53,18 @@ sleep 0.8; shot 09_home_tap
 read TXP TYP <<< "$(pad tool)"; echo "tool pad at $TXP $TYP"
 if [ -n "$TXP" ]; then for i in $(seq 1 6); do adb shell input tap ${TXP%.*} ${TYP%.*} & sleep 0.15; done; wait; fi
 sleep 0.3; shot 09b_home_hits
+sleep 3   # let the tool settle so the switch button is back
 read SXP SYP <<< "$(pad switch)"; echo "switch pad at $SXP $SYP"
 if [ -n "$SXP" ]; then adb shell input tap ${SXP%.*} ${SYP%.*}; fi
 sleep 0.8; shot 09c_tool_list
-adb shell input keyevent 4; sleep 0.5
+adb shell input keyevent 4; sleep 2
+# hold the tool and drag it towards Clawd: he should run away from it
+read TXP TYP <<< "$(pad tool)"; read CXP CYP <<< "$(pad char)"
+if [ -n "$TXP" ] && [ -n "$CXP" ]; then
+  adb shell input swipe ${TXP%.*} ${TYP%.*} ${CXP%.*} ${TYP%.*} 3200 &
+  sleep 1.3; shot 09f_run1; sleep 1.2; shot 09g_run2; wait; sleep 0.6; shot 09h_run_end
+fi
+sleep 2
 # typing: open a message compose box with the keyboard
 adb shell am start -a android.intent.action.SENDTO -d sms:5551234 --es sms_body " "; sleep 4; shot 09d_keyboard
 adb shell input text "salam"; sleep 2; shot 09e_typing
@@ -74,7 +82,7 @@ adb shell input text "مرحبا"; sleep 0.5
 adb shell input tap $(( W*8/100 )) $(( H*45/100 )); sleep 2; shot 12_chat_send
 
 # ---- diagnostics ----
-adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught|Clawd|OverlayService" > "$OUT/log.txt" || true
+adb logcat -d | grep -E "AndroidRuntime|FATAL|E $P|chromium.*Uncaught|Clawd|OverlayService|ntrusted touch|occlu" > "$OUT/log.txt" || true
 echo "=== services ===" >> "$OUT/log.txt"
 adb shell dumpsys activity services $P | head -20 >> "$OUT/log.txt"
 echo "=== accessibility ===" >> "$OUT/log.txt"
