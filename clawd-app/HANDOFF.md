@@ -3,21 +3,18 @@
 Branch: `claude/interactive-claude-character-app-33bzzn` in `agaatworld/AATWORLD-1`, folder `clawd-app/`.
 Not part of the AAT website. Owner talks Arabic; reply in Arabic, short, outcome first.
 
-## Stop point (18 Oct 2026, ~01:20 UTC)
-- Build #9 showed the CI shell **cannot start the overlay service directly** (`Permission Denial … not exported`
-  in `dist/log.txt`), so the floating overlay has **never been exercised in CI yet**. Not an app bug: the app's
-  "start floating" button starts the service from inside the app.
-- Fix pushed in `ci/emu.sh`: start it through `MainActivity --ez float true` (now handled in `onNewIntent`).
-  That push triggers build #10.
-- **First thing next session:** open the latest `clawd-ci` commit's `dist/08_home_floating.png`, `09_home_tap.png`,
-  `10_over_settings.png`, `dist/windows.txt`, `dist/log.txt`.
-  - Look for a **second** `stage ready {...}` line in log.txt (the overlay's, about full screen 412×914dp); the
-    ~412×480dp one is the in-app arena.
-  - Overlay window present + Clawd visible over home/settings → confirmed; go to polish.
-  - Window missing → look for exceptions when the window is added or the foreground service starts.
-  - Window present but nothing visible → rendering issue of a transparent NOT_TOUCHABLE WebView window
-    (try `stage.setLayerType(View.LAYER_TYPE_HARDWARE, null)` or a tiny non-zero alpha background).
-- Delivered to the owner: `dist/clawd.apk` from build #8 (152 KB, raw-HTTP chat) + single-file browser preview.
+## Stop point (18 Oct 2026, ~01:25 UTC)
+- **Floating overlay confirmed on the emulator** (build of `be60ced`): second `stage ready` at full screen
+  (412×915dp), overlay + pad windows present, Clawd visible over home, Phone app and Settings
+  (`dist/08_home_floating.png`, `09_home_tap.png`, `10_over_settings.png`).
+- **Play Protect** on the owner's Samsung blocked v2 ("App blocked to protect your device"): its enhanced fraud
+  protection blocks sideloaded apps that declare an accessibility service. So there are now two flavors:
+  - `lite` (`dist/clawd-lite.apk`): no `ClawdEyes`; installs normally. Settings show «عيون كلود» as unavailable.
+  - `full` (`dist/clawd.apk`): with `ClawdEyes`; needs Play Protect scanning off for the install.
+  The service declaration lives in `app/src/full/AndroidManifest.xml`. Both were sent to the owner.
+- CI can't open the chat window (`am startservice` → service not exported). Chat is only tested in the browser mock.
+- Next: wait for the owner's feedback from the real phone (lite first). Small polish noticed: on the home screen
+  Clawd stands on the Google search bar at the very bottom; consider a higher resting spot.
 
 ## What exists
 Web layer (all in `app/src/main/assets/`, plain JS, no build step):
