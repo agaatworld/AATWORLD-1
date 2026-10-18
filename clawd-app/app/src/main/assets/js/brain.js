@@ -1089,6 +1089,8 @@ class Brain {
     if (!open) this.pendingKb = null;
     else if (this.activity && RELIGIOUS[this.activity]) { this.pendingKb = field; return; } // after his reading
     if (open && field) {
+      const kt = this.w.kbTop; // a field hidden behind the keyboard (or reported late): he sits on top of the keyboard instead
+      if (kt && field.y > kt - 20) field = { x: 12, y: kt, w: M.min(240, this.w.W - 24), h: 0 };
       const first = !this.typing; this.typing = true; this.field = field; if (first) { this.longSaid = false; this.typeStart = 0; this.lastTypeAt = 0; }
       const W = this.w.W, x0 = clamp(field.x + field.w * 0.12, 30, W - 60), x1 = x0 + M.min(field.w * 0.3, 120);
       this.w.platforms = [{ x0: x0, x1: x1, y: field.y }]; this.w.platOn = true;

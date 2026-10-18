@@ -70,7 +70,7 @@ public class ClawdEyes extends AccessibilityService {
     private void handleApp(String pkg) {
         // the keyboard and the system bars are not apps: they used to count as "another app opened",
         // which took away the text field he sits on, so he fell to the bottom when typing
-        if (imePkgs.contains(pkg) || pkg.equals("com.android.systemui") || pkg.contains("inputmethod") || pkg.contains("keyboard")) return;
+        if (imePkgs.contains(pkg) || pkg.equals("com.android.systemui") || pkg.contains("inputmethod") || pkg.contains("keyboard") || pkg.contains("honeyboard") || pkg.contains("swiftkey")) return;
         String kind = classify(pkg);
         if (!pkg.equals(lastPkg) || !kind.equals(lastKind)) {
             lastPkg = pkg; lastKind = kind;
@@ -92,7 +92,11 @@ public class ClawdEyes extends AccessibilityService {
         try {
             List<AccessibilityWindowInfo> ws = getWindows();
             for (AccessibilityWindowInfo w : ws) {
-                if (w.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) { open = true; kb = new Rect(); w.getBoundsInScreen(kb); }
+                if (w.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) {
+                    open = true; kb = new Rect(); w.getBoundsInScreen(kb);
+                    AccessibilityNodeInfo r = w.getRoot(); // remember which package is the keyboard (some aren't listed for us)
+                    if (r != null) { if (r.getPackageName() != null) imePkgs.add(r.getPackageName().toString()); r.recycle(); }
+                }
             }
         } catch (Exception ignored) { }
         if (open) {
