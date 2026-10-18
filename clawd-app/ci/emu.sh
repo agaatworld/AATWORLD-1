@@ -25,7 +25,7 @@ adb shell am start -n $P/.MainActivity
 sleep 2;  shot 01_splash
 sleep 4;  shot 02_app
 # hit the stick a few times in the arena (lower third of the screen)
-AX=$(( W * 55 / 100 )); AY=$(( H * 72 / 100 ))
+AX=$(( W * 72 / 100 )); AY=$(( H * 56 / 100 ))  # the stick in the arena (the tool buttons sit below it)
 for i in $(seq 1 10); do adb shell input tap $AX $AY & sleep 0.12; done; wait
 shot 03_arena_hits
 # long-press for a charged hit
