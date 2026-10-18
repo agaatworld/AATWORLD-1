@@ -74,7 +74,10 @@ class Brain {
     // tiny when left alone
     const idle = T - this.lastUser;
     const tiny = !this.arena && s.shrink && idle > s.shrinkSec && !this.typing && !this.hiding && !this.asking && !this.away && !this.f && !this.chatOpen;
-    c.scale.t = tiny ? 0.34 : (this.typing ? 0.62 : 1);
+    c.scale.t = c.strollScale ? c.strollScale : tiny ? 0.34 : (this.typing ? 0.62 : 1);
+    // phone laid flat on a table: after a moment he steps "into" the screen and walks around on it
+    if (this.w.gmag < 0.35 && s.td3d && s.acts.stroll !== false) { this.flatFor = (this.flatFor || 0) + dt; } else this.flatFor = 0;
+    if (this.flatFor > 2.5 && c.mode !== 'top' && !c.busy(2) && !this.away && !this.hiding && !this.typing && c.ground) { this.flatFor = -30; c.play(R.stroll(this, c), 1); }
     this.tool.scale.t = this.confiscated ? 0.01 : tiny ? 0.5 : 1;
     if (this.helmetUntil && T > this.helmetUntil) { this.helmetUntil = 0; c.outfit.helmet = 0; }
     if (this.shieldUntil && T > this.shieldUntil) { this.shieldUntil = 0; if (c.prop && c.prop.kind === 'shield') c.prop = null; }
@@ -112,9 +115,12 @@ class Brain {
     const tiny = c.scale.t < 0.5;
     const r = M.random();
     if (r < 0.48) { const a = this.chooseActivity(tiny); if (a) { this.startActivity(a); return; } }
-    if (!tiny && r < 0.66) {
-      if (s.parkour && s.acts.parkour && (this.appKind === 'home' || this.arena) && this.w.gdir.y > 0.7 && chance(0.6)) { c.play(R.parkourShow(this, c), 1); return; }
-      if (s.roam) { c.play(R.roam(this, c), 1); this.nextIdle = T + rnd(3, 6); return; }
+    if (r < 0.66) {
+      if (!tiny && this.appKind === 'home' && this.w.platOn && s.parkour && this.w.gdir.y > 0.7 && chance(0.55)) { c.play(R.iconTour(this, c), 1); return; }
+      if (!tiny && s.td3d && s.acts.stroll !== false && (this.appKind === 'home' || !this.appInfo) && this.w.gdir.y > 0.7 && chance(0.2)) { this.startActivity('stroll'); return; }
+      // without "Clawd's eyes" we never learn which app is open, so allow parkour anywhere
+      if (!tiny && s.parkour && s.acts.parkour && (this.appKind === 'home' || this.arena || !this.appInfo) && this.w.gdir.y > 0.7 && chance(this.appInfo ? 0.6 : 0.3)) { c.play(R.parkourShow(this, c), 1); return; }
+      if (s.roam && this.w.gdir.y > 0.7) { c.play(R.roam(this, c), 1); this.nextIdle = T + rnd(3, 6); return; } // small walks even when he is tiny
     }
     if (!tiny && !this.arena && M.abs(c.x - this.home().x) > 40 * c.u && chance(0.5)) { c.play(R.goHome(this, c), 1); return; }
     if (T - this.lastUser > 30 && chance(0.12)) this.say(c, 'idle', { mood: 'calm' });
@@ -417,6 +423,23 @@ class Brain {
       if (this.rightful() && chance(0.6)) { c.aR.t = -2.2; this.sfx('catch'); this.say(c, 'block', { prio: 3, mood: 'serious' }); return; }
       this.impact('belly', clamp(sp / 3000, 0.2, 1), { x: h.x, y: h.y, thrown: true });
     }
+  }
+  setTool(kind, quiet) { // pick a tool by name (app buttons, the list, or Claude in the chat)
+    const s = this.s, t = this.tool;
+    if (!CL.TOOLS[kind]) return false;
+    if (s.tools[kind] === false) { s.tools[kind] = true; }
+    if (t.kind === kind && !t.hidden) return true;
+    t.kind = kind; t.scale.v = 0.2; t.hidden = this.confiscated; this.sfx('pop');
+    s.tool = kind; if (this.ui.saveSetting) this.ui.saveSetting('tool', kind);
+    this.w.fx.mark(CL.TOOLS[kind].name, t.x, t.y - t.def.len * t.u - 10, 16, '#141413');
+    if (!quiet && chance(0.7)) this.say(this.c, 'tool_switch', { prio: 2, mood: 'scared' });
+    this.log('صاحبه بدّل الأداة لـ' + CL.TOOLS[kind].name);
+    return true;
+  }
+  chooseTool() { // the ⇄ button: a list of every tool
+    const ks = Object.keys(CL.TOOLS);
+    this.ask(this.c, CL.lineOf(['s|شو بدك أداة؟ 😅', 'e|عايز أنهي أداة؟ 😅', 'g|وش تبي أداة؟ 😅', 'f|أي أداة تريد؟ 😅']), ks.map((k) => CL.TOOLS[k].name), (i) => this.setTool(ks[i]));
+    this.ui.showOptions();
   }
   switchTool() {
     const s = this.s, ks = Object.keys(CL.TOOLS).filter((k) => s.tools[k] !== false);
@@ -821,7 +844,7 @@ class Brain {
 
   /* ---------------- phone context (needs the accessibility helper on Android) */
   onApp(kind, label) {
-    const prev = this.appKind; this.appKind = kind;
+    const prev = this.appKind; this.appKind = kind; this.appInfo = true;
     this.w.platOn = kind === 'home' && this.icons.length > 0;
     if (kind === 'video') { if (this.videoStart == null) { this.videoStart = this.T; if (chance(0.5)) setTimeout(() => this.say(this.c, 'app_video', { prio: 2, mood: 'calm' }), 1500); } }
     else this.videoStart = null;

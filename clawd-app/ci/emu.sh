@@ -45,8 +45,22 @@ adb shell input keyevent 3   # back to home, Clawd should stay floating
 sleep 4; shot 08_home_floating
 adb shell dumpsys window windows | grep -iE "clawd|TYPE_APPLICATION_OVERLAY|Window #" | head -40 > "$OUT/windows.txt" || true
 adb shell dumpsys window windows | grep -iE "clawd|Window #" | head -40 > "$OUT/windows.txt" || true
-# tap where Clawd starts (bottom-left) to make him react over the home screen
-adb shell input tap $(( W*16/100 )) $(( H - $(dp 150) )); sleep 0.6; shot 09_home_tap
+# find Clawd's real touch pad (logged by the app in screen pixels) and tap it
+pad(){ adb logcat -d -s Clawd:D | grep " pad $1 " | tail -1 | awk '{print $(NF-3)+$(NF-1)/2, $(NF-2)+$NF/2}'; }
+read CXP CYP <<< "$(pad char)"; echo "char pad at $CXP $CYP"
+if [ -n "$CXP" ]; then adb shell input tap ${CXP%.*} ${CYP%.*}; fi
+sleep 0.8; shot 09_home_tap
+read TXP TYP <<< "$(pad tool)"; echo "tool pad at $TXP $TYP"
+if [ -n "$TXP" ]; then for i in $(seq 1 6); do adb shell input tap ${TXP%.*} ${TYP%.*} & sleep 0.15; done; wait; fi
+sleep 0.3; shot 09b_home_hits
+read SXP SYP <<< "$(pad switch)"; echo "switch pad at $SXP $SYP"
+if [ -n "$SXP" ]; then adb shell input tap ${SXP%.*} ${SYP%.*}; fi
+sleep 0.8; shot 09c_tool_list
+adb shell input keyevent 4; sleep 0.5
+# typing: open a message compose box with the keyboard
+adb shell am start -a android.intent.action.SENDTO -d sms:5551234 --es sms_body " "; sleep 4; shot 09d_keyboard
+adb shell input text "salam"; sleep 2; shot 09e_typing
+adb shell input keyevent 4; adb shell input keyevent 4; adb shell input keyevent 3; sleep 2
 # over another app
 adb shell am start -a android.settings.SETTINGS; sleep 3; shot 10_over_settings
 adb shell input keyevent 3; sleep 3

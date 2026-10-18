@@ -103,7 +103,7 @@ CL.startStage = function (opts) {
     const showChat = CL.settings.chatBtn && big && !brain.away && !brain.hiding && !c.held && !opts.noChatBtn;
     chatBtn.style.display = showChat ? 'flex' : 'none';
     if (showChat) { const bx = u.clamp(c.bbox.x + c.bbox.w + 2, 4, W - 46), by = u.clamp(c.bbox.y - 30, world.insets.top, H - 46); chatBtn.style.transform = 'translate(' + bx + 'px,' + by + 'px)'; }
-    const t = brain.tool, showSw = T < hintUntil && !t.hidden && t.state === 'idle';
+    const t = brain.tool, showSw = !t.hidden && t.state === 'idle' && !t.held && !brain.asking && (big || T < hintUntil);
     swBtn.style.display = showSw ? 'flex' : 'none';
     if (showSw) { const r = t.bboxRect(); swBtn.style.transform = 'translate(' + u.clamp(r.x + r.w + 4, 4, W - 50) + 'px,' + u.clamp(r.y - 10, world.insets.top, H - 50) + 'px)'; }
   }
@@ -167,7 +167,7 @@ CL.startStage = function (opts) {
     } else if (!cancel && !g.moved) {
       if (g.id === 'bubble') UI.showOptions();
       else if (g.id === 'chatbtn') UI.openChat('');
-      else if (g.id === 'switch') { brain.switchTool(); hintUntil = world.T + 3.5; }
+      else if (g.id === 'switch') { brain.chooseTool(); hintUntil = 0; }
       else if (g.id.indexOf('opt') === 0) answer(+g.id.slice(3));
     }
   }
@@ -219,12 +219,13 @@ CL.startStage = function (opts) {
     settings(json) {
       try { CL.applySettings(JSON.parse(json)); } catch (e) { return; }
       CL.snd.on = CL.settings.sound; world.sizeMul = sizeMul[CL.settings.size] || 1; world.resize();
-      const t = brain.tool; if (CL.settings.tools[CL.settings.tool] !== false) t.kind = CL.settings.tool;
+      const t = brain.tool; if (CL.settings.tools[CL.settings.tool] !== false && t.kind !== CL.settings.tool) { t.kind = CL.settings.tool; t.scale.v = 0.2; }
       if (!Object.keys(CL.TOOLS).some((k) => CL.settings.tools[k] !== false)) t.hidden = true; else if (!brain.confiscated) t.hidden = false;
       document.documentElement.style.setProperty('--fs', (CL.settings.font || 16) + 'px');
     },
     insets(t, b, l, r) { world.insets = { top: t, bottom: b, left: l || 0, right: r || 0 }; },
     ctx() { return JSON.stringify(brain.chatContext()); },
+    setTool(kind) { brain.setTool(kind); },
     test(name) { if (name === 'ask') brain.askRandom(); else if (brain.startActivity && CL.R[name]) brain.startActivity(name); }
   });
   native.settings(JSON.stringify(CL.settings));

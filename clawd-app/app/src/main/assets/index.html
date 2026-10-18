@@ -33,6 +33,10 @@ header{display:flex;align-items:center;gap:12px;padding:12px 16px 4px}
 .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--line)}
 .btn.primary{background:var(--orange);color:#fff;border-color:#141413;box-shadow:4px 4px 0 #141413;flex:1 1 100%}
 .btn.half{flex:1 1 40%}
+.toolbar{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.toolbar::-webkit-scrollbar{display:none}
+.toolbar button{flex:0 0 auto;border:2.5px solid var(--line);background:var(--card);border-radius:22px;padding:8px 14px;font-weight:800;font-size:17px;color:var(--ink)}
+.toolbar button.on{background:var(--orange);color:#fff;border-color:#141413}
 .hint{padding:0 16px;color:var(--muted);font-weight:700;font-size:16px;text-align:center}
 /* sheets */
 .sheet{position:absolute;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
@@ -83,6 +87,7 @@ input[type=number]{width:90px;text-align:center}
   </header>
   <div class="meter"><div class="lbl"><span>الطاقة اللي فرّغتها</span><span id="sRank">مبتدئ</span></div><div class="bar"><i id="sBar"></i></div></div>
   <div id="arena"><canvas id="acv"></canvas></div>
+  <div class="toolbar" id="toolbar"></div>
   <div class="hint" id="hint">اضغط العصا: ضربة · اضغط طويلاً: ضربة أقوى · اسحب العصا بعيد واضرب: أقوى · اضغط كلود: يتفاعل · اسحبه وارميه</div>
   <div class="dock">
     <button class="btn primary" id="bFloat">▶ تشغيل كلود العائم</button>

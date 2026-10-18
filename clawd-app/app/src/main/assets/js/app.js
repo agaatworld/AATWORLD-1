@@ -24,7 +24,22 @@ function startArena() {
     onStat: (d) => { stats.hits++; stats.energy += d; CL.store('stats', stats); showStats(); },
     onChat: (seed) => { if (NATIVE) call('openChat', seed); else location.href = 'stage.html?mock=1'; } });
   showStats(); setInterval(showStats, 3000);
+  renderToolbar();
   setTimeout(() => { $('hint').style.opacity = '.55'; }, 10000);
+}
+
+/* ---------------- tool picker under the arena (also applies to the floating Clawd) */
+const TOOL_ICON = { stick: '🪵', pillow: '🛏️', hammer: '🔨', glove: '🥊', balloon: '🎈', snow: '❄️', feather: '🪶' };
+function pickTool(k) {
+  if (CL.brain) CL.brain.setTool(k); else { S().tool = k; save(); }
+  S().tool = k; save(); renderToolbar();
+}
+function renderToolbar() {
+  const bar = $('toolbar'); if (!bar) return; bar.innerHTML = '';
+  Object.keys(CL.TOOLS).forEach((k) => {
+    const b = el('button', S().tool === k ? 'on' : '', (TOOL_ICON[k] || '') + ' ' + CL.TOOLS[k].name);
+    b.onclick = () => pickTool(k); bar.appendChild(b);
+  });
 }
 
 /* ---------------- floating mode */
@@ -59,7 +74,7 @@ const SCHEMA = [
   ['sw', 'sound', 'الأصوات'], ['sw', 'vib', 'الاهتزاز مع الضربات'],
   ['sw', 'td3d', 'ثلاثي الأبعاد', 'يلتفت ويتشقلب، وأحياناً بيتمشى فوق التطبيقات وكأنك شايفه من فوق'],
   ['sw', 'shrink', 'يصغر لما تتركه', 'بيصير قد زر صغير وبيكمّل نشاطاته'], ['num', 'shrinkSec', 'بعد كم ثانية يصغر', 10, 600],
-  ['sec', 'أدوات الضرب'], ['tools'],
+  ['sec', 'أدوات الضرب'], ['toolpick'], ['tools'],
   ['sec', 'الحركة'], ['sw', 'roam', 'يتمشى على الشاشة'], ['sw', 'parkour', 'حركات باركور وشقلبات'], ['sw', 'gravity', 'يتأثر بميلان وقلب التلفون'],
   ['sec', 'نشاطاته لما يكون فاضي'], ['acts'], ['sw', 'outfit', 'يلبس الجلابية والطاقية', 'بالقرآن والتسبيح والدعاء'],
   ['sec', 'تفاعله مع هاتفك'], ['note', 'هالميزات بتحتاج تفعيل «عيون كلود» من فوق.'],
@@ -98,6 +113,12 @@ function renderSettings() {
         c.onclick = () => { const a = S().dialects; const i = a.indexOf(d); if (i >= 0) { if (a.length > 1) a.splice(i, 1); } else a.push(d); c.classList.toggle('on', a.indexOf(d) >= 0); save(); };
         ch.appendChild(c);
       });
+      r.appendChild(ch); box().appendChild(r);
+    } else if (type === 'toolpick') {
+      const r = row('الأداة الحالية', 'وكمان: زر ⇄ جنب الأداة وهو عائم، أو قلّه بالدردشة «بدّلها لمطرقة»', null); r.style.flexWrap = 'wrap';
+      const ch = el('div', 'chips'); ch.style.width = '100%';
+      Object.keys(CL.TOOLS).forEach((k) => { const c = el('button', 'chip' + (S().tool === k ? ' on' : ''), (TOOL_ICON[k] || '') + ' ' + CL.TOOLS[k].name);
+        c.onclick = () => { pickTool(k); [].forEach.call(ch.children, (x) => x.classList.toggle('on', x === c)); }; ch.appendChild(c); });
       r.appendChild(ch); box().appendChild(r);
     } else if (type === 'tools') Object.keys(CL.TOOLS).forEach((k) => box().appendChild(row(CL.TOOLS[k].name, '', sw('tools.' + k))));
     else if (type === 'acts') ACTS.forEach((a) => box().appendChild(row(a[1], '', sw('acts.' + a[0]))));

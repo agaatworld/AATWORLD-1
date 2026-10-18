@@ -313,6 +313,20 @@ R.parkourShow = function* (B, b) {
     if (b.ground && b.ground.plat != null) yield* R.jump(B, b, B.home().x, B.w.bounds.y1, 4 * b.u);
   } finally { B.activity = null; }
 };
+R.iconTour = function* (B, b) { // hop from app icon to app icon on the home screen
+  const plats = B.w.platforms; if (!B.w.platOn || !plats.length || !b.ground || B.w.gdir.y < 0.7) return;
+  B.activity = 'parkour';
+  try {
+    const n = 2 + ((M.random() * 4) | 0);
+    for (let i = 0; i < n && b.ground; i++) {
+      const p = plats[(M.random() * plats.length) | 0];
+      yield* R.jump(B, b, (p.x0 + p.x1) / 2, p.y, rnd(3, 7) * b.u, chance(0.6));
+      if (chance(0.35)) B.say(b, 'hop', { prio: 1, mood: 'happy', dur: 0.9 });
+      yield* wait(rnd(0.3, 0.9));
+    }
+    if (b.ground && b.ground.plat != null) yield* R.jump(B, b, B.home().x, B.w.bounds.y1, 4 * b.u);
+  } finally { B.activity = null; }
+};
 R.roam = function* (B, b) { // wander along the floor, sometimes look at things
   const bd = B.w.bounds;
   const x = clamp(rnd(bd.x0, bd.x1), bd.x0 + 8 * b.u, bd.x1 - 8 * b.u);
@@ -332,17 +346,17 @@ R.stroll = function* (B, b) { // dive "into" the phone and walk over the apps, s
     B.say(b, 'stroll', { mood: 'happy' });
     b.vy = -55 * b.u; b.ground = null; b.trick = { t: 0, dur: 0.5, flip: TAU }; CL.sfx.flip();
     yield* until(() => b.vy > 0, 2);
-    b.trick = null; b.flip = 0; b.mode = 'top'; b.pv.t = 0.72; b.heading = rnd(PI * 0.6, PI * 1.4);
+    b.trick = null; b.flip = 0; b.mode = 'top'; b.pv.t = 0.5; b.strollScale = 1.18; b.heading = rnd(PI * 0.6, PI * 1.4);
     const bd = B.w.bounds; b.y = clamp(b.y, bd.y0 + 10 * b.u, bd.y1 - 2 * b.u);
     let t = 0; const dur = rnd(14, 24);
-    while (t < dur) {
+    while (t < dur || (B.w.gmag < 0.35 && t < 90)) { // phone lying flat: he keeps walking around on it
       const dt = yield; t += dt; b.walk = 4.2 * b.u;
       if (chance(dt * 0.45)) b.heading += rnd(-1.3, 1.3);
       if (chance(dt * 0.1)) { b.walk = 0; b.setFace(pick(['surprised', 'puzzled', 'wideHappy', 'sideeye']), 1.2); yield* wait(rnd(0.8, 1.4)); }
     }
     b.walk = 0; b.mode = 'side'; b.pv.t = 0.12; b.yaw.t = 0; b.ground = null; b.vy = -35 * b.u; b.vx = 0;
     yield* until(() => b.ground, 4);
-  } finally { if (b.mode === 'top') { b.mode = 'side'; b.pv.t = 0.12; b.ground = null; } B.activity = null; }
+  } finally { b.strollScale = 0; if (b.mode === 'top') { b.mode = 'side'; b.pv.t = 0.12; b.ground = null; } B.activity = null; }
 };
 
 /* ---------------------------------------------------------------- his friend Pixel */

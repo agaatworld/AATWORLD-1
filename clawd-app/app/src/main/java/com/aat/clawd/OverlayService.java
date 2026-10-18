@@ -181,7 +181,8 @@ public class OverlayService extends Service implements SensorEventListener {
             }
         } catch (Exception ignored) { }
         if (top == 0) top = Math.round(26 * density);
-        jsStage("clawd.insets(" + top + "," + Math.max(bottom, Math.round(10 * density)) + ",0,0)");
+        bottom = Math.max(bottom, Math.round(10 * density));
+        jsStage("clawd.insets(" + fmt(top / density) + "," + fmt(bottom / density) + ",0,0)");
     }
 
     @Override public void onConfigurationChanged(android.content.res.Configuration cfg) {
@@ -195,6 +196,20 @@ public class OverlayService extends Service implements SensorEventListener {
     }
 
     /* ---------------- touch pads ---------------- */
+    private final int[] origin = {0, 0};
+    private long originAt;
+    int[] stageOrigin() {
+        long now = SystemClock.uptimeMillis();
+        if (stage != null && now - originAt > 1000) { originAt = now; try { stage.getLocationOnScreen(origin); } catch (Exception ignored) { } }
+        return origin;
+    }
+    private final java.util.HashMap<String, Long> padLogAt = new java.util.HashMap<>();
+    void logPad(String id, int x, int y, int w, int h) { // lets the CI script find and tap Clawd
+        long now = SystemClock.uptimeMillis(); Long t = padLogAt.get(id);
+        if (t != null && now - t < 1500) return;
+        padLogAt.put(id, now);
+        android.util.Log.d("Clawd", "pad " + id + " " + x + " " + y + " " + w + " " + h);
+    }
     void setPads(String json) { pads.update(json); }
 
     private final class PadManager {
@@ -212,7 +227,7 @@ public class OverlayService extends Service implements SensorEventListener {
                 if (i < n) {
                     try {
                         JSONArray t = arr.getJSONArray(i);
-                        p.set(t.getString(0), t.getInt(1), t.getInt(2), t.getInt(3), t.getInt(4));
+                        p.set(t.getString(0), t.getDouble(1), t.getDouble(2), t.getDouble(3), t.getDouble(4));
                     } catch (Exception e) { p.hide(); }
                 } else p.hide();
             }
@@ -238,9 +253,12 @@ public class OverlayService extends Service implements SensorEventListener {
             lp.gravity = Gravity.TOP | Gravity.START;
             v.setOnTouchListener(this::onTouch);
         }
-        void set(String id, int x, int y, int w, int h) {
+        void set(String id, double x, double y, double w, double h) { // x, y, w, h in dp (page units)
             this.id = id;
-            lp.x = x; lp.y = y; lp.width = Math.max(1, w); lp.height = Math.max(1, h);
+            int[] o = stageOrigin();
+            lp.x = (int) Math.round(x * density) + o[0]; lp.y = (int) Math.round(y * density) + o[1];
+            lp.width = Math.max(1, (int) Math.round(w * density)); lp.height = Math.max(1, (int) Math.round(h * density));
+            logPad(id, lp.x, lp.y, lp.width, lp.height);
             if (!shown) { shown = true; try { wm.addView(v, lp); } catch (Exception e) { shown = false; } }
             else try { wm.updateViewLayout(v, lp); } catch (Exception ignored) { }
         }
@@ -268,8 +286,10 @@ public class OverlayService extends Service implements SensorEventListener {
             }
             return true;
         }
-        void js(String type, float x, float y) {
-            jsStage("clawd.touch(" + Bus.q(id) + "," + Bus.q(type) + "," + x + "," + y + ")");
+        void js(String type, float rx, float ry) { // raw screen pixels -> page dp
+            int[] o = stageOrigin();
+            float x = (rx - o[0]) / density, y = (ry - o[1]) / density;
+            jsStage("clawd.touch(" + Bus.q(id) + "," + Bus.q(type) + "," + fmt(x) + "," + fmt(y) + ")");
         }
     }
 
@@ -285,9 +305,23 @@ public class OverlayService extends Service implements SensorEventListener {
         if (rot == Surface.ROTATION_90) { float t = gx; gx = -gy; gy = t; }
         else if (rot == Surface.ROTATION_270) { float t = gx; gx = gy; gy = -t; }
         else if (rot == Surface.ROTATION_180) { gx = -gx; gy = -gy; }
-        jsStage("clawd.gravity(" + fmt(gx) + "," + fmt(gy) + ")");
-        if (Math.sqrt(x * x + y * y + z * z) > 26) jsStage("clawd.shake()");
+        // low-pass: hand tremor no longer moves him
+        if (!gInit) { fgx = gx; fgy = gy; gInit = true; }
+        fgx += (gx - fgx) * 0.08f; fgy += (gy - fgy) * 0.08f;
+        long now = SystemClock.uptimeMillis();
+        if (now - lastG > 66 && (Math.abs(fgx - sentX) > 0.12f || Math.abs(fgy - sentY) > 0.12f)) {
+            lastG = now; sentX = fgx; sentY = fgy;
+            jsStage("clawd.gravity(" + fmt(fgx) + "," + fmt(fgy) + ")");
+        }
+        // shake = two strong jolts within 0.6 s
+        float jolt = Math.abs((float) Math.sqrt(x * x + y * y + z * z) - 9.81f);
+        if (jolt > 14f) {
+            if (now - lastJolt < 600 && now - lastShake > 2500) { lastShake = now; jsStage("clawd.shake()"); }
+            lastJolt = now;
+        }
     }
+    private float fgx, fgy, sentX = 99, sentY = 99; private boolean gInit;
+    private long lastG, lastJolt, lastShake;
     private static String fmt(float f) { return String.valueOf(Math.round(f * 100) / 100f); }
 
     /* ---------------- screen on/off ---------------- */
@@ -429,10 +463,11 @@ public class OverlayService extends Service implements SensorEventListener {
                             String ans = f == null ? full.toString() : f;
                             history.add(new String[]{"a", ans});
                             trimHistory(); saveHistory();
-                            String face = tag(ans, "face"), act = tag(ans, "act");
+                            String face = tag(ans, "face"), act = tag(ans, "act"), tool = tag(ans, "tool");
                             ui.post(() -> {
                                 js("chat.done(" + Bus.q(ans) + ",null)");
                                 if (face != null || act != null) jsStage("clawd.chatReply(" + Bus.q(face) + "," + Bus.q(act) + ",false)");
+                                if (tool != null) jsStage("clawd.setTool(" + Bus.q(tool) + ")");
                             });
                         }
                         @Override public void onError(String m) { ui.post(() -> js("chat.error(" + Bus.q(m) + ")")); }
@@ -480,6 +515,7 @@ public class OverlayService extends Service implements SensorEventListener {
                 + "ابدأ ردّك دائماً بوسمين اختياريين يحددان تعبير وجهك وحركتك، ثم الكلام. "
                 + "الوسوم: [[face:X]] حيث X من: happy, joy, laugh, sad, cry, angry, surprised, cool, love, think, wink, proud, serene, sideeye, bored, determined, pleading, embarrassed. "
                 + "و[[act:Y]] حيث Y من: wave, dance, think, jump, flip, laugh, stretch, spin, hearts, sad, proud. "
+                + "إذا طلب صاحبك تبديل أداة الضرب أضف [[tool:Z]] حيث Z من: stick (عصا), pillow (مخدة), hammer (مطرقة بتزمّر), glove (قفاز ملاكمة), balloon (بالون مي), snow (كرة ثلج), feather (ريشة)، وقل له بمرح إنك بدّلتها. "
                 + "مثال: [[face:joy]][[act:wave]] أهلين! كيفك اليوم؟";
     }
 

@@ -53,6 +53,10 @@ public class ClawdEyes extends AccessibilityService {
             return;
         }
 
+        if (type == AccessibilityEvent.TYPE_VIEW_SCROLLED) { // home screen page swiped: icons moved
+            if ("home".equals(lastKind)) { lastIcons = 0; scanIcons(); }
+            return;
+        }
         if (type == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || type == AccessibilityEvent.TYPE_WINDOWS_CHANGED) {
             checkKeyboard();
             CharSequence p = e.getPackageName();
@@ -84,9 +88,10 @@ public class ClawdEyes extends AccessibilityService {
             int kbTop = kb != null ? kb.top : 0;
             try {
                 JSONObject o = new JSONObject();
-                o.put("kbTop", kbTop);
-                if (field != null) { o.put("x", field.left); o.put("y", field.top); o.put("w", field.width()); o.put("h", field.height()); }
-                else { o.put("x", 20); o.put("y", kbTop - 140); o.put("w", 320); o.put("h", 120); }
+                float d = getResources().getDisplayMetrics().density; // the page works in dp
+                o.put("kbTop", kbTop / d);
+                if (field != null) { o.put("x", field.left / d); o.put("y", field.top / d); o.put("w", field.width() / d); o.put("h", field.height() / d); }
+                else { o.put("x", 12); o.put("y", kbTop / d - 70); o.put("w", 200); o.put("h", 50); }
                 Bus.keyboard(true, o.toString());
             } catch (Exception ignored) { }
             kbOpen = true;
@@ -124,7 +129,8 @@ public class ClawdEyes extends AccessibilityService {
             Rect r = new Rect(); n.getBoundsInScreen(r);
             int w = r.width(), hh = r.height();
             if (w > 90 && w < 320 && hh > 90 && hh < 360 && Math.abs(w - hh) < w * 0.9) {
-                try { JSONObject o = new JSONObject(); o.put("x", r.left); o.put("y", r.top); o.put("w", w); o.put("h", hh); out.put(o); } catch (Exception ignored) { }
+                float d = getResources().getDisplayMetrics().density;
+                try { JSONObject o = new JSONObject(); o.put("x", r.left / d); o.put("y", r.top / d); o.put("w", w / d); o.put("h", hh / d); out.put(o); } catch (Exception ignored) { }
             }
         }
         for (int i = 0; i < cc; i++) { AccessibilityNodeInfo ch = n.getChild(i); if (ch != null) { collectIcons(ch, out, depth + 1); ch.recycle(); } }

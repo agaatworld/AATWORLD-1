@@ -603,7 +603,7 @@ const PROPS = (CL.PROPS = {
 /* ---------------------------------------------------------------- tools (world objects, screen pixels) */
 const TOOLS = (CL.TOOLS = {
   stick:   { name: 'عصا', len: 8.4, swing: true, sfx: 'bonk', soft: 0 },
-  pillow:  { name: 'مخدة', len: 7, swing: true, sfx: 'puff', soft: 0.8 },
+  pillow:  { name: 'مخدة', len: 4.6, swing: true, sfx: 'puff', soft: 0.8 },
   hammer:  { name: 'مطرقة بتزمّر', len: 7.6, swing: true, sfx: 'squeak', soft: 0.5 },
   glove:   { name: 'قفاز ملاكمة', len: 5, swing: false, punch: true, sfx: 'punch', soft: 0.2 },
   balloon: { name: 'بالون مي', len: 3, throwable: true, sfx: 'splash', soft: 0.7 },
@@ -624,10 +624,10 @@ function drawTool(ctx, kind, u, glow, T) {
     ctx.fillStyle = COL.woodD; px(0.5, -L - 0.2, 0.3, 2.2); px(-0.2, -L + 1, 0.45, 0.3); px(-0.1, -L * 0.55, 0.4, 0.4);
     for (let i = 0; i < 4; i++) { ctx.fillStyle = i % 2 ? COL.gripD : COL.grip; px(-0.62, -2.4 + i * 0.6, 1.25, 0.6); }
   } else if (kind === 'pillow') {
-    ctx.fillStyle = '#E9E4F7'; px(-0.35, -2.2, 0.7, 2.2); ctx.shadowBlur = 0;
-    ctx.fillStyle = '#B7A9E8'; px(-2.2, -L, 4.4, 4.8); ctx.fillStyle = '#CFC4F2'; px(-2.0, -L + 0.2, 4.0, 4.4);
-    ctx.fillStyle = '#9C8BDB'; px(-2.4, -L - 0.2, 0.6, 0.6); px(1.8, -L - 0.2, 0.6, 0.6); px(-2.4, -L + 4.4, 0.6, 0.6); px(1.8, -L + 4.4, 0.6, 0.6);
-    ctx.fillStyle = '#fff'; px(-1.2, -L + 1, 0.8, 0.4);
+    ctx.fillStyle = '#E9E4F7'; px(-0.3, -1.7, 0.6, 1.7); ctx.shadowBlur = 0;
+    ctx.fillStyle = '#B7A9E8'; px(-1.4, -L, 2.8, 3.0); ctx.fillStyle = '#CFC4F2'; px(-1.25, -L + 0.15, 2.5, 2.7);
+    ctx.fillStyle = '#9C8BDB'; px(-1.6, -L - 0.15, 0.45, 0.45); px(1.15, -L - 0.15, 0.45, 0.45); px(-1.6, -L + 2.7, 0.45, 0.45); px(1.15, -L + 2.7, 0.45, 0.45);
+    ctx.fillStyle = '#fff'; px(-0.8, -L + 0.6, 0.6, 0.3);
   } else if (kind === 'hammer') {
     ctx.fillStyle = '#F6C445'; px(-0.4, -L + 2, 0.8, L - 2); ctx.shadowBlur = 0;
     ctx.fillStyle = '#E8473B'; px(-2.4, -L, 4.8, 2.4); ctx.fillStyle = '#FF6B5E'; px(-2.4, -L, 4.8, 0.6);
@@ -794,9 +794,17 @@ class World {
     this.g.x = gx; this.g.y = gy;
     const m = M.hypot(gx, gy);
     this.gmag = m / 9.8;
-    if (m > 1.5) { this.gdir.x = gx / m; this.gdir.y = gy / m; }
+    if (this.axis == null) { this.axis = 0; this.tilt = 0; }
+    if (m < 3) { this.tilt *= 0.9; return; } // phone lying flat: keep the current floor
+    const th = M.atan2(gx, gy); // 0 = straight down the screen
+    // the floor is one of the four screen edges; switch only when the phone is clearly turned (about 55 degrees)
+    let best = this.axis, bd = 9;
+    [0, PI / 2, PI, -PI / 2].forEach((a) => { const d = M.abs(wrap(th - a)); if (d < bd) { bd = d; best = a; } });
+    if (best !== this.axis && bd < 0.6) this.axis = best;
+    this.tilt = lerp(this.tilt, wrap(th - this.axis), 0.35);
+    this.gdir.x = M.round(M.sin(this.axis)); this.gdir.y = M.round(M.cos(this.axis));
   }
-  gravity() { const G = 2600 * this.U / 7 * M.max(0.3, M.min(1.1, this.gmag)); return { x: this.gdir.x * G, y: this.gdir.y * G }; }
+  gravity() { const G = 2600 * this.U / 7; return { x: this.gdir.x * G, y: this.gdir.y * G }; }
   addBot(kind) { const b = new Bot(this, kind); this.bots.push(b); return b; }
 
   /* ---------- physics for one bot ---------- */
@@ -851,8 +859,9 @@ class World {
       if (gn < Gm * 0.35 && !b.noClip) { // floor no longer below: fall
         b.vx = t.x * b.tv; b.vy = t.y * b.tv; b.ground = null; b.airTime = 0; return;
       }
-      // walking + sliding on a tilted floor
-      const slide = gt * 0.35;
+      // walking + sliding when the phone is tilted more than ~20 degrees
+      const tl = this.tilt || 0, over = M.abs(tl) - 0.35, seated = b.sit.t > 0.5;
+      const slide = over > 0 && !seated ? M.sign(tl) * M.min(1, over * 2.2) * Gm * 0.22 : 0; void gt;
       b.tv += (b.walk - b.tv) * M.min(1, dt * 7) + slide * dt;
       b.x += t.x * b.tv * dt; b.y += t.y * b.tv * dt;
       // stay inside along the floor
@@ -868,11 +877,14 @@ class World {
         const lo = bd.y0 + hw, hi = bd.y1 - hw;
         if (b.y < lo) { b.y = lo; if (b.tv * t.y < 0) b.tv = 0; } else if (b.y > hi) { b.y = hi; if (b.tv * t.y > 0) b.tv = 0; }
       }
-      setRoll(b, b.rollOverride != null ? b.rollOverride : M.atan2(-n.x, -n.y));
+      // small tilts: he leans to stay upright against the real gravity
+      const lean = b.rollOverride != null || b.task && b.taskPrio >= 2 ? 0 : clamp(this.tilt || 0, -0.5, 0.5) * (seated ? 0.25 : 0.55);
+      setRoll(b, b.rollOverride != null ? b.rollOverride : M.atan2(-n.x, -n.y) + lean);
       b.walkPhase += M.abs(b.tv) * dt / (u * 1.1);
       b.walkAmt = lerp(b.walkAmt, M.min(1, M.abs(b.tv) / (u * 5)), M.min(1, dt * 8));
-      if (this.opts.yaw3d !== false && M.abs(b.tv) > u * 0.8 && b.rollOverride == null && !b.lockYaw) b.yaw.t = M.sign(b.tv) * 0.6;
-      else if (!b.lockYaw && M.abs(b.tv) < u * 0.5 && !b.task) b.yaw.t = 0;
+      if (seated && !b.lockYaw) b.yaw.t = 0;
+      else if (this.opts.yaw3d !== false && M.abs(b.tv) > u * 0.8 && b.rollOverride == null && !b.lockYaw) b.yaw.t = M.sign(b.tv) * 0.6;
+      else if (!b.lockYaw && M.abs(b.walk) < u * 0.3 && M.abs(b.tv) < u * 1.2) b.yaw.t = 0; // face the user when not walking
       return;
     }
     // airborne
@@ -961,7 +973,10 @@ class World {
     this.bots.forEach((b) => {
       if (b.gone || b.alpha < 0.05) return;
       const u = b.u;
-      if (b.mode === 'top') { ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(b.x - 4.6 * u, b.y - 0.6 * u, 9.2 * u, 2.4 * u); return; }
+      if (b.mode === 'top') {
+        ctx.save(); ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(b.x, b.y + 0.2 * u, 5.4 * u, 1.9 * u, 0, 0, PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(b.x, b.y + 0.2 * u, 7 * u, 2.6 * u, 0, 0, PI * 2); ctx.fill(); ctx.restore(); return;
+      }
       if (this.gdir.y > 0.7 && !b.noClip) {
         const fy = b.ground ? b.y : this.bounds.y1; const air = clamp((fy - b.y) / (10 * u), 0, 1);
         if (fy - b.y < 14 * u) { ctx.fillStyle = 'rgba(0,0,0,' + (0.16 * (1 - air * 0.7)) + ')'; const sw = 10 * u * b.sx.v * (1 - air * 0.4); ctx.fillRect(b.x - sw / 2, fy + 0.05 * u, sw, 0.5 * u); }
