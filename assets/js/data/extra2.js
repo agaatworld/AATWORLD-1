@@ -51,5 +51,5 @@ window.AAT_MODERN_G = {"pack": {"en": "Packaging and filling machines", "ar": "�
   function key(n) { return String(n || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12); }
   var have = {}; D.events.forEach(function (e) { have[key(e.name) + e.country + String(e.start).slice(0, 4)] = 1; });
   X.forEach(function (r, i) { if (have[key(r[0]) + r[3] + "2027"]) return; var place = [r[5], r[4]].filter(Boolean).join(", ");
-    D.events.push({ id: "e27" + r[3] + i, ext: true, approx: !!r[8], name: r[0], start: r[1], end: r[2], country: r[3], city: r[4], industry: "", venue: { en: place || r[4], ar: place || r[4] }, organizer: "—", url: r[9] || "", sector: { en: r[6], ar: r[7] }, summary: { en: r[6], ar: r[7] } }); });
+    D.events.push({ id: "e27" + r[3] + i, ext: true, approx: !!r[8], name: r[0], start: r[1], end: r[2], country: r[3], city: r[4], industry: "", venue: { en: place || r[4], ar: place || r[4] }, organizer: "—", url: "", sector: { en: r[6], ar: r[7] }, summary: { en: r[6], ar: r[7] } }); });
 })(window);

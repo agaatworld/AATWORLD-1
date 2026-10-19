@@ -746,7 +746,7 @@
   /* rows of cards drift slowly sideways on their own until someone touches them */
   function drift() {
     [].slice.call(doc.querySelectorAll("#app .mz-mount:not(.mz-grid) .mz-srow, #app .ind")).forEach(function (el) {
-      if (el._dr || still || root.classList.contains("lite")) return; el._dr = 1; var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
+      if (el._dr || still) return; el._dr = 1; /* moves on every computer (lite mode only pauses decorations) */ var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
       function wait(ms) { idle = W.performance.now() + ms; pos = null; }
       ["pointerdown", "pointermove", "wheel", "touchstart", "touchmove", "focusin"].forEach(function (n) { el.addEventListener(n, function (e) { if (n !== "pointermove" || e.pointerType === "mouse") wait(n === "pointermove" ? 900 : 3500); }, { passive: true }); });
       if ("IntersectionObserver" in W) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(el);

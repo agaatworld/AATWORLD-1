@@ -629,3 +629,31 @@ ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 [tabindex="-1"]:focus { outline: none; box-shadow: none; }
 /* owner's rule: no small labels above headings */
 .kick:has(+ h1), .kick:has(+ .h1), .kick:has(+ h2), .kick:has(+ .h2), .kick:has(+ .h0), .live-k:has(+ h2) { display: none !important; }
+/* section titles that open their page look like titles, not links */
+.sh-a { color: inherit; text-decoration: none; }
+.sh-a:hover { color: var(--red, #D21F26); }
+/* medium screens (e.g. a laptop with Windows display scaling): the page links go on a second row instead of disappearing behind the menu button */
+@media (min-width: 860px) and (max-width: 1179px) {
+  :root { --hd: 128px; }
+  #hdr .hd { height: auto !important; flex-wrap: wrap; row-gap: 4px; padding-block: 8px; max-width: calc(100% - 16px); }
+  #hdr .hd-nav { display: flex !important; order: 3; flex-basis: 100%; justify-content: space-between; }
+  #hdr .hd-nav a { font-size: 17px !important; font-weight: 800; padding: 6px 4px; }
+  #hdr .hd-menu { display: none !important; }
+}
+/* original app logos (pictures) fill the whole rounded tile */
+.app-i.app-img { overflow: hidden; background: #fff; }
+.app-i.app-img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+/* AAT Business Club seal (red ring, AAT logo in the middle) */
+.cbm { position: relative; width: 190px !important; height: 190px !important; background: none !important; border: 0 !important; display: block !important; box-shadow: 0 10px 24px -14px rgba(122,10,16,.6); border-radius: 50%; }
+.cbm-ring { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cbm-lg { position: absolute; left: 50%; top: 50%; width: 96px; transform: translate(-50%, -38%); line-height: 0; }
+.cbm-lg svg { width: 100%; height: auto; display: block; }
+@media (max-width: 640px) { .cbm { width: 160px !important; height: 160px !important; margin-inline: auto; } .cbm-lg { width: 80px; } }
+/* Sections are clearly separated: every second section sits on a white band, and each new section starts with a line and a short red bar */
+#app section + section { position: relative; border-top: 1px solid #E7DADB; }
+#app section + section::before { content: ""; position: absolute; top: -3px; left: 50%; width: 84px; height: 5px; margin-left: -42px; border-radius: 3px; background: #D21F26; }
+#app section.sec:nth-of-type(even) { background: rgba(255, 255, 255, .78); }
+/* First open: the static copy of the page (for search engines) stays invisible until the real page is drawn,
+   so visitors never see the page jump back to the top banner. If the scripts fail it appears after 6 seconds. */
+html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
+@keyframes aat-show { to { opacity: 1; } }

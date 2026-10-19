@@ -53,7 +53,7 @@
       sec("alt", U.head(t("cats_kicker"), t("cats_title"), ["products", t("hot_all")]) + '<div class="ind">' + A.INDUSTRIES.map(function (x) { return '<a class="ind-c" href="#industry-' + x.slug + '"><img src="' + A.indPic(x.img) + '" alt="" loading="lazy"><span><b>' + esc(t("ln_" + x.img)) + "</b><small>" + esc(t("ln_" + x.img + "_d")) + "</small></span></a>"; }).join("") + "</div>" +
         '<div class="pg pg-in">' + A.allProducts().slice(0, 8).map(U.productCard).join("") + "</div>") +
 
-      (arts.length ? sec("alt", U.head(t("ar_nav"), t("art_home_t"), ["articles", t("ar_back")]) + '<div class="ag">' + arts.slice(0, 5).map(function (a, i) { return U.articleCard(a, i === 0); }).join("") + "</div>") : "") +
+      (arts.length ? sec("alt", U.head(t("ar_nav"), t("ar_nav"), ["articles", t("ar_back")]) + '<div class="ag">' + arts.slice(0, 5).map(function (a, i) { return U.articleCard(a, i === 0); }).join("") + "</div>") : "") +
 
       sec("", U.head(t("news_kicker"), t("news_title"), ["news", t("news_btn")]) + '<div class="ng">' + newsCards(-1, 3) + "</div>") +
 
@@ -247,7 +247,20 @@
   }
 
   /* ---------- club, about, advertise, contact ---------- */
-  function clubMark() { return '<span class="cbm" aria-label="AAT Business Club"><b>AAT</b><small>BUSINESS CLUB</small></span>'; }
+  /* the club seal: red ring with the club name in English and Arabic, the AAT logo in the middle, a briefcase above and three stars below */
+  function clubMark() {
+    var lg = A.mag && A.mag.logoHTML ? A.mag.logoHTML(0) : "<b>AAT</b>";
+    return '<span class="cbm" role="img" aria-label="AAT Business Club"><svg class="cbm-ring" viewBox="0 0 200 200" aria-hidden="true" focusable="false">' +
+      '<defs><path id="cbm-t" d="M30 100a70 70 0 0 1 140 0"/><path id="cbm-b" d="M13 100a87 87 0 0 0 174 0"/></defs>' +
+      '<circle cx="100" cy="100" r="98" fill="#D21F26"/><circle cx="100" cy="100" r="93" fill="none" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="100" cy="100" r="64" fill="#fff"/><circle cx="100" cy="100" r="59" fill="none" stroke="#D21F26" stroke-width="1.5"/>' +
+      '<text font-family="Poppins, Arial, sans-serif" font-weight="800" font-size="17" letter-spacing="2.2" fill="#fff" text-anchor="middle"><textPath href="#cbm-t" startOffset="50%">BUSINESS CLUB</textPath></text>' +
+      '<text font-family="Jazeera, Tahoma, sans-serif" font-weight="700" font-size="17" fill="#fff" text-anchor="middle" direction="rtl"><textPath href="#cbm-b" startOffset="50%">نادي رجال الأعمال</textPath></text>' +
+      '<circle cx="20" cy="100" r="3.5" fill="#fff"/><circle cx="180" cy="100" r="3.5" fill="#fff"/>' +
+      '<g transform="translate(88 50)" fill="none" stroke="#111" stroke-width="2.2" stroke-linejoin="round"><rect x="0" y="5" width="24" height="16" rx="2.5"/><path d="M8 5V2.5h8V5M0 12h24"/></g>' +
+      '<g fill="#D21F26"><path d="M84 140l1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z"/><path d="M100 143l1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z"/><path d="M116 140l1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z"/></g>' +
+      '</svg><span class="cbm-lg">' + lg + "</span></span>";
+  }
   /* joining the club: the number with every messaging app, and the club e-mail */
   function clubJoin() { var c = D.config; return '<div class="row ctb"><a class="btn btn-line btn-lg ctb-ph" href="tel:+' + esc(c.whatsapp) + '" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + U.apps(t("cb_join_wa")) + '<a class="btn btn-line btn-lg" href="' + A.mailLink(c.clubEmail, "AAT Business Club", t("cb_join_wa")) + '">' + ic("mail", 18) + t("email_word") + "</a></div>"; }
   /* the members list is filled by the browser from members/list.php (it reads the photos folder on the server) */

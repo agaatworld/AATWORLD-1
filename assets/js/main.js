@@ -438,7 +438,7 @@
   W.AAT.app = { render: function () { chrome(); render(true); }, route: function () { return route; }, applyTheme: applyTheme };
   function start() {
     hdr = $("#hdr"); app = $("#app"); ftr = $("#ftr");
-    initPrefs(); chrome(); render(true); bind(); headerScroll(); aiInit(); intro();
+    initPrefs(); chrome(); render(true); bind(); headerScroll(); aiInit(); /* no intro splash: it came after the page was already showing and looked like a restart */
     root.classList.add("js");
   }
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", start); else start();

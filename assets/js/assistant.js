@@ -136,11 +136,16 @@
     var need = toks.length > 1 ? 2 : 1;
     var cos = top(A.companies || [], function (c) { return c.company + " " + L(c.about) + " " + (c.about && c.about.en || "") + " " + L((A.cats || {})[c.cat]) + " " + L(c.city); }, function (c) { return ["#company-" + c.page, c.company, L((A.cats || {})[c.cat]) + " · " + L(c.city)]; }, need);
     var pr = top(A.allProducts ? A.allProducts() : [], function (x) { return x.it.n + " " + (x.it.d || "") + " " + x.c.company; }, function (x) { return ["#product-" + x.c.page + "-" + x.k, x.it.n, x.c.company]; }, need);
+    /* "Modern products and industries": AAT's own selection of factories (assets/js/data, AAT_MODERN) */
+    var MG = W.AAT_MODERN_G || {};
+    var mod = top((W.AAT_MODERN || []).map(function (m, i) { return { m: m, i: i }; }), function (o) { var m = o.m, g = MG[m.g || m.group || m.k] || {}; return [m.t, m.en, m.name, (m.body || []).join(" "), g.ar, g.en, m.web].filter(Boolean).join(" "); },
+      function (o) { var g = MG[o.m.g || o.m.group || o.m.k]; return ["#modern-" + o.i, o.m.t || o.m.en || o.m.name, g ? L(g) : tr("Modern products and industries", "منتجات وصناعات حديثة")]; }, need);
     var arts = top((A.articles || []).filter(function (a) { return ar() || a.lang !== "ar"; }), function (a) { return (a.title.ar || "") + " " + (a.title.en || "") + " " + L(a.sum); }, function (a) { return ["#article-" + a.id, L(a.title)]; }, need);
     var news = top((D.news || []).map(function (n, i) { return { n: n, i: i }; }), function (o) { return (o.n.title.ar || "") + " " + (o.n.title.en || ""); }, function (o) { return ["#news-" + o.i, L(o.n.title)]; }, need);
     var evs = top(A.eventsWindow(new Date(), 3), function (e) { return e.name + " " + (e.city || "") + " " + L(e.sector); }, showLine, Math.max(need, 2));
     if (cos.length) out.push(p("<b>" + esc(tr("Companies", "شركات")) + "</b>") + links(cos));
-    if (pr.length) out.push(p("<b>" + esc(tr("Products", "منتجات")) + "</b>") + links(pr));
+    if (pr.length) out.push(p("<b>" + esc(tr("Products in this issue", "منتجات هذا العدد")) + "</b>") + links(pr));
+    if (mod.length) out.push(p("<b>" + esc(tr("Modern products and industries", "منتجات وصناعات حديثة")) + "</b>") + links(mod));
     if (evs.length) out.push(p("<b>" + esc(tr("International exhibitions", "معارض دولية")) + "</b>") + links(evs));
     if (arts.length) out.push(p("<b>" + esc(tr("Articles", "مقالات")) + "</b>") + links(arts));
     if (news.length) out.push(p("<b>" + esc(tr("News", "أخبار")) + "</b>") + links(news));
@@ -219,10 +224,11 @@
         "التجارة العربية الآسيوية (AAT) مجلة تجارية شهرية بالعربية والإنجليزية، أسسها السيد محمد مروان فتال في تايوان عام 1982. تربط التجار والمستوردين والمصدّرين والمصنّعين في الدول العربية وأفريقيا وآسيا."))) + links([["#about", tr("About us", "من نحن")]]);
 
     var f = faq(qn, toks); if (f) return f;
+    /* products, factories, articles... found on the site come first; general advice only when nothing is found */
+    var found = search(toks.filter(function (w) { return ["ابحث", "اريد", "ابغي", "عن", "مصنع", "مصانع", "factory", "supplier", "مورد"].indexOf(w) < 0; }).length ? toks.filter(function (w) { return ["ابحث", "اريد", "ابغي", "عن", "مصنع", "مصانع", "factory", "supplier", "مورد"].indexOf(w) < 0; }) : toks);
+    if (found) return p(esc(tr("This is what I found on the site:", "هذا ما وجدته في الموقع:"))) + found;
     var g = kb(qn, "last", exWord); if (g) return g + contact();
     /* a field alone ("plastic machines") also points to the shows of that field */
-    var found = search(toks);
-    if (found) return p(esc(tr("This is what I found on the site:", "هذا ما وجدته في الموقع:"))) + found;
     if (fieldOf(qn)) return shows(qn, toks);
     return p(esc(tr("I could not find this on the site. Our team will answer you directly:", "لم أجد هذا في الموقع. سيجيبك فريقنا مباشرة:"))) + contact();
   }
