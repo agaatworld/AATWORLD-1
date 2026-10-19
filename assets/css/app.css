@@ -677,3 +677,6 @@ html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
 /* the banner starts at the very top, behind the floating white menu bar */
 #app header.ph:not(.co):not(.mz-ph) { margin-top: calc(-1 * var(--hd)); padding-top: calc(var(--hd) + clamp(34px, 4.6vw, 70px)); }
 #app header.ph:not(.co):not(.mz-ph) { background: url("../img/brand/pair-pattern.svg") 0 0 / 240px 180px repeat, linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); }
+/* owner: no AAT symbol on the site for now — plain red banner (no pattern, no big swash) */
+#app header.ph:not(.co):not(.mz-ph) { background: linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); }
+#app header.ph:not(.co):not(.mz-ph)::after { content: none; display: none; }
