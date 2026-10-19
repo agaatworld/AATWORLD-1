@@ -61,7 +61,7 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - Told the owner (not done by us, needs hPanel): add to the top of public_html/.htaccess — no-cache for index.html and version.txt (the Hostinger CDN cached index.html for 7 days → "nothing changed"), and block xmlrpc.php; keep WordPress/plugins updated or disabled.
 
 - Update 29 (19 Oct evening): blue only for web/e-mail addresses on light backgrounds (never in buttons/red boxes); header menu in two rows at 860–1179px; no intro splash, static copy hidden until the real page is drawn (no jump); shelf always moves; no "date to be announced" text and no EventsEye links; one title per section (no "see all" link); assistant finds products and modern industries; newsletter saves to `api/subscribe.php` (CSV in api/data, e-mail to info@); original Botim/imo/BiP logos in `assets/img/apps/` (cut from real pictures); new AAT Business Club seal (`clubMark()` in views.js); clear separators between all sections (line + red bar, alternating white bands).
-- **Skill `aat-web`** (`.claude/skills/aat-web/SKILL.md`): the owner's way of thinking + checklist. Load it on every AAT task.
+- **Skill `aat-web`** (`.claude/skills/aat-web/SKILL.md`, also `_release/aat-web-skill.zip` for claude.ai): a GENERAL way of thinking for any website (owner asked it not be AAT-specific). AAT facts stay in this file. Load it on every web task.
 
 ## Open tasks (as of 15 Oct 2026)
 1. Confirm the owner uploaded **update 15** (`version.txt`). Live site had been showing an old magazine (top bar, "See page 52", small footer) — evidence earlier updates weren't extracted correctly.
