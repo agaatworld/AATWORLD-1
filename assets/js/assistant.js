@@ -5,7 +5,9 @@
   var D = A.D;
 
   function esc(s) { return A.esc(String(s == null ? "" : s)); }
-  function ar() { return A.state.lang === "ar"; }
+  /* the reply follows the language of the question: Arabic letters -> Arabic, Latin letters only -> English, otherwise the site language */
+  var force = null;
+  function ar() { return force != null ? force : A.state.lang === "ar"; }
   function tr(en, a) { return ar() ? a : en; }
   function L(o) { return o ? (ar() ? (o.ar || o.en) : (o.en || o.ar)) || "" : ""; }
 
@@ -94,9 +96,14 @@
     });
     /* words left over may name a show ("taipei plas", "gulfood") */
     var EXW = ["معرض", "معارض", "expo", "exhibition", "exhibitions", "shows", "fair", "fairs", "trade", "اكسبو", "المعرض", "المعارض", "دوليه", "international", "2027", "2028"];
-    var rest = toks.filter(function (w) { return w.length > 2 && EXW.indexOf(w) < 0 && EXW.indexOf(bare(w)) < 0; });
+    /* words that named the country or the field are not show names */
+    var used = {}; Object.keys(COUNTRY_ALIAS).forEach(function (k) { COUNTRY_ALIAS[k].forEach(function (w) { norm(w).split(" ").forEach(function (x) { used[x] = 1; }); }); });
+    FIELDS.forEach(function (f) { f[2].split(" ").forEach(function (x) { used[norm(x)] = 1; }); });
+    var rest = toks.filter(function (w) { return w.length > 2 && EXW.indexOf(w) < 0 && EXW.indexOf(bare(w)) < 0 && !used[w] && !used[bare(w)] && !Object.keys(used).some(function (u) { return u.length > 3 && w.indexOf(u) === 0; }); });
     var named = list.filter(function (e) { var n = " " + norm(e.name + " " + (e.city || "")) + " "; return rest.some(function (w) { return w.length > 2 && /[a-z]/.test(w) && n.indexOf(" " + w) > -1; }); });
+    var note = "";
     if (named.length) list = named;
+    else if (rest.some(function (w) { return /[a-z]/.test(w) && w.length > 3; })) note = p(esc(tr("No show with this name from January 2027 on (some shows are held every two years). Other shows that match:", "لا يوجد معرض بهذا الاسم من يناير 2027 فما فوق (بعض المعارض تُقام كل سنتين). معارض أخرى مطابقة:")));
     else if (!c && !m && !y && !fs.length && rest.some(function (w) { return /[a-z]/.test(w) || !STOP[w]; }) && rest.length) {
       /* a show asked by a name we could not find */
       return p(esc(tr("I could not find a show with this name. Shows are listed by their English names; you can browse them all:", "لم أجد معرضاً بهذا الاسم. المعارض مكتوبة بأسمائها الإنجليزية، ويمكنك تصفّحها كلها:"))) + links([["#exhibitions", tr("All international exhibitions", "كل المعارض الدولية")]]);
@@ -110,7 +117,7 @@
       if (c === "af" || c === "ye") return p(esc(tr("EventsEye lists no trade shows in this country for 2027.", "لا توجد معارض مسجّلة في هذه الدولة على EventsEye لعام 2027."))) + links([["#exhibitions", tr("All international exhibitions", "كل المعارض الدولية")]]);
       return p(esc(tr("I found no show for this search", "لم أجد معرضاً لهذا البحث")) + (what.length ? " (" + esc(what.join(" · ")) + ")" : "") + ".") + links([["#exhibitions", tr("All international exhibitions", "كل المعارض الدولية")]]);
     }
-    return p(esc(tr("Shows found", "عدد المعارض")) + (what.length ? " (" + esc(what.join(" · ")) + ")" : "") + ": <b>" + list.length + "</b>" + (list.length > 6 ? esc(tr(". The first six:", ". أول ستة:")) : "")) +
+    return note + p(esc(tr("Shows found", "عدد المعارض")) + (what.length ? " (" + esc(what.join(" · ")) + ")" : "") + ": <b>" + list.length + "</b>" + (list.length > 6 ? esc(tr(". The first six:", ". أول ستة:")) : "")) +
       links(list.slice(0, 6).map(showLine)) + links([["#exhibitions", tr("See all, filter by country and field", "عرض الكل والتصفية حسب الدولة والمجال")]]);
   }
 
@@ -145,7 +152,44 @@
     return bs >= 3 ? p("<b>" + esc(L(best.q)) + "</b>") + p(esc(L(best.a))) : "";
   }
 
+
+  /* general trade questions importers and exporters ask (general guidance, not offers; for a deal the team answers) */
+  var KB = [
+    { k: "fob cif exw incoterm incoterms شروط_الشحن فوب سيف", en: "Common shipping terms (Incoterms): EXW = you collect the goods at the factory. FOB = the seller loads the goods on the ship at the port of origin; you pay sea freight and insurance from there. CIF = the seller pays the goods, insurance and freight to your port. Agree the term in writing with the supplier.", ar: "أشهر شروط الشحن (Incoterms): EXW تستلم البضاعة من المصنع. FOB البائع يحمّل البضاعة على السفينة في ميناء بلده، وأنت تدفع الشحن البحري والتأمين بعدها. CIF البائع يدفع ثمن البضاعة والتأمين والشحن حتى ميناء بلدك. اتفق على الشرط كتابياً مع المورّد." },
+    { k: "payment pay tt l/c lc letter_of_credit deposit دفع الدفع ادفع ندفع يدفع تحويل اعتماد مستندي عربون دفعه", en: "Usual ways to pay a factory: bank transfer (T/T), often a deposit (for example 30%) and the rest before shipment; or a letter of credit (L/C) for larger orders, which protects both sides through the banks. The exact terms are agreed with each supplier.", ar: "طرق الدفع المعتادة للمصانع: تحويل بنكي (T/T)، وغالباً دفعة مقدّمة (مثلاً 30٪) والباقي قبل الشحن؛ أو اعتماد مستندي (L/C) للطلبات الكبيرة، وهو يحمي الطرفين عن طريق البنوك. الشروط الدقيقة يُتفق عليها مع كل مورّد." },
+    { k: "moq minimum_order الحد_الادني اقل_كميه كميه", en: "The minimum order quantity (MOQ) is set by each factory and depends on the product. Ask the supplier directly, or ask our team to ask for you.", ar: "الحد الأدنى للطلب (MOQ) يحدده كل مصنع حسب المنتج. اسأل المورّد مباشرة، أو اطلب من فريقنا أن يسأل عنك." },
+    { k: "sample samples عينه عينات", en: "Most factories send samples. Usually the buyer pays the sample and the courier, and some factories deduct it from the first order.", ar: "معظم المصانع ترسل عينات. عادة يدفع المشتري ثمن العينة والشحن السريع، وبعض المصانع تخصمه من أول طلبية." },
+    { k: "verify trust reliable scam fraud genuine inspection موثوق ثقه احتيال نصب تاكد فحص تفتيش", en: "To check a supplier: ask for the company registration, visit the factory or meet them at a trade show, start with a small order, use a third-party inspection before shipment, and prefer a letter of credit for large orders.", ar: "للتأكد من المورّد: اطلب سجل الشركة، زر المصنع أو قابله في معرض، ابدأ بطلبية صغيرة، استخدم شركة فحص مستقلة قبل الشحن، وفضّل الاعتماد المستندي في الطلبات الكبيرة." },
+    { k: "shipping_time transit how_long مده_الشحن كم_يوم كم_اسبوع شحن_بحري شحن_جوي يستغرق", en: "Roughly: by sea from Taiwan or East Asia to the Gulf about 3 to 5 weeks, to North Africa longer; by air a few days. A freight forwarder gives the exact time and price.", ar: "تقريباً: الشحن البحري من تايوان أو شرق آسيا إلى الخليج حوالي 3 إلى 5 أسابيع، وإلى شمال أفريقيا أطول؛ والجوي أيام قليلة. وكيل الشحن يعطيك المدة والسعر بدقة." },
+    { k: "customs duty duties hs_code tariff جمارك جمركي رسوم_جمركيه", en: "Each product has an HS code; import duties are set by the customs of the importing country. A customs broker in your country can give the exact duty.", ar: "لكل منتج رمز جمركي (HS Code)، والرسوم يحددها جمرك بلد الاستيراد. المخلّص الجمركي في بلدك يعطيك الرسوم بدقة." },
+    { visa: 1, k: "visa invitation letter badge register visitor تاشيره فيزا دعوه زائر تسجيل", en: "To visit a trade show: register as a visitor on the show's website to get your badge. For a visa, ask the organizer for an invitation letter; visa rules depend on your nationality (for Taiwan, see the Bureau of Consular Affairs).", ar: "لزيارة معرض: سجّل كزائر في موقع المعرض لتحصل على بطاقة الدخول. وللتأشيرة اطلب خطاب دعوة من المنظّم؛ وشروط التأشيرة حسب جنسيتك (لتايوان راجع مكتب الشؤون القنصلية)." },
+    { k: "currency dollar twd ntd عمله دولار تايواني", en: "Taiwan's currency is the New Taiwan Dollar (TWD). Export prices are usually quoted in US dollars.", ar: "عملة تايوان هي الدولار التايواني الجديد (TWD). أسعار التصدير تُعطى عادة بالدولار الأمريكي." },
+    { low: 1, k: "supplier factory manufacturer find source sourcing مورد موردين مصنع مصانع", en: "Look at the companies and products of this issue on the site, or tell our team what you need and we connect you with suitable factories.", ar: "تصفّح الشركات والمنتجات في الموقع، أو أخبر فريقنا بما تحتاجه ونربطك بالمصانع المناسبة." }
+  ];
+  /* which: "first" = before the exhibition search (all but the general supplier answer; with a show word only the visa answer), "last" = any */
+  function kb(qn, which, exWord) {
+    var best = null, bs = 0;
+    KB.forEach(function (e) {
+      if (which === "first" && (e.low || (exWord && !e.visa))) return;
+      var n = e.k.split(" ").filter(function (w) { w = w.replace(/_/g, " "); return w.length > 1 && hasAny(qn, [w]); }).length; /* "_" joins the words of a phrase */ if (n > bs) { bs = n; best = e; }
+    });
+    return bs ? p(esc(ar() ? best.ar : best.en)) : "";
+  }
+  function clock(qn) {
+    if (!hasAny(qn, ["time", "clock", "الساعه", "الوقت", "date", "التاريخ", "تاريخ اليوم"]) && !/(^| )(what day|today s date|اي يوم)( |$)/.test(qn)) return "";
+    var now = new Date(), tw = new Date(now.getTime() + (now.getTimezoneOffset() + 480) * 60000);
+    var f = function (d, o) { try { return new Intl.DateTimeFormat(ar() ? "ar-u-nu-latn" : "en", o).format(d); } catch (e) { return d.toString(); } };
+    if (hasAny(qn, ["taiwan", "تايوان"]) || hasAny(qn, ["time", "clock", "الساعه", "الوقت"]))
+      return p(esc(tr("Time in Taiwan now: ", "الوقت الآن في تايوان: ")) + "<b>" + esc(f(tw, { hour: "2-digit", minute: "2-digit", weekday: "long" })) + "</b>" + esc(tr(" (UTC+8). Office days: Monday to Friday.", " (UTC+8). أيام العمل: من الاثنين إلى الجمعة.")));
+    return p(esc(tr("Today is ", "اليوم هو ")) + "<b>" + esc(f(now, { weekday: "long", day: "numeric", month: "long", year: "numeric" })) + "</b>.");
+  }
   function answer(raw) {
+    force = /[\u0600-\u06FF]/.test(raw || "") ? true : /[A-Za-z]/.test(raw || "") ? false : null;
+    /* dates and names follow the reply language too (the site language is switched only while the reply is built) */
+    var keep = A.state.lang; if (force === true) A.state.lang = "ar"; else if (force === false && keep === "ar") A.state.lang = "en";
+    try { return reply(raw); } finally { force = null; A.state.lang = keep; }
+  }
+  function reply(raw) {
     var qn = norm(raw), toks = words(raw), M = D.magazine || {};
     if (!qn) return p(esc(tr("Type your question.", "اكتب سؤالك.")));
     if (/^(hi|hello|hey|salam|مرحبا|اهلا|السلام عليكم|السلام|صباح الخير|مساء الخير)( .*)?$/.test(qn) && toks.length <= 3)
@@ -153,8 +197,10 @@
         "أهلاً وسهلاً! اسألني عن المعارض الدولية (حسب الدولة أو الشهر أو المجال)، أو عن الشركات والمنتجات في المجلة، أو المقالات، أو كيف تتواصل معنا.")));
     if (hasAny(qn, ["شكرا", "thanks", "thank", "مشكور", "يعطيك العافيه"])) return p(esc(tr("You are welcome! Anything else?", "العفو! هل تحتاج شيئاً آخر؟")));
 
-    /* exhibitions first: they are the most asked */
     var exWord = hasAny(qn, ["معرض", "معارض", "expo", "exhibition", "exhibitions", "shows", "fair", "fairs", "trade show", "اكسبو"]);
+    /* time and date, then trade questions (shipping terms, payment, visa...), then exhibitions, the most asked */
+    var cl = clock(qn); if (cl) return cl;
+    var g0 = kb(qn, "first", exWord); if (g0) return g0 + contact();
     if (exWord || ((countryOf(qn) || monthOf(qn)) && !hasAny(qn, ["شركه", "شركات", "company", "منتج", "product"]))) return shows(qn, toks);
 
     if (hasAny(qn, ["عنوان", "address", "location", "مكتب", "office", "موقعكم", "where are you"]))
@@ -173,6 +219,7 @@
         "التجارة العربية الآسيوية (AAT) مجلة تجارية شهرية بالعربية والإنجليزية، أسسها السيد محمد مروان فتال في تايوان عام 1982. تربط التجار والمستوردين والمصدّرين والمصنّعين في الدول العربية وأفريقيا وآسيا."))) + links([["#about", tr("About us", "من نحن")]]);
 
     var f = faq(qn, toks); if (f) return f;
+    var g = kb(qn, "last", exWord); if (g) return g + contact();
     /* a field alone ("plastic machines") also points to the shows of that field */
     var found = search(toks);
     if (found) return p(esc(tr("This is what I found on the site:", "هذا ما وجدته في الموقع:"))) + found;

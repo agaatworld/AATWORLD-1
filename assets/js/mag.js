@@ -78,7 +78,7 @@
   function media(c) {
     var ps = prods(c), lg = logo(c);
     if (ps.length) return '<span class="mz-media" style="--c:' + col(c) + '">' + ps.map(function (p, i) { return '<img class="' + (i ? "" : "on") + '" src="' + img(p.img) + '" alt="' + (i ? "" : esc(p.n)) + '" loading="' + (i ? "lazy" : "eager") + '">'; }).join("") + "</span>";
-    return '<span class="mz-media mz-brand" style="--c:' + col(c) + '">' + (lg ? '<img class="mz-blogo" src="' + lg + '" alt="' + esc(c.company) + '">' : "") + '<span class="mz-lines">' + lines(c).map(function (n) { return "<span>" + esc(clip(n, 24)) + "</span>"; }).join("") + "</span></span>";
+    return '<span class="mz-media mz-brand" style="--c:' + col(c) + '">' + (lg ? '<img loading="lazy" decoding="async" class="mz-blogo" src="' + lg + '" alt="' + esc(c.company) + '">' : "") + '<span class="mz-lines">' + lines(c).map(function (n) { return "<span>" + esc(clip(n, 24)) + "</span>"; }).join("") + "</span></span>";
   }
   if (!still) setInterval(function () {
     Array.prototype.forEach.call(doc.querySelectorAll(".mz-media:not(.mz-brand)"), function (m) { var im = m.children, n = im.length; if (n < 2 || !m.offsetParent) return; for (var i = 0; i < n; i++) if (im[i].classList.contains("on")) { im[i].classList.remove("on"); im[(i + 1) % n].classList.add("on"); break; } });
@@ -105,7 +105,7 @@
     function slide(from) {
       var x = list[i], lg = logo(x);
       q(root, ".mz-spot-st").innerHTML = '<div class="mz-spot-card" style="--c:' + col(x) + ";--from:" + (from || 0) + 'px"><i class="mz-blob"></i><a class="mz-spot-pic" href="' + hrefCo(x) + '" aria-label="' + esc(x.company) + '">' + media(x) + "</a>" +
-        '<div class="mz-spot-info"><span class="mz-tag">' + t("spot") + " · " + esc(shortName(x.cat)) + '</span><a class="mz-who" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img src="' + lg + '" alt=""></span>' : "") + "<span><b>" + esc(x.company) + "</b><small>" + esc(L(x.city)) + "</small></span></a>" +
+        '<div class="mz-spot-info"><span class="mz-tag">' + t("spot") + " · " + esc(shortName(x.cat)) + '</span><a class="mz-who" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "") + "<span><b>" + esc(x.company) + "</b><small>" + esc(L(x.city)) + "</small></span></a>" +
         "<p>" + esc(L(x.about)) + '</p><div class="mz-acts">' + cta(x) + '<a class="btn btn-line" href="' + hrefCo(x) + '">' + t("details") + "</a></div></div></div>";
       qa(root, ".mz-tile").forEach(function (b) { b.classList.toggle("on", +b.getAttribute("data-p") === x.page); });
       q(root, ".mz-pos").textContent = (i + 1) + " / " + list.length;
@@ -138,7 +138,8 @@
     function to(k, smooth) { k = (k + n) % n; var o = { behavior: smooth && !still ? "smooth" : "auto" }; if (hz) o.left = k * feed.clientWidth; else o.top = k * feed.clientHeight; feed.scrollTo(o); }
     function cur() { for (var j = 0; j < n; j++) kids[j].classList.toggle("mz-cur", Math.abs(j - i) <= 2); for (var d2 = 1; d2 <= 4; d2++) if (kids[i + d2]) qa(kids[i + d2], "img").forEach(function (im) { im.loading = "eager"; if (im.decode && !im._mzd) { im._mzd = 1; im.decode().catch(function () {}); } }); }
     /* fetch every picture of the reel in the background, nearest slides first, so nothing loads while swiping */
-    c.later(500, function () { var all = qa(feed, 'img[loading="lazy"]'), k = 0; (function more() { for (var z = 0; z < 8 && k < all.length; z++, k++) all[k].loading = "eager"; if (k < all.length) c.later(220, more); })(); });
+    /* only the next 8 pictures are fetched ahead; the rest load as the reader moves on (fetching all of them cost ~3 MB on every visit) */
+    c.later(500, function () { qa(feed, 'img[loading="lazy"]').slice(0, 8).forEach(function (im) { im.loading = "eager"; }); });
     function setDir(h) { var k = i; hz = h; box.style.setProperty("--mzdir", A.dir()); feed.classList.toggle("mz-h", hz); q(box, ".mz-dirb").textContent = hz ? "↔" : "↕"; var hn = q(box, ".mz-hint"); hn.textContent = hz ? "← " + t("swipeH") + " →" : "↑ " + t("swipe"); try { localStorage.setItem("mz-dir", hz ? "h" : "v"); } catch (e) { /* storage unavailable */ } feed.style.scrollSnapType = "none"; to(k, false); requestAnimationFrame(function () { to(k, false); feed.style.scrollSnapType = ""; }); }
     function marks() { qa(box, ".mz-st").forEach(function (b) { var on = +b.getAttribute("data-k") === i; b.classList.toggle("now", on); if (on) { var s = q(box, ".mz-stories"); s.scrollLeft = b.offsetLeft - 90; } }); }
     c.on(feed, "scroll", function () { var h = hz ? feed.clientWidth : feed.clientHeight; if (!h) return; var k = Math.round((hz ? feed.scrollLeft : feed.scrollTop) / h); if (k !== i) { i = k; prog = 0; cur(); if (!hinted) { hinted = true; q(box, ".mz-hint").hidden = true; } marks(); } }, { passive: true });
@@ -176,9 +177,9 @@
     var s = seq(), story = [];
     var slides = s.map(function (o, k) {
       if (o.ad) { var x = o.ad, lg = logo(x); if (lg) story.push({ c: x, k: k });
-        return '<section class="mz-slide" style="--c:' + col(x) + '">' + media(x) + rail(x) + '<div class="mz-cap"><a class="mz-who" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img src="' + lg + '" alt=""></span>' : "") + "<span><b>" + esc(x.company) + "</b><small>" + t("sponsored") + " · " + esc(catName(x.cat)) + "</small></span></a><p>" + esc(L(x.about)) + "</p>" + cta(x) + "</div></section>"; }
+        return '<section class="mz-slide" style="--c:' + col(x) + '">' + media(x) + rail(x) + '<div class="mz-cap"><a class="mz-who" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "") + "<span><b>" + esc(x.company) + "</b><small>" + t("sponsored") + " · " + esc(catName(x.cat)) + "</small></span></a><p>" + esc(L(x.about)) + "</p>" + cta(x) + "</div></section>"; }
       var a = o.art;
-      return '<section class="mz-slide mz-art"' + (a.img ? ' style="--bgi:url(&quot;' + esc(img(a.img)) + '&quot;)"' : "") + '>' + (a.img ? '<img class="mz-bg" src="' + img(a.img) + '" alt="" loading="lazy">' : "") + '<div class="mz-cap"><span class="mz-tag">' + t("article") + "</span><h3>" + esc(aTitle(a)) + "</h3><p>" + esc(aSum(a)) + '</p><a class="mz-read" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></section>";
+      return '<section class="mz-slide mz-art"' + (a.img ? ' data-bgi="' + esc(img(a.img)) + '"' : "") + '>' + (a.img ? '<img class="mz-bg" src="' + img(a.img) + '" alt="" loading="lazy">' : "") + '<div class="mz-cap"><span class="mz-tag">' + t("article") + "</span><h3>" + esc(aTitle(a)) + "</h3><p>" + esc(aSum(a)) + '</p><a class="mz-read" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></section>";
     });
     return reelShell(root, c, slides, story, 7);
   };
@@ -189,7 +190,7 @@
       if (ps.length) row = ps.map(function (p) { var inner = '<span class="mz-ph"><img src="' + W.AAT.esc(img(p.img)) + '" alt="" loading="lazy"></span><b>' + esc(p.n) + "</b>"; var pu = A.safeUrl(p.url); return pu ? '<a class="mz-pc" href="' + esc(pu) + '" target="_blank" rel="noopener noreferrer">' + inner + "</a>" : '<span class="mz-pc">' + inner + "</span>"; }).join("");
       else row = lines(x).map(function (nm, j) { return '<span class="mz-pc mz-ln"><em>' + (j < 9 ? "0" : "") + (j + 1) + "</em><b>" + esc(nm) + "</b></span>"; }).join("");
       var facts = [L(x.city), x.certs, x.tel, x.email].filter(Boolean).map(function (f) { return "<span>" + esc(f) + "</span>"; }).join("");
-      return '<section class="mz-slide mz-g" style="--c:' + col(x) + '"><a class="mz-ban" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img src="' + lg + '" alt=""></span>' : "") + "<span><small>" + esc(catName(x.cat)) + " · " + (k + 1) + " / " + list.length + "</small><b>" + esc(x.company) + "</b><small>" + esc(L(x.city)) + (u ? " · " + esc(domain(u)) : "") + "</small></span></a>" +
+      return '<section class="mz-slide mz-g" style="--c:' + col(x) + '"><a class="mz-ban" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "") + "<span><small>" + esc(catName(x.cat)) + " · " + (k + 1) + " / " + list.length + "</small><b>" + esc(x.company) + "</b><small>" + esc(L(x.city)) + (u ? " · " + esc(domain(u)) : "") + "</small></span></a>" +
         (row ? '<div class="mz-sub"><span>' + t(ps.length ? "products" : "lines") + "</span><span>" + t("drag") + '</span></div><div class="mz-prow">' + row + "</div>" : '<div class="mz-prow"></div>') +
         '<div class="mz-gabout"><p>' + esc(L(x.about)) + '</p><div class="mz-facts">' + facts + "</div></div><div class=\"mz-gft\">" + cta(x) + '<a class="btn btn-line" href="' + hrefCo(x) + '">' + t("details") + "</a></div></section>";
     });
@@ -223,7 +224,7 @@
     var sp = q(root, ".mz-orbit"), bodies = q(root, ".mz-bodies");
     function build() {
       var list = [];
-      function moon(x) { var lg = logo(x); list.push({ ring: 0, html: '<a class="mz-b mz-moon" href="' + hrefCo(x) + '" style="--c:' + col(x) + '"><span class="mz-orb">' + (lg ? '<img src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</span><span class="mz-lbl">' + esc(clip(x.company, 20)) + "</span></a>" }); }
+      function moon(x) { var lg = logo(x); list.push({ ring: 0, html: '<a class="mz-b mz-moon" href="' + hrefCo(x) + '" style="--c:' + col(x) + '"><span class="mz-orb">' + (lg ? '<img loading="lazy" decoding="async" src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</span><span class="mz-lbl">' + esc(clip(x.company, 20)) + "</span></a>" }); }
       if (!S.cat) { for (var k = 0; k < 5; k++) moon(all[(S.batch * 5 + k) % all.length]);
         ks.forEach(function (key) { var n = adsIn(key).length; list.push({ ring: 1, html: '<button type="button" class="mz-b mz-planet" data-mz="cat" data-k="' + key + '" style="--c:' + (COL[key] || "#6B7280") + '"><span class="mz-orb"><b>' + n + '</b></span><span class="mz-lbl">' + esc(shortName(key)) + "</span></button>" }); });
       } else adsIn(S.cat).forEach(moon);
@@ -258,8 +259,8 @@
     function deal(k, flipped) {
       var two = shuffle(adsIn(k)).slice(0, 2), as = shuffle(arts()).slice(0, 3 - two.length), cl = COL[k] || "#6B7280";
       q(root, ".mz-result").innerHTML = '<b style="--c:' + cl + '">' + esc(catName(k)) + "</b><small>" + adsIn(k).length + " " + t("adv") + "</small>";
-      q(root, ".mz-hand").innerHTML = two.map(function (x) { var ps = prods(x), pic = ps.length ? img(ps[0].img) : logo(x); return '<div class="mz-fc' + (flipped ? " flip" : "") + '" style="--c:' + cl + '"><div class="mz-in"><span class="mz-bk">AAT</span><div class="mz-ft"><a class="mz-fpic" href="' + hrefCo(x) + '">' + (pic ? '<img src="' + pic + '" alt="">' : "") + '</a><a class="mz-fnm" href="' + hrefCo(x) + '"><b>' + esc(x.company) + "</b></a>" + cta(x, "mz-sm") + "</div></div></div>"; }).join("") +
-        as.map(function (a) { return '<div class="mz-fc' + (flipped ? " flip" : "") + '"><div class="mz-in"><span class="mz-bk">AAT</span><div class="mz-ft"><a class="mz-fpic mz-photo" href="#article-' + esc(a.id) + '">' + (a.img ? '<img src="' + img(a.img) + '" alt="">' : "") + '</a><a class="mz-fnm" href="#article-' + esc(a.id) + '"><b>' + esc(aTitle(a)) + '</b></a><a class="btn btn-line" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></div></div>"; }).join("");
+      q(root, ".mz-hand").innerHTML = two.map(function (x) { var ps = prods(x), pic = ps.length ? img(ps[0].img) : logo(x); return '<div class="mz-fc' + (flipped ? " flip" : "") + '" style="--c:' + cl + '"><div class="mz-in"><span class="mz-bk">AAT</span><div class="mz-ft"><a class="mz-fpic" href="' + hrefCo(x) + '">' + (pic ? '<img loading="lazy" decoding="async" src="' + pic + '" alt="">' : "") + '</a><a class="mz-fnm" href="' + hrefCo(x) + '"><b>' + esc(x.company) + "</b></a>" + cta(x, "mz-sm") + "</div></div></div>"; }).join("") +
+        as.map(function (a) { return '<div class="mz-fc' + (flipped ? " flip" : "") + '"><div class="mz-in"><span class="mz-bk">AAT</span><div class="mz-ft"><a class="mz-fpic mz-photo" href="#article-' + esc(a.id) + '">' + (a.img ? '<img loading="lazy" decoding="async" src="' + img(a.img) + '" alt="">' : "") + '</a><a class="mz-fnm" href="#article-' + esc(a.id) + '"><b>' + esc(aTitle(a)) + '</b></a><a class="btn btn-line" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></div></div>"; }).join("");
       if (!flipped) qa(root, ".mz-fc").forEach(function (el, i) { c.later(still ? 0 : 380 + i * 170, function () { el.classList.add("flip"); }); });
     }
     function spin() { if (busy) return; busy = true; rot += 1080 + Math.floor(Math.random() * 360); q(root, ".mz-wheel").style.transform = "rotate(" + rot + "deg)"; c.later(still ? 30 : 3300, function () { var top = (360 - (rot % 360)) % 360; busy = false; deal(ks[Math.floor(top / SEG) % N], false); }); }
@@ -318,7 +319,7 @@
       return '<div class="mz-pg mz-pa' + (feats.length || ps.length || ln.length ? "" : " mz-thin") + '"><div class="mz-pa-main">' + kick(tr("About the company", "عن الشركة")) + au(x.company, "h4") + au(L(x.about) || tb.tx, "p", "mz-lead") + (!ar && tb.tx && L(x.about) ? au(tb.tx, "p") : "") +
         (feats.length ? '<ul class="mz-feat">' + feats.slice(0, 10).map(function (s) { return au(s, "li"); }).join("") + "</ul>" : "") +
         (ps.length ? '<div class="mz-pa-strip">' + ps.slice(0, 4).map(function (p) { return '<img src="' + img(p.img) + '" alt="" loading="lazy">'; }).join("") + "</div>" : (ln.length ? '<div class="mz-pa-strip mz-pa-ln">' + ln.slice(0, 4).map(function (s, j) { return '<span class="mz-ptl"><em>0' + (j + 1) + "</em>" + au(clip(s, 50), "b") + "</span>"; }).join("") + "</div>" : "")) + "</div>" +
-        '<aside class="mz-pa-side">' + (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "") + '<div class="mz-sts">' + stat(yr, tr("Founded", "سنة التأسيس")) + stat(yrs > 0 ? yrs + "+" : "", tr("Years of experience", "عاماً من الخبرة")) + stat(ps.length || ln.length || "", tr("Products in this issue", "منتجاً في هذا العدد")) + stat(x.certs ? String(x.certs).split(/\s*[·,]\s*/)[0] : "", tr("Certified", "شهادة الجودة")) + "</div>" +
+        '<aside class="mz-pa-side">' + (lg ? '<span class="mz-pa-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "") + '<div class="mz-sts">' + stat(yr, tr("Founded", "سنة التأسيس")) + stat(yrs > 0 ? yrs + "+" : "", tr("Years of experience", "عاماً من الخبرة")) + stat(ps.length || ln.length || "", tr("Products in this issue", "منتجاً في هذا العدد")) + stat(x.certs ? String(x.certs).split(/\s*[·,]\s*/)[0] : "", tr("Certified", "شهادة الجودة")) + "</div>" +
         '<dl class="mz-pfx">' + (L(x.city) ? "<dt>" + tr("Location", "الموقع") + "</dt>" + au(L(x.city), "dd") : "") + (addr ? "<dt>" + tr("Address", "العنوان") + "</dt>" + au(addr, "dd") : "") + (x.certs ? "<dt>" + tr("Certificates", "الشهادات") + "</dt>" + au(x.certs, "dd") : "") + (catName(x.cat) ? "<dt>" + tr("Industry", "القطاع") + "</dt><dd>" + esc(catName(x.cat)) + "</dd>" : "") + "</dl></aside></div>";
     }
     /* Products: a catalogue, the range listed beside large product cards */
@@ -336,7 +337,7 @@
     function pN(tb) {
       var it = tb.it.map(function (s) { var m = s.match(/^(.*?)\s*\(([^)]*\d{4}[^)]*)\)\s*$/) || s.match(/^(.*?(?:19|20)\d{2})?,\s*(.*\d{4}.*)$/); if (m && m[1]) return { h: m[1], d: m[2] }; var y = s.match(/(?:19|20)\d{2}/); return { h: s, d: y ? y[0] : "" }; });
       if (!it.length) return '<div class="mz-pg mz-pn"><article class="mz-pn-top">' + kick(tr("News", "الأخبار")) + au(tb.tx, "h4") + "</article></div>";
-      return '<div class="mz-pg mz-pn"><article class="mz-pn-top">' + kick(tr("News", "الأخبار")) + (it[0].d ? '<em dir="ltr">' + esc(it[0].d) + "</em>" : "") + au(it[0].h, "h4") + (tb.tx && !ar ? au(tb.tx, "p") : "") + (ps.length ? '<span class="mz-pn-pic"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "")) + "</article>" +
+      return '<div class="mz-pg mz-pn"><article class="mz-pn-top">' + kick(tr("News", "الأخبار")) + (it[0].d ? '<em dir="ltr">' + esc(it[0].d) + "</em>" : "") + au(it[0].h, "h4") + (tb.tx && !ar ? au(tb.tx, "p") : "") + (ps.length ? '<span class="mz-pn-pic"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : (lg ? '<span class="mz-pa-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "")) + "</article>" +
         '<ol class="mz-pn-list">' + it.slice(1, 8).map(function (n2) { return "<li>" + (n2.d ? '<em dir="ltr">' + esc(n2.d) + "</em>" : "<em>—</em>") + au(n2.h, "b") + "</li>"; }).join("") + "</ol></div>";
     }
     /* Contact: the address card beside one-tap ways to reach the company */
@@ -350,12 +351,12 @@
       pick("em").forEach(function (s) { row(tr("Email", "البريد الإلكتروني"), s, "mailto:" + s); });
       if (web(x)) row(tr("Website", "الموقع الإلكتروني"), String(web(x)).replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""), web(x));
       var hrs = pick("hr")[0];
-      return '<div class="mz-pg mz-pk"><div class="mz-pk-card">' + (lg ? '<span class="mz-pa-lg"><img src="' + lg + '" alt=""></span>' : "") + kick(tr("Get in touch", "تواصل مع الشركة")) + au(x.company, "h4") + (addr ? au(addr, "p") : "") + (L(x.city) && !addr ? au(L(x.city), "p") : "") + (hrs ? au(hrs, "p", "mz-hrs") : "") + cta(x, "mz-sm") + "</div>" +
+      return '<div class="mz-pg mz-pk"><div class="mz-pk-card">' + (lg ? '<span class="mz-pa-lg"><img loading="lazy" decoding="async" src="' + lg + '" alt=""></span>' : "") + kick(tr("Get in touch", "تواصل مع الشركة")) + au(x.company, "h4") + (addr ? au(addr, "p") : "") + (L(x.city) && !addr ? au(L(x.city), "p") : "") + (hrs ? au(hrs, "p", "mz-hrs") : "") + cta(x, "mz-sm") + "</div>" +
         '<div class="mz-pk-act">' + rows.slice(0, 8).join("") + "</div></div>";
     }
     var PANE = { a: pA, p: pP, x: pX, n: pN, c: pC };
     return '<section class="mz-slide mz-bs mz-L' + lay + (o.wall ? " mz-bw" : "") + '" data-w="' + esc(web(x) || "") + '" style="--a:' + b.a + ";--b:" + b.b + ";--on:" + b.on + ";--f:" + (FONTS[x.cat] || "'Archivo'") + '">' +
-      '<nav class="mz-bnav"><button type="button" class="mz-blg" data-mz="bt" data-t="-1" aria-label="' + esc(x.company) + '">' + (lg ? '<img src="' + lg + '" alt="">' : "<b>" + esc(clip(x.company, 18)) + "</b>") + '</button><div dir="' + A.dir() + '">' + tabs.map(function (tb, j) { return '<button type="button" data-mz="bt" data-t="' + j + '">' + esc(tb.n) + "</button>"; }).join("") + "</div>" + (o.x || "") + "</nav>" +
+      '<nav class="mz-bnav"><button type="button" class="mz-blg" data-mz="bt" data-t="-1" aria-label="' + esc(x.company) + '">' + (lg ? '<img loading="lazy" decoding="async" src="' + lg + '" alt="">' : "<b>" + esc(clip(x.company, 18)) + "</b>") + '</button><div dir="' + A.dir() + '">' + tabs.map(function (tb, j) { return '<button type="button" data-mz="bt" data-t="' + j + '">' + esc(tb.n) + "</button>"; }).join("") + "</div>" + (o.x || "") + "</nav>" +
       '<div class="mz-bbody"><div class="mz-bpane on" data-p="-1"><div class="mz-bhero"><i class="mz-bpat" aria-hidden="true"></i><div class="mz-btx">' + (head !== x.company ? au(x.company, "small") : "") + au(head, "h3") + au(clip(L(x.about), 150), "p") + '</div><div class="mz-bwin">' + (ps.length ? media(x) : '<span class="mz-bset">' + ln.slice(0, 4).map(function (n2) { return "<i>" + esc(clip(n2, 22)) + "</i>"; }).join("") + "</span>") + "</div></div>" +
       (slo.length ? '<div class="mz-btick" dir="ltr"><div>' + slo.concat(slo, slo, slo).map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + "</div></div>" : "") + '<div class="mz-bsec mz-bhome">' + grid(6) + '<div class="mz-bhf">' + stat(yr, tr("Founded", "سنة التأسيس")) + stat(L(x.city), tr("Location", "الموقع")) + stat(x.certs, tr("Certificates", "الشهادات")) + stat(catName(x.cat), tr("Industry", "القطاع")) + "</div></div></div>" +
       tabs.map(function (tb, j) { return '<div class="mz-bpane mz-k' + tb.k + '" data-p="' + j + '">' + PANE[tb.k](tb) + "</div>"; }).join("") + "</div>" +
@@ -367,7 +368,7 @@
   /* articles in the reels: picture on top (the illustration cut out of the banner), then the headline as real text, then the writer */
   function artBy(a) { if (!a.author) return ""; return '<span class="mz-by">' + (a.face ? '<img src="' + img(a.face) + '" alt="" loading="lazy">' : '<i aria-hidden="true"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3"/></svg></i>') + "<u>" + esc(a.author) + "</u></span>"; }
   function artSlide(a) { var pic = a.cut || a.img;
-    return '<section class="mz-slide mz-art mz-art2' + (a.fit ? " mz-fit" : "") + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(new URL(img(pic), location.href).href) + '&quot;)"' : "") + '>' + (pic ? '<div class="mz-av"><img src="' + img(pic) + '" alt="" loading="lazy"></div>' : "") +
+    return '<section class="mz-slide mz-art mz-art2' + (a.fit ? " mz-fit" : "") + '"' + (pic ? ' data-bgi="' + esc(new URL(img(pic), location.href).href) + '"' : "") + '>' + (pic ? '<div class="mz-av"><img src="' + img(pic) + '" alt="" loading="lazy"></div>' : "") +
       '<div class="mz-cap"><span class="mz-tag">' + t("article") + "</span><h3>" + esc(aTitle(a)) + "</h3>" + artBy(a) + "<p>" + esc(aSum(a)) + '</p><a class="mz-read" href="#article-' + esc(a.id) + '">' + t("read") + "</a></div></section>"; }
   function brandFeed() { var a = ads().filter(function (x) { return !FCAT || x.cat === FCAT; }).sort(function (x, y) { return (prods(y).length ? 1 : 0) - (prods(x).length ? 1 : 0) || x.page - y.page; }), r = FCAT ? [] : arts(), out = [], j = 0;
     a.forEach(function (x, i) { out.push({ ad: x }); var want = Math.floor((i + 1) * r.length / a.length); while (j < want) out.push({ art: r[j++] }); }); return out; }
@@ -377,7 +378,7 @@
     if (!it.length) it = [{ n: x.company, d: "" }]; var base = it.slice(); while (it.length < 6) it = it.concat(base); return { all: it.slice(0, 12), uniq: base.length }; }
   function prodSlide(x) { var b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), pi = prodItems(x), n = pi.all.length;
     return '<section class="mz-slide mz-ps" data-w="' + esc(web(x) || "") + '" style="--a:' + b.a + ";--b:" + b.b + ";--on:" + b.on + '" data-n="' + n + '" data-u="' + pi.uniq + '">' +
-      '<header class="mz-phd"><a class="mz-plg" href="' + esc(web(x) || hrefCo(x)) + '"' + (web(x) ? ' target="_blank" rel="noopener noreferrer"' : "") + '>' + (lg ? '<img src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</a><span><b>' + esc(x.company) + "</b><small>" + esc(catName(x.cat)) + " · " + esc(L(x.city)) + "</small></span></header>" +
+      '<header class="mz-phd"><a class="mz-plg" href="' + esc(web(x) || hrefCo(x)) + '"' + (web(x) ? ' target="_blank" rel="noopener noreferrer"' : "") + '>' + (lg ? '<img loading="lazy" decoding="async" src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</a><span><b>' + esc(x.company) + "</b><small>" + esc(catName(x.cat)) + " · " + esc(L(x.city)) + "</small></span></header>" +
       '<div class="mz-rw"><i class="mz-rglow"></i><i class="mz-rfloor"></i><div class="mz-ring">' + pi.all.map(function (p, i) { return '<div class="mz-ri" data-i="' + i + '" data-n="' + esc(p.n) + '" data-d="' + esc(clip(p.d || L(x.about), 150)) + '"><span class="mz-rc">' + (p.img ? '<img src="' + p.img + '" alt="" loading="lazy">' : '<b>' + esc(clip(p.n, 40)) + "</b>") + "</span></div>"; }).join("") + "</div></div>" +
       '<footer class="mz-pft"><div class="mz-pnfo"><a class="mz-pall" href="' + hrefCo(x, "products") + '"><em></em><span>' + (A.state.lang === "ar" ? "كل منتجات الشركة" : "All company products") + ' ›</span></a><b></b><p></p></div><div class="mz-pmt"><a class="mz-pcat" href="#reels-' + x.cat + '"><i></i>' + esc(catName(x.cat)) + " ›</a>" + cta(x, "mz-sm") + "</div></footer></section>"; }
   function prodRun(feed, c) { var act = null, anims = [], held = false, downAt = 0, raf = 0;
@@ -425,10 +426,10 @@
       feed.map(function (o, k) {
         if (o.ad) { var x = o.ad, b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), ps = prods(x);
           return '<button type="button" class="mz-sc" data-mz="so" data-k="' + k + '" style="--a:' + b.a + ";--b:" + b.b + '" aria-label="' + esc(x.company) + '">' + (ps.length ? '<span class="mz-scp"><img src="' + img(ps[0].img) + '" alt="" loading="lazy"></span>' : '<span class="mz-scl">' + lines(x).slice(0, 3).map(function (n2) { return "<i>" + esc(clip(n2, 20)) + "</i>"; }).join("") + "</span>") + '<span class="mz-sct">' + (lg ? '<span class="mz-scg"><img src="' + lg + '" alt="" loading="lazy"></span>' : "") + "<b>"  + esc(clip(x.company, 34)) + "</b><small>" + esc(shortName(x.cat)) + "</small></span></button>"; }
-        var a = o.art, pic = a.cut || a.img; return '<button type="button" class="mz-sc mz-sca mz-sca2' + (a.fit ? " mz-fit" : "") + '" data-mz="so" data-k="' + k + '"' + (pic ? ' style="--bgi:url(&quot;' + esc(new URL(img(pic), location.href).href) + '&quot;)"' : "") + '>' + (pic ? '<span class="mz-scv"><img src="' + img(pic) + '" alt="" loading="lazy"></span>' : "") + '<span class="mz-sct"><em>' + t("article") + "</em><b>" + esc(clip(aTitle(a), 70)) + "</b>" + artBy(a) + "</span></button>";
+        var a = o.art, pic = a.cut || a.img; return '<button type="button" class="mz-sc mz-sca mz-sca2' + (a.fit ? " mz-fit" : "") + '" data-mz="so" data-k="' + k + '"' + (pic ? ' data-bgi="' + esc(new URL(img(pic), location.href).href) + '"' : "") + '>' + (pic ? '<span class="mz-scv"><img src="' + img(pic) + '" alt="" loading="lazy"></span>' : "") + '<span class="mz-sct"><em>' + t("article") + "</em><b>" + esc(clip(aTitle(a), 70)) + "</b>" + artBy(a) + "</span></button>";
       }).join("") + '</div></div><div class="mz-shelfreel"></div>';
     var holder = q(root, ".mz-shelfreel"), row = q(root, ".mz-srow"), d = null, moved = false;
-    c.later(300, function () { var all = qa(row, 'img[loading="lazy"]'), k = 0; (function more() { for (var z = 0; z < 10 && k < all.length; z++, k++) { all[k].decoding = "async"; all[k].loading = "eager"; } if (k < all.length) c.later(180, more); })(); });
+    c.later(300, function () { qa(row, 'img[loading="lazy"]').slice(0, 8).forEach(function (im) { im.decoding = "async"; im.loading = "eager"; }); });
     c.on(root, "click", function (ev) { var b = ev.target.closest('[data-mz="so"]'); if (!b) return; if (moved) { moved = false; return; }
       if (!box) { FCAT = myCat; done = COMP.brand(holder, c); box = q(holder, ".mz-reel"); doc.documentElement.classList.add("mz-nochat"); }
       box._mz.open(+b.getAttribute("data-k")); });
@@ -771,12 +772,12 @@
     function L(v) { return v && typeof v === "object" ? (v[A.state.lang] || v.en || v.ar || "") : (v || ""); }
     function unit(x, kind) {
       var b = G.brand[x.page] || {}, a = b.a || "#EC1D25", ps = G.prods(x).slice(0, 4), u = G.web(x), line = (!ar && b.h) || L(x.tagline) || G.catName(x.cat);
-      var pics = ps.map(function (p, k) { return '<img src="' + W.AAT.esc(G.img(p.img)) + '" alt="" style="--k:' + k + ";--n:" + ps.length + '">'; }).join("");
+      var pics = ps.map(function (p, k) { return '<img loading="lazy" decoding="async" src="' + W.AAT.esc(G.img(p.img)) + '" alt="" style="--k:' + k + ";--n:" + ps.length + '">'; }).join("");
       var ln = G.lines(x).slice(0, 3), what = ps.length ? ps.slice(0, 2).map(function (p) { return G.clip(p.n, 38); }).join(" · ") : ln.join(" · ");
       if (ln.length && ps.length) what = ln.slice(0, 3).join(" · "); if (!what) what = line;
       return '<a class="mz-ad mz-ad-' + kind + (ps.length ? "" : " mz-ad-np") + '" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer sponsored" style="--a:' + a + ";--b:" + (b.b || "#15161a") + '">' +
-        '<small class="mz-adl">' + (ar ? "إعلان" : "Advertisement") + "</small>" + (ps.length ? '<span class="mz-adp">' + pics + "</span>" : '<span class="mz-adp mz-adpl"><img src="' + W.AAT.esc(G.logo(x)) + '" alt=""></span>') +
-        '<span class="mz-adx"><em class="mz-adk">' + esc(G.catName(x.cat)) + '</em><b class="mz-adh">' + esc(G.clip(what, kind === "tower" ? 70 : 90)) + '</b><span class="mz-adco">' + (ps.length ? '<img src="' + G.logo(x) + '" alt="">' : "") + "<i>" + esc(x.company) + '</i></span><span class="mz-adc">' + (ar ? "زيارة الموقع" : "Visit website") + " ↗</span></span></a>";
+        '<small class="mz-adl">' + (ar ? "إعلان" : "Advertisement") + "</small>" + (ps.length ? '<span class="mz-adp">' + pics + "</span>" : '<span class="mz-adp mz-adpl"><img loading="lazy" decoding="async" src="' + W.AAT.esc(G.logo(x)) + '" alt=""></span>') +
+        '<span class="mz-adx"><em class="mz-adk">' + esc(G.catName(x.cat)) + '</em><b class="mz-adh">' + esc(G.clip(what, kind === "tower" ? 70 : 90)) + '</b><span class="mz-adco">' + (ps.length ? '<img loading="lazy" decoding="async" src="' + G.logo(x) + '" alt="">' : "") + "<i>" + esc(x.company) + '</i></span><span class="mz-adc">' + (ar ? "زيارة الموقع" : "Visit website") + " ↗</span></span></a>";
     }
     var slots = [], wide = W.innerWidth >= 1240;
     function slot(parent, kind, before) { var d = doc.createElement("div"); d.className = "mz-slot mz-slot-" + kind; if (before) parent.insertBefore(d, before); else parent.appendChild(d); slots.push({ el: d, kind: kind, k: slots.length }); }
@@ -850,11 +851,14 @@
   /* the full-screen reel is sized to the part of the screen that is really visible (phone browser bars come and go) */
   function vh() { var v = W.visualViewport, h = Math.round(v ? v.height : W.innerHeight), t = Math.round(v ? v.offsetTop : 0); root.style.setProperty("--mzvh", h + "px"); root.style.setProperty("--mzvt", t + "px"); }
   vh(); W.addEventListener("resize", vh); W.addEventListener("orientationchange", function () { W.setTimeout(vh, 250); }); if (W.visualViewport) { W.visualViewport.addEventListener("resize", vh); W.visualViewport.addEventListener("scroll", vh); }
-  function go() { bg(); liveMap(); chrome(); drift(); ads(); exAll(); readMode(); }
+  function go() { bg(); liveMap(); chrome(); drift(); ads(); exAll(); readMode(); lazyBg(); }
   var app = doc.getElementById("app");
   /* page changes are handled once per frame, not once per change (the exhibitions list adds hundreds of rows in batches) */
+  /* blurred picture backdrops (--bgi) are set only when the card comes into view: as a CSS background they loaded every picture at once (~3 MB) */
+  var bgIO = W.IntersectionObserver ? new IntersectionObserver(function (es) { es.forEach(function (en) { if (!en.isIntersecting) return; var el = en.target; bgIO.unobserve(el); el.style.setProperty("--bgi", 'url("' + String(el.getAttribute("data-bgi")).replace(/"/g, "%22") + '")'); }); }, { rootMargin: "200px" }) : null;
+  function lazyBg() { [].forEach.call(doc.querySelectorAll("[data-bgi]:not([data-bgo])"), function (el) { el.setAttribute("data-bgo", "1"); if (bgIO) bgIO.observe(el); else el.style.setProperty("--bgi", 'url("' + String(el.getAttribute("data-bgi")).replace(/"/g, "%22") + '")'); }); }
   var moPending = false;
-  if (app && W.MutationObserver) new MutationObserver(function () { if (moPending) return; moPending = true; W.requestAnimationFrame(function () { moPending = false; liveMap(); drift(); ads(); exAll(); }); }).observe(app, { childList: true, subtree: true });
+  if (app && W.MutationObserver) new MutationObserver(function () { if (moPending) return; moPending = true; W.requestAnimationFrame(function () { moPending = false; liveMap(); drift(); ads(); exAll(); lazyBg(); }); }).observe(app, { childList: true, subtree: true });
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", go); else go();
   W.addEventListener("load", go);
 })(window);

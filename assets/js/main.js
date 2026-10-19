@@ -227,9 +227,10 @@
     (function step() {
       if (!list.isConnected) return;
       var start = list.children.length, k = exKeys();
-      list.insertAdjacentHTML("beforeend", rest.slice(at, at + 80).map(A.ui.eventRow).join("")); at += 80;
+      list.insertAdjacentHTML("beforeend", rest.slice(at, at + 40).map(A.ui.eventRow).join("")); at += 40;
       for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (!exShow(r, k)) r.style.display = "none"; r.classList.add("in"); } /* text sizes of rows come from CSS (app.css), no per-row check */
-      if (at < rest.length) setTimeout(step, 40);
+      /* next batch when the browser is idle, so scrolling stays smooth while rows are added */
+      if (at < rest.length) { if (W.requestIdleCallback) W.requestIdleCallback(step, { timeout: 400 }); else setTimeout(step, 40); }
     })();
   }
   /* members of the club: fills the grid from members/list.php, 20 per page with page numbers under it, and a search box.

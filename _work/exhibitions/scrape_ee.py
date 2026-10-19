@@ -19,7 +19,11 @@ def get(url, tries=4):
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (AAT World calendar check)"})
-            return urllib.request.urlopen(req, timeout=40).read().decode("utf-8", "replace")
+            raw = urllib.request.urlopen(req, timeout=40).read()
+            try:  # most pages are UTF-8; some are Windows-1252 (Tüyap, Türkiye...): decoding those as UTF-8 broke the letters
+                return raw.decode("utf-8")
+            except UnicodeDecodeError:
+                return raw.decode("cp1252", "replace")
         except Exception as e:  # network hiccup: wait and retry
             if i == tries - 1:
                 print("FAILED", url, e, file=sys.stderr); return ""
