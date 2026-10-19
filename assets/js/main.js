@@ -9,7 +9,7 @@
   /* ---------- theme and language ---------- */
   function applyTheme(th) { root.setAttribute("data-theme", th); var m = $('meta[name="theme-color"]'); if (m) m.setAttribute("content", th === "dark" ? "#0D0D0F" : "#FFFFFF"); }
   function initPrefs() {
-    var th = A.store.get("theme3", null) || "light";
+    var th = "light"; /* dark mode was removed (owner's request) */
     applyTheme(th);
     A.setLang(A.store.get("lang3", null) || "ar");
   }
@@ -61,19 +61,23 @@
     var v = V.view(route);
     timers.forEach(clearInterval); timers = [];
     app.innerHTML = '<div class="view">' + v.html + "</div>";
+    doc.body.classList.toggle("is-mag", route.v === "flip"); /* the magazine page: no site zoom, no header (works in browsers without :has) */
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); floorText(app); floorText($("#ftr"));
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); exFill();
+    /* mag.js draws more cards after this (reels, company strips): check the text sizes again once they are in */
+    clearTimeout(floorT); floorT = setTimeout(function () { floorText(app); floorText($("#ftr")); setTimeout(function () { floorText(app); }, 1500); }, 700); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
   /* readers with weak eyesight: no text on the site is allowed to stay small */
+  var floorT = 0;
   function floorText(root) {
     if (!root) return;
     var all = root.querySelectorAll("*"), i, el, k, own, fs, tag, min;
     for (i = 0; i < all.length; i++) {
       el = all[i]; tag = el.tagName;
-      if (tag === "SVG" || tag === "svg" || tag === "PATH" || tag === "path" || tag === "SCRIPT" || tag === "STYLE" || tag === "IMG" || el.closest("svg")) continue;
+      if (tag === "SVG" || tag === "svg" || tag === "PATH" || tag === "path" || tag === "SCRIPT" || tag === "STYLE" || tag === "IMG" || el.closest("svg") || el.closest("#ex-list")) continue; /* exhibition rows: sizes set in CSS */
       own = false; for (k = 0; k < el.childNodes.length; k++) { var n = el.childNodes[k]; if (n.nodeType === 3 && n.nodeValue.trim()) { own = true; break; } }
       if (!own) continue;
       fs = parseFloat(getComputedStyle(el).fontSize) || 16;
@@ -125,8 +129,10 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) { if (!en.isIntersecting) return; var el = en.target; io.unobserve(el); if (el.classList.contains("count")) countUp(el); else el.classList.add("in"); });
     }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
-    $$(".rv, .split, .sh, .lead", app).forEach(function (el) {
-      if (el.getBoundingClientRect().top < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
+    /* measure every element first, then change classes: measuring after each change made the browser redo the page layout once per element (seconds on long lists such as the exhibitions) */
+    var els = $$(".rv, .split, .sh, .lead", app), tops = els.map(function (el) { return el.getBoundingClientRect().top; });
+    els.forEach(function (el, i) {
+      if (tops[i] < vh * 0.92) requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("in"); }); });
       else { el.classList.add("pre"); io.observe(el); }
     });
     $$(".count", app).forEach(function (el) { io.observe(el); });
@@ -203,6 +209,65 @@
     void leaf.offsetWidth; leaf.classList.add("go");
     setTimeout(function () { fb.page = nxt[0]; fbShow(); leaf.className = "fb-leaf"; fb.busy = false; }, 620);
   }
+  /* exhibitions: the first rows are drawn with the page and the rest follow in small batches, so the page opens at once (no "show more" button) */
+  /* exhibitions: country (buttons from mag.js) and field (sector buttons) filter the list together */
+  function exKeys() { var c = $(".exc .on[data-exc]", app), s = $(".exs .on[data-exs]", app); return [c ? c.getAttribute("data-exc") : "", s ? s.getAttribute("data-exs") : ""]; }
+  function exShow(r, k) { return (!k[0] || r.getAttribute("data-c") === k[0]) && (!k[1] || r.getAttribute("data-s") === k[1]); }
+  function exFilter() {
+    var list = $("#ex-list", app); if (!list) return;
+    var k = exKeys(), cnt = {}, tot = 0;
+    (A.exAllList || []).forEach(function (e) { if (k[0] && e.country !== k[0]) return; var s = e.sector && e.sector.ar || ""; cnt[s] = (cnt[s] || 0) + 1; tot++; });
+    if (k[1] && !cnt[k[1]]) { $$(".exs [data-exs]", app).forEach(function (b) { b.classList.toggle("on", !b.getAttribute("data-exs")); }); k[1] = ""; }
+    $$(".exs [data-exs]", app).forEach(function (b) { var s = b.getAttribute("data-exs"), v = s ? (cnt[s] || 0) : tot, sm = b.querySelector("small"); if (sm) sm.textContent = v; b.hidden = !!s && !v; });
+    for (var i = 0; i < list.children.length; i++) { var r = list.children[i], on = exShow(r, k); r.style.display = on ? "" : "none"; if (on) r.classList.add("in"); }
+  }
+  doc.addEventListener("click", function (ev) { if (ev.target.closest && ev.target.closest(".exc [data-exc]")) setTimeout(exFilter, 0); });
+  function exFill() {
+    var list = $("#ex-list", app), rest = A.exRest, at = 0; A.exRest = null; if (!list || !rest || !rest.length) return;
+    (function step() {
+      if (!list.isConnected) return;
+      var start = list.children.length, k = exKeys();
+      list.insertAdjacentHTML("beforeend", rest.slice(at, at + 40).map(A.ui.eventRow).join("")); at += 40;
+      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (!exShow(r, k)) r.style.display = "none"; r.classList.add("in"); } /* text sizes of rows come from CSS (app.css), no per-row check */
+      /* next batch when the browser is idle, so scrolling stays smooth while rows are added */
+      if (at < rest.length) { if (W.requestIdleCallback) W.requestIdleCallback(step, { timeout: 400 }); else setTimeout(step, 40); }
+    })();
+  }
+  /* members of the club: fills the grid from members/list.php, 20 per page with page numbers under it, and a search box.
+     A page change only swaps the cards in place, so the reader stays where they are on the page */
+  function membersStart() {
+    var box = $("#mem-box", app); if (!box) return;
+    var ar = A.state.lang === "ar", all = null, per = 20, page = 1, grid = $(".mem-grid", box), cnt = $(".mem-count", box), pager = $(".mem-pager", box), inp = $("#mem-q", box), q = "";
+    function card(m) {
+      return '<article class="mem-card"><img loading="lazy" decoding="async" src="' + esc(m.photo) + '" alt="' + esc(m.name) + '" width="240" height="240"><h3>' + esc(m.name) + "</h3>" +
+        (m.company ? "<p>" + esc(m.company) + "</p>" : "") + (m.country ? "<small>" + esc(m.country) + "</small>" : "") + "</article>";
+    }
+    function pg(p, label, cur) {
+      return '<button type="button" class="mem-pg' + (cur ? " on" : "") + '" data-mem="' + p + '"' + (cur ? ' aria-current="page"' : "") + ">" + label + "</button>";
+    }
+    function pages(n) {
+      if (n < 2) return "";
+      var h = page > 1 ? pg(page - 1, ar ? "السابق" : "Prev", false) : "";
+      for (var i = 1; i <= n; i++) {
+        if (i === 1 || i === n || Math.abs(i - page) <= 1) h += pg(i, i, i === page);
+        else if (i === 2 || i === n - 1) h += '<span class="mem-dots">…</span>';
+      }
+      return h + (page < n ? pg(page + 1, ar ? "التالي" : "Next", false) : "");
+    }
+    function draw() {
+      if (!all) return;
+      var list = all.filter(function (m) { return !q || (m.name + " " + (m.company || "")).toLowerCase().indexOf(q) > -1; });
+      var n = Math.max(1, Math.ceil(list.length / per)); if (page > n) page = n;
+      grid.innerHTML = list.slice((page - 1) * per, page * per).map(card).join("");
+      cnt.textContent = (ar ? "عدد الأعضاء: " : "Members: ") + list.length + (list.length !== all.length ? " / " + all.length : "") + (n > 1 ? (ar ? " — صفحة " : " — page ") + page + " / " + n : "");
+      pager.innerHTML = pages(n);
+    }
+    pager.addEventListener("click", function (e) { var b = e.target.closest("[data-mem]"); if (!b) return; page = +b.getAttribute("data-mem"); draw(); });
+    inp.addEventListener("input", function () { q = inp.value.trim().toLowerCase(); page = 1; draw(); });
+    fetch("members/list.php").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+      all = d.members || []; if (!all.length) { cnt.textContent = ar ? "قائمة الأعضاء ستظهر هنا بعد رفع الصور." : "The member list will appear here once the photos are uploaded."; return; } draw();
+    }).catch(function () { cnt.textContent = ar ? "قائمة الأعضاء غير متاحة الآن." : "The member list is not available right now."; });
+  }
   function flipStart() {
     var el = $("[data-fb]", app); fb = null; if (!el) return;
     fb = { el: el, n: +el.getAttribute("data-n"), page: +el.getAttribute("data-page"), book: $(".fb-book", el), r: $(".fb-p.r img", el), l: $(".fb-p.l img", el), leaf: $(".fb-leaf", el), lbl: $(".fb-lbl", el), range: $("#fb-r", el), links: $(".fb-links", el), single: W.innerWidth < 760, busy: false };
@@ -249,10 +314,11 @@
     if (W.AAT_ASSISTANT_API) { chat.mode = "api"; return; }
     if (W.claude && typeof W.claude.use === "function") W.claude.use("sample").then(function (fn) { if (fn) { chat.sample = fn; chat.mode = "claude"; if (chat.open) chatRender(false); } }).catch(function () {});
   }
-  function links(list) { return '<div class="res">' + list.map(function (x) { return '<a href="' + x[0] + '"' + (/^#/.test(x[0]) ? "" : ' target="_blank" rel="noopener noreferrer"') + ">" + esc(x[1]) + (x[2] ? "<small>" + esc(x[2]) + "</small>" : "") + "</a>"; }).join("") + "</div>"; }
+  function links(list) { return '<div class="res">' + list.map(function (x) { return '<a href="' + esc(x[0]) + '"' + (/^#/.test(x[0]) ? "" : ' target="_blank" rel="noopener noreferrer"') + ">" + esc(x[1]) + (x[2] ? "<small>" + esc(x[2]) + "</small>" : "") + "</a>"; }).join("") + "</div>"; }
   function contactRes() { var c = A.D.config; return links([[A.waLink(), t("wa"), c.phoneDisplay], ["mailto:" + c.email, t("email_word"), c.email]]); }
   function has(q, words) { return words.some(function (w) { return q.indexOf(w) > -1; }); }
   function quickAnswer(raw) {
+    if (A.answer) return A.answer(raw); /* assistant.js: answers from the site's own content, no API needed */
     var q = " " + raw.toLowerCase() + " ";
     if (has(q, ["whatsapp", "contact", "phone", "email", "call", "واتس", "تواصل", "اتصال", "هاتف", "بريد", "聯絡", "联系", "hubungi"])) return esc(t("chat_contact")) + contactRes();
     if (has(q, ["advertis", " ad ", "اعلان", "إعلان", "أعلن", "廣告", "广告", "iklan"])) return esc(t("ad_title")) + links([["#advertise", t("adv_btn")]]) + contactRes();
@@ -284,6 +350,7 @@
   function chatRender(reset) {
     if (reset) chat.log = [{ who: "bot", html: esc(t("chat_hello")) }];
     var el = $("#chat"); if (!el) return;
+    if (A.D.config.assistant === false) { el.innerHTML = ""; return; } /* the assistant is switched off in data.js for now */
     el.innerHTML = '<button type="button" class="chat-b" data-act="chat-open" aria-label="' + esc(t("chat_open")) + '"' + (chat.open ? " hidden" : "") + ">" + U.ic("chat", 22) + "<span><b>" + t("chat_cta") + "</b><small>" + t("chat_cta2") + "</small></span></button>" +
       '<section class="chat" role="dialog" aria-label="' + esc(t("chat_title")) + '"' + (chat.open ? "" : " hidden") + '><header><div><b>' + t("chat_title") + "</b><small>" + (chat.mode ? t("ai_on") : t("chat_sub")) + '</small></div><button type="button" class="ib" data-act="chat-close" aria-label="' + esc(t("chat_close")) + '">' + U.ic("x", 20) + "</button></header>" +
       '<div class="chat-log" id="chat-log" aria-live="polite">' + chat.log.map(function (m) { return '<div class="msg ' + m.who + '">' + m.html + "</div>"; }).join("") + "</div>" + (chat.mode ? '<p class="chat-n">' + t("ai_note") + "</p>" : "") +
@@ -340,6 +407,10 @@
       else if (act === "hs") { e.stopPropagation(); hsOpen(+a.getAttribute("data-k")); }
       else if (act === "zoom") zoomOpen(a.getAttribute("src"), a.getAttribute("alt"));
       else if (act === "cat") { var list = $("#pr-list"); list.setAttribute("data-cat", a.getAttribute("data-cat")); $$("[data-act=cat]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === a)); }); list.innerHTML = V.productList($("#pr-q").value.trim(), a.getAttribute("data-cat")); $$(".rv", list).forEach(function (x) { x.classList.add("in"); }); }
+      else if (act === "exs") { $$(".exs [data-exs]", app).forEach(function (b) { b.classList.toggle("on", b === a); }); exFilter(); }
+      else if (act === "appnum") { var num = a.getAttribute("data-copy"), app = a.getAttribute("data-app"), arx = A.state.lang === "ar";
+        var done = function () { var tb = doc.createElement("div"); tb.className = "app-toast"; tb.setAttribute("role", "status"); tb.textContent = (arx ? "تم نسخ الرقم " : "Number copied: ") + num + (arx ? " — الصقه في " : " — paste it in ") + app; doc.body.appendChild(tb); setTimeout(function () { tb.remove(); }, 3500); };
+        (navigator.clipboard ? navigator.clipboard.writeText(num) : Promise.reject()).then(done, done); }
       else if (act === "copy") { var txt = a.getAttribute("data-copy"), orig = a.textContent; (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { a.textContent = t("copied"); setTimeout(function () { a.textContent = orig; }, 1600); }).catch(function () { a.textContent = txt; }); }
       else if (act === "chat-open") { chat.open = true; chatRender(false); $("#chat-in").focus(); }
       else if (act === "chat-close") { chat.open = false; chatRender(false); $(".chat-b").focus(); }
@@ -367,7 +438,7 @@
   W.AAT.app = { render: function () { chrome(); render(true); }, route: function () { return route; }, applyTheme: applyTheme };
   function start() {
     hdr = $("#hdr"); app = $("#app"); ftr = $("#ftr");
-    initPrefs(); chrome(); render(true); bind(); headerScroll(); aiInit(); intro();
+    initPrefs(); chrome(); render(true); bind(); headerScroll(); aiInit(); /* no intro splash: it came after the page was already showing and looked like a restart */
     root.classList.add("js");
   }
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", start); else start();

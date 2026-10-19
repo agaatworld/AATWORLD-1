@@ -20,7 +20,7 @@ ONEP,OW,OH=_U['one']['d'],_U['one']['w'],_U['one']['h']
 logo_red=open('aat-logo-red.svg').read(); logo_white=open('aat-logo-white.svg').read()
 def inner(svg): return svg[svg.index('>')+1:svg.rindex('</svg>')]
 # vCard QR
-vc='\r\n'.join(['BEGIN:VCARD','VERSION:3.0','N:Fattal;Mohamad Marwan','FN:Mohamad Marwan Fattal','ORG:AAT','TEL:+886966404681','EMAIL:marwanaat@gmail.com','URL:aatworld.com','END:VCARD'])
+vc='\r\n'.join(['BEGIN:VCARD','VERSION:3.0','N:Fattal;Mohamad Marwan','FN:Mohamad Marwan Fattal','ORG:AAT','TEL:+886966404681','EMAIL:marwan@aatworld.com','URL:aatworld.com','END:VCARD'])
 q=segno.make(vc,error='l',micro=False)
 buf=io.BytesIO(); q.save(buf,kind="svg",scale=1,border=0,dark="#1b1a18",xmldecl=False,svgns=True,nl=False,omitsize=True); QR=buf.getvalue().decode()
 qn=q.symbol_size(scale=1,border=0)[0]
@@ -56,7 +56,7 @@ F=('<div style="position:relative;width:%dpx;height:%dpx;overflow:hidden;backgro
  '<div style="font-size:33px;font-weight:800;line-height:1.15">Mohamad Marwan Fattal</div>'
  '<div style="font-size:24px;font-weight:800;color:#D21F26;letter-spacing:2px;margin-bottom:26px">OWNER · <span dir="rtl">المالك</span></div>'
  '<div style="font-size:28px;font-weight:700">+886 966 404 681</div>'
- '<div style="font-size:28px;font-weight:700">marwanaat@gmail.com</div></div>'
+ '<div style="font-size:28px;font-weight:700">marwan@aatworld.com</div></div>'
  '<div style="position:absolute;right:56px;bottom:52px;display:flex;flex-direction:column;align-items:center;gap:8px">'
  '<div style="width:142px;height:142px;padding:7px;box-sizing:border-box;background:#fff;border:3px solid #D21F26;border-radius:12px">'+QR.replace('<svg ','<svg width="122" height="122" style="display:block" ',1)+'</div>'
  '<div style="font-size:16px;font-weight:700;color:#6b655c">Scan to save</div></div></div>')

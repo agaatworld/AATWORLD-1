@@ -7,15 +7,17 @@ window.AAT_DATA = {
     whatsapp: "886966404681",            // WhatsApp number, international format, digits only (confirm this number uses WhatsApp)
     phoneDisplay: "+886 966 404681",     // Taiwan phone, as on aatworld.com
     email: "info@aatworld.com",
-    editorEmail: "marwanaat@gmail.com",
+    editorEmail: "marwan@aatworld.com",
     clubEmail: "aatclub@gmail.com",      // support / AAT Business Club
     newsUrl: "https://aatworld.com/news/",
     siteUrl: "https://aatworld.com/",
     leadEndpoint: "",                    // optional: a form backend URL (Formspree, your CRM, etc.). Leave empty to send leads by WhatsApp.
     address: {
-      en: "P.O. Box 5, Yongqiao, Taipei City 100916, Taiwan R.O.C.",
-      ar: "ص.ب 5، يونغتشياو، مدينة تايبيه 100916، تايوان"
+      en: "P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.",
+      ar: "ص.ب 568، يونغخه، مدينة تايبيه الجديدة 234964، تايوان"
     },
+    apps: ["WhatsApp", "Botim", "Imo", "BiP", "Viber", "LINE"],   // the phone number can be reached on these apps (WhatsApp and Viber open a chat; the others copy the number)
+    assistant: true,                     // the "24-hour chat" assistant (assets/js/assistant.js, answers from the site's content without an API); false hides it
     social: {
       youtube: "https://www.youtube.com/@aatworldvideo608"
     },

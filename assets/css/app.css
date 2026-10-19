@@ -488,7 +488,7 @@ html[lang="ar"] .prose, .rd[lang="ar"] .prose { font-size: 22px; line-height: 1.
 #app, #ftr { zoom: 1.08; }
 @media (min-width: 900px) { #app, #ftr { zoom: 1.18; } }
 @media (min-width: 1500px) { #app, #ftr { zoom: 1.26; } }
-body:has(.fbx) #app { zoom: 1; }
+body:has(.fbx) #app, body.is-mag #app, body.is-mag #ftr { zoom: 1; }
 .kick, html[lang="ar"] .kick, html[lang^="zh"] .kick { font-size: 19px; font-weight: 800; }
 .h2 { font-size: clamp(26px, 2.5vw, 36px); }
 .more { font-size: 17px; font-weight: 700; }
@@ -525,7 +525,7 @@ html.mz-bgon body, html.mz-bgon[data-theme="dark"] body { background-attachment:
 .hd, .mnav, #hdr .hd { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; }
 .btn-adv, .btn-adv::before, .btn-adv::after, .btn .ic, .more .ic { animation: none !important; }
 /* Magazine page: the magazine takes the whole window; the site menu lives in the magazine's own side drawer */
-body:has(.fbx) #hdr { display: none !important; }
+body:has(.fbx) #hdr, body.is-mag #hdr, body.is-mag #ftr { display: none !important; }
 
 /* Live trade map, readable: red labels with white text, strong red moving lines and dots */
 .tm-lb rect, .tm-lb.hub rect, .tm-lb.ar rect { fill: #D21F26 !important; stroke: none !important; }
@@ -537,3 +537,181 @@ body:has(.fbx) #hdr { display: none !important; }
 /* exhibitions: sector line, and month-only shows */
 .er-s { display: block; font-style: normal; font-weight: 700; color: var(--red-2); font-size: 17px; margin-top: 2px; }
 .er-d.mo b { font-size: 22px; } .er-d.mo small { font-size: 15px; }
+
+/* ===== speed (update 16) ===== */
+/* decorations pause while the page scrolls, so scrolling stays smooth */
+html.is-scrolling *, html.is-scrolling *::before, html.is-scrolling *::after { animation-play-state: paused !important; }
+/* slow computers: no moving decorations, no costly glow filters (content, ads and the map stay) */
+html.lite .mz-wbg i, html.lite .mz-blob, html.lite .mz-L1 .mz-bpat::after, html.lite #app::before, html.lite .mz-av img, html.lite .mz-adp img:only-child, html.lite .mz-rglow, html.lite .xc-f .fl, html.lite .btn-adv::after, html.lite .btn-adv .ic, html.lite .mz-cta::after, html.lite .mz-ad::after { animation: none !important; }
+html.lite .tm-glow, html.lite .mz-wbg i { filter: none !important; }
+/* magazine page: the site chat button would cover the magazine's page bar */
+body.is-mag #chat { display: none !important; }
+
+/* ===== club members (update 20): filled from members/list.php ===== */
+.mem-box { display: grid; gap: 18px; }
+.mem-q { width: 100%; max-width: 520px; min-height: 52px; font: inherit; font-size: 18px; padding: 10px 16px; border-radius: 12px; border: 2px solid var(--line, #d9d9de); background: var(--surface, #fff); color: inherit; }
+.mem-count { font-size: 18px; font-weight: 700; margin: 0; }
+.mem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+.mem-card { background: var(--surface, #fff); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; text-align: center; }
+.mem-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; background: #f3f3f5; }
+.mem-card h3 { font-size: 19px; line-height: 1.35; margin: 10px 0 4px; }
+.mem-card p { font-size: 17px; margin: 0; color: var(--muted, #555); }
+.mem-card small { display: block; font-size: 16px; margin-top: 4px; color: var(--red, #D21F26); font-weight: 700; }
+.mem-more-row { text-align: center; margin: 0; }
+.mem-grid { animation: memIn .2s ease; }
+@keyframes memIn { from { opacity: .35; } to { opacity: 1; } }
+.mem-pager { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin: 4px 0 0; }
+.mem-pg { min-width: 56px; min-height: 56px; padding: 0 14px; font: inherit; font-size: 20px; font-weight: 800; border-radius: 12px; border: 2px solid var(--red, #D21F26); background: var(--surface, #fff); color: var(--red, #D21F26); cursor: pointer; }
+.mem-pg.on { background: var(--red, #D21F26); color: #fff; }
+.mem-pg:focus-visible { outline: 3px solid #7A0A10; outline-offset: 2px; }
+.mem-dots { font-size: 20px; font-weight: 800; padding: 0 4px; }
+
+/* ---------- owner's changes (update 22) ---------- */
+/* header: the page links spread across the whole bar, in larger type */
+#hdr .hd { max-width: 1480px; }
+@media (min-width: 1180px) {
+  #hdr .hd-nav { justify-content: space-evenly; gap: 6px; }
+  #hdr .hd-nav a, html #hdr .hd-nav a { font-size: clamp(17px, 1.3vw, 21px); font-weight: 800; padding: 8px 6px; }
+}
+.lang-sw { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line, #d9d9de); background: var(--surface, #fff); color: var(--ink, #111); font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.lang-sw:hover { border-color: var(--red, #D21F26); color: var(--red, #D21F26); }
+/* 24-hour chat on the left, the back-to-top button on the right, in both languages */
+.chat-b, .chat { inset-inline-start: auto; left: 18px; right: auto; }
+#mz-top { inset-inline-end: auto; right: 18px; left: auto; }
+/* the search bar stays in its place above the list instead of floating over the page */
+.bar, .bar.sticky { position: static; }
+/* "We have published / 560 / issues of the magazine" */
+.kpi-pre { display: block; font-style: normal; font-weight: 800; font-size: 18px; line-height: 1.3; }
+/* the products of this issue sit inside "Modern products and industries", under the sectors */
+.pg-in { margin-top: 28px; }
+/* "this number is on": the messaging apps */
+.apps { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none; }
+.apps li { padding: 4px 12px; border-radius: 999px; background: var(--surface-2, #f1f1f4); color: var(--ink, #111); font-weight: 800; font-size: 16px; }
+.ft .apps li { background: rgba(255, 255, 255, .12); color: #fff; }
+/* the full exhibitions list (~950 rows): rows below the screen are laid out only when scrolled to */
+#ex-list .er { content-visibility: auto; contain-intrinsic-size: auto 110px; }
+.ft ul.apps, ul.apps { display: flex; flex-wrap: wrap; justify-content: flex-start; }
+.ft ul.apps li, ul.apps li { display: inline-block; width: auto; margin: 0; }
+.ft-b bdi { white-space: nowrap; }
+.ft-r { white-space: nowrap; }
+/* while scrolling, every animation pauses to keep the page smooth, except the "45 years" counter and the trade map (owner's request) */
+html.is-scrolling .yrs, html.is-scrolling .yrs *, html.is-scrolling .yrs *::before, html.is-scrolling .yrs *::after,
+html.is-scrolling .live-map, html.is-scrolling .live-map *, html.is-scrolling .live-map *::before, html.is-scrolling .live-map *::after { animation-play-state: running !important; }
+/* the apps as icons */
+ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
+.app-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: 0 4px 12px -6px rgba(0, 0, 0, .45); }
+.app-i svg { width: 30px; height: 30px; display: block; }
+.app-i svg { width: 36px; height: 36px; }
+/* languages: "English" switch plus a globe button that opens every language */
+.lang-g { width: 44px; height: 44px; min-height: 44px; padding: 0; justify-content: center; }
+.hd-act { gap: 8px; }
+/* app icons are links (WhatsApp, Viber) or copy buttons (Botim, imo, BiP, LINE) */
+.app-a { display: block; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 14px; transition: transform .15s; }
+.app-a:hover { transform: translateY(-2px); }
+.app-a:focus-visible { outline: 3px solid var(--red, #D21F26); outline-offset: 3px; }
+.ctb { align-items: center; flex-wrap: wrap; gap: 12px; }
+.ctb-ph { font-weight: 800; font-size: 18px; }
+.app-toast { position: fixed; z-index: 120; left: 50%; bottom: 28px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 14px 20px; border-radius: 14px; background: #111; color: #fff; font-size: 18px; font-weight: 700; box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6); }
+/* exhibitions: the field (sector) buttons under the countries */
+.exs-t { margin: 14px 0 6px; font-size: 18px; font-weight: 800; }
+.exs .chip[hidden] { display: none; }
+.exs .chip.on { background: var(--red, #D21F26); color: #fff; border-color: var(--red, #D21F26); } .exs .chip.on small { color: #fff; }
+/* exhibition rows: the large-text floor set in CSS (the per-row text check was the slowest part of the list); the city beside the flag was 12px */
+.er small, .er .er-n { font-size: max(16px, 1em) !important; }
+.er .er-cn em { font-size: 16px; font-weight: 700; }
+/* the 24-hour chat button and window in large type */
+.chat-b b { font-size: 18px; } .chat-b small { font-size: 16px; }
+.chat-b { padding: 11px 20px 11px 16px; }
+.chat .msg, .chat .msg p, .chat .res a, .chat input, .chat header small { font-size: 17px; }
+.chat .res small { font-size: 16px; }
+.chat header b { font-size: 19px; }
+/* page titles get focus on each page change (for screen readers): no outline box for mouse and touch users */
+[tabindex="-1"]:focus { outline: none; box-shadow: none; }
+/* owner's rule: no small labels above headings */
+.kick:has(+ h1), .kick:has(+ .h1), .kick:has(+ h2), .kick:has(+ .h2), .kick:has(+ .h0), .live-k:has(+ h2) { display: none !important; }
+/* section titles that open their page look like titles, not links */
+.sh-a { color: inherit; text-decoration: none; }
+.sh-a:hover { color: var(--red, #D21F26); }
+/* medium screens (e.g. a laptop with Windows display scaling): the page links go on a second row instead of disappearing behind the menu button */
+@media (min-width: 860px) and (max-width: 1179px) {
+  :root { --hd: 128px; }
+  #hdr .hd { height: auto !important; flex-wrap: wrap; row-gap: 4px; padding-block: 8px; max-width: calc(100% - 16px); }
+  #hdr .hd-nav { display: flex !important; order: 3; flex-basis: 100%; justify-content: space-between; }
+  #hdr .hd-nav a { font-size: 17px !important; font-weight: 800; padding: 6px 4px; }
+  #hdr .hd-menu { display: none !important; }
+}
+/* original app logos (pictures) fill the whole rounded tile */
+.app-i.app-img { overflow: hidden; background: #fff; }
+.app-i.app-img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+/* AAT Business Club seal (red ring, AAT logo in the middle) */
+.cbm { position: relative; width: 190px !important; height: 190px !important; background: none !important; border: 0 !important; display: block !important; box-shadow: 0 10px 24px -14px rgba(122,10,16,.6); border-radius: 50%; }
+.cbm-ring { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cbm-lg { position: absolute; left: 50%; top: 50%; width: 96px; transform: translate(-50%, -38%); line-height: 0; }
+.cbm-lg svg { width: 100%; height: auto; display: block; }
+@media (max-width: 640px) { .cbm { width: 160px !important; height: 160px !important; margin-inline: auto; } .cbm-lg { width: 80px; } }
+/* Sections are clearly separated: every second section sits on a white band, and each new section starts with a line and a short red bar */
+#app section + section { position: relative; border-top: 1px solid #E7DADB; }
+#app section + section::before { content: ""; position: absolute; top: -3px; left: 50%; width: 84px; height: 5px; margin-left: -42px; border-radius: 3px; background: #D21F26; }
+#app section.sec:not(.cta):not(.facts):nth-of-type(even) { background: rgba(255, 255, 255, .78); }
+/* First open: the static copy of the page (for search engines) stays invisible until the real page is drawn,
+   so visitors never see the page jump back to the top banner. If the scripts fail it appears after 6 seconds. */
+html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
+@keyframes aat-show { to { opacity: 1; } }
+/* Page opening (every inner page): a welcoming brand banner — deep red with the AAT hooked-pair pattern,
+   large white title, short white bar, and the big AAT swash pair at the end side */
+#app header.ph:not(.co):not(.mz-ph) { position: relative; overflow: hidden; border: 0; color: #fff; isolation: isolate;
+  background: url("../img/brand/pair-pattern.svg") 0 0 / 240px 180px repeat, linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%);
+  padding-block: clamp(40px, 5.2vw, 76px) clamp(38px, 4.6vw, 66px); box-shadow: inset 0 -6px 0 #7A0A10; }
+#app header.ph:not(.co):not(.mz-ph)::after { content: ""; position: absolute; z-index: -1; inset-block: -10% -14%; inset-inline-end: -4%; width: min(46vw, 620px);
+  background: url("../img/brand/pair-white.svg") center / contain no-repeat; opacity: .12; }
+[dir="rtl"] #app header.ph:not(.co):not(.mz-ph)::after { transform: scaleX(-1); }
+#app header.ph:not(.co):not(.mz-ph) .wrap { gap: 14px; }
+#app header.ph:not(.co):not(.mz-ph) .h1 { color: #fff; font-size: clamp(34px, 4.4vw, 60px); line-height: 1.2; text-shadow: 0 2px 14px rgba(60, 0, 4, .35); }
+#app header.ph:not(.co):not(.mz-ph) .h1::after { content: ""; display: block; width: 92px; height: 6px; margin-top: 16px; border-radius: 3px; background: #fff; }
+#app header.ph:not(.co):not(.mz-ph) .lead, #app header.ph:not(.co):not(.mz-ph) p { color: rgba(255, 255, 255, .94) !important; max-width: 62ch; font-size: clamp(19px, 1.5vw, 23px); line-height: 1.8; }
+#app header.ph:not(.co):not(.mz-ph) a:not(.btn) { color: #fff; }
+#app header.ph:not(.co):not(.mz-ph) .kick, #app header.ph:not(.co):not(.mz-ph) .crumbs { display: none; }
+#app header.ph:not(.co):not(.mz-ph) + section::before { display: none; }
+#app header.ph:not(.co):not(.mz-ph) + section { border-top: 0; }
+#app .facts + .cta, #app .cta + .facts { border-top-color: #2A2A2E; }
+/* the banner starts at the very top, behind the floating white menu bar */
+#app header.ph:not(.co):not(.mz-ph) { margin-top: calc(-1 * var(--hd)); padding-top: calc(var(--hd) + clamp(34px, 4.6vw, 70px)); }
+#app header.ph:not(.co):not(.mz-ph) { background: url("../img/brand/pair-pattern.svg") 0 0 / 240px 180px repeat, linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); }
+/* owner: no AAT symbol on the site for now — plain red banner (no pattern, no big swash) */
+#app header.ph:not(.co):not(.mz-ph) { background: linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); }
+#app header.ph:not(.co):not(.mz-ph)::after { content: none; display: none; }
+/* Clear sections on every page (owner: "section it like AAT BC, or better"):
+   1) the home opening is a red brand banner like the openings of the inner pages */
+#app section.hero { position: relative; color: #fff; background: linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); box-shadow: inset 0 -6px 0 #7A0A10; padding-block: clamp(34px, 4vw, 60px) clamp(40px, 4.6vw, 66px); }
+#app section.hero .kick, #app section.hero .yrs-n, #app section.hero .yrs-w, #app section.hero .yrs-s, #app section.hero .h0, #app section.hero .lead { color: #fff !important; }
+#app section.hero .kick::before, #app section.hero .yrs-s::before { background: #fff; }
+#app section.hero .uline { background: #fff !important; }
+#app section.hero .lead { opacity: .95; }
+#app section.hero .btn-adv { background: #fff; color: #B5121A; box-shadow: 0 12px 28px -14px rgba(40, 0, 0, .8); }
+#app section.hero .btn-line { color: #fff; border-color: rgba(255, 255, 255, .7); }
+#app section.hero .btn-line:hover { background: #fff; color: #B5121A; }
+#app section.hero .hero-cover, #app section.hero .hero-cover-t { color: #fff; }
+#app section.hero + section { border-top: 0; }
+#app section.hero + section::before { display: none; }
+/* 2) every section title carries the same short red bar as the page banners */
+#app section.sec:not(.cta) .sh .h2::after, #app section.live h2::after, #app section.sec:not(.cta) > .wrap > .h2:first-child::after, #app section.sec:not(.cta) > .wrap > div > .h2:first-child::after {
+  content: ""; display: block; width: 70px; height: 6px; border-radius: 3px; background: #D21F26; margin-top: 14px; }
+#app .sh .h2.split::after { margin-inline-start: 0; }
+/* 3) the exhibitions' logo strip belongs to the exhibitions section (no separate untitled band) */
+#app section.sec.trust { border-top: 0 !important; background: transparent !important; padding-top: 0; }
+#app section.sec.trust::before { display: none !important; }
+#app section.sec:not(.cta) h2.h2::after { content: ""; display: block; width: 70px; height: 6px; border-radius: 3px; background: #D21F26; margin-top: 14px; transform: none; }
+#app section .card h2::after, #app section .h3::after { content: none !important; }
+/* Clear sections on EVERY page (same as the Business Club page): solid alternating bands, a line with a red bar
+   between them, and every section title with the red bar under it */
+#app section.sec:not(.cta):not(.facts):not(.trust) { background: #FFFFFF; }
+#app section.sec:not(.cta):not(.facts):not(.trust):nth-of-type(odd) { background: #F7F1EF; }
+/* products: one band per field, each with its title and number of products */
+#app .pr-wrap { padding-block: 0; }
+#app .pr-grp { position: relative; padding-block: clamp(30px, 4vw, 54px); box-shadow: 0 0 0 100vmax #FFFFFF; clip-path: inset(0 -100vmax); border-top: 1px solid #E7DADB; }
+#app .pr-grp:nth-child(even) { box-shadow: 0 0 0 100vmax #F7F1EF; }
+#app .pr-grp:first-child { border-top: 0; }
+#app .pr-grp:not(:first-child)::before { content: ""; position: absolute; top: -3px; left: 50%; width: 84px; height: 5px; margin-left: -42px; border-radius: 3px; background: #D21F26; }
+#app .pr-grp > .h2 { margin: 0 0 24px; display: block; }
+#app .pr-n { vertical-align: middle; margin-inline-start: 10px; }
+#app .pr-n { display: inline-grid; place-items: center; min-width: 40px; height: 34px; padding: 0 10px; border-radius: 999px; background: #D21F26; color: #fff; font-size: 18px; font-weight: 800; }
