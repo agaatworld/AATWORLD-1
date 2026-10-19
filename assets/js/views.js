@@ -212,7 +212,7 @@
     var body = b ? (b.body[A.state.lang] || b.body.en || b.body.ar || []) : [], src = b ? A.safeUrl(b.source) : "";
     return { title: L(n.title), html:
       '<article class="rd"><div class="wrap rd-w">' + U.crumbs([[t("home"), "home"], [U.newsWord(), "news"], [L(n.title)]]) + '<h1 class="h1" tabindex="-1">' + esc(L(n.title)) + "</h1>" + (b && b.date ? '<p class="rd-m">' + esc(A.fmtDate(b.date)) + "</p>" : "") +
-      '<img class="rd-img" src="' + img(n.img) + '" alt=""><div class="prose">' + paras(body) + "</div>" + (src ? '<div class="row"><a class="btn btn-line" href="' + esc(src) + '" target="_blank" rel="noopener noreferrer">' + ic("link", 18) + t("news_source") + "</a></div>" : "") + "</div></article>" +
+      '<img class="rd-img" src="' + esc(img(n.img)) + '" alt=""><div class="prose">' + paras(body) + "</div>" + (src ? '<div class="row"><a class="btn btn-line" href="' + esc(src) + '" target="_blank" rel="noopener noreferrer">' + ic("link", 18) + t("news_source") + "</a></div>" : "") + "</div></article>" +
       sec("alt", U.head(t("news_kicker"), t("news_more"), ["news", t("news_all")]) + '<div class="ng">' + newsCards(i, 4) + "</div>") };
   }
 
@@ -248,7 +248,8 @@
 
   /* ---------- club, about, advertise, contact ---------- */
   function clubMark() { return '<span class="cbm" aria-label="AAT Business Club"><b>AAT</b><small>BUSINESS CLUB</small></span>'; }
-  function clubJoin() { return '<div class="row"><a class="btn btn-wa btn-lg" href="' + A.waLink(t("cb_join_wa")) + '" target="_blank" rel="noopener noreferrer">' + ic("chat", 18) + t("wa") + '</a><a class="btn btn-line btn-lg" href="' + A.mailLink(D.config.clubEmail, "AAT Business Club", t("cb_join_wa")) + '">' + ic("mail", 18) + t("email_word") + "</a></div>"; }
+  /* joining the club: the number with every messaging app, and the club e-mail */
+  function clubJoin() { var c = D.config; return '<div class="row ctb"><a class="btn btn-line btn-lg ctb-ph" href="tel:+' + esc(c.whatsapp) + '" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + U.apps(t("cb_join_wa")) + '<a class="btn btn-line btn-lg" href="' + A.mailLink(c.clubEmail, "AAT Business Club", t("cb_join_wa")) + '">' + ic("mail", 18) + t("email_word") + "</a></div>"; }
   /* the members list is filled by the browser from members/list.php (it reads the photos folder on the server) */
   function membersBox() {
     var ar = A.state.lang === "ar";

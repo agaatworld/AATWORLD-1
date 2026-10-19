@@ -11,6 +11,17 @@
  */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: public, max-age=300');
+header('X-Content-Type-Options: nosniff');
+
+// the scan of ~2,900 photos is kept for 10 minutes (and redone at once when hidden.json or data.json change),
+// so many visitors at the same time do not make the server read the folder again and again
+$cache = __DIR__ . '/list-cache.json';
+if (is_file($cache)) {
+    $age = time() - filemtime($cache);
+    $newer = false;
+    foreach (['hidden.json', 'data.json'] as $f) { if (is_file(__DIR__ . '/' . $f) && filemtime(__DIR__ . '/' . $f) > filemtime($cache)) { $newer = true; } }
+    if ($age < 600 && !$newer) { readfile($cache); exit; }
+}
 
 $base = __DIR__ . '/photos';
 $extra = [];
@@ -52,4 +63,6 @@ if (is_dir($base)) {
 }
 usort($members, function ($a, $b) { return strnatcasecmp($a['name'], $b['name']); });
 
-echo json_encode(['count' => count($members), 'members' => $members], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+$out = json_encode(['count' => count($members), 'members' => $members], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+@file_put_contents($cache, $out, LOCK_EX);
+echo $out;

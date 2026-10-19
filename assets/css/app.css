@@ -616,3 +616,16 @@ ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 .exs-t { margin: 14px 0 6px; font-size: 18px; font-weight: 800; }
 .exs .chip[hidden] { display: none; }
 .exs .chip.on { background: var(--red, #D21F26); color: #fff; border-color: var(--red, #D21F26); } .exs .chip.on small { color: #fff; }
+/* exhibition rows: the large-text floor set in CSS (the per-row text check was the slowest part of the list); the city beside the flag was 12px */
+.er small, .er .er-n { font-size: max(16px, 1em) !important; }
+.er .er-cn em { font-size: 16px; font-weight: 700; }
+/* the 24-hour chat button and window in large type */
+.chat-b b { font-size: 18px; } .chat-b small { font-size: 16px; }
+.chat-b { padding: 11px 20px 11px 16px; }
+.chat .msg, .chat .msg p, .chat .res a, .chat input, .chat header small { font-size: 17px; }
+.chat .res small { font-size: 16px; }
+.chat header b { font-size: 19px; }
+/* page titles get focus on each page change (for screen readers): no outline box for mouse and touch users */
+[tabindex="-1"]:focus { outline: none; box-shadow: none; }
+/* owner's rule: no small labels above headings */
+.kick:has(+ h1), .kick:has(+ .h1), .kick:has(+ h2), .kick:has(+ .h2), .kick:has(+ .h0), .live-k:has(+ h2) { display: none !important; }

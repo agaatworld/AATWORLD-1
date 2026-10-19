@@ -3,3 +3,5 @@
    AAT_NEWSLETTER_API: address that receives {email, lang} by POST. Empty = the visitor confirms by email. */
 window.AAT_ASSISTANT_API = window.AAT_ASSISTANT_API || "";
 window.AAT_NEWSLETTER_API = window.AAT_NEWSLETTER_API || "";
+/* the home page opens with the magazine shelf (this line used to sit inside index.html; inline scripts are now blocked by the security policy) */
+window.AAT_MZ_HOME = "shelf";

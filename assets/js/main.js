@@ -65,16 +65,19 @@
     applyLayout(); applyText(app);
     doc.title = (v.title ? v.title + " · " : "") + t("brand_full") + " | AAT World";
     $$("[data-nav]").forEach(function (a) { if (a.getAttribute("data-nav") === route.nav) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); exFill(); floorText($("#ftr"));
+    closeMenus(); navSync(); motion(); sliderStart(); flipStart(); membersStart(); floorText(app); exFill();
+    /* mag.js draws more cards after this (reels, company strips): check the text sizes again once they are in */
+    clearTimeout(floorT); floorT = setTimeout(function () { floorText(app); floorText($("#ftr")); setTimeout(function () { floorText(app); }, 1500); }, 700); floorText($("#ftr"));
     if (!keepScroll) { W.scrollTo(0, 0); var h1 = $("h1", app); if (h1 && route.v !== "home") try { h1.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
   /* readers with weak eyesight: no text on the site is allowed to stay small */
+  var floorT = 0;
   function floorText(root) {
     if (!root) return;
     var all = root.querySelectorAll("*"), i, el, k, own, fs, tag, min;
     for (i = 0; i < all.length; i++) {
       el = all[i]; tag = el.tagName;
-      if (tag === "SVG" || tag === "svg" || tag === "PATH" || tag === "path" || tag === "SCRIPT" || tag === "STYLE" || tag === "IMG" || el.closest("svg")) continue;
+      if (tag === "SVG" || tag === "svg" || tag === "PATH" || tag === "path" || tag === "SCRIPT" || tag === "STYLE" || tag === "IMG" || el.closest("svg") || el.closest("#ex-list")) continue; /* exhibition rows: sizes set in CSS */
       own = false; for (k = 0; k < el.childNodes.length; k++) { var n = el.childNodes[k]; if (n.nodeType === 3 && n.nodeValue.trim()) { own = true; break; } }
       if (!own) continue;
       fs = parseFloat(getComputedStyle(el).fontSize) || 16;
@@ -225,7 +228,7 @@
       if (!list.isConnected) return;
       var start = list.children.length, k = exKeys();
       list.insertAdjacentHTML("beforeend", rest.slice(at, at + 80).map(A.ui.eventRow).join("")); at += 80;
-      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (!exShow(r, k)) r.style.display = "none"; r.classList.add("in"); floorText(r); }
+      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (!exShow(r, k)) r.style.display = "none"; r.classList.add("in"); } /* text sizes of rows come from CSS (app.css), no per-row check */
       if (at < rest.length) setTimeout(step, 40);
     })();
   }
@@ -310,7 +313,7 @@
     if (W.AAT_ASSISTANT_API) { chat.mode = "api"; return; }
     if (W.claude && typeof W.claude.use === "function") W.claude.use("sample").then(function (fn) { if (fn) { chat.sample = fn; chat.mode = "claude"; if (chat.open) chatRender(false); } }).catch(function () {});
   }
-  function links(list) { return '<div class="res">' + list.map(function (x) { return '<a href="' + x[0] + '"' + (/^#/.test(x[0]) ? "" : ' target="_blank" rel="noopener noreferrer"') + ">" + esc(x[1]) + (x[2] ? "<small>" + esc(x[2]) + "</small>" : "") + "</a>"; }).join("") + "</div>"; }
+  function links(list) { return '<div class="res">' + list.map(function (x) { return '<a href="' + esc(x[0]) + '"' + (/^#/.test(x[0]) ? "" : ' target="_blank" rel="noopener noreferrer"') + ">" + esc(x[1]) + (x[2] ? "<small>" + esc(x[2]) + "</small>" : "") + "</a>"; }).join("") + "</div>"; }
   function contactRes() { var c = A.D.config; return links([[A.waLink(), t("wa"), c.phoneDisplay], ["mailto:" + c.email, t("email_word"), c.email]]); }
   function has(q, words) { return words.some(function (w) { return q.indexOf(w) > -1; }); }
   function quickAnswer(raw) {

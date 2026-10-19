@@ -53,11 +53,14 @@
     if (m && o.en != null && m[o.en] != null) return m[o.en];
     return o.en != null ? o.en : "";
   }
-  function fmtDate(s) { try { return new Intl.DateTimeFormat(LOCALE[state.lang], { day: "numeric", month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s; } }
-  function fmtMonth(s) { try { return new Intl.DateTimeFormat(LOCALE[state.lang], { month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s.slice(0, 7); } }
+  /* date formatters are slow to create: one per language and style, reused (the exhibitions list formats ~1,500 dates) */
+  var FMT = {};
+  function fmt(kind, opts) { var k = state.lang + "|" + kind; return FMT[k] || (FMT[k] = new Intl.DateTimeFormat(LOCALE[state.lang], opts)); }
+  function fmtDate(s) { try { return fmt("d", { day: "numeric", month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s; } }
+  function fmtMonth(s) { try { return fmt("m", { month: "long", year: "numeric" }).format(parseDate(s)); } catch (e) { return s.slice(0, 7); } }
   function fmtRange(a, b) {
     try {
-      var f = new Intl.DateTimeFormat(LOCALE[state.lang], { day: "numeric", month: "short", year: "numeric" });
+      var f = fmt("r", { day: "numeric", month: "short", year: "numeric" });
       return f.formatRange ? f.formatRange(parseDate(a), parseDate(b)) : f.format(parseDate(a)) + " – " + f.format(parseDate(b));
     } catch (e) { return a + " – " + b; }
   }
@@ -151,7 +154,9 @@
       .filter(function (x) { return x.s >= EV_FROM && x.f >= from; })
       .sort(function (a, b) { return a.s - b.s; }).map(function (x) { return x.e; });
   }
-  function eventById(id) { var l = D.events || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  /* shows looked up by id through an index (rebuilt when the list grows), not by walking ~1,500 shows each time */
+  var EV_IX = null, EV_N = -1;
+  function eventById(id) { var l = D.events || []; if (EV_N !== l.length) { EV_IX = {}; l.forEach(function (e) { EV_IX[e.id] = e; }); EV_N = l.length; } return EV_IX[id] || null; }
   function daysUntil(e, now) { var a = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((parseDate(e.start) - a) / 864e5); }
 
   /* sector pictures: the original photo set is not in the site files, so each sector borrows a fitting picture from the modern-products section */

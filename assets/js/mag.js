@@ -186,7 +186,7 @@
     var list = ads(), story = [];
     var slides = list.map(function (x, k) {
       var ps = prods(x), lg = logo(x), u = web(x), row; if (lg) story.push({ c: x, k: k });
-      if (ps.length) row = ps.map(function (p) { var inner = '<span class="mz-ph"><img src="' + img(p.img) + '" alt="" loading="lazy"></span><b>' + esc(p.n) + "</b>"; var pu = A.safeUrl(p.url); return pu ? '<a class="mz-pc" href="' + esc(pu) + '" target="_blank" rel="noopener noreferrer">' + inner + "</a>" : '<span class="mz-pc">' + inner + "</span>"; }).join("");
+      if (ps.length) row = ps.map(function (p) { var inner = '<span class="mz-ph"><img src="' + W.AAT.esc(img(p.img)) + '" alt="" loading="lazy"></span><b>' + esc(p.n) + "</b>"; var pu = A.safeUrl(p.url); return pu ? '<a class="mz-pc" href="' + esc(pu) + '" target="_blank" rel="noopener noreferrer">' + inner + "</a>" : '<span class="mz-pc">' + inner + "</span>"; }).join("");
       else row = lines(x).map(function (nm, j) { return '<span class="mz-pc mz-ln"><em>' + (j < 9 ? "0" : "") + (j + 1) + "</em><b>" + esc(nm) + "</b></span>"; }).join("");
       var facts = [L(x.city), x.certs, x.tel, x.email].filter(Boolean).map(function (f) { return "<span>" + esc(f) + "</span>"; }).join("");
       return '<section class="mz-slide mz-g" style="--c:' + col(x) + '"><a class="mz-ban" href="' + hrefCo(x) + '">' + (lg ? '<span class="mz-lg"><img src="' + lg + '" alt=""></span>' : "") + "<span><small>" + esc(catName(x.cat)) + " · " + (k + 1) + " / " + list.length + "</small><b>" + esc(x.company) + "</b><small>" + esc(L(x.city)) + (u ? " · " + esc(domain(u)) : "") + "</small></span></a>" +
@@ -223,7 +223,7 @@
     var sp = q(root, ".mz-orbit"), bodies = q(root, ".mz-bodies");
     function build() {
       var list = [];
-      function moon(x) { var lg = logo(x); list.push({ ring: 0, html: '<a class="mz-b mz-moon" href="' + hrefCo(x) + '" style="--c:' + col(x) + '"><span class="mz-orb">' + (lg ? '<img src="' + lg + '" alt="">' : "") + '</span><span class="mz-lbl">' + esc(clip(x.company, 20)) + "</span></a>" }); }
+      function moon(x) { var lg = logo(x); list.push({ ring: 0, html: '<a class="mz-b mz-moon" href="' + hrefCo(x) + '" style="--c:' + col(x) + '"><span class="mz-orb">' + (lg ? '<img src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</span><span class="mz-lbl">' + esc(clip(x.company, 20)) + "</span></a>" }); }
       if (!S.cat) { for (var k = 0; k < 5; k++) moon(all[(S.batch * 5 + k) % all.length]);
         ks.forEach(function (key) { var n = adsIn(key).length; list.push({ ring: 1, html: '<button type="button" class="mz-b mz-planet" data-mz="cat" data-k="' + key + '" style="--c:' + (COL[key] || "#6B7280") + '"><span class="mz-orb"><b>' + n + '</b></span><span class="mz-lbl">' + esc(shortName(key)) + "</span></button>" }); });
       } else adsIn(S.cat).forEach(moon);
@@ -377,7 +377,7 @@
     if (!it.length) it = [{ n: x.company, d: "" }]; var base = it.slice(); while (it.length < 6) it = it.concat(base); return { all: it.slice(0, 12), uniq: base.length }; }
   function prodSlide(x) { var b = brOf(x) || { a: col(x), b: "#1f2937", on: "#fff" }, lg = logo(x), pi = prodItems(x), n = pi.all.length;
     return '<section class="mz-slide mz-ps" data-w="' + esc(web(x) || "") + '" style="--a:' + b.a + ";--b:" + b.b + ";--on:" + b.on + '" data-n="' + n + '" data-u="' + pi.uniq + '">' +
-      '<header class="mz-phd"><a class="mz-plg" href="' + esc(web(x) || hrefCo(x)) + '"' + (web(x) ? ' target="_blank" rel="noopener noreferrer"' : "") + '>' + (lg ? '<img src="' + lg + '" alt="">' : "") + '</a><span><b>' + esc(x.company) + "</b><small>" + esc(catName(x.cat)) + " · " + esc(L(x.city)) + "</small></span></header>" +
+      '<header class="mz-phd"><a class="mz-plg" href="' + esc(web(x) || hrefCo(x)) + '"' + (web(x) ? ' target="_blank" rel="noopener noreferrer"' : "") + '>' + (lg ? '<img src="' + W.AAT.esc(lg) + '" alt="">' : "") + '</a><span><b>' + esc(x.company) + "</b><small>" + esc(catName(x.cat)) + " · " + esc(L(x.city)) + "</small></span></header>" +
       '<div class="mz-rw"><i class="mz-rglow"></i><i class="mz-rfloor"></i><div class="mz-ring">' + pi.all.map(function (p, i) { return '<div class="mz-ri" data-i="' + i + '" data-n="' + esc(p.n) + '" data-d="' + esc(clip(p.d || L(x.about), 150)) + '"><span class="mz-rc">' + (p.img ? '<img src="' + p.img + '" alt="" loading="lazy">' : '<b>' + esc(clip(p.n, 40)) + "</b>") + "</span></div>"; }).join("") + "</div></div>" +
       '<footer class="mz-pft"><div class="mz-pnfo"><a class="mz-pall" href="' + hrefCo(x, "products") + '"><em></em><span>' + (A.state.lang === "ar" ? "كل منتجات الشركة" : "All company products") + ' ›</span></a><b></b><p></p></div><div class="mz-pmt"><a class="mz-pcat" href="#reels-' + x.cat + '"><i></i>' + esc(catName(x.cat)) + " ›</a>" + cta(x, "mz-sm") + "</div></footer></section>"; }
   function prodRun(feed, c) { var act = null, anims = [], held = false, downAt = 0, raf = 0;
@@ -771,11 +771,11 @@
     function L(v) { return v && typeof v === "object" ? (v[A.state.lang] || v.en || v.ar || "") : (v || ""); }
     function unit(x, kind) {
       var b = G.brand[x.page] || {}, a = b.a || "#EC1D25", ps = G.prods(x).slice(0, 4), u = G.web(x), line = (!ar && b.h) || L(x.tagline) || G.catName(x.cat);
-      var pics = ps.map(function (p, k) { return '<img src="' + G.img(p.img) + '" alt="" style="--k:' + k + ";--n:" + ps.length + '">'; }).join("");
+      var pics = ps.map(function (p, k) { return '<img src="' + W.AAT.esc(G.img(p.img)) + '" alt="" style="--k:' + k + ";--n:" + ps.length + '">'; }).join("");
       var ln = G.lines(x).slice(0, 3), what = ps.length ? ps.slice(0, 2).map(function (p) { return G.clip(p.n, 38); }).join(" · ") : ln.join(" · ");
       if (ln.length && ps.length) what = ln.slice(0, 3).join(" · "); if (!what) what = line;
       return '<a class="mz-ad mz-ad-' + kind + (ps.length ? "" : " mz-ad-np") + '" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer sponsored" style="--a:' + a + ";--b:" + (b.b || "#15161a") + '">' +
-        '<small class="mz-adl">' + (ar ? "إعلان" : "Advertisement") + "</small>" + (ps.length ? '<span class="mz-adp">' + pics + "</span>" : '<span class="mz-adp mz-adpl"><img src="' + G.logo(x) + '" alt=""></span>') +
+        '<small class="mz-adl">' + (ar ? "إعلان" : "Advertisement") + "</small>" + (ps.length ? '<span class="mz-adp">' + pics + "</span>" : '<span class="mz-adp mz-adpl"><img src="' + W.AAT.esc(G.logo(x)) + '" alt=""></span>') +
         '<span class="mz-adx"><em class="mz-adk">' + esc(G.catName(x.cat)) + '</em><b class="mz-adh">' + esc(G.clip(what, kind === "tower" ? 70 : 90)) + '</b><span class="mz-adco">' + (ps.length ? '<img src="' + G.logo(x) + '" alt="">' : "") + "<i>" + esc(x.company) + '</i></span><span class="mz-adc">' + (ar ? "زيارة الموقع" : "Visit website") + " ↗</span></span></a>";
     }
     var slots = [], wide = W.innerWidth >= 1240;
@@ -852,7 +852,9 @@
   vh(); W.addEventListener("resize", vh); W.addEventListener("orientationchange", function () { W.setTimeout(vh, 250); }); if (W.visualViewport) { W.visualViewport.addEventListener("resize", vh); W.visualViewport.addEventListener("scroll", vh); }
   function go() { bg(); liveMap(); chrome(); drift(); ads(); exAll(); readMode(); }
   var app = doc.getElementById("app");
-  if (app && W.MutationObserver) new MutationObserver(function () { liveMap(); drift(); ads(); exAll(); }).observe(app, { childList: true, subtree: true });
+  /* page changes are handled once per frame, not once per change (the exhibitions list adds hundreds of rows in batches) */
+  var moPending = false;
+  if (app && W.MutationObserver) new MutationObserver(function () { if (moPending) return; moPending = true; W.requestAnimationFrame(function () { moPending = false; liveMap(); drift(); ads(); exAll(); }); }).observe(app, { childList: true, subtree: true });
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", go); else go();
   W.addEventListener("load", go);
 })(window);
