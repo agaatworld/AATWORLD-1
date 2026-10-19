@@ -34,7 +34,8 @@
     return '<div class="hd"><a class="hd-brand" href="#home" aria-label="' + esc(t("brand_full")) + '">' + logo(34) + "</a>" +
       '<nav class="hd-nav" aria-label="' + esc(t("menu")) + '">' + links + '<i class="hd-ind" aria-hidden="true"></i></nav>' +
       /* one plain language switch: "English" on the Arabic site, "العربية" on every other language (no dark mode, no advertise button in the header) */
-      '<div class="hd-act"><button type="button" class="lang-b lang-sw" data-act="lang" data-lang="' + (A.state.lang === "ar" ? "en" : "ar") + '" lang="' + (A.state.lang === "ar" ? "en" : "ar") + '">' + ic("globe", 18) + "<span>" + (A.state.lang === "ar" ? "English" : "العربية") + "</span></button>" +
+      '<div class="hd-act"><button type="button" class="lang-b lang-sw" data-act="lang" data-lang="' + (A.state.lang === "ar" ? "en" : "ar") + '" lang="' + (A.state.lang === "ar" ? "en" : "ar") + '">' + "<span>" + (A.state.lang === "ar" ? "English" : "العربية") + "</span></button>" +
+      '<div class="lang"><button type="button" class="lang-b lang-g" data-act="lang-open" aria-haspopup="true" aria-expanded="false" aria-label="' + esc(t("lang_choose")) + '" title="' + esc(t("lang_choose")) + '">' + ic("globe", 22) + '</button><div class="lang-m" role="menu" hidden>' + langItems() + "</div></div>" +
       '<button type="button" class="ib hd-menu" data-act="menu" aria-expanded="false" aria-controls="mnav" aria-label="' + esc(t("menu")) + '">' + ic("menu", 24) + "</button></div></div>" +
       '<nav id="mnav" class="mnav" hidden aria-label="' + esc(t("menu")) + '">' + links + '<div class="mnav-l">' + langItems() + "</div></nav>";
   }
@@ -51,7 +52,7 @@
   /* WhatsApp and email side by side: some countries have no WhatsApp */
   function contactButtons(text, big) {
     var c = D.config, cls = big ? " btn-lg" : "";
-    return '<div class="row"><a class="btn btn-wa' + cls + '" href="' + A.waLink(text) + '" target="_blank" rel="noopener noreferrer">' + ic("chat", 18) + t("wa") + '</a><a class="btn btn-line' + cls + '" href="' + A.mailLink(c.email, "AAT World", text) + '">' + ic("mail", 18) + t("email_word") + "</a></div>";
+    return '<div class="row ctb"><a class="btn btn-line' + cls + ' ctb-ph" href="tel:+' + esc(c.whatsapp) + '" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + apps(text) + '<a class="btn btn-line' + cls + '" href="' + A.mailLink(c.email, "AAT World", text) + '">' + ic("mail", 18) + t("email_word") + "</a></div>";
   }
 
   function companyCard(c) {
@@ -113,14 +114,27 @@
     var g = a.s ? a.s : a.p ? '<path fill="#fff" d="' + a.p + '"/>' : '<text x="12" y="12" dy=".35em" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="' + a.fs + '" fill="#fff">' + esc(a.w) + "</text>";
     return '<span class="app-i" style="background:' + a.c + (a.b ? ";box-shadow:inset 0 0 0 1.5px " + a.b : "") + '"><svg viewBox="' + (a.p ? "-3 -3 30 30" : "0 0 24 24") + '" width="30" height="30" aria-hidden="true" focusable="false">' + g + '</svg></span><span class="sr">' + esc(x) + "</span>";
   }
-  function apps() { var l = D.config.apps || []; return l.length ? '<ul class="apps" aria-label="' + (A.state.lang === "ar" ? "متاح على" : "Available on") + '">' + l.map(function (x) { return '<li title="' + esc(x) + '">' + appIcon(x) + "</li>"; }).join("") + "</ul>" : ""; }
+  /* WhatsApp and Viber open a chat with the AAT number; Botim, imo, BiP and LINE have no web link for a phone number, so their icon copies the number */
+  function appHref(x, text) {
+    if (x === "WhatsApp") return A.waLink(text);
+    if (x === "Viber") return "viber://chat?number=%2B" + D.config.whatsapp;
+    return "";
+  }
+  function apps(text) {
+    var l = D.config.apps || [], ar = A.state.lang === "ar", ph = D.config.phoneDisplay;
+    return l.length ? '<ul class="apps" aria-label="' + (ar ? "تواصل معنا عبر" : "Contact us on") + '">' + l.map(function (x) {
+      var h = appHref(x, text), tip = h ? (ar ? "راسلنا على " : "Message us on ") + x : (ar ? "انسخ الرقم لـ " : "Copy the number for ") + x;
+      return "<li>" + (h ? '<a class="app-a" href="' + esc(h) + '" target="_blank" rel="noopener noreferrer" title="' + esc(tip) + '">' + appIcon(x) + "</a>"
+        : '<button type="button" class="app-a" data-act="appnum" data-app="' + esc(x) + '" data-copy="' + esc(ph) + '" title="' + esc(tip) + '">' + appIcon(x) + "</button>") + "</li>";
+    }).join("") + "</ul>" : "";
+  }
   function footer() {
     var c = D.config, back = A.companies.filter(function (x) { return x.tier === "back"; })[0];
     return (back ? '<a class="bc" href="#company-' + back.page + '"><span class="wrap bc-in">' + (A.logoOf(back) ? '<img src="' + img(A.logoOf(back)) + '" alt="">' : "") + "<span><b>" + esc(back.company) + '</b></span><span class="bc-go">' + t("ed_open") + '<span class="flip">' + ic("arrow", 16) + "</span></span></span></a>" : "") +
       '<div class="wrap ft"><div class="ft-nl"><div><h2 class="h3">' + t("nl_title") + "</h2><p>" + t("nl_lead") + "</p></div>" + newsletter("ft-email") + "</div>" +
       '<div class="ft-g"><div class="ft-a"><a class="ft-brand" href="#home">' + logo(46) + '</a><p class="ft-n"><b>' + t("brand_full") + "</b><span>" + t("brand_other") + "</span></p><p>" + t("mb_claim") + "</p></div>" +
       '<div><h2 class="ft-h">' + t("footer_explore") + "</h2><ul>" + navList().slice(0, 5).map(function (n) { return '<li><a href="#' + n[0] + '">' + navT(n[1]) + "</a></li>"; }).join("") + '<li><a href="#advertise">' + t("adv_btn") + "</a></li></ul></div>" +
-      '<div><h2 class="ft-h">' + t("nav_contact") + "</h2><ul><li>" + esc(L(c.address)) + '</li><li><a href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + apps() + '</li><li><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></li><li><a href="mailto:' + esc(c.clubEmail) + '">' + esc(c.clubEmail) + "</a></li></ul></div></div>" +
+      '<div><h2 class="ft-h">' + t("nav_contact") + "</h2><ul><li dir=\"ltr\">" + esc(c.address.en) + '</li><li><a href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + apps() + '</li><li><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></li><li><a href="mailto:' + esc(c.clubEmail) + '">' + esc(c.clubEmail) + "</a></li></ul></div></div>" +
       '<div class="ft-b"><span>' + t("brand_full") + ' · <bdi dir="ltr">AAT (ARAB ASIAN TRADE)</bdi> · ' + t("since82") + ' · <span class="ft-r">' + t("footer_rights") + ' <bdi dir="ltr">© ' + new Date().getFullYear() + '</bdi></span></span><a href="#privacy">' + t("privacy") + "</a></div></div>";
   }
 

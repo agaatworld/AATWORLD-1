@@ -290,10 +290,10 @@
     function copyBtn(v) { return '<button type="button" class="btn btn-line btn-sm" data-act="copy" data-copy="' + esc(v) + '">' + t("copy") + "</button>"; }
     return { title: t("contact_title"), html: U.pageHead([[t("home"), "home"], [t("nav_contact")]], t("contact_title"), "") +
       sec("", '<div class="ctg">' +
-        tile("chat", t("contact_whatsapp"), esc(c.phoneDisplay), '<a class="btn btn-wa btn-sm" href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer">' + t("wa") + "</a>" + copyBtn(c.phoneDisplay), 1, '<p class="apps-t">' + (A.state.lang === "ar" ? "الرقم متاح على هذه التطبيقات:" : "This number is on these apps:") + "</p>" + U.apps()) +
+        tile("chat", A.state.lang === "ar" ? "الهاتف" : "Phone", esc(c.phoneDisplay), copyBtn(c.phoneDisplay), 1, '<p class="apps-t">' + (A.state.lang === "ar" ? "راسلنا على:" : "Message us on:") + "</p>" + U.apps()) +
         tile("mail", t("contact_email"), esc(c.email), '<a class="btn btn-red btn-sm" href="mailto:' + esc(c.email) + '">' + t("email_word") + "</a>" + copyBtn(c.email), 1) +
         tile("mail", t("contact_support"), esc(c.clubEmail), '<a class="btn btn-red btn-sm" href="mailto:' + esc(c.clubEmail) + '">' + t("email_word") + "</a>" + copyBtn(c.clubEmail), 1) +
-        tile("pin", t("contact_address"), esc(L(c.address)), "") + "</div>") };
+        tile("pin", t("contact_address"), esc(c.address.en), "", 1) + "</div>") };
   }
   function privacy() { return { title: t("privacy_title"), html: U.pageHead([[t("home"), "home"], [t("privacy_title")]], t("privacy_title"), "") + sec("", '<div class="prose">' + t("x_privacy").split("|").map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>") }; }
   function notFound() { return { title: t("nf_title"), html: U.pageHead([[t("home"), "home"]], t("nf_title"), t("nf_lead")) + sec("", '<div class="row"><a class="btn btn-red" href="#home">' + t("home") + "</a></div>") }; }

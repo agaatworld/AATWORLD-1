@@ -16,7 +16,8 @@ window.AAT_DATA = {
       en: "P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.",
       ar: "ص.ب 568، يونغخه، مدينة تايبيه الجديدة 234964، تايوان"
     },
-    apps: ["WhatsApp", "Botim", "Imo", "BiP", "Viber", "LINE"],   // the phone number can be reached on these apps
+    apps: ["WhatsApp", "Botim", "Imo", "BiP", "Viber", "LINE"],   // the phone number can be reached on these apps (WhatsApp and Viber open a chat; the others copy the number)
+    assistant: false,                    // the "24-hour chat" assistant button: hidden for now (owner's request); true shows it again
     social: {
       youtube: "https://www.youtube.com/@aatworldvideo608"
     },

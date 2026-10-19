@@ -602,3 +602,13 @@ ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 .app-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: 0 4px 12px -6px rgba(0, 0, 0, .45); }
 .app-i svg { width: 30px; height: 30px; display: block; }
 .app-i svg { width: 36px; height: 36px; }
+/* languages: "English" switch plus a globe button that opens every language */
+.lang-g { width: 44px; height: 44px; min-height: 44px; padding: 0; justify-content: center; }
+.hd-act { gap: 8px; }
+/* app icons are links (WhatsApp, Viber) or copy buttons (Botim, imo, BiP, LINE) */
+.app-a { display: block; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 14px; transition: transform .15s; }
+.app-a:hover { transform: translateY(-2px); }
+.app-a:focus-visible { outline: 3px solid var(--red, #D21F26); outline-offset: 3px; }
+.ctb { align-items: center; flex-wrap: wrap; gap: 12px; }
+.ctb-ph { font-weight: 800; font-size: 18px; }
+.app-toast { position: fixed; z-index: 120; left: 50%; bottom: 28px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 14px 20px; border-radius: 14px; background: #111; color: #fff; font-size: 18px; font-weight: 700; box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6); }

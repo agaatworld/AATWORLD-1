@@ -49,6 +49,13 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - EventsEye is reachable only through the WebFetch tool (shell curl is blocked). URL patterns: `https://www.eventseye.com/fairs/c1_trade-shows_<country>.html`, `_1.html`, `_2.html` (50 rows per page, chronological); month pages `cd1_trade-shows_<country>_<month>_1.html` (`_1` = 2027). The country page sidebar gives monthly counts for verification. Slugs: taiwan, indonesia, malaysia, pakistan, afghanistan, algeria, egypt, iraq, kuwait, yemen, oman, qatar, saudi-arabia, syria, united-arab-emirates, turkey.
 - Status 15 Oct 2026: 948 shows. All countries verified except **UAE** (pages failed to load that day; July/December unverified). Month-only shows have `approx` and show "اليوم يُعلن لاحقاً".
 
+## Owner decisions (19 Oct 2026)
+- The Taiwan address is ALWAYS shown in English (P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.), even on the Arabic site.
+- Header: "English"/"العربية" switch + separate globe button with all languages. No dark mode, no advertise button in the header, no breadcrumbs.
+- Contact: number + app icons (WhatsApp, Viber link; Botim, imo, BiP, LINE copy the number). No YouTube.
+- **REMIND THE OWNER:** the AAT assistant ("محادثة 24 ساعة") is switched off (`assistant: false` in `assets/js/data/data.js`) because it is not connected to an API. He wants it back, ideally working without an API and answering any question (e.g. a search over the site's own content: shows, companies, products, articles). Bring this up in each session until done.
+- Live site was on update 23 (17 Oct); update 24 sent 19 Oct.
+
 ## Open tasks (as of 15 Oct 2026)
 1. Confirm the owner uploaded **update 15** (`version.txt`). Live site had been showing an old magazine (top bar, "See page 52", small footer) — evidence earlier updates weren't extracted correctly.
 2. UAE exhibitions July & December 2027: re-check on EventsEye.

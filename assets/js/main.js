@@ -333,6 +333,7 @@
   function chatRender(reset) {
     if (reset) chat.log = [{ who: "bot", html: esc(t("chat_hello")) }];
     var el = $("#chat"); if (!el) return;
+    if (A.D.config.assistant === false) { el.innerHTML = ""; return; } /* the assistant is switched off in data.js for now */
     el.innerHTML = '<button type="button" class="chat-b" data-act="chat-open" aria-label="' + esc(t("chat_open")) + '"' + (chat.open ? " hidden" : "") + ">" + U.ic("chat", 22) + "<span><b>" + t("chat_cta") + "</b><small>" + t("chat_cta2") + "</small></span></button>" +
       '<section class="chat" role="dialog" aria-label="' + esc(t("chat_title")) + '"' + (chat.open ? "" : " hidden") + '><header><div><b>' + t("chat_title") + "</b><small>" + (chat.mode ? t("ai_on") : t("chat_sub")) + '</small></div><button type="button" class="ib" data-act="chat-close" aria-label="' + esc(t("chat_close")) + '">' + U.ic("x", 20) + "</button></header>" +
       '<div class="chat-log" id="chat-log" aria-live="polite">' + chat.log.map(function (m) { return '<div class="msg ' + m.who + '">' + m.html + "</div>"; }).join("") + "</div>" + (chat.mode ? '<p class="chat-n">' + t("ai_note") + "</p>" : "") +
@@ -389,6 +390,9 @@
       else if (act === "hs") { e.stopPropagation(); hsOpen(+a.getAttribute("data-k")); }
       else if (act === "zoom") zoomOpen(a.getAttribute("src"), a.getAttribute("alt"));
       else if (act === "cat") { var list = $("#pr-list"); list.setAttribute("data-cat", a.getAttribute("data-cat")); $$("[data-act=cat]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === a)); }); list.innerHTML = V.productList($("#pr-q").value.trim(), a.getAttribute("data-cat")); $$(".rv", list).forEach(function (x) { x.classList.add("in"); }); }
+      else if (act === "appnum") { var num = a.getAttribute("data-copy"), app = a.getAttribute("data-app"), arx = A.state.lang === "ar";
+        var done = function () { var tb = doc.createElement("div"); tb.className = "app-toast"; tb.setAttribute("role", "status"); tb.textContent = (arx ? "تم نسخ الرقم " : "Number copied: ") + num + (arx ? " — الصقه في " : " — paste it in ") + app; doc.body.appendChild(tb); setTimeout(function () { tb.remove(); }, 3500); };
+        (navigator.clipboard ? navigator.clipboard.writeText(num) : Promise.reject()).then(done, done); }
       else if (act === "copy") { var txt = a.getAttribute("data-copy"), orig = a.textContent; (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { a.textContent = t("copied"); setTimeout(function () { a.textContent = orig; }, 1600); }).catch(function () { a.textContent = txt; }); }
       else if (act === "chat-open") { chat.open = true; chatRender(false); $("#chat-in").focus(); }
       else if (act === "chat-close") { chat.open = false; chatRender(false); $(".chat-b").focus(); }
