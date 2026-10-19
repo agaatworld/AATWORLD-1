@@ -55,8 +55,8 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - The Taiwan address is ALWAYS shown in English (P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.), even on the Arabic site.
 - Header: "English"/"العربية" switch + separate globe button with all languages. No dark mode, no advertise button in the header, no breadcrumbs.
 - Contact: number + app icons (WhatsApp, Viber link; Botim, imo, BiP, LINE copy the number). No YouTube.
-- **REMIND THE OWNER:** the AAT assistant ("محادثة 24 ساعة") is switched off (`assistant: false` in `assets/js/data/data.js`) because it is not connected to an API. He wants it back, ideally working without an API and answering any question (e.g. a search over the site's own content: shows, companies, products, articles). Bring this up in each session until done.
-- Live site was on update 23 (17 Oct); update 24 sent 19 Oct.
+- AAT assistant ("محادثة 24 ساعة") is ON again (`assistant: true` in `assets/js/data/data.js`), working without an API: `assets/js/assistant.js` answers from the site content (exhibitions by country/city/month/field/name incl. Arabic spellings of famous shows, companies, products, articles, news, FAQs, contact, advertising, club, magazine, about). An AI-backed version can come later if he gets an API.
+- Live site was on update 23 (17 Oct); updates 24, 25, 26 sent 19 Oct (26 includes all).
 
 ## Open tasks (as of 15 Oct 2026)
 1. Confirm the owner uploaded **update 15** (`version.txt`). Live site had been showing an old magazine (top bar, "See page 52", small footer) — evidence earlier updates weren't extracted correctly.

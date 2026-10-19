@@ -17,7 +17,7 @@ window.AAT_DATA = {
       ar: "ص.ب 568، يونغخه، مدينة تايبيه الجديدة 234964، تايوان"
     },
     apps: ["WhatsApp", "Botim", "Imo", "BiP", "Viber", "LINE"],   // the phone number can be reached on these apps (WhatsApp and Viber open a chat; the others copy the number)
-    assistant: false,                    // the "24-hour chat" assistant button: hidden for now (owner's request); true shows it again
+    assistant: true,                     // the "24-hour chat" assistant (assets/js/assistant.js, answers from the site's content without an API); false hides it
     social: {
       youtube: "https://www.youtube.com/@aatworldvideo608"
     },

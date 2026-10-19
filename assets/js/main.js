@@ -314,6 +314,7 @@
   function contactRes() { var c = A.D.config; return links([[A.waLink(), t("wa"), c.phoneDisplay], ["mailto:" + c.email, t("email_word"), c.email]]); }
   function has(q, words) { return words.some(function (w) { return q.indexOf(w) > -1; }); }
   function quickAnswer(raw) {
+    if (A.answer) return A.answer(raw); /* assistant.js: answers from the site's own content, no API needed */
     var q = " " + raw.toLowerCase() + " ";
     if (has(q, ["whatsapp", "contact", "phone", "email", "call", "واتس", "تواصل", "اتصال", "هاتف", "بريد", "聯絡", "联系", "hubungi"])) return esc(t("chat_contact")) + contactRes();
     if (has(q, ["advertis", " ad ", "اعلان", "إعلان", "أعلن", "廣告", "广告", "iklan"])) return esc(t("ad_title")) + links([["#advertise", t("adv_btn")]]) + contactRes();

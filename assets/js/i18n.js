@@ -14,6 +14,8 @@ window.AAT_TX = {"zh-TW":{"P.O. Box 5, Yongqiao, Taipei City 100916, Taiwan R.O.
   set("mb_f2", "عدداً من المجلة", "magazine issues");
   set("footer_rights", "جميع الحقوق محفوظة", "All rights reserved");
   set("contact_whatsapp", "الهاتف · واتساب", "Phone · WhatsApp");
+  set("chat_hello", "أهلاً بك! اسألني عن المعارض الدولية (حسب الدولة أو الشهر أو المجال)، أو عن الشركات والمنتجات في المجلة، أو المقالات والأخبار، أو كيف تتواصل معنا.", "Welcome! Ask me about international exhibitions (by country, month or field), the companies and products in the magazine, articles and news, or how to reach us.");
+  set("chat_sub", "إجابات فورية من محتوى الموقع", "Instant answers from the site's content");
   if (I.ar && I.ar.x_privacy) I.ar.x_privacy = I.ar.x_privacy.replace("تُحفظ اللغة واختيارك للوضع الفاتح أو الداكن في متصفحك فقط.", "تُحفظ اللغة التي تختارها في متصفحك فقط.");
   if (I.en && I.en.x_privacy) I.en.x_privacy = I.en.x_privacy.replace("Your language and your light or dark mode choice are saved only in your own browser.", "The language you choose is saved only in your own browser.");
 })(window.AAT_I18N);
