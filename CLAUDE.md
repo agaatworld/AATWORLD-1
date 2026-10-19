@@ -3,7 +3,7 @@
 Read this whole file before doing anything. It replaces the long chat history.
 
 ## Who and what
-- Owner: **Mohamad Marwan Fattal (محمد مروان فتال)**, founder of **Arab Asian Trade (AAT) · التجارة العربية الآسيوية · 中阿商業雜誌**, a printed + online B2B trade magazine since 1982, Taiwan office (P.O. BOX 568, Yonghe, New Taipei City 234964, Taiwan R.O.C., +886 966 404 681, marwanaat@gmail.com, www.aatworld.com).
+- Owner: **Mohamad Marwan Fattal (محمد مروان فتال)**, founder of **Arab Asian Trade (AAT) · التجارة العربية الآسيوية · 中阿商業雜誌**, a printed + online B2B trade magazine since 1982, Taiwan office (P.O. BOX 568, Yonghe, New Taipei City 234964, Taiwan R.O.C., +886 966 404 681, marwan@aatworld.com, www.aatworld.com).
 - He is not technical. He writes in Arabic or English (often capitals). **Reply in Arabic when he writes Arabic.** Short, plain, outcome first, no jargon. He gets angry when something "didn't change": always say exactly what changed and how he can see it.
 - CEO name is unconfirmed: magazine page 6 says **عبدالرحمن محمد / Abdulrahman Mohammad**; the old site said **مروان أنس / Marwan Anas**. CEO phone/email unknown.
 
@@ -34,6 +34,7 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 ## Releasing to the live site (Hostinger)
 - Live: **aatworld.com** on Hostinger, files in `public_html`. The OLD WordPress site + Business Club data stay in the same `public_html`, hidden by `.htaccess` (DirectoryIndex index.html; non-file URLs redirect home except `/wp-admin|wp-login|wp-json|wp-content|wp-includes`). **Never delete WordPress files.**
 - Current method: build a zip of `index.html version.txt assets/css assets/js assets/img/flags assets/fonts/aljazeera-*.ttf issue560/index.html issue560/assets/page-flip.js issue560/assets/fonts/aljazeera-*.ttf` (plus any new images) and the owner uploads it into `public_html` → Extract → folder "." → replace → clear Hostinger cache → check `/version.txt`.
+- **Magazine PDF = picture of the flipbook.** `issue560/AAT-560-October-2026.pdf` is made FROM the flipbook, page by page: `node _work/tools/mag_pdf.js && python3 _work/tools/mag_pdf.py` (server on :8765). Run it after EVERY change to `issue560/index.html` and put the PDF in the release zip. (19 Oct: owner found the PDF "totally different" from the flip — it was printed once on 8 Oct and never remade.)
 - **Biggest recurring problem:** the owner says "nothing changed" because the zip was extracted into a sub-folder or Hostinger cache/CDN served old files. Always tell him to check `/version.txt`.
 - Better (not yet done): Hostinger hPanel → Websites → Advanced → **Git** → repo `https://github.com/agaatworld/AATWORLD-1`, branch `main`, directory `public_html`… BUT Hostinger Git deploy wants an empty folder, and public_html holds WordPress. Safer: deploy to a sub-folder and point the domain, or keep zips. Discuss with him before changing.
 - Git: push to `main` and also `main:gh-pages` (GitHub Pages preview). Commit messages end with the attribution lines the session gives.
@@ -65,6 +66,7 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - Update 31 (19 Oct): owner: "remove the symbol, not on the site now" — banner is plain red gradient (pattern + big swash removed, files deleted). Don't add the AAT symbol to the site until he asks.
 - Update 32 (19 Oct): exhibition page hides the Organizer row when unknown (was "—").
 - Promo video (19 Oct): Remotion project `_work/video/aat-promo` (25 s, 1080×1920, English, male voice = Piper "ryan-high" generated locally, music synthesized by `music.py` idea, real site screenshots in `public/`). Render: `npx remotion render AatPromo out/aat-services-25s.mp4 --browser-executable=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell` (Google Fonts can't load in the renderer here; fonts are local in public/fonts).
+- Update 33 (19 Oct): new magazine PDF made from the flipbook (100 pages, matches exactly); page 6 mailing address = P.O. Box 568, Yonghe, New Taipei City 234964 (was an old P.O. Box 5, Yongqiao address); owner's email everywhere = marwan@aatworld.com (business card + vCard QR, 18 name-card designs, claude.ai design board).
 - **Skill `aat-web`** (`.claude/skills/aat-web/SKILL.md`, also `_release/aat-web-skill.zip` for claude.ai): a GENERAL way of thinking for any website (owner asked it not be AAT-specific). AAT facts stay in this file. Load it on every web task.
 
 ## Open tasks (as of 15 Oct 2026)

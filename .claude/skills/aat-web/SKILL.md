@@ -64,6 +64,8 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
 - Ship only site files, never working or source folders, and never touch the owner's other data on the server.
 - Commit with a clear message and keep the project notes (`CLAUDE.md`) updated with decisions and open tasks.
 
+- **Every derived copy is rebuilt from its source on every release**: PDFs, print versions, static snapshots, cached JSON. A copy made once goes stale silently; tie its rebuild to the release checklist.
+
 ## 8. Talking to the owner
 - Use their language. Lead with the outcome. Give a short numbered list of **what changed and where to see it**. No jargon.
 - Say plainly what is still waiting on them (texts, photos, settings only they can change) and why it matters.
@@ -84,6 +86,8 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
 | "Use original logos, not recreated" | Real assets only. |
 | "Where are the section separators?" | Make the page structure visible. |
 | "Nothing changed" | Cache-buster + version file + clear upload steps. |
+| "Why is the PDF totally different from the flipbook?" | A copy made once (PDF) went stale while the source kept changing. Generate copies FROM the source, every release. |
+| "Why this wrong email? Fix everywhere" | Search the whole project (and hidden places: QR codes, design boards, generators) for a wrong fact and fix every instance at once. |
 | "In this last fix you made huge problems" | Regression-check everything around a fix. |
 | "WHAT?" (white text on a white band after a "sections" fix) | A site-wide rule (backgrounds, colours) must exclude blocks with their own colour; run an automatic text-contrast scan on every page after any background change. |
 | "The opening of the page is dull, like inviting an old guest" | Every page opening is a welcome: a strong brand banner (brand colour, brand pattern/symbol, big title, short accent bar), integrated with the menu bar, not a pale title floating on an empty background. |
