@@ -18,14 +18,16 @@ h = h.replace(old, '?v=' + stamp + suffix); open('index.html', 'w', encoding='ut
 c = open('assets/js/config.js', encoding='utf-8').read()
 c = re.sub(r'window\.AAT_UPDATE = \d+;', 'window.AAT_UPDATE = %d;' % N, c); open('assets/js/config.js', 'w', encoding='utf-8').write(c)
 subprocess.run(['node', '_work/tools/mag_pdf.js'], check=True)
-subprocess.run(['python3', '_work/tools/mag_pdf.py'], check=True)
+subprocess.run(['python3', '_work/tools/mag_pdf.py'], check=True)  # flipbook pictures (for the check)
+subprocess.run(['node', '_work/tools/mag_pdf_text.js'], check=True)    # real-text PDF
+subprocess.run(['python3', '_work/tools/mag_pdf_best.py'], check=True) # pictures only where the text print differs
 fs = ['index.html', 'version.txt', 'issue560/index.html', 'issue560/AAT-560-October-2026.pdf', 'members/list.php', 'members/hidden.json', 'api/subscribe.php']
 for d in ['assets/css', 'assets/js', 'assets/img/apps']:
     for r, _, f in os.walk(d): fs += [os.path.join(r, x) for x in f]
 os.makedirs('_release', exist_ok=True)
 # two zips: the site (small) and the magazine PDF alone (big), so each can be sent in chat (limit ~30 MB); both extract into public_html
 site = [f for f in fs if not f.endswith('.pdf')]
-outs = [('_release/aat-update-%d.zip' % N, site), ('_release/aat-update-%d-pdf.zip' % N, ['issue560/AAT-560-October-2026.pdf'])]
+outs = [('_release/aat-update-%d.zip' % N, site)]  # the PDF is sent as the plain file: upload it to public_html/issue560/
 for out, files in outs:
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
         for f in files:

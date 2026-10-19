@@ -7,7 +7,7 @@ window.AAT_NEWSLETTER_API = window.AAT_NEWSLETTER_API || "api/subscribe.php"; /*
 window.AAT_MZ_HOME = "shelf";
 /* the update these files belong to (same number as version.txt). If the server already has a newer update but this
    browser kept an old copy of the page (Hostinger lets browsers keep index.html for 7 days), load the new one once. */
-window.AAT_UPDATE = 35;
+window.AAT_UPDATE = 36;
 (function () {
   if (!window.fetch) return;
   fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) {

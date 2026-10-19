@@ -113,14 +113,18 @@
   /* ---------- products ---------- */
   function products(cat) {
     var cats = A.usedCats(); if (cats.indexOf(cat) < 0) cat = "";
-    return { title: t("nav_products"), html: U.pageHead([[t("home"), "home"], [t("nav_products")]], t("nav_products"), t("prod_all_lead")) + prodSwitch("mag") +
+    return { title: t("nav_products"), html: U.pageHead([[t("home"), "home"], [t("nav_products")]], t("nav_products"), t("prod_all_lead")) +
       '<div class="bar sticky"><div class="wrap"><label class="sr" for="pr-q">' + t("pr_search") + '</label><div class="srch">' + ic("search", 18) + '<input id="pr-q" type="search" placeholder="' + esc(t("pr_search")) + '" autocomplete="off"></div>' +
       '<div class="chips" role="group" aria-label="' + esc(t("pd_category")) + '"><button type="button" class="chip" data-act="cat" data-cat="" aria-pressed="' + (!cat) + '">' + t("ed_all") + "</button>" + cats.map(function (k) { return '<button type="button" class="chip" data-act="cat" data-cat="' + k + '" aria-pressed="' + (cat === k) + '">' + esc(L(A.cats[k])) + "</button>"; }).join("") + "</div></div></div>" +
-      sec("", '<div class="pg" id="pr-list" data-cat="' + cat + '">' + productList("", cat) + "</div>") };
+      sec("pr-wrap", '<div id="pr-list" data-cat="' + cat + '">' + productList("", cat) + "</div>") };
   }
   function productList(q, cat) {
     var l = A.allProducts().filter(function (p) { return A.matchProduct(p, q, cat); });
-    return l.length ? l.map(U.productCard).join("") : '<p class="empty">' + t("pr_none") + "</p>";
+    if (!l.length) return '<p class="empty">' + t("pr_none") + "</p>";
+    /* no search and no category chosen: one clear section per field, each with its own title, like the club page */
+    if (!q && !cat) return A.usedCats().map(function (k) { var g = l.filter(function (p) { return p.c.cat === k; }); if (!g.length) return "";
+      return '<div class="pr-grp"><h2 class="h2">' + esc(L(A.cats[k])) + ' <span class="pr-n">' + g.length + '</span></h2><div class="pg">' + g.map(U.productCard).join("") + "</div></div>"; }).join("");
+    return '<div class="pg">' + l.map(U.productCard).join("") + "</div>";
   }
   function product(id, k) {
     var c = A.company(id), it = c && A.productsOf(c)[k]; if (!it) return notFound();
@@ -183,7 +187,7 @@
   function modernList() {
     var M = W.AAT_MODERN || [], G = W.AAT_MODERN_G || {}, keys = Object.keys(G), n = 0;
     function gname(k) { return G[k][A.state.lang] || G[k].en; }
-    return { title: mw("sw2"), html: U.pageHead([[t("home"), "home"], [t("nav_products"), "products"], [mw("sw2")]], mw("sw2"), mw("lead")) + prodSwitch("mod") +
+    return { title: mw("sw2"), html: U.pageHead([[t("home"), "home"], [t("nav_products"), "products"], [mw("sw2")]], mw("sw2"), mw("lead")) +
       '<section class="sec mod"><div class="wrap"><nav class="mod-nav" aria-label="' + esc(mw("sw2")) + '">' + keys.map(function (k) { var c = M.filter(function (x) { return x.g === k; }).length; return '<button type="button" class="chip" data-modg="' + k + '">' + esc(gname(k)) + " <small>" + c + "</small></button>"; }).join("") + "</nav>" +
       keys.map(function (k, gi) { var items = []; M.forEach(function (x, i) { if (x.g === k) items.push([x, i]); });
         return '<section class="mod-g" id="modg-' + k + '"><header><i>' + A.pad2(gi + 1) + "</i><h2 class=\"h3\">" + esc(gname(k)) + "</h2><small>" + items.length + '</small></header><div class="mod-l">' + items.map(function (p) { n++; return '<a class="mod-c rv" href="#modern-' + p[1] + '"><span class="mod-im"><img src="' + esc(p[0].img) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></span><span class="mod-b"><b>' + esc(mTitle(p[0])) + "</b>" + (p[0].web ? "<small>" + esc(p[0].web.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "")) + "</small>" : "") + '</span><span class="mod-go flip">' + ic("arrow", 18) + "</span></a>"; }).join("") + "</div></section>"; }).join("") + "</div></section>" };

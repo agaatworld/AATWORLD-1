@@ -702,3 +702,16 @@ html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
 #app section.sec.trust::before { display: none !important; }
 #app section.sec:not(.cta) h2.h2::after { content: ""; display: block; width: 70px; height: 6px; border-radius: 3px; background: #D21F26; margin-top: 14px; transform: none; }
 #app section .card h2::after, #app section .h3::after { content: none !important; }
+/* Clear sections on EVERY page (same as the Business Club page): solid alternating bands, a line with a red bar
+   between them, and every section title with the red bar under it */
+#app section.sec:not(.cta):not(.facts):not(.trust) { background: #FFFFFF; }
+#app section.sec:not(.cta):not(.facts):not(.trust):nth-of-type(odd) { background: #F7F1EF; }
+/* products: one band per field, each with its title and number of products */
+#app .pr-wrap { padding-block: 0; }
+#app .pr-grp { position: relative; padding-block: clamp(30px, 4vw, 54px); box-shadow: 0 0 0 100vmax #FFFFFF; clip-path: inset(0 -100vmax); border-top: 1px solid #E7DADB; }
+#app .pr-grp:nth-child(even) { box-shadow: 0 0 0 100vmax #F7F1EF; }
+#app .pr-grp:first-child { border-top: 0; }
+#app .pr-grp:not(:first-child)::before { content: ""; position: absolute; top: -3px; left: 50%; width: 84px; height: 5px; margin-left: -42px; border-radius: 3px; background: #D21F26; }
+#app .pr-grp > .h2 { margin: 0 0 24px; display: block; }
+#app .pr-n { vertical-align: middle; margin-inline-start: 10px; }
+#app .pr-n { display: inline-grid; place-items: center; min-width: 40px; height: 34px; padding: 0 10px; border-radius: 999px; background: #D21F26; color: #fff; font-size: 18px; font-weight: 800; }
