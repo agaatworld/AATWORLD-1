@@ -3,6 +3,8 @@
   "use strict";
   var A = W.AAT, U = A.ui, esc = A.esc, t = A.t, L = A.L, img = A.img, ic = U.ic, D = A.D, IS = A.IS;
   function LA(o) { var l = (o && (o[A.state.lang] || o.en)) || []; var m = (W.AAT_TX || {})[A.state.lang]; return l.map(function (x) { return (m && !o[A.state.lang] && m[x]) || x; }); }
+  /* the release number of this page's files (index.html ?v=…): the magazine is opened with it so a new release never shows an old cached magazine */
+  var REL = (function () { var sc = W.document.querySelector('script[src*="views.js"]'), m = sc && /[?&]v=([^&#]+)/.exec(sc.getAttribute("src")); return m ? m[1] : "1"; })();
   function sec(cls, inner) { return '<section class="sec ' + (cls || "") + '"><div class="wrap">' + inner + "</div></section>"; }
   /* news for the current language: items marked for one language appear only in it, newest of them first */
   function newsList() { var lg = A.state.lang, own = [], rest = []; D.news.forEach(function (n, i) { if (n.only) { if ((n.only === "ar") === (lg === "ar")) own.push([n, i]); } else rest.push([n, i]); }); return own.concat(rest); }
@@ -77,7 +79,7 @@
   }
   function flip(page) {
     /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=20261017a#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=' + REL + '#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
