@@ -13,7 +13,7 @@ const OUT = __dirname + '/pdfpages';
   await p.goto('http://localhost:8765/issue560/index.html#p-1', { waitUntil: 'networkidle' });
   await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(2500);
   // hide the reader's own buttons and bars that float over the page
-  await p.addStyleTag({ content: '#mBtn,.tb,.ub,.nav,.navb,[class*="arrow"],.drw,#drw,.prog,.bar,.pager,button{visibility:hidden!important} *{animation:none!important;transition:none!important}' });
+  await p.addStyleTag({ content: '#mBtn,#sideTools,.tb,.ub,.nav,.navb,[class*="arrow"],.drw,#drw,.prog,.bar,.pager,button{visibility:hidden!important} *{animation:none!important;transition:none!important}' });
   const N = await p.evaluate(() => document.querySelectorAll('.stf__item').length);
   for (let n = 1; n <= N; n++) {
     await p.evaluate(n => { location.hash = '#p-' + n; }, n);

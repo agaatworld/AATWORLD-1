@@ -28,7 +28,8 @@
   var A = W.AAT, doc = document;
   if (!A || !A.views) return;
   var esc = A.esc, L = A.L, img = A.img;
-  var still = !!(W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  /* owner's rule: reels, shelves and showcases always move, also when Windows animations are off (they are the content, not decoration) */
+  var still = false;
 
   /* ---------- words (English and Arabic; other languages read the English) ---------- */
   var TXT = {
@@ -130,7 +131,7 @@
   /* ===== 2 and 3. Reels: full-bleed, swipe up. "guide" turns each reel into a company guide ===== */
   function fullBtn() { return '<button type="button" class="mz-fs" data-mz="full" aria-label="' + t("full") + '">' + IC.full + "</button>"; }
   function reelShell(root, c, slides, storyAds, auto) {
-    var i = 0, prog = 0, touch = false, hinted = false;
+    var i = 0, prog = 0, touch = false, hinted = false, rest = 0; /* rest: paused while the visitor reads (mouse, wheel, keys) */
     root.innerHTML = '<div class="mz-reel"><div class="mz-phone"><div class="mz-feed">' + slides.join("") + '</div><div class="mz-rtop"><div class="mz-tbar"><i></i></div><div class="mz-rrow"><div class="mz-stories" dir="ltr">' +
       storyAds.map(function (x) { return '<button type="button" class="mz-st" data-mz="jump" data-k="' + x.k + '" aria-label="' + esc(x.c.company) + '"><img src="' + logo(x.c) + '" alt="" loading="lazy"></button>'; }).join("") + "</div>" + '<button type="button" class="mz-fs mz-dirb" data-mz="dir" hidden></button>' + fullBtn() + '</div></div><span class="mz-hint"></span></div></div>';
     var box = q(root, ".mz-reel"), feed = q(box, ".mz-feed"), n = slides.length;
@@ -166,7 +167,8 @@
     c.on(feed, "touchend", function () { if (!g || g.lock !== 1) { g = null; return; } var dx = g.dx || 0, rtl = A.dir() === "rtl"; g = null; if (Math.abs(dx) < 56) { feed.style.transition = "transform .2s ease-out"; feed.style.transform = ""; return; } var sgn = dx < 0 ? 1 : -1; side(rtl ? -sgn : sgn, sgn); }, { passive: true });
     box._mz = { open: function (k) { setFull(true); i = k; marks(); cur(); requestAnimationFrame(function () { to(k, false); }); } };
     marks(); cur(); setDir(hz);
-    if (auto && !still) c.every(100, function () { if (touch || doc.hidden) return; var r = feed.getBoundingClientRect(); if (r.bottom < 120 || r.top > W.innerHeight - 120) return; prog += 100 / (auto * 10); q(box, ".mz-tbar i").style.width = Math.min(100, prog) + "%"; if (prog >= 100) { prog = 0; to(i + 1, true); } });
+    ["pointermove", "wheel", "keydown"].forEach(function (n) { c.on(box, n, function (ev) { if (n !== "pointermove" || ev.pointerType === "mouse") rest = Date.now() + 5000; }); });
+    if (auto && !still) c.every(100, function () { if (touch || doc.hidden || Date.now() < rest) return; var r = feed.getBoundingClientRect(); if (r.bottom < 120 || r.top > W.innerHeight - 120) return; prog += 100 / (auto * 10); q(box, ".mz-tbar i").style.width = Math.min(100, prog) + "%"; if (prog >= 100) { prog = 0; to(i + 1, true); } });
     return function () { doc.documentElement.classList.remove("mz-lock"); if (box.parentNode === doc.body) doc.body.removeChild(box); };
   }
   function rail(x) {
@@ -414,7 +416,7 @@
     var done = reelShell(root, c, brandFeed().map(function (o, k) {
       if (o.ad) { if (logo(o.ad)) story.push({ c: o.ad, k: k }); return PROD ? prodSlide(o.ad) : brandSlide(o.ad); }
       return artSlide(o.art);
-    }), story, 0);
+    }), story, 9); /* plays by itself: next company every 9 s, paused while the visitor reads */
     q(root, ".mz-reel").classList.add("mz-m-brand"); if (PROD) { q(root, ".mz-reel").classList.add("mz-m-prod"); prodRun(q(root, ".mz-feed"), c); } return done;
   };
   COMP.reels = function (root, c) { return COMP.brand(root, c); };
@@ -746,7 +748,7 @@
   /* rows of cards drift slowly sideways on their own until someone touches them */
   function drift() {
     [].slice.call(doc.querySelectorAll("#app .mz-mount:not(.mz-grid) .mz-srow, #app .ind")).forEach(function (el) {
-      if (el._dr || still) return; el._dr = 1; /* moves on every computer (lite mode only pauses decorations) */ var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
+      if (el._dr) return; el._dr = 1; /* moves on every computer, also in lite mode and with Windows animations off (lite only calms the background) */ var dir = 1, pos = null, idle = 0, lastT = 0, vis = true;
       function wait(ms) { idle = W.performance.now() + ms; pos = null; }
       ["pointerdown", "pointermove", "wheel", "touchstart", "touchmove", "focusin"].forEach(function (n) { el.addEventListener(n, function (e) { if (n !== "pointermove" || e.pointerType === "mouse") wait(n === "pointermove" ? 900 : 3500); }, { passive: true }); });
       if ("IntersectionObserver" in W) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(el);
@@ -785,7 +787,7 @@
     else { var pr = rd.querySelector(".prose") || rd.querySelector(".rd-w"), ps2 = pr ? [].slice.call(pr.children) : []; if (ps2.length > 3) slot(pr, "strip", ps2[3]); if (ps2.length > 9) slot(pr, "card", ps2[9]); else if (pr) slot(pr, "card"); }
     var step = 0;
     function fill(sl, first) { var x = top[(seed + sl.k * 3 + step * slots.length + (step ? sl.k : 0)) % top.length], used = slots.map(function (o) { return o.cur; }), g = 0; while (used.indexOf(x) > -1 && g++ < top.length) x = top[(top.indexOf(x) + 1) % top.length];
-      sl.cur = x; if (first || still) { sl.el.innerHTML = unit(x, sl.kind); return; }
+      sl.cur = x; if (first) { sl.el.innerHTML = unit(x, sl.kind); return; }
       sl.el.classList.add("mz-sw"); W.setTimeout(function () { if (!sl.el.isConnected) return; sl.el.innerHTML = unit(x, sl.kind); sl.el.classList.remove("mz-sw"); }, 520); }
     slots.forEach(function (sl) { fill(sl, true); });
     /* two of them change every 40 seconds, in turn */

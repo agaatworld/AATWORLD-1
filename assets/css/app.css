@@ -680,3 +680,25 @@ html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
 /* owner: no AAT symbol on the site for now — plain red banner (no pattern, no big swash) */
 #app header.ph:not(.co):not(.mz-ph) { background: linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); }
 #app header.ph:not(.co):not(.mz-ph)::after { content: none; display: none; }
+/* Clear sections on every page (owner: "section it like AAT BC, or better"):
+   1) the home opening is a red brand banner like the openings of the inner pages */
+#app section.hero { position: relative; color: #fff; background: linear-gradient(120deg, #7A0A10 0%, #B5121A 45%, #D21F26 100%); box-shadow: inset 0 -6px 0 #7A0A10; padding-block: clamp(34px, 4vw, 60px) clamp(40px, 4.6vw, 66px); }
+#app section.hero .kick, #app section.hero .yrs-n, #app section.hero .yrs-w, #app section.hero .yrs-s, #app section.hero .h0, #app section.hero .lead { color: #fff !important; }
+#app section.hero .kick::before, #app section.hero .yrs-s::before { background: #fff; }
+#app section.hero .uline { background: #fff !important; }
+#app section.hero .lead { opacity: .95; }
+#app section.hero .btn-adv { background: #fff; color: #B5121A; box-shadow: 0 12px 28px -14px rgba(40, 0, 0, .8); }
+#app section.hero .btn-line { color: #fff; border-color: rgba(255, 255, 255, .7); }
+#app section.hero .btn-line:hover { background: #fff; color: #B5121A; }
+#app section.hero .hero-cover, #app section.hero .hero-cover-t { color: #fff; }
+#app section.hero + section { border-top: 0; }
+#app section.hero + section::before { display: none; }
+/* 2) every section title carries the same short red bar as the page banners */
+#app section.sec:not(.cta) .sh .h2::after, #app section.live h2::after, #app section.sec:not(.cta) > .wrap > .h2:first-child::after, #app section.sec:not(.cta) > .wrap > div > .h2:first-child::after {
+  content: ""; display: block; width: 70px; height: 6px; border-radius: 3px; background: #D21F26; margin-top: 14px; }
+#app .sh .h2.split::after { margin-inline-start: 0; }
+/* 3) the exhibitions' logo strip belongs to the exhibitions section (no separate untitled band) */
+#app section.sec.trust { border-top: 0 !important; background: transparent !important; padding-top: 0; }
+#app section.sec.trust::before { display: none !important; }
+#app section.sec:not(.cta) h2.h2::after { content: ""; display: block; width: 70px; height: 6px; border-radius: 3px; background: #D21F26; margin-top: 14px; transform: none; }
+#app section .card h2::after, #app section .h3::after { content: none !important; }

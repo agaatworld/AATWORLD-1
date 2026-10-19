@@ -622,7 +622,7 @@ body{background:radial-gradient(ellipse at 50% 30%,var(--desk),var(--desk2));col
 #pn,#pn *{font-size:20px!important;font-weight:800!important}
 </style>
 </head><body><div id="app"><div class="tb"><svg class="lg" viewBox="0 0 413 138" role="img" aria-label="AAT"><use href="#aatlogo"/></svg><div class="ti"><span id="tt">التجارة العربية الآسيوية<small id="ts"></small></span></div><span class="sp"></span>
-<button type="button" class="ub" id="bToc"></button><button type="button" class="ub hide-s" id="bZoom"></button><button type="button" class="ub hide-s" id="bFull"></button><a class="ub hide-s" href="AAT-560-October-2026.pdf" target="_blank" rel="noopener" style="text-decoration:none">PDF</a><button type="button" class="ub" id="bLang"></button></div>
+<button type="button" class="ub" id="bToc"></button><button type="button" class="ub hide-s" id="bZoom"></button><button type="button" class="ub hide-s" id="bFull"></button><a class="ub hide-s" href="AAT-560-October-2026.pdf?v=34" target="_blank" rel="noopener" style="text-decoration:none">PDF</a><button type="button" class="ub" id="bLang"></button></div>
 <div id="stage"><button type="button" class="nv l" id="nx"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div id="clip"><div id="bk"></div></div><button type="button" class="nv r" id="pv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
 <div id="dock"></div>
 <div class="ft"><input type="range" id="rng" min="1" max="100" value="1" aria-label="Page"><output id="pn" for="rng"></output></div></div>
@@ -757,7 +757,7 @@ $("#src").remove();
 var PF=null,cur=1,timer=0,tdx=null;
 var SITE=[["home","الرئيسية","Home"],["articles","المقالات","Articles"],["news","الأخبار","News"],["exhibitions","معارض دولية","International exhibitions"],["products","منتجات وصناعات حديثة","Products & modern industries"],["club","نادي رجال الأعمال","Business Club"],["about","من نحن","About us"],["contact","تواصل معنا","Contact"]];
 zoom=false;
-(function(){var tl=$("#drwTools");["#bToc","#bZoom","#bFull",'.tb a.ub[href$=".pdf"]',"#bLang"].forEach(function(q){var e=$(q);if(e)tl.appendChild(e)})})();
+(function(){var tl=$("#drwTools");["#bToc","#bZoom","#bFull",'.tb a.ub[href*=".pdf"]',"#bLang"].forEach(function(q){var e=$(q);if(e)tl.appendChild(e)})})();
 function dims(){var mb=window.innerWidth<=700,w=stage.clientWidth-(mb?20:150),h=stage.clientHeight-(mb?12:24);single=w<h*1.15;var fit=Math.min(w/(PWB*(single?1:2)),h/PHB);
  /* "large" (the default on a computer) fits the two pages to the window WIDTH, so text is big and the page scrolls; "whole page" fits the height */
  k=fit;if(!zoom&&!mb){/* default on a computer: the page fills the window height exactly, nothing cut off; two pages side by side when both fit at full height, otherwise one */k=(h-8)/PHB;single=w<PWB*k*2;if(single)k=Math.min(k,w/PWB)}if(zoom){if(mb)k=fit*1.9;else{single=true;k=Math.max(Math.min(w/PWB,1.35),Math.min(w/PWB,h/PHB))}}return[Math.max(120,Math.floor(PWB*k)),Math.max(170,Math.floor(PHB*k))]}
@@ -840,4 +840,29 @@ document.addEventListener("pointerdown",fs,true);document.addEventListener("touc
 <script>/* the logo opens the menu when the pointer rests on it, and the menu closes when the pointer leaves it */
 (function(){var b=document.getElementById("mMenu"),d=document.getElementById("drw"),bg=document.getElementById("drwBg"),t;if(!b||!d)return;function on(){clearTimeout(t);d.hidden=false;bg.hidden=false}function off(){t=setTimeout(function(){d.hidden=true;bg.hidden=true},450)}
 if(window.matchMedia&&matchMedia("(hover:hover)").matches){b.addEventListener("mouseenter",on);b.addEventListener("mouseleave",off);d.addEventListener("mouseenter",on);d.addEventListener("mouseleave",off)}})();</script>
+<style id="sideTools-css">
+/* PC: the reader's choices as small buttons in the empty side beside the magazine (right in Arabic, left in English); phones keep the menu */
+#sideTools{position:fixed;top:88px;inset-inline-start:12px;z-index:55;display:none;flex-direction:column;align-items:stretch;gap:8px;width:160px}
+#sideTools.on{display:flex}
+#sideTools .st{display:flex;align-items:center;justify-content:center;box-sizing:border-box;height:40px!important;min-height:0!important;margin:0!important;padding:0 14px!important;border-radius:999px;border:2px solid #E3D6D2;background:#fff;color:#1b1a18;font:700 16px/1.2 Jazeera,"Inter Tight",system-ui,sans-serif;text-decoration:none;cursor:pointer;box-shadow:0 6px 16px -10px rgba(0,0,0,.4);white-space:nowrap}
+#sideTools .st:hover,#sideTools .st:focus-visible{border-color:#D21F26;color:#D21F26;outline:none}
+#sideTools .st.pdf{background:#D21F26;border-color:#D21F26;color:#fff}
+#sideTools .st.pdf:hover{background:#B5121A;color:#fff}
+</style>
+<script>/* side buttons for PC: each one presses the same button as in the menu, so both always do the same thing */
+(function(){var box=document.createElement("nav");box.id="sideTools";box.setAttribute("aria-label","Magazine tools");document.body.appendChild(box);
+var IDS=["bToc","bZoom","bFull","PDF","bLang"];
+function src(id){return id==="PDF"?document.querySelector('a.ub[href*=".pdf"]'):document.getElementById(id)}
+function build(){box.innerHTML="";IDS.forEach(function(id){var o=src(id);if(!o)return;var b;
+ if(id==="PDF"){b=document.createElement("a");b.href=o.getAttribute("href");b.target="_blank";b.rel="noopener";b.className="st pdf"}
+ else{b=document.createElement("button");b.type="button";b.className="st";b.addEventListener("click",function(){o.click();setTimeout(build,50)})}
+ b.textContent=(o.textContent||"").trim()||id;box.appendChild(b)})}
+function place(){var it=[].filter.call(document.querySelectorAll(".stf__item"),function(e){var r=e.getBoundingClientRect();return r.width>50&&r.right>0&&r.left<innerWidth&&getComputedStyle(e).display!=="none"});
+ if(!it.length||innerWidth<1000||matchMedia("(pointer:coarse)").matches){box.classList.remove("on");return}
+ var L=Math.min.apply(null,it.map(function(e){return e.getBoundingClientRect().left})),R=Math.max.apply(null,it.map(function(e){return e.getBoundingClientRect().right}));
+ var rtl=document.documentElement.dir==="rtl",side=rtl?innerWidth-R:L,w=Math.min(190,side-28);
+ if(w<128){box.classList.remove("on");return}box.style.width=w+"px";box.classList.add("on")}
+build();place();setTimeout(function(){build();place()},1200);addEventListener("resize",function(){setTimeout(place,250)});addEventListener("hashchange",function(){setTimeout(place,700)});
+new MutationObserver(function(){build();place()}).observe(document.documentElement,{attributes:true,attributeFilter:["dir","lang"]});
+})();</script>
 </body></html>
