@@ -612,3 +612,7 @@ ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 .ctb { align-items: center; flex-wrap: wrap; gap: 12px; }
 .ctb-ph { font-weight: 800; font-size: 18px; }
 .app-toast { position: fixed; z-index: 120; left: 50%; bottom: 28px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 14px 20px; border-radius: 14px; background: #111; color: #fff; font-size: 18px; font-weight: 700; box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6); }
+/* exhibitions: the field (sector) buttons under the countries */
+.exs-t { margin: 14px 0 6px; font-size: 18px; font-weight: 800; }
+.exs .chip[hidden] { display: none; }
+.exs .chip.on { background: var(--red, #D21F26); color: #fff; border-color: var(--red, #D21F26); } .exs .chip.on small { color: #fff; }

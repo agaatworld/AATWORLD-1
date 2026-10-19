@@ -45,9 +45,11 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - Design board artifact (Claude): "AAT Name Cards" https://claude.ai/artifact/23umBYa17bkqmMshRp5sGe (18 name-card designs + BusinessCard board). Project doc `claude/aat-brand-kit.md`, rules `claude/aat-website-rules.md` in the claude.ai project "AAT WORLD".
 
 ## Exhibitions data
-- Source text per country: `_work/exhibitions/*.txt` (`small.txt` and `gaps.txt` use `#cc` country headers). `python3 build.py` → `ee2027.json` → replace ONLY the `var X = [...]` inside the block that starts with `/* international exhibitions January to December 2027` in `assets/js/data/extra2.js` (the file has 5 other `var X =` blocks — a careless regex once replaced the wrong one).
-- EventsEye is reachable only through the WebFetch tool (shell curl is blocked). URL patterns: `https://www.eventseye.com/fairs/c1_trade-shows_<country>.html`, `_1.html`, `_2.html` (50 rows per page, chronological); month pages `cd1_trade-shows_<country>_<month>_1.html` (`_1` = 2027). The country page sidebar gives monthly counts for verification. Slugs: taiwan, indonesia, malaysia, pakistan, afghanistan, algeria, egypt, iraq, kuwait, yemen, oman, qatar, saudi-arabia, syria, united-arab-emirates, turkey.
-- Status 15 Oct 2026: 948 shows. All countries verified except **UAE** (pages failed to load that day; July/December unverified). Month-only shows have `approx` and show "اليوم يُعلن لاحقاً".
+- Source: EventsEye, read automatically. The environment allows `*.eventseye.com` (Limited network, Allowed domains).
+- `cd _work/exhibitions && python3 scrape_ee.py` reads, for each of the 16 countries, the monthly chart on the country page and every month page from January 2027 on (2027 = suffix `_1`, 2028 = `_2`), compares rows read with the chart count (`ee_check.txt`, "DIFFERENT" marks a mismatch), drops education/MBA/student fairs → `ee_scrape.json`. Then `python3 build_scrape.py` → `ee2027.json` and replaces ONLY the `var X = [...]` of the block starting `/* international exhibitions January to December 2027` in `assets/js/data/extra2.js` (rows: name, start, end, country, city, venue, sector en, sector ar (field group), month only, EventsEye page).
+- Country slugs: taiwan, indonesia, malaysia, pakistan, algeria, egypt, iraq, kuwait, oman, qatar, saudi-arabia, syria, **uae-united-arab-emirates**, turkey. Afghanistan and Yemen have no EventsEye page (no shows).
+- Status 19 Oct 2026: 1,460 shows (1,039 in 2027 + 421 already listed for 2028); every month equals EventsEye's chart. The exhibitions page filters by country AND field (18 field groups from keywords in `build_scrape.py`).
+- Old hand-made lists (`*.txt`, `build.py`) are kept only for their sector labels.
 
 ## Owner decisions (19 Oct 2026)
 - The Taiwan address is ALWAYS shown in English (P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.), even on the Arabic site.
@@ -58,7 +60,7 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 
 ## Open tasks (as of 15 Oct 2026)
 1. Confirm the owner uploaded **update 15** (`version.txt`). Live site had been showing an old magazine (top bar, "See page 52", small footer) — evidence earlier updates weren't extracted correctly.
-2. UAE exhibitions July & December 2027: re-check on EventsEye.
+2. (done 19 Oct) UAE exhibitions re-checked: all months match EventsEye.
 3. Sector pictures on the home page are poor matches — need real photos from the owner or a stock source.
 4. "من نحن / About us": owner wants the exact text of the old WordPress page (`https://aatworld.com/about-us/`, page id 1970). Tools only returned a summary; ask him to paste the text from WordPress → Pages → About Us.
 5. Magazine pages 95–96 (exhibitions in the printed issue) still show Nov 2026; ask whether to replace with 2027.

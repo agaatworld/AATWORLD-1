@@ -207,13 +207,25 @@
     setTimeout(function () { fb.page = nxt[0]; fbShow(); leaf.className = "fb-leaf"; fb.busy = false; }, 620);
   }
   /* exhibitions: the first rows are drawn with the page and the rest follow in small batches, so the page opens at once (no "show more" button) */
+  /* exhibitions: country (buttons from mag.js) and field (sector buttons) filter the list together */
+  function exKeys() { var c = $(".exc .on[data-exc]", app), s = $(".exs .on[data-exs]", app); return [c ? c.getAttribute("data-exc") : "", s ? s.getAttribute("data-exs") : ""]; }
+  function exShow(r, k) { return (!k[0] || r.getAttribute("data-c") === k[0]) && (!k[1] || r.getAttribute("data-s") === k[1]); }
+  function exFilter() {
+    var list = $("#ex-list", app); if (!list) return;
+    var k = exKeys(), cnt = {}, tot = 0;
+    (A.exAllList || []).forEach(function (e) { if (k[0] && e.country !== k[0]) return; var s = e.sector && e.sector.ar || ""; cnt[s] = (cnt[s] || 0) + 1; tot++; });
+    if (k[1] && !cnt[k[1]]) { $$(".exs [data-exs]", app).forEach(function (b) { b.classList.toggle("on", !b.getAttribute("data-exs")); }); k[1] = ""; }
+    $$(".exs [data-exs]", app).forEach(function (b) { var s = b.getAttribute("data-exs"), v = s ? (cnt[s] || 0) : tot, sm = b.querySelector("small"); if (sm) sm.textContent = v; b.hidden = !!s && !v; });
+    for (var i = 0; i < list.children.length; i++) { var r = list.children[i], on = exShow(r, k); r.style.display = on ? "" : "none"; if (on) r.classList.add("in"); }
+  }
+  doc.addEventListener("click", function (ev) { if (ev.target.closest && ev.target.closest(".exc [data-exc]")) setTimeout(exFilter, 0); });
   function exFill() {
     var list = $("#ex-list", app), rest = A.exRest, at = 0; A.exRest = null; if (!list || !rest || !rest.length) return;
     (function step() {
       if (!list.isConnected) return;
-      var start = list.children.length, on = $(".exc .on[data-exc]", app), k = on ? on.getAttribute("data-exc") : "";
+      var start = list.children.length, k = exKeys();
       list.insertAdjacentHTML("beforeend", rest.slice(at, at + 80).map(A.ui.eventRow).join("")); at += 80;
-      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (k && r.getAttribute("data-c") !== k) r.style.display = "none"; r.classList.add("in"); floorText(r); }
+      for (var i = start; i < list.children.length; i++) { var r = list.children[i]; if (!exShow(r, k)) r.style.display = "none"; r.classList.add("in"); floorText(r); }
       if (at < rest.length) setTimeout(step, 40);
     })();
   }
@@ -390,6 +402,7 @@
       else if (act === "hs") { e.stopPropagation(); hsOpen(+a.getAttribute("data-k")); }
       else if (act === "zoom") zoomOpen(a.getAttribute("src"), a.getAttribute("alt"));
       else if (act === "cat") { var list = $("#pr-list"); list.setAttribute("data-cat", a.getAttribute("data-cat")); $$("[data-act=cat]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === a)); }); list.innerHTML = V.productList($("#pr-q").value.trim(), a.getAttribute("data-cat")); $$(".rv", list).forEach(function (x) { x.classList.add("in"); }); }
+      else if (act === "exs") { $$(".exs [data-exs]", app).forEach(function (b) { b.classList.toggle("on", b === a); }); exFilter(); }
       else if (act === "appnum") { var num = a.getAttribute("data-copy"), app = a.getAttribute("data-app"), arx = A.state.lang === "ar";
         var done = function () { var tb = doc.createElement("div"); tb.className = "app-toast"; tb.setAttribute("role", "status"); tb.textContent = (arx ? "تم نسخ الرقم " : "Number copied: ") + num + (arx ? " — الصقه في " : " — paste it in ") + app; doc.body.appendChild(tb); setTimeout(function () { tb.remove(); }, 3500); };
         (navigator.clipboard ? navigator.clipboard.writeText(num) : Promise.reject()).then(done, done); }

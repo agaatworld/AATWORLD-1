@@ -217,14 +217,25 @@
   }
 
   /* ---------- exhibitions ---------- */
+  /* English names of the field groups (the Arabic group name is the key) */
+  var SEC_EN = { "أغذية ومشروبات": "Food and beverage", "بلاستيك وتغليف وطباعة": "Plastics, packaging and printing", "نسيج وملابس": "Textiles and clothing",
+    "آلات وأدوات ومعادن": "Machinery, tools and metal", "صناعة وأتمتة": "Industry and automation", "إلكترونيات وإضاءة": "Electronics and lighting",
+    "طاقة ونفط وغاز": "Energy, oil and gas", "بناء وأثاث وديكور": "Building, furniture and interiors", "نقل وسيارات ولوجستيات": "Transport, vehicles and logistics",
+    "صحة وتجميل وأدوية": "Health, beauty and pharma", "زراعة": "Agriculture", "كيماويات وطلاءات": "Chemicals and coatings", "مياه وبيئة وتبريد": "Water, environment and cooling",
+    "أمن وسلامة": "Security and safety", "تقنية واتصالات": "Technology and telecom", "سلع استهلاكية وخدمات": "Consumer goods and services",
+    "سياحة وفنادق وترفيه": "Tourism, hotels and leisure", "معارض عامة ومتعددة القطاعات": "General and multi-sector" };
   function exhibitions() {
     var ev = A.eventsWindow(new Date(), 2), cn = D.countries || {}, cnt = {}, isAr = A.state.lang === "ar";
     ev.forEach(function (e) { cnt[e.country] = (cnt[e.country] || 0) + 1; });
     /* the first 40 rows come with the page; main.js adds the rest in the background (A.exRest), and the country counts use the full list (A.exAllList) */
     A.exAllList = ev; A.exRest = ev.slice(40);
+    /* fields (sectors): one button each, most shows first; main.js keeps the counts in step with the chosen country */
+    var secs = {}, sk; ev.forEach(function (e) { var k = e.sector && e.sector.ar; if (!k) return; secs[k] = secs[k] || { s: e.sector, n: 0 }; secs[k].n++; });
+    sk = Object.keys(secs).sort(function (a, b) { return secs[b].n - secs[a].n; });
+    var fields = sk.length ? '<p class="exs-t">' + (isAr ? "المجال:" : "Field:") + '</p><div class="chips exs" role="tablist"><button type="button" class="chip on" data-act="exs" data-exs="">' + (isAr ? "كل المجالات" : "All fields") + " <small>" + ev.length + "</small></button>" + sk.map(function (k) { return '<button type="button" class="chip" data-act="exs" data-exs="' + esc(k) + '">' + esc(isAr ? k : (SEC_EN[k] || L(secs[k].s))) + " <small>" + secs[k].n + "</small></button>"; }).join("") + "</div>" : "";
     var chips = Object.keys(cn).length ? '<div class="chips exc" role="tablist"><button type="button" class="chip on" data-exc="">' + (isAr ? "كل الدول" : "All countries") + " <small>" + ev.length + "</small></button>" + Object.keys(cn).map(function (k) { return '<button type="button" class="chip' + (cnt[k] ? "" : " none") + '" data-exc="' + k + '"' + (cnt[k] ? "" : " disabled") + ">" + esc(L(cn[k])) + " <small>" + (cnt[k] || 0) + "</small></button>"; }).join("") + "</div>" : "";
     return { title: t("nav_exhibitions"), html: U.pageHead([], t("nav_exhibitions"), "") +
-      sec("", ev.length ? chips + '<div class="el" id="ex-list">' + ev.slice(0, 40).map(U.eventRow).join("") + "</div>" : '<p class="empty">' + t("x_ex_none") + "</p>") };
+      sec("", ev.length ? chips + fields + '<div class="el" id="ex-list">' + ev.slice(0, 40).map(U.eventRow).join("") + "</div>" : '<p class="empty">' + t("x_ex_none") + "</p>") };
   }
   function exhibition(id) {
     var e = A.eventById(id); if (!e) return notFound();

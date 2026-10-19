@@ -8,28 +8,30 @@ Run from this folder:  python3 build_scrape.py
 import calendar, collections, datetime, json, re
 
 # the keyword -> Arabic sector table used before (copied from build.py, which must not be imported: it rebuilds the old list)
-AR=[('food|bever|bakery|coffee|tea|halal|horeca|hospitality|snack|confection|meat|seafood|dairy|chocolate|ingredient|wine','أغذية ومشروبات'),
-('plastic|rubber|packag|print|label|carton|paper|tissue','بلاستيك وتغليف وطباعة'),('textile|garment|fashion|apparel|denim|leather|footwear|sewing','نسيج وملابس'),
-('machine|machinery|tool|metal|steel|weld|cnc|fastener|hardware|mould|die','آلات وأدوات ومعادن'),('automation|robot|manufactur|industr|engineering|subcon','صناعة وأتمتة'),
-('electr|semicon|pcb|led|lighting|display|touch','إلكترونيات وإضاءة'),('energy|power|solar|oil|gas|petro|battery|wind|renewable','طاقة ونفط وغاز'),
-('construct|build|concrete|stone|façade|facade|ceramic|floor|window|door|interior|furniture|architect|home|kitchen|decor|real estate|property','بناء وأثاث وديكور'),
+AR=[('hotel|hospitality|tourism|travel|caravan|leisure|amusement|entertainment|attraction|event show|mice|pool|spa\\b|shisha|film|comic|cosplay|music|photograph|marathon|festival|wedding','سياحة وفنادق وترفيه'),
+('food|bever|bakery|coffee|tea|halal|horeca|snack|confection|meat|seafood|dairy|chocolate|ingredient|wine|organic|natural product|date|dates|nut','أغذية ومشروبات'),
+('plastic|rubber|packag|print|label|carton|paper|tissue|polyurethane','بلاستيك وتغليف وطباعة'),('textile|garment|fashion|apparel|denim|leather|footwear|sewing|underwear|hosiery|swimwear|yarn|fabric','نسيج وملابس'),
+('machine|machinery|tool|metal|steel|weld|cnc|fastener|hardware|mould|die|material handling|handling|storage|powder|bulk|mining|drone','آلات وأدوات ومعادن'),('automation|robot|manufactur|industr|engineering|subcon','صناعة وأتمتة'),
+('electr|semicon|pcb|led|lighting|display|touch|cable|wire','إلكترونيات وإضاءة'),('energy|power|solar|oil|gas|petro|battery|wind|renewable|hydrogen','طاقة ونفط وغاز'),
+('construct|build|concrete|stone|façade|facade|ceramic|floor|window|door|interior|furniture|architect|home|kitchen|decor|real estate|property|elevator|escalator|lift|road|bridge|tunnel|workspace|glass','بناء وأثاث وديكور'),
 ('auto|vehicle|motor|truck|tyre|bike|bicycle|cycl|transport|logistic|marine|ship|port|rail|aviation|aero|airport|mobility','نقل وسيارات ولوجستيات'),
-('medical|health|pharma|dental|lab|beauty|cosmetic|optic|wellness','صحة وتجميل وأدوية'),('agri|farm|livestock|palm|fertil|horti|aquacult|fisher|greenhouse|rice|sugar|mill','زراعة'),
-('chemic|coating|paint|dye|pigment|lubric','كيماويات وطلاءات'),('water|waste|recycl|environment|hvac|refrigera|cold','مياه وبيئة وتبريد'),
-('security|safety|fire|defen|police','أمن وسلامة'),('it|digital|data|cyber|ai|tech|internet|telecom|cloud|fintech|bank|payment','تقنية واتصالات'),
-('jewel|gold|gift|toy|baby|pet|book|art|sport|outdoor|travel|diving|education|mba|franchise','سلع استهلاكية وخدمات')]
+('medical|health|pharma|dental|lab|beauty|cosmetic|optic|wellness|biotech|aesthetic|medicine|otorhinolaryngology|audiology|hospital|surg','صحة وتجميل وأدوية'),('agri|farm|livestock|palm|fertil|horti|aquacult|fisher|greenhouse|rice|sugar|mill|animal|feed|poultry|veterin','زراعة'),
+('chemic|coating|paint|dye|pigment|lubric','كيماويات وطلاءات'),('water|waste|recycl|environment|hvac|refrigera|cold|carbon|climate|sustainab','مياه وبيئة وتبريد'),
+('security|safety|fire|defen|police','أمن وسلامة'),('it|digital|data|cyber|ai|tech|internet|telecom|cloud|fintech|bank|payment|infocomm|invention|innovation|software|smart','تقنية واتصالات'),
+('jewel|gold|gift|toy|baby|pet|book|art|sport|outdoor|diving|franchise|housewares|homelife|stationery|office|consumer|retail|game','سلع استهلاكية وخدمات'),
+('multi-sector|multisector|investment|trade expo|trade fair|sourcing|international fair|foire|export|import|business','معارض عامة ومتعددة القطاعات')]
 def ar(sec):
     s=sec.lower()
     for k,v in AR:
         if re.search(r'\b('+k+')',s): return v
-    return 'معرض تجاري'
+    return 'معارض عامة ومتعددة القطاعات'
 
 EN = {"أغذية ومشروبات": "Food and beverage", "بلاستيك وتغليف وطباعة": "Plastics, packaging and printing", "نسيج وملابس": "Textiles and clothing",
       "آلات وأدوات ومعادن": "Machinery, tools and metal", "صناعة وأتمتة": "Industry and automation", "إلكترونيات وإضاءة": "Electronics and lighting",
       "طاقة ونفط وغاز": "Energy, oil and gas", "بناء وأثاث وديكور": "Building, furniture and interiors", "نقل وسيارات ولوجستيات": "Transport, vehicles and logistics",
       "صحة وتجميل وأدوية": "Health, beauty and pharma", "زراعة": "Agriculture", "كيماويات وطلاءات": "Chemicals and coatings",
       "مياه وبيئة وتبريد": "Water, environment and cooling", "أمن وسلامة": "Security and safety", "تقنية واتصالات": "Technology and telecom",
-      "سلع استهلاكية وخدمات": "Consumer goods and services", "معرض تجاري": "Trade show"}
+      "سلع استهلاكية وخدمات": "Consumer goods and services", "معارض عامة ومتعددة القطاعات": "General and multi-sector", "سياحة وفنادق وترفيه": "Tourism, hotels and leisure"}
 
 
 def key(n):
@@ -50,7 +52,7 @@ except FileNotFoundError:
 
 rows, seen = [], set()
 for r in json.load(open("ee_scrape.json")):
-    k = r["url"] or (key(r["name"]), r["country"], r["start"])
+    k = (r["url"] or key(r["name"]), r["country"], r["start"])  # one row per edition: a yearly show is listed for 2027 and 2028
     if k in seen:
         continue
     seen.add(k)
@@ -60,9 +62,10 @@ for r in json.load(open("ee_scrape.json")):
     else:
         end = (datetime.date(y, m, d) + datetime.timedelta(days=max(r["days"], 1) - 1)).isoformat()
     sec_ar = ar(r["name"])  # the name first (descriptions are prose: words like "it" or "led" mislead)
-    if sec_ar == "معرض تجاري":
+    if sec_ar == "معارض عامة ومتعددة القطاعات":
         sec_ar = ar(r["desc"])
-    sec_en, sec_ar = old.get((key(r["name"]), r["country"]), (EN[sec_ar], sec_ar))
+    o = old.get((key(r["name"]), r["country"]))
+    sec_en, sec_ar = (o[0], o[1]) if o and o[1] in EN and o[1] != "معارض عامة ومتعددة القطاعات" and o[1] != "معرض تجاري" else (EN[sec_ar], sec_ar)
     venue = "" if r["venue"] in ("?", "") else r["venue"]
     city = "" if r["city"] in ("?", "") else r["city"]
     rows.append([nice(r["name"]), r["start"], end, r["country"], city, venue, sec_en, sec_ar, r["approx"], r["url"]])
