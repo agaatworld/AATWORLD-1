@@ -757,7 +757,7 @@
         var dt = Math.min(ts - lastT, 60); lastT = ts;
         if (!vis || doc.hidden || ts < idle || root.classList.contains("mz-lock") || root.classList.contains("is-scrolling") || el.scrollWidth <= el.clientWidth + 4) { pos = null; return; }
         if (pos === null) pos = el.scrollLeft;
-        var before = el.scrollLeft; pos += dir * dt * .022; el.scrollLeft = pos;
+        var before = el.scrollLeft; pos += dir * dt * .042; /* about 42 px a second: clearly moving */ el.scrollLeft = pos;
         if (Math.abs(pos - el.scrollLeft) > 2 || (el.scrollLeft === before && Math.abs(pos - before) > 1.5)) { dir = -dir; pos = el.scrollLeft; idle = ts + 1200; }
       })(0);
     });

@@ -86,6 +86,8 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
 | "Use original logos, not recreated" | Real assets only. |
 | "Where are the section separators?" | Make the page structure visible. |
 | "Nothing changed" | Cache-buster + version file + clear upload steps. |
+| "Why is the PDF still low quality?" | A copy must match the original in quality too: check it zoomed in, the way the owner reads it. |
+| "Reels still not moving!" (after a fix) | Test on the LIVE site with a fresh browser AND think of the owner's own browser cache: make old copies refresh themselves. |
 | "Why is the PDF totally different from the flipbook?" | A copy made once (PDF) went stale while the source kept changing. Generate copies FROM the source, every release. |
 | "Why this wrong email? Fix everywhere" | Search the whole project (and hidden places: QR codes, design boards, generators) for a wrong fact and fix every instance at once. |
 | "In this last fix you made huge problems" | Regression-check everything around a fix. |
