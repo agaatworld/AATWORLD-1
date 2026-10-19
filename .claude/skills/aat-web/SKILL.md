@@ -26,14 +26,15 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
 ## 3. Design principles (any brand)
 1. **One fixed theme.** Use the brand colours plus neutral black and white, and nothing else. Exceptions must have a clear rule (e.g. links/addresses in link-blue only on light backgrounds, never inside buttons or coloured boxes). Apply each rule identically everywhere. Mixed colours look like chaos.
 2. **Large, bold, clear.** Minimum ~16px for any text and ~18px for paragraphs, big buttons and big menus. Measure it, don't guess. No tiny labels or kicker text.
-3. **Clear structure.** One title per section, in the reading direction's start side. Clear visible separation between sections. No duplicate titles or "see all" clutter.
-4. **Either a fact is there or it isn't.** No "TBA", "coming soon", "approx", "to be announced", or empty boxes. Show what is known, cleanly, or hide it.
-5. **Original assets only.** Use real logos, real icons and real photos (official files, or cut from real pictures). Never redraw a famous logo; look-alikes look fake.
-6. **Formal and trustworthy for a business audience.** Seals, badges and icons in the brand style, no cartoons.
-7. **The site promotes its owner, not others.** No links or credit lines that send visitors to data sources or competitors, unless the owner wants them.
-8. **Right-to-left done right.** Mirror the layout, wrap Latin runs inside Arabic/Hebrew text, check arrows and ticks, and keep things the owner wants in a fixed language (e.g. a postal address) fixed.
-9. **Every language version is a first-class site.** Check each one, not just the default.
-10. **Respect the owner's wording.** Use the exact names and terms they choose, everywhere, consistently.
+3. **Inviting openings.** The top of every page welcomes the visitor: brand colour, brand symbol, big title. Never a dull pale title.
+4. **Clear structure.** One title per section, in the reading direction's start side. Clear visible separation between sections. No duplicate titles or "see all" clutter.
+5. **Either a fact is there or it isn't.** No "TBA", "coming soon", "approx", "to be announced", or empty boxes. Show what is known, cleanly, or hide it.
+6. **Original assets only.** Use real logos, real icons and real photos (official files, or cut from real pictures). Never redraw a famous logo; look-alikes look fake.
+7. **Formal and trustworthy for a business audience.** Seals, badges and icons in the brand style, no cartoons.
+8. **The site promotes its owner, not others.** No links or credit lines that send visitors to data sources or competitors, unless the owner wants them.
+9. **Right-to-left done right.** Mirror the layout, wrap Latin runs inside Arabic/Hebrew text, check arrows and ticks, and keep things the owner wants in a fixed language (e.g. a postal address) fixed.
+10. **Every language version is a first-class site.** Check each one, not just the default.
+11. **Respect the owner's wording.** Use the exact names and terms they choose, everywhere, consistently.
 
 ## 4. Function, speed, stability
 - **Works for real.** Forms save and notify, search finds things, the assistant answers from real content, buttons and links do something, contact icons open the right app or copy the number.
@@ -53,7 +54,7 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
    - every main page, every language, at ~1920, 1366, ~1100, ~960 and phone ~390 widths;
    - a slow-CPU first load, to look for jumps or flashes;
    - capture page errors (must be zero).
-3. Automated scans: text smaller than the minimum, colours outside the theme, empty boxes, broken links and images.
+3. Automated scans: text smaller than the minimum, colours outside the theme, low text contrast (text vs its real background), empty boxes, broken links and images.
 4. Look at the screenshots yourself: theme, sizes, separation, titles, RTL, real logos, nothing missing.
 5. Fix everything found, not only what was named, then check again.
 
@@ -84,3 +85,5 @@ This is a way of thinking, not one project's facts. The facts for a project (bra
 | "Where are the section separators?" | Make the page structure visible. |
 | "Nothing changed" | Cache-buster + version file + clear upload steps. |
 | "In this last fix you made huge problems" | Regression-check everything around a fix. |
+| "WHAT?" (white text on a white band after a "sections" fix) | A site-wide rule (backgrounds, colours) must exclude blocks with their own colour; run an automatic text-contrast scan on every page after any background change. |
+| "The opening of the page is dull, like inviting an old guest" | Every page opening is a welcome: a strong brand banner (brand colour, brand pattern/symbol, big title, short accent bar), integrated with the menu bar, not a pale title floating on an empty background. |
