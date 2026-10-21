@@ -1,6 +1,6 @@
 # Builds tile-ar.html and tile-en.html for the "Business Club" concept from the real content package.
 # Run: python3 -I build_tile.py   (writes next to this file)
-import json, html, os
+import json, html, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 D = json.load(open(os.path.join(HERE, '..', '..', 'data', 'data.json'), encoding='utf-8'))
@@ -59,7 +59,7 @@ T = {
 
 CSS = r"""
 :root{
-  --ink:#141821; --ink2:#242B38; --red:#D21F26; --red-deep:#A4161C; --brass:#8A6B2D; --brass-l:#D4B46A;
+  --ink:#141821; --ink2:#242B38; --red:#D21F26; --red-deep:#A4161C; --brass:#7E6128; --brass-l:#D4B46A;
   --paper:#FFFFFF; --panel:#EDEFF2; --line:#C9CDD6; --muted:#4A5160; --link:#0B4F9C;
   --display:'Newsreader','Amiri',Georgia,serif; --body:'Source Serif 4','Noto Naskh Arabic',Georgia,serif;
   --wrap:1320px; --gut:24px;
@@ -70,7 +70,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:
 html[lang=en] body{font-size:19px;line-height:1.7}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
-bdi,.ltr{unicode-bidi:isolate} .ltr{direction:ltr;display:inline-block}
+bdi,.ltr{unicode-bidi:isolate} .ltr{direction:ltr;display:inline-block} .kw{white-space:nowrap}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
 h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;line-height:1.3}
 html[lang=ar] h1,html[lang=ar] h2,html[lang=ar] h3{line-height:1.45}
@@ -149,7 +149,7 @@ html[dir=rtl] .pcard .pn{text-align:right}
 /* 6. advertisers (logo cards) */
 .lgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
 .lcard{background:var(--paper);border:1px solid var(--line);position:relative}
-.lcard .box{height:132px;display:flex;align-items:center;justify-content:center;padding:18px;border-bottom:1px solid var(--line)}
+.lcard .box{height:152px;display:flex;align-items:center;justify-content:center;padding:42px 18px 14px;border-bottom:1px solid var(--line)}
 .lcard .box img{max-height:84px;max-width:150px;width:auto;object-fit:contain}
 .lcard .box .nm{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.3;text-align:center}
 .lcard .meta{padding:12px 14px 14px}
@@ -170,7 +170,7 @@ html[dir=rtl] .pcard .pn{text-align:right}
 .club .wrap{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start}
 .club h2{color:#fff;border-bottom-color:var(--red)}
 .club .lead{font-size:22px;margin:0 0 20px;max-width:60ch}
-.club ol{margin:0 0 26px;padding:0;list-style:none;counter-reset:b;border-top:1px solid rgba(212,180,106,.5)}
+.club ol{margin:0 0 26px;padding:0;list-style:none;counter-reset:b;border-top:1px solid rgba(212,180,106,.5);display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
 .club li{counter-increment:b;display:flex;gap:18px;padding:12px 0;border-bottom:1px solid rgba(212,180,106,.5);font-size:19px;line-height:1.6}
 .club li::before{content:counter(b);font-family:var(--display);font-weight:600;color:var(--brass-l);font-size:28px;line-height:1;min-width:34px}
 .club .mem{font-size:18px;color:var(--brass-l);margin:0 0 22px}
@@ -221,7 +221,8 @@ footer .bottom{margin-top:40px;padding-top:18px;border-top:1px solid rgba(255,25
   .issue .grid{grid-template-columns:1fr;gap:28px}
   .cover{max-width:300px}
   .lgrid{grid-template-columns:1fr 1fr;gap:12px}
-  .lcard .box{height:112px;padding:14px}
+  .lcard .box{height:132px;padding:40px 12px 12px}
+  .club ol{grid-template-columns:1fr}
   .lcard .box img{max-height:70px}
   .ledger thead{display:none}
   .ledger tr{display:block;padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -243,7 +244,7 @@ def seal(t, size):
 <circle cx="120" cy="120" r="77" fill="none" stroke="#D21F26" stroke-width="2"/>
 <text font-family="Newsreader, Georgia, serif" font-size="18" font-weight="700" letter-spacing="2.9" fill="#141821" direction="ltr"><textPath href="#ring" textLength="594" lengthAdjust="spacing">{ring}</textPath></text>
 <image href="{IMG}img/logo.png" x="58" y="84" width="124" height="41.5"/>
-<text x="120" y="152" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="17" font-weight="700" letter-spacing="2" fill="#8A6B2D" direction="ltr">1982 · 2026</text>
+<text x="120" y="152" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="17" font-weight="700" letter-spacing="2" fill="#7E6128" direction="ltr">1982 · 2026</text>
 </svg>'''
 
 def fmt_date(s, e, lang):
@@ -293,8 +294,9 @@ def build(lang):
               (f'<tr><td class="d">{fmt_date(s["start"], s["end"], L)}</td><td class="n">{E(s["name"])}</td>'
                f'<td><span class="flag"><img src="{IMG}{c["flag"]}" alt="">{E(city)}, {E(c[L])}</span></td><td>{E(F[s["field"]][L])}</td></tr>')
     th = ''.join(f'<th>{E(x)}</th>' for x in t['th'])
-    # --- club benefits (first 4)
-    ben = ''.join(f'<li>{E(b[L])}</li>' for b in D['club']['benefits'][:4])
+    # --- club benefits (all 8)
+    kw = lambda x: re.sub(r'(AAT (?:Tube|Alert)|www\.aatworld\.com)', r'<bdi class="kw">\1</bdi>', x)
+    ben = ''.join(f'<li><span>{kw(E(b[L]))}</span></li>' for b in D['club']['benefits'])
     cfg = D['config']
     navs = ''.join(f'<a href="#" class="{"on" if i == 0 else ""}">{E(n)}</a>' for i, n in enumerate(t['nav']))
     globe = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>'

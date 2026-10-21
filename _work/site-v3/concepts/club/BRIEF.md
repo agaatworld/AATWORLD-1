@@ -2,7 +2,7 @@
 
 AAT is a 45-year-old trade publication whose owner also runs a Business Club of 2,831 members. This concept organises the whole site as that club: a formal house with a reception, a reading room, a members' directory, an exhibitions ledger and a membership office. Deep ink, the logo's red, one brass accent, serif type, seals and ruled ledgers. Everything the owner loves is kept (large clear text, the moving product shelf, real logos, the red AAT script logo); everything else is rebuilt.
 
-Style tiles: `tile-ar.html` / `tile-en.html` (screenshots `tile-ar-1920.png`, `tile-en-1920.png`, `tile-ar-390.png`, `tile-ar-full.png`, `tile-ar-1366.png`, `ref-vs-new.png`). Built by `build_tile.py` from `../../data/data.json` (every text is real). Contrast figures from `contrast.py`.
+Style tiles: `tile-ar.html` / `tile-en.html` (screenshots `tile-ar-1920.png`, `tile-en-1920.png`, `tile-ar-390.png`, `tile-ar-full.png`, `tile-ar-1366.png`, `tile-en-full.png`, `ref-vs-new.png`). Built by `build_tile.py` from `../../data/data.json` (every text is real); screenshots by `shoot.js` (which also prints the smallest rendered text, loaded fonts, broken images and horizontal overflow); `ref-vs-new.png` by `compare.py`. Contrast figures from `contrast.py`.
 
 ---
 
@@ -15,7 +15,7 @@ Style tiles: `tile-ar.html` / `tile-en.html` (screenshots `tile-ar-1920.png`, `t
 5. **Exhibitions.** Today: 16 flag tiles, a chip row, then rounded rows. → A **ledger**: month headings in serif, ruled rows (date in brass tabular figures | show | city and country with flag | field), with country and field lists in a side column on PC and two big filter buttons on the phone.
 6. **Layout language.** Today: rounded cards (16–24px radius), gradients, shadows, pill buttons, dark hero blocks, red bands between everything. → **Square corners everywhere**, one-pixel hairlines, no shadows, no gradients; sections separated by alternating white / cool-grey bands and hairlines; ink bands only for the invitation, the club and the footer.
 7. **Typography.** Today: one Kufi-style sans (Jazeera) for everything, Rubik-like Latin. → A serif voice: **Amiri** for Arabic headings, **Noto Naskh Arabic** for Arabic text, **Newsreader** for Latin headings, figures and the seal, **Source Serif 4** for Latin text. Reads like a printed trade journal and a club charter, not like an app.
-8. **Colour.** Today: red gradients as backgrounds on every page opening, section titles red, white/cream bands. → Red is used only where it means something: the logo, the ribbon, the primary button, the seal rings, the 4px rule under section titles, page stamps. Backgrounds are ink, white and cool grey; brass (#8A6B2D / #D4B46A) is the single accent for figures, dates and rules.
+8. **Colour.** Today: red gradients as backgrounds on every page opening, section titles red, white/cream bands. → Red is used only where it means something: the logo, the ribbon, the primary button, the seal rings, the 4px rule under section titles, page stamps. Backgrounds are ink, white and cool grey; brass (#7E6128 / #D4B46A) is the single accent for figures, dates and rules.
 9. **Motifs.** Today: nothing branded beyond the logo and the (removed) swoosh. → Two motifs from AAT's own world: the **seal** (round stamp "AAT BUSINESS CLUB · TAIPEI · SINCE 1982" with the real logo inside) and the **ledger / catalogue rule** (hairlines, page stamps "صفحة 3", tabular dates). No swoosh anywhere.
 10. **Section titles.** Today: title with a short red bar, sometimes a count badge, sometimes a "see all" link. → One serif title per section with a 4px red underline, nothing else beside it; actions are buttons at the end of the section.
 11. **Figures and dates.** Today: numbers in the same bold sans as words. → All numbers (counts, dates, page numbers, phone) in Newsreader/Source Serif lining tabular figures, brass where they are the point (dates, totals), so a date column lines up like a printed timetable.
@@ -37,7 +37,7 @@ Style tiles: `tile-ar.html` / `tile-en.html` (screenshots `tile-ar-1920.png`, `t
 | `ink-2` | #242B38 | footer background; hover row on ink; secondary panel on ink |
 | `red` | #D21F26 | the logo's red (fixed): ribbon, primary button, seal rings, 4px rule under section titles, page stamps, active nav underline, chat tab |
 | `red-deep` | #A4161C | primary button hover/pressed |
-| `brass` | #8A6B2D | accent on light backgrounds: dates in the ledger, page numbers in the contents, figures; text only at ≥ 17px bold |
+| `brass` | #7E6128 | accent on light backgrounds: dates in the ledger, page numbers in the contents, figures; text only at ≥ 17px bold (passes 4.5:1 on paper and on panel, so no large-text exception is needed) |
 | `brass-light` | #D4B46A | accent on ink: the big figures, rules, footer column titles, the sub-line of the invitation; the 6px rule under the masthead |
 | `paper` | #FFFFFF | page and card background |
 | `panel` | #EDEFF2 | alternating section band (cool grey, not cream) |
@@ -55,8 +55,8 @@ Contrast (WCAG, computed by `contrast.py`):
 | ink on panel | 15.42:1 | AA |
 | muted on paper | 7.96:1 | AA |
 | muted on panel | 6.91:1 | AA |
-| brass on paper | 4.97:1 | AA |
-| brass on panel | 4.32:1 | large text only (used at 21–22px bold in ledgers on panel) |
+| brass on paper | 5.79:1 | AA |
+| brass on panel | 5.03:1 | AA |
 | white on red | 5.30:1 | AA |
 | white on red-deep | 7.75:1 | AA |
 | white on ink | 17.76:1 | AA |
@@ -105,7 +105,7 @@ Arabic line-height is 1.85 for text and 1.45 for headings (Amiri needs room for 
 - **Rhythm.** Section padding 64px (44px phone); 30px from a section title to its content; cards gap 18px; ledger rows 14px padding. Spacing steps: 8, 12, 16, 24, 32, 48, 64.
 - **Section separation.** Alternating bands: white → panel (#EDEFF2) → white, each separated by a 1px `line`; ink bands (invitation, club) carry a 6px brass rule on top. No red bands.
 - **Section title.** One H2 at the reading start, with a 4px red underline the width of the title. No kicker above, no count badge, no "see all" link beside it. Actions are buttons at the end of the section.
-- **Cards.** Square corners, 1px `line` border, white, no shadow, no hover lift. Logo card: 132px logo box (logo ≤ 84px high, real file, never redrawn; a company without a logo file shows its Latin name in Newsreader 24px in the box — no grey placeholder), name 17px bold, category · city 16px muted, red page stamp top corner. Product card (shelf): 186px picture box on white, logo chip + company, product name 18px bold two lines.
+- **Cards.** Square corners, 1px `line` border, white, no shadow, no hover lift. Logo card: 152px logo box with a 42px zone reserved at the top for the red page stamp (the stamp never touches the logo; 132px box with a 40px zone on phones), logo ≤ 84px high (70px on phones), real file, never redrawn; a company without a logo file shows its Latin name in Newsreader 24px in the box — no grey placeholder), name 17px bold, category · city 16px muted, red page stamp top corner. Product card (shelf): 186px picture box on white, logo chip + company, product name 18px bold two lines.
 - **Buttons.** Rectangular, 2px border, 20px bold, 58px tall. Primary: red fill, white text. Secondary: ink outline on light, white outline on ink. Never blue, never rounded, never a gradient.
 - **Chips / filters.** Rectangular tabs with a hairline, 18px bold; the active one is ink with white text. On PC the exhibition filters are vertical lists (flag + name + count) in a side column; on phones two full-width buttons ("الدولة", "المجال") open a full-screen list.
 - **Tables / rows.** The ledger: header row 17px muted with a 2px ink rule, rows with 1px `line`, date column brass tabular, name bold, flag 30×20 with a hairline. On phones each row stacks (date, name, place, field) inside the same ruled block.
@@ -134,7 +134,7 @@ Routes (hash): `#home`, `#magazine` (+ `#article-<id>`, `#news`, `#news-<id>`, `
 5. Advertisers in this issue (companies: logo, Arabic/Latin name, category · city, page stamp; 36 cards) — the members' wall; every advertiser gets equal, dignified space.
 6. International exhibitions — next month (exact-date shows of the coming month, 8 rows, then one button to the ledger) — the second reason readers visit.
 7. Reading room (3 fresh articles + 3 news in one ruled list, pictures where shipped) — editorial content below the commercial content, as in the magazine.
-8. The Business Club band (seal, lead, 8 benefits, members line, join buttons) — the membership office, dark and formal, close to the end where a decided visitor acts.
+8. The Business Club band (seal, lead, the 8 benefits as a numbered ledger in two columns — one column on phones — members line, join buttons) — the membership office, dark and formal, close to the end where a decided visitor acts.
 9. Contact (phone, app icons, e-mail in link blue, English address, newsletter) — every page ends with a way to reach the owner.
 10. Footer (white logo, trilingual name, claim, Explore, Services, Contact, address, ©, privacy).
 

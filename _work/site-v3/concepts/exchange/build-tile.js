@@ -8,6 +8,8 @@ const IMG = '../../img/'; // relative from concepts/exchange/ to _work/site-v3/i
 
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const nf = n => Number(n).toLocaleString('en-US');
+// product count with correct Arabic/English number agreement
+const plProducts = (n, L) => L === 'ar' ? (n === 1 ? 'منتج واحد' : n === 2 ? 'منتجان' : n <= 10 ? n + ' منتجات' : n + ' منتجاً') : (n === 1 ? '1 product' : n + ' products');
 
 const MONTHS = {
   ar: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
@@ -124,12 +126,13 @@ function page(L) {
     const city = c.city ? (c.city[L] || c.city.en) : '';
     const sub = L === 'ar' && c.nameAr && c.logo ? `<span class="s-en"><bdi dir="ltr">${esc(c.company)}</bdi></span>` : '';
     // without a logo the Latin name already sits large in the logo area: show only the Arabic name under it (if any)
-    const nameLine = c.logo ? `<span class="sname"><bdi>${esc(name)}</bdi></span>` : (L === 'ar' && c.nameAr ? `<span class="sname"><bdi>${esc(c.nameAr)}</bdi></span>` : '');
+    const latin = !/[\u0600-\u06FF]/.test(name);
+    const nameLine = c.logo ? `<span class="sname"${latin ? ' dir="ltr"' : ''}><bdi>${esc(name)}</bdi></span>` : (L === 'ar' && c.nameAr ? `<span class="sname"><bdi>${esc(c.nameAr)}</bdi></span>` : '');
     return `<a href="#" class="stile">
       <span class="slogo">${logo}</span>
       ${nameLine}${sub}
       <span class="smeta"><span>${esc(city)}</span><span class="dot"></span><span>${esc(cat)}</span></span>
-      <span class="scount num">${c.products.length ? nf(c.products.length) + (L === 'ar' ? ' منتجات' : ' products') : (L === 'ar' ? 'صفحة ' + c.page : 'page ' + c.page)}</span>
+      <span class="scount num">${c.products.length ? plProducts(c.products.length, L) : (L === 'ar' ? 'صفحة ' + c.page : 'page ' + c.page)}</span>
     </a>`;
   }).join('');
 
@@ -170,7 +173,13 @@ bdi{unicode-bidi:isolate}
 
 /* ---------- header: white top bar + navy rail ---------- */
 .top{background:var(--paper);border-bottom:1px solid var(--rule)}
+.top{position:sticky;top:0;z-index:7}
 .top .wrap{display:flex;align-items:center;gap:28px;min-height:96px}
+/* the tool-bar search is hidden while the big search of the opening board is on screen, so the search is never shown twice */
+.top .search{display:none}
+.top.with-search .search{display:flex}
+.top .logo{margin-inline-end:auto}
+.top.with-search .logo{margin-inline-end:0}
 .logo img{height:60px;width:auto}
 .search{flex:1;display:flex;border:2px solid var(--ink);border-radius:4px;background:var(--paper);min-height:60px;overflow:hidden}
 .search input{flex:1;border:0;font:500 20px/1.4 var(--ar);padding:0 20px;color:var(--ink);min-width:0;background:transparent}
@@ -190,25 +199,25 @@ bdi{unicode-bidi:isolate}
 .menuBtn{display:none}
 .rail{background:var(--navy)}
 .rail .wrap{display:flex;flex-wrap:wrap;gap:0 8px}
-.rail a{display:block;color:#fff;font:600 20px/1.2 var(--ar);padding:19px 18px 15px;border-bottom:5px solid transparent}
+.rail a{display:block;color:#fff;font:600 20px/1.2 var(--ar);padding:21px 18px 17px;border-bottom:5px solid transparent}
 .rail a.on{border-bottom-color:var(--signal)}
 .rail a:hover{background:rgba(255,255,255,.08)}
 [dir=ltr] .rail a{font-family:var(--lat);font-weight:700;font-stretch:95%;font-size:20px;letter-spacing:.01em}
 
 /* ---------- opening board ---------- */
 .open{background:var(--ink);color:#fff}
-.open .wrap{display:grid;grid-template-columns:1fr 420px;gap:48px;padding-top:56px;padding-bottom:56px;align-items:center}
+.open .wrap{display:grid;grid-template-columns:1fr 420px;gap:48px;padding-top:40px;padding-bottom:40px;align-items:center}
 .open h1{font:700 48px/1.3 var(--ar);margin-bottom:8px}
 .open h1 span{display:block;color:#fff}
 .open h1 .b{font-size:34px;font-weight:600;line-height:1.4;margin-top:6px;opacity:.95}
 [dir=ltr] .open h1{font-family:var(--lat);font-weight:800;font-stretch:92%;font-size:56px;line-height:1.1}
 [dir=ltr] .open h1 .b{font-family:var(--ar);font-weight:500;font-size:30px;font-stretch:100%}
-.open p.lead{font-size:20px;line-height:1.75;max-width:900px;margin:14px 0 28px;color:#E6ECF3}
+.open p.lead{font-size:20px;line-height:1.75;max-width:1100px;margin:12px 0 24px;color:#E6ECF3}
 .bigsearch{display:flex;background:#fff;border-radius:4px;overflow:hidden;min-height:76px;max-width:980px;border:3px solid #fff}
 .bigsearch input{flex:1;border:0;font:500 22px var(--ar);padding:0 24px;color:var(--ink);min-width:0}
 .bigsearch input::placeholder{color:var(--slate);opacity:1}
 .bigsearch button{border:0;background:var(--signal);color:#fff;font:700 22px var(--ar);padding:0 36px;cursor:pointer}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px;max-width:980px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px;max-width:980px}
 .stat{background:#fff;color:var(--ink);border-radius:4px;padding:18px 20px 16px;border-top:6px solid var(--signal)}
 .stat .n{font:800 44px/1 var(--lat);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .stat .l{font:700 18px/1.3 var(--ar);margin-top:8px}
@@ -290,7 +299,8 @@ bdi{unicode-bidi:isolate}
 .slogo{height:92px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
 .slogo img{max-height:84px;max-width:100%;object-fit:contain}
 .noLogo{font:800 24px/1.15 var(--lat);font-stretch:90%;color:var(--ink);text-align:center}
-.sname{font:700 18px/1.4 var(--ar);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sname{font:700 18px/1.4 var(--ar);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+[dir=rtl] .sname[dir=ltr]{text-align:right}
 [dir=ltr] .sname{font-family:var(--lat)}
 .s-en{font:500 16px/1.3 var(--lat);color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:start}
 [dir=rtl] .s-en,[dir=rtl] .c-name .venue{text-align:right}
@@ -320,6 +330,7 @@ footer .wrap.cols{display:grid;grid-template-columns:1.4fr 1fr 1.3fr;gap:48px;pa
 footer .flogo img{height:64px;width:auto;margin-bottom:16px}
 footer .names{font:700 20px/1.6 var(--ar)}
 footer .names .en{font-family:var(--lat);font-weight:700}
+footer .names .en bdi,footer .names .nw{white-space:nowrap}
 footer p{font-size:17px;line-height:1.7;color:#D5DEE8;margin-top:10px;max-width:520px}
 footer h4{font:700 20px/1.3 var(--ar);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid rgba(255,255,255,.25)}
 footer ul{list-style:none}
@@ -406,6 +417,7 @@ footer .bottom .wrap{display:flex;justify-content:space-between;gap:16px;flex-wr
   .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;font:700 16px/1.1 var(--ar);padding:9px 2px 8px;min-height:76px}
   .tabbar a.on{background:var(--ink)}
   .tabbar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
+  [dir=ltr] .tabbar a{font-family:var(--lat);font-stretch:88%;font-size:16px;letter-spacing:.01em}
 }
 </style>
 </head>
@@ -422,8 +434,8 @@ footer .bottom .wrap{display:flex;justify-content:space-between;gap:16px;flex-wr
     <div class="lang"><a class="btn" href="${t.otherHref}">${esc(t.other)}</a><a class="globe" href="#" aria-label="Languages"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></a></div>
     <a class="menuBtn" href="#" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></a>
   </div>
-  <nav class="rail"><div class="wrap">${navHtml}</div></nav>
 </header>
+<nav class="rail"><div class="wrap">${navHtml}</div></nav>
 
 <section class="open">
   <div class="wrap">
@@ -492,7 +504,7 @@ footer .bottom .wrap{display:flex;justify-content:space-between;gap:16px;flex-wr
   <div class="wrap cols">
     <div class="flogo">
       <img src="${IMG}brand/aat-logo-white.svg" alt="AAT">
-      <div class="names"><div>${esc(t.fGroup)}</div><div class="en"><bdi dir="ltr">${esc(t.fGroupEn)}</bdi> · <bdi dir="ltr">${esc(t.fZh)}</bdi></div></div>
+      <div class="names"><div>${esc(t.fGroup)}</div><div class="en"><bdi dir="${/[\u0600-\u06FF]/.test(t.fGroupEn) ? 'rtl' : 'ltr'}">${esc(t.fGroupEn)}</bdi> <span class="nw">· <bdi dir="ltr">${esc(t.fZh)}</bdi></span></div></div>
       <p>${esc(t.fSince)}</p>
     </div>
     <div>
@@ -513,6 +525,7 @@ footer .bottom .wrap{display:flex;justify-content:space-between;gap:16px;flex-wr
 <nav class="tabbar">${tabsHtml}</nav>
 <script>
 // phones: a short placeholder in the narrow top search field
+(function(){var top=document.querySelector('.top'),big=document.querySelector('.bigsearch');if(top&&big&&'IntersectionObserver' in window){new IntersectionObserver(function(e){top.classList.toggle('with-search',!e[0].isIntersecting)},{threshold:0}).observe(big)}else if(top){top.classList.add('with-search')}})();
 (function(){var i=document.querySelector('.top .search input');if(!i)return;var full=i.placeholder;function f(){i.placeholder=window.innerWidth<761?${JSON.stringify(t.search)}:full;}f();window.addEventListener('resize',f);})();
 </script>
 </body>

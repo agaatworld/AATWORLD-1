@@ -1,36 +1,39 @@
-# Concept "The Trade Gazette" (slug: gazette)
+# The Trade Gazette — concept brief (slug: `gazette`)
 
-AAT has printed a trade paper every month since 1982: 560 issues, 45 years. This concept makes the website *that paper, moved online*. The home page is the front page of a publication (masthead, dateline, section bar, columns divided by rules, big figures), not a landing page with banners and cards. Everything the owner loves stays: the red AAT script logo, large clear text, the moving shelf of products, real logos. Everything else is rebuilt.
+A 45-year trade paper that moved online. The home page is the front page of a publication (masthead, issue line, columns, rules, big figures), not a landing page. Everything the reader sees carries the weight of "printed in Taiwan since 1982, issue 560".
+
+Files: `tile-ar.html`, `tile-en.html` (built by `build_tile.js` from `../../data/data.json`, every text real), screenshots `tile-ar-1920.png`, `tile-en-1920.png`, `tile-ar-390.png`, `tile-ar-full.png`, comparison `ref-vs-new.png`, current-site references `ref-*.png`.
 
 ---
 
-## 1. Difference statement (today → new)
+## 1. Difference statement (today → the gazette)
 
-1. **Navigation model.** Today: a floating white pill bar with 7 menu items and a globe, same on every page. → New: a **newspaper masthead** (dateline row, large centred AAT logo with the three names, then a ruled **section bar** with 9 sections). On scroll the masthead folds into a compact ruled bar. The owner sees a masthead, not a menu pill, in the first second.
-2. **Home page.** Today: a card shelf, then a red gradient hero ("45 years" + floating cover), then a dotted trade map, external partner logos, product cards, article cards, news cards, show rows, CTA. → New: a **front page**: ticker tape of products under the masthead, then a three-column lead (the issue with its cover and headline | "In this issue" contents with page numbers | the nearest shows as a dated ledger), then the advertisers' index, the reading columns, the catalogue groups, the club notice, the imprint. Columns are separated by vertical hairline rules, as on a broadsheet.
-3. **Content grouping.** Today: Magazine, Articles, News, International exhibitions, Products & modern industries, Business Club, About, Contact as flat equal pages; the magazine, the flipbook and the company mini-sites are three routes. → New: **"The Issue" (#issue)** merges magazine + flipbook + company panels + contents + archive + PDF in one section; **"Products" (#products)** is one *catalogue* with an advertisers' A–Z index at the top and the "منتجات وصناعات حديثة" groups as its second part; exhibitions become **calendar pages** (a ledger grouped by month) instead of flag cards; everything carries a **folio** ("ص 18") that opens the printed page.
-4. **Layout language.** Today: rounded cards (16–20 px radius), soft shadows, red gradient banners, pill chips, alternating white/warm bands with a red bar under titles. → New: **no rounded corners, no shadows, no gradients**. Flat paper, hairline rules, column rules, **double rules** (thick red + thin ink) under section titles, square-cornered framed pictures, rectangular buttons with 2 px borders, bordered "notice" boxes for the club and contact.
-5. **Page openings.** Today: every inner page opens with a red gradient banner holding a white title. → New: every page opens as a **page of the paper**: the masthead (compact), then the page title in the headline face sitting on a double rule with its count/date on the same line ("معارض دولية · 1,460 معرضاً · 2027"). Still red-rich (red logo, red thick rule, red primary button), but typographic rather than a coloured block.
-6. **Typography.** Today: one modern Arabic sans (Al-Jazeera) for everything, bold sans headlines. → New: **two voices**: headlines in **Noto Naskh Arabic 700** (the classic Arabic press headline) / **Newsreader 700** (a serif designed for on-screen news) in English; body and UI in **Readex Pro**, a face designed for low-vision readers, at 20 px. Figures (1982, 560, 2,831) are set big in the display face as "big numbers" of the front page.
-7. **Colour.** Today: red gradients, warm grey bands, a near-black footer, blue links. → New: **paper white + ink black + neutral newsprint grey + AAT red used as a rule and a stamp**, never as a gradient wash. Red is the logo, the thick rule, the primary button, the selected-filter underline, the date stamps and the folios. Blue only for web and e-mail addresses on light backgrounds.
-8. **Exhibitions.** Today: five big flag cards, then filters, then rows. → New: a **ledger**: search field, a ruled strip of 16 flags + names + counts (a table row, not cards), field chips as square tabs, then rows grouped under running month heads ("يناير 2027 · 55 معرضاً") with a **date stamp** (day large, month small) at the start of every row.
-9. **Magazine reader.** Today: a beige room with white pill tools at the side. → New: a **reading room** in newsprint grey with a ruled toolbar; two pages side by side at full window height on PC, one on phone, folios under each page; tapping an ad opens the **advertiser panel** as a side column (PC) or bottom sheet (phone), never a page jump.
-10. **Footer.** Today: dark three-column footer. → New: a **colophon** (imprint) on paper under a heavy double rule: logo, the three names, "published in Taiwan since 1982", sections, phone + app icons, e-mails in blue, the English address, newsletter line; closed by a 56 px red band with the copyright and the issue number.
-11. **Feel.** Today: a bright modern B2B landing page. → New: the authority of a paper that has run for 45 years — dated, numbered, ruled, signed. The reader feels he is holding the current issue, with the whole archive and directory behind it.
-12. **Motion.** Today: moving card shelf, counting numbers, reveal animations. → New: only the ticker tape moves (plus the page turn in the reader). Nothing fades in, nothing jumps, nothing counts up.
+1. **Navigation.** Today: a floating white pill bar (logo at the end, 8 links, "English" pill, globe) hovering over a card shelf. → New: a newspaper masthead: the issue line in the "ears" (العدد 560 · أكتوبر 2026 / السنة 45 · تصدر في تايوان منذ 1982), the full red AAT logo centred, the tri-lingual red name strip under it (copied from the printed cover), then a bold black **section bar** between a thick and a thin rule. The bar is always fully visible (it wraps into rows on narrow screens, no hamburger) and sticks to the top when scrolling.
+2. **Home page.** Today: a landing page (shelf → red gradient "45 عاماً" banner with a tilted cover → dotted trade map → logo strip → photo tiles → cards). → New: a **front page** in three ruled columns: "في هذا العدد" (cover, this-issue text, table of contents with dotted leaders and page numbers), "معارض دولية" (dated rows of the next shows + counts by country), "نادي رجال الأعمال" (seal, 2,831, first benefits, join). Then a figures strip and the advertisers' classifieds grid.
+3. **Grouping of content.** Today: one page per media type, each with its own red banner (magazine, flipbook, articles, news, products, modern industries, exhibitions, club, advertise, about, contact). → New: three bodies: **the issue** (reader, contents, articles, advertisers, products of the issue, ad positions), **the directories** (calendar of fairs; products directory incl. "منتجات وصناعات حديثة"), **the club**; plus news, about, contact. Every company, product and article carries its page folio "ص. 18" — the site and the printed magazine are one thing.
+4. **Layout language.** Today: rounded cards with shadows, dark gradient cards, pill chips, red gradient banners, alternating beige bands. → New: **square corners, no shadows, no gradients**. Structure is made of rules: a 3px ink rule + red square opens every section, hairlines separate rows and columns, logos sit in a hairline classifieds grid, the only framed box is the company card.
+5. **Typography.** Today: one Arabic sans (Al-Jazeera/Rubik-like) at every size, white on red. → New: a **typographic identity**: Noto Naskh Arabic headlines (the Naskh of Arabic newspapers), Noto Kufi Arabic for the section bar/buttons/labels, Newsreader (a news serif) for English headlines, text and all big figures, Libre Franklin (the Franklin Gothic of newspapers) for English UI and for every Latin name inside Arabic pages.
+6. **Colour.** Today: red is the background (gradient banners, red newsletter, dark contact box, beige bands, gradient cards). → New: **two-colour print: black ink on white paper**, red only as ink accents (logo, name strip, red squares, folios, primary buttons, active underline, the chat tab, the rule above the footer). One grey newsprint band (contact) and one black colophon (footer). Blue only for web/e-mail addresses on light backgrounds.
+7. **Numbers.** Today: "45" as a giant decorative numeral on red. → New: figures are **editorial facts in the serif**: the figures strip 1982 · 560 · 45 · 1,464 · 2,831 · 5 with hairlines, the club's 2,831 as a headline number, tabular day ranges in the show rows.
+8. **Pictures.** Today: AI-ish sector photos in gradient tiles, products on gradient cards, a tilted cover. → New: **documentary pictures**: the cover flat in a hairline frame, products on white in hairline boxes, real logos on white in a grid, article photos above the headline. Anything without a picture is a text row — no empty boxes, no placeholders.
+9. **The moving shelf.** Today: tall gradient cards mixing products and articles. → New: the **ticker**: a continuous band of products between rules with the product name, the company logo and the page folio, titled "منتجات العدد 560" in a fixed cell; pauses on hover/touch. Still first under the menu, still moving ~42 px/s.
+10. **Exhibitions.** Today: big flag cards to pick a country, then rows. → New: a **calendar of fairs**: month header bars with counts, a table (date | show | city with flag | venue | field), a rule-framed filter strip (country, field, month, search). Month-only shows print the month name in the date column, never a day.
+11. **Magazine reader.** Today: a beige flipbook with floating white pill buttons. → New: a **reading room**: a grey desk, pages fitted to the window height, two pages side by side on PC, a top rule bar with the issue line, page x/100, contents, PDF, full screen; tapping an ad page opens the company card beside the page.
+12. **Feel.** Today: "a modern app with a red theme". → New: "a serious trade paper printed since 1982 that now opens in the browser". The owner sees it in three seconds: centred masthead, red name strip, black section bar, ruled columns.
 
 ---
 
 ## 2. Identity
 
-- **The logo is the masthead.** The full red AAT script ("AAT · Ideas For Business", `assets/img/logo.png` / `_work/brand/logo/aat-logo-red.svg`, ratio 3:1) sits centred in the masthead at 420 px wide on PC (200 px on phone), flanked by the three names: **التجارة العربية الآسيوية** on the start side, **Arab Asian Trade** and **中阿商業雜誌** on the end side, in the headline face. Under it the **masthead double rule**: a 6 px AAT-red rule over a 1 px ink rule. In the compact scrolled bar the logo is 130 px wide. In the footer the red logo appears once more above the colophon. Favicon: the red "AAT" logo on white, cropped to the letters (the file already exists as `assets/img/logo.png`; the favicon is a 64 px crop of the "A").
-- **Tagline.** "Ideas For Business" is only ever the part of the logo file; it is never typed as text. The written tagline of the paper is the dateline: **"تصدر في تايوان منذ 1982 · العدد 560 · أكتوبر 2026"** / "Published in Taiwan since 1982 · Issue 560 · October 2026". The owner's own line "مفتاح النجاح بين المستوردين والمصدّرين" stays on the issue page under the cover.
-- **Motifs from AAT's own world (no swoosh):**
-  1. **The double rule** (6 px red + 1 px ink): masthead, section titles, footer, the frame of the club notice. It is the newspaper's own ornament and it carries the brand red everywhere without a symbol.
-  2. **The date stamp**: a square box with a 2 px ink frame, day number large (32 px, display face) over the month (18 px). Every trade show row starts with one; the issue page shows "560 · أكتوبر 2026" as a stamp. It comes from the postal life of a printed magazine (P.O. Box 568, 45 years of mailing).
-  3. **The folio** ("ص 18" / "p. 18"): a small red bold page reference on products, articles and advertisers that opens the printed page in the reader. It ties the site to the paper everywhere.
-  4. **The ticker tape**: a continuous strip of product cuts and company names running under the masthead between two hairlines, like a market tape. This is the owner's moving shelf in the gazette's language.
-- **What makes it unmistakably AAT:** the red script logo as the masthead, the trilingual name line (Arabic · English · Chinese, as on the printed cover), the issue number and the year 1982 in the dateline of every page, the real advertisers' logos in the index, and the red double rule.
+- **Logo.** The full red script logo (`img/brand/aat-logo-red.svg`) is the masthead, centred, 340 px wide on PC, 230 px on phones; never recoloured, cropped or rotated. Footer: the white logo on the black colophon at 220 px. Favicon: the red "AAT" letters of the logo on white. The reader's top bar uses the red logo at 90 px.
+- **Tagline.** "Ideas For Business" lives inside the logo and is not repeated as text.
+- **The tri-lingual name strip.** White Kufi/Franklin/Noto Sans TC on `aat-red`: التجارة العربية الآسيوية · Arab Asian Trade · 中阿商業雜誌 — the red band of the printed cover. With the logo above it, this is unmistakably AAT.
+- **Motifs from AAT's own world (print and trade):**
+  1. *Rules*: the thick + thin double rule of the section bar, the 3px rule + red square that opens every section, hairline column rules, dotted leaders in the table of contents.
+  2. *Page folios*: "ص. 18" / "p. 18" in red Kufi/Franklin on every advertiser, product, article and in the ticker — the reader is always told where it is printed.
+  3. *The issue line as a dateline*: issue number, month, year of publication, "since 1982" in the masthead ears and at every section note.
+  4. *The postmark seal* for the club: a double red ring, "AAT BUSINESS CLUB • SINCE 1982 • TAIWAN" on the ring, the logo and نادي رجال الأعمال inside — a stamp, the trader's mark of trust.
+- No swoosh, no pattern, no gradient. Nothing is decorative that is not also information.
 
 ---
 
@@ -38,162 +41,144 @@ AAT has printed a trade paper every month since 1982: 560 issues, 45 years. This
 
 | Token | Hex | Role |
 |---|---|---|
-| `paper` | `#FFFFFF` | Page background, cards-free surfaces, the footer colophon. |
-| `newsprint` | `#F2F2EF` | Neutral grey (not cream) for the second surface: the "In this issue" column, month heads in the ledger, the reading room background, the stamp fill, input backgrounds. |
-| `rule` | `#C8C6C0` | Hairlines, column rules, picture frames, table rules. Decorative only, never text. |
-| `ink` | `#141414` | All headlines and body text, heavy rules, button borders, the 1 px line of the double rule. |
-| `ink-2` | `#4A4A4A` | Secondary text: venues, cities, captions, dates in rows, the dateline. |
-| `aat-red` | `#D21F26` | Fixed by the logo. The thick rule of the double rule, primary buttons (white text), the selected filter underline, date-stamp day numbers, folios, the final footer band, the chat tab. Never a gradient, never a wash behind text, never body text. |
-| `red-deep` | `#9E1419` | Hover/pressed state of red buttons and red links to the issue; the ink of the club seal. |
-| `link-blue` | `#0B4FA8` | Web and e-mail addresses on `paper`/`newsprint` only. Inside buttons, red boxes or the red band, addresses are white. |
+| `paper` | `#FFFFFF` | page background, cards, ticker, table rows, buttons (secondary) |
+| `newsprint` | `#F1EFEA` | the contact band, hover state of grid cells, zebra rows in long tables |
+| `ink` | `#141414` | all primary text, thick rules, month header bars, the colophon footer background |
+| `ink-2` | `#4A4A4A` | secondary text: dates, cities, section notes, labels (never under 16px) |
+| `hairline` | `#C9C5BD` | decorative rules and frames only — never text |
+| `aat-red` | `#D21F26` | the logo, the name strip, red squares, folios, primary buttons, active nav underline, the chat tab, the 6px rule above the footer |
+| `red-deep` | `#8E1116` | hover/pressed red; hover colour of headlines |
+| `link-blue` | `#0B4F9C` | web and e-mail addresses on `paper`/`newsprint` only; never inside buttons, never on red or black |
 
-Where red is **not** used: backgrounds of sections, page openings (no red banner), card fills, table rows, text paragraphs, chips at rest, the reader's room.
+Contrast (computed, WCAG): ink/paper **18.4**; ink/newsprint **16.0**; ink-2/paper **8.9**; ink-2/newsprint **7.7**; white/aat-red **5.3**; white/red-deep **9.4**; aat-red text/paper **5.3**; aat-red text/newsprint **4.6**; link-blue/paper **8.0**; link-blue/newsprint **7.0**; white/ink (footer) **18.4**; `#E6E3DD`/ink (footer secondary) **14.9**. Every text pair is ≥ 4.5:1; the `hairline` never carries text.
 
-**Contrast (WCAG, computed):**
-
-| Text | Background | Ratio | Use |
-|---|---|---|---|
-| ink #141414 | paper #FFFFFF | 18.42 : 1 | body, headlines |
-| ink #141414 | newsprint #F2F2EF | 16.42 : 1 | body on grey |
-| ink-2 #4A4A4A | paper | 8.86 : 1 | secondary text |
-| ink-2 #4A4A4A | newsprint | 7.90 : 1 | secondary text on grey |
-| aat-red #D21F26 | paper | 5.30 : 1 | folios, stamp day numbers (bold ≥ 18 px) |
-| aat-red #D21F26 | newsprint | 4.72 : 1 | same on grey |
-| red-deep #9E1419 | paper | 8.18 : 1 | hover text |
-| white | aat-red | 5.30 : 1 | primary buttons, red band, chat tab |
-| white | red-deep | 8.18 : 1 | pressed buttons |
-| white | ink | 18.42 : 1 | (reserved; not used in this concept) |
-| link-blue #0B4FA8 | paper | 7.78 : 1 | addresses |
-| link-blue #0B4FA8 | newsprint | 6.94 : 1 | addresses on grey |
-
-All text pairs ≥ 4.5 : 1. `rule` on paper is 1.71 : 1 and is never used for text.
+Where red is **not** used: section backgrounds, cards, tables, the reader's desk, the footer body, the newsletter box, filters. A page is ~85 % paper, ~12 % ink, ~3 % red — the red counts because it is rare.
 
 ---
 
 ## 4. Typography
 
 **Arabic**
-- Headlines / masthead names / big figures: **Noto Naskh Arabic 700** (Google Fonts). The bold Naskh is the voice of the Arabic press; it says "newspaper, serious, since 1982" to an Arab businessman at first glance, and it is different from the sans headlines of the current site.
-- Body, UI, menus, buttons, tables: **Readex Pro 400 / 500 / 600 / 700** (Google Fonts). Designed for low-vision readers (large counters, open shapes, generous spacing); at 20 px it reads like 22 px of other faces. Covers Latin as well, so UI text in English uses the same body face.
-- Weights: 400 body, 500 nav and row titles, 600 buttons/chips, 700 headlines (Naskh) and emphasis.
+- *Noto Naskh Arabic* 400 / 600 / 700 — headlines, paragraphs, lists, table of contents, article text. The Naskh of printed Arabic newspapers: the reader has read it all his life; large counters and a tall body make it clear at 19–20 px for weak eyesight.
+- *Noto Kufi Arabic* 600 / 700 / 800 — the section bar, buttons, filters, dates, labels, folios, figure labels, the name strip. Geometric and bold: a section flag must be recognised at a glance, and Arabic papers set their section heads in Kufi.
 
-**Latin / English version**
-- Headlines: **Newsreader 700** (optical size 36–72), a serif designed for on-screen news reading; it echoes the soft serif of the "AAT" letters and the "Ideas For Business" tagline better than a geometric sans.
-- Body/UI: **Readex Pro** (same as Arabic), so the two language versions share the same buttons, tables and rows.
+**Latin**
+- *Newsreader* (variable, optical size 6–72) 400–800 — English headlines, body, and **all big figures** in both languages (1982, 560, 2,831): serif numerals read as facts from a dateline.
+- *Libre Franklin* 500–800 — English UI (section bar, buttons, labels) and **every Latin name inside Arabic pages**: company, product, show, venue, phone number, web address, the Taiwan address. Franklin Gothic is the sans of newspapers.
+- Chinese slots (strip, zh versions): Noto Sans TC/SC.
 
-**Chinese / Malay:** Readex Pro for UI with the system CJK fallback for Chinese text ("Noto Sans TC" via Google Fonts can be added later; the prototype uses the system fallback).
+**Scale — LARGE MODE (PC / phone)**
 
-**Type scale (LARGE MODE)** — PC (≥ 1280 px) / phone (≤ 480 px); line-height for Arabic is taller:
+| Role | Arabic | English |
+|---|---|---|
+| H1 page title / lead headline | 56 / 36, Naskh 700, lh 1.3 | 60 / 36, Newsreader 700, lh 1.15 |
+| H2 section title | 36 / 28, Naskh 700, lh 1.3 (+ 18px red square) | 38 / 28, Newsreader 700 |
+| H3 column title, card name | 26 / 22 | 27 / 22 |
+| Lead article headline | 34 / 26 | 34 / 26 |
+| Body paragraphs | **20 / 19**, lh **1.85** | **19 / 18**, lh 1.6 |
+| Lists, TOC rows, benefits | 18, lh 1.5–1.6 | 18 |
+| Section bar | 20 / 18, Kufi 700 | 20 / 18, Franklin 700 |
+| Buttons | 20, Kufi 700, min height 54 px | 20, Franklin 700, 54 px |
+| Show row date | 22 (day range, Kufi 800) + 16 (month-year) | same, Franklin |
+| Notes, labels, folios, captions | **16–17** (floor 16 px, audited) | 16–17 |
+| Figures strip | Newsreader 700, 64 / 48 | same |
+| Club number, phone number | 64 / 52; phone Franklin 800 44 / 32 | same |
 
-| Role | PC | Phone | Line-height AR / EN | Face |
-|---|---|---|---|---|
-| Masthead names | 30 px 700 | 18 px 700 | 1.4 / 1.2 | Naskh / Newsreader |
-| Dateline, meta, captions, folios | 18 px | 17 px | 1.6 / 1.5 | Readex Pro |
-| Section bar (nav) | 20 px 600 | 19 px 600 | — | Readex Pro |
-| Body paragraph | 20 px | 19 px | 1.8 / 1.6 | Readex Pro |
-| Row title (show name, product) | 22 px 600 | 20 px 600 | 1.5 | Readex Pro |
-| H3 entry headline | 26 px 700 | 22 px 700 | 1.5 / 1.3 | Naskh / Newsreader |
-| H2 section title | 40 px 700 | 30 px 700 | 1.4 / 1.2 | Naskh / Newsreader |
-| H1 page title (front-page lead headline: 46 px) | 52 px 700 | 34 px 700 | 1.35 / 1.15 | Naskh / Newsreader |
-| Big figure (1982, 560, 45, 2,831) | 96 px 700 | 60 px 700 | 1 | Newsreader (tabular lining) |
-| Date stamp day / month | 32 px 700 / 18 px | 28 / 17 | 1 | Newsreader / Readex Pro |
-| Buttons | 20 px 600, min height 56 px | 19 px, 52 px | — | Readex Pro |
-| Chips / filters | 19 px 600, min height 48 px | 18 px, 46 px | — | Readex Pro |
+Arabic line-heights: 1.85 body, 1.6 lists, 1.3–1.4 headlines (Naskh needs air above and below). Latin paragraphs 1.6.
 
-Floor: **no text under 17 px anywhere; paragraphs 19–20 px**. A `floorText()`-style check runs after render as on the current site.
-
-**Numerals:** Western digits (0–9) everywhere, as on the printed cover and the current site; `font-variant-numeric: lining-nums tabular-nums` so that dates and counts align in ledgers; every number inside Arabic text is wrapped in `<bdi>` so ranges like "11–14" keep their order. Big figures are always in Newsreader, in both languages, so "1982" looks the same on the Arabic and English front page.
+**Numerals.** Western digits everywhere (as in the current site and the printed magazine), `font-variant-numeric: tabular-nums`, thousands separators (1,464), dates "11–13 يناير 2027" with an en dash. Digits and Latin inside Arabic text are isolated (`<bdi dir="ltr">`) so "11–13" and "+886 966 404681" never flip.
 
 ---
 
 ## 5. Layout language
 
-- **Grid.** Content width 1480 px max (a broadsheet), 12 columns, 24 px gutters, 32 px page gutters on PC, 16 px on phone. Columns in the front page and the reading sections are separated by **1 px vertical rules** in `rule`; on phone the rules become horizontal hairlines between stacked blocks.
-- **Spacing rhythm.** 8 px base. Rows 16/24 px padding; sections 64 px apart on PC, 40 px on phone; the masthead block 32 px above and below the logo.
-- **Section separation and titles.** One title per section, in the headline face, at the start side, sitting **on the double rule** (6 px red over 1 px ink, full width). On the same baseline at the end side, a plain fact in 18–20 px when there is one ("36 معلناً", "1,460 معرضاً", "العدد 560 · أكتوبر 2026") — never a label above the title. Sections alternate paper / nothing: separation is done by the double rule and white space, not by coloured bands.
-- **Cards.** None in the rounded sense. Three containers only: (a) the **entry**: text (and optional framed picture) separated from its neighbours by hairlines and column rules; (b) the **notice box**: 2 px ink frame with square corners, used for the club, the contact imprint and the assistant; (c) the **stamp**: 2 px ink frame, newsprint fill, for dates and the issue number.
-- **Buttons.** Rectangular, square corners, min height 56 px, 20 px 600 text, 24 px side padding. Primary: red fill, white text, hover red-deep. Secondary: 2 px ink border on paper, ink text, hover inverts to ink fill/white text. Latin button text is set in small caps-like tracking (+0.02 em), Arabic never letter-spaced. Links in text: ink with a 2 px underline; addresses link-blue.
-- **Chips / filters.** Square "tabs" in a ruled strip: 19 px 600, 48 px tall, hairline between tabs; the selected tab has a 4 px red underline and bold text; the count sits after the name in ink-2.
-- **Rows for shows (ledger).** Columns: date stamp (72 px) | name 22 px 600 + venue/city 18 px ink-2 | flag 36 × 24 px + country | sector. Hairline under each row; month running head in newsprint grey spanning the full width. Hover: newsprint fill. Clicking opens a clipping panel (notice box) with dates, venue, city, sector, "موقع المعرض" button.
-- **Images.** Square corners, 1 px `rule` frame, object-fit contain on white for products and logos, cover for article photos. Items without a shipped picture show no picture box at all: the entry is text-only and the grid keeps its rules.
-- **Logo cards (advertisers' index).** A ruled grid (hairlines between cells, like a printed index): each cell 200 × 120 px logo area on white, company name 19 px 500 under it, folio "ص 52" in red. Six cells per row on PC, two on phone.
-- **Tables for data** (club members list, ad positions): real tables with 1 px rules, 19 px text, header row in newsprint.
+- **Grid.** 12 columns, max width 1480 px, 24 px gutters (16 px on phones). The front page is 5 / 4 / 3 columns with 1 px hairline column rules and 28 px column padding. ≤ 1180 px: the lead column spans the width, the two others sit under it; ≤ 760 px: one column.
+- **Rhythm.** 44 px between sections on PC (28–36 on phones); rows 12 px with hairlines; columns 28 px; no section backgrounds except the newsprint contact band and the black colophon.
+- **Section title (the one title, no kicker).** A 3 px ink rule across the section, then the title (Naskh/Newsreader 700, 36 px) with an 18 px red square before it, and optionally a 17 px grey note at the end of the same line (count, issue line). Column titles use the same treatment at 26 px. No "see all" links beside titles; a section's single action is a button or an underlined "more" line at its foot.
+- **Cards.** Used for one thing only: the **company card** (reader side panel and company page): 1 px ink frame, header row with a 3 px rule (page folio + category), logo, name, city, about, two product boxes, two buttons, web address in link-blue. Everything else is rows and grids.
+- **Buttons.** Rectangular. Primary: solid `aat-red`, white text; secondary: 2 px ink border on paper. 54 px tall, 20 px bold. Hover: red-deep / newsprint fill. Full-width in columns and on phones.
+- **Filters/chips.** Rectangular tabs inside a rule-framed strip; selected = solid ink with white text; counts in the label ("الإمارات 216"); no pills, no rounded corners.
+- **Show rows.** Grid 118 px | 1fr: date cell (day range 22 px Kufi 800 over month-year 16 px grey), name (Franklin 700, 19 px), city with a 28×19 flag + venue (Franklin 17 px grey); hairline between rows. On the exhibitions page the same row gains a field tag and sits under month header bars.
+- **Images.** Hairline frames, square corners; products `object-fit: contain` on white, photos `cover` at 2:1; no tilt, no overlay, no mask. No picture → no box: the item becomes a text row.
+- **Logo cells.** Classifieds grid (`minmax(228px, 1fr)`), hairline borders, logo max 60 px high at the start side, company name 17 px Kufi 700 (Arabic name where the TOC has one), city 16 px grey, red folio at the end.
+- **Ticker.** 360 px items: 96 px product picture in a hairline box, product name (Franklin 700 18 px, 2 lines), company logo 22 px + company name 16 px, folio; title cell fixed at the start with a 3 px rule; the band sits between the section bar and the front page.
 
 ---
 
 ## 6. Site structure
 
-### Site map
+**Site map (hash routes)**
 
-| Route | Section (AR / EN) | What it is | Compared with today |
+| Route | Page | Content and purpose |
+|---|---|---|
+| `#home` | Front page | see below |
+| `#magazine` | The issue | cover + "اقرأ العدد 560" + PDF; contents (13 articles + 45 ad pages with page numbers); advertisers of the issue (36, logos); **ad positions ("أعلن معنا")** — moved here from today's separate advertise page, because it is about the printed magazine |
+| `#reader`, `#reader-18` | Reading room | full-screen reader (opens at page 18) |
+| `#company-18` | Company page | the company card in full: about, all products, contact, its magazine pages, mini-site content |
+| `#exhibitions`, `#exhibitions-ae` | Calendar of fairs | 1,464 shows; the country route preselects the filter; a row expands in place (no separate show page) |
+| `#products`, `#product-4-0`, `#modern-7` | Products directory | part 1: advertisers' products by field (13 categories, 127 products, each with company + folio); part 2: **منتجات وصناعات حديثة** (40 items in 6 groups) |
+| `#club` | نادي رجال الأعمال | goals, 8 benefits, members register (2,831 names), turnkey studies, join |
+| `#articles`, `#article-ar26-1` | Articles | 13 of the issue + 24 older |
+| `#news`, `#news-n0` | News | 26 items, the visitor's language first |
+| `#about` | من نحن | the WordPress text word for word, the figures, founder, the claim |
+| `#contact` | تواصل معنا | phone + apps, e-mail, English address, newsletter |
+
+Merged compared with today: advertise → inside the magazine page; modern industries → part 2 of the products directory; magazine / flipbook / company mini-sites → one "issue" area. Dropped: the flag-card country chooser (countries are a filter and a route), the dotted trade map, the sector photo tiles (poor pictures; the figures strip and the advertisers grid carry the message instead).
+
+**Home — the front page, in order**
+
+| # | Section | Source | Why here |
 |---|---|---|---|
-| `#home` | الصفحة الأولى / Front Page | The front page of the paper (see below). | Replaces the landing page. |
-| `#issue`, `#issue-p-N`, `#company-N` | العدد 560 / Issue 560 | The reader (two pages at full height), the contents of the issue with folios, the advertisers' A–Z, the PDF, the cover of 559 in an archive strip, the owner's tagline. Tapping an ad opens the advertiser panel. | Merges #magazine + #flip + #company-*. |
-| `#products`, `#product-N-K`, `#industry-slug` | المنتجات / Products | The catalogue: an index strip of the advertisers' logos, then products grouped by field with folios; then the second part **منتجات وصناعات حديثة** (40 items in 6 groups) with the owner's exact title. | Same content as today's page, restructured as one catalogue with an index; no switch. |
-| `#exhibitions`, `#exhibition-id` | معارض دولية / International Exhibitions | The calendar pages: search, 16-country strip, 18 field tabs, ledger by month, clipping panel. | Flag cards removed; rows become a ledger. |
-| `#articles`, `#article-id` | المقالات / Articles | The Arabic articles of the issue in columns; each with "ص 16–17" folio to the printed page. | Same content, newspaper columns. |
-| `#news`, `#news-N` | الأخبار / News | English + Arabic news as briefs and full stories. | Same content, briefs layout. |
-| `#club`, `#turnkey` | نادي رجال الأعمال / Business Club | A membership notice: seal, goals, the 8 benefits as a numbered ruled list, 2,831 members with search, "مشاريع تسليم المفتاح" entries, join by number + app icons. | Same content; notice-box layout. |
-| `#about` | من نحن / About | The history page: 1982 → 2026 as a ruled timeline with big figures (560 issues, 45 years, 16 countries), the founder, مجموعة التجارة العربية الآسيوية, partners (today's external logos move here). | Trade map and external logo strip leave the home. |
-| `#contact` | تواصل معنا / Contact | The imprint: number + app icons, e-mails, English address, hours. | Same facts. |
-| `#advertise` | أعلن معنا / Advertise | Ad positions as a rate table, "your printed ad becomes an online page". Reached from the footer and the issue page, not from the header. | Same. |
-| `#privacy` | الخصوصية | As today. | — |
+| 1 | Masthead: ears (issue line / language + globe / phone), logo, tri-lingual strip, section bar | `config`, `magazine` | Identity first; the dateline says "issue 560, year 45, since 1982" before anything else |
+| 2 | Ticker "منتجات العدد 560" | `companies[].products` with pictures (29 in the prototype) | The owner's moving shelf, first under the menu |
+| 3a | Column "في هذا العدد": cover, cover text, the claim, buttons, contents with page numbers | `magazine`, `about.claim`, `magazine.toc.articles` | The magazine is the product |
+| 3b | Column "معارض دولية": the next 8 dated shows from January 2027, button "كل المعارض: 1,464 معرضاً في 16 دولة", counts by country | `shows`, `countries` | The most used data on the site |
+| 3c | Column "نادي رجال الأعمال": seal, 2,831, lead, benefits 1–3, join | `club` | The business offer |
+| 4 | Figures strip 1982 · 560 · 45 · 1,464 · 2,831 · 5 | `about.facts`, `shows`, `club.members`, `config.languages` | The credibility line |
+| 5 | "معلنو العدد 560": 29 logos with city and page (the 6 companies without a logo are listed by name) | `companies` | Real logos — the heart of an advertising paper |
+| 6 | "مقالات العدد": lead article with picture + 10 headlines with author and page | `articles` (fresh) | The editorial voice |
+| 7 | "الأخبار": 3 dated news with pictures + headline list | `news` | Freshness |
+| 8 | "منتجات وصناعات حديثة": 6 groups with counts and 3 pictures each | `modernGroups`, `modern` | The owner's modern-industries section (not in the tile) |
+| 9 | Contact band (newsprint): lead, phone, apps, e-mail, English address, newsletter | `config` | Every visit ends with a way to call |
+| 10 | Colophon footer (black): white logo, tri-lingual names, publisher line, claim, sections, contact, © 2026 مجموعة التجارة العربية الآسيوية | `config`, `about` | The imprint |
 
-### Home page, in order
+**Header / nav behaviour.** PC: ears → logo → strip → section bar; on scroll the masthead leaves and the section bar sticks at the top with the active section underlined in red; between 860 and 1180 px the bar wraps into two rows (never hidden). Phone: row 1 = phone number + language + globe, row 2 = issue line, logo 230 px, strip, the section bar wraps into 3–4 rows of 18 px bold items (always visible, no hamburger); after 400 px of scrolling a compact sticky bar (logo 90 px + "الأقسام" button that opens the full list in 22 px rows) takes over.
 
-1. **Dateline row** (18 px): start side "تصدر في تايوان منذ 1982"; centre today's date; end side "English" switch + globe (all five languages). Source: config.
-2. **Masthead**: red AAT logo 420 px, the three names, the double rule. Source: logo files + magazine names. *Why first:* the owner must see the paper's identity within 3 seconds.
-3. **Section bar**: 9 sections with hairlines between them. *Why:* a reader of a paper goes to a section, not a menu.
-4. **Ticker tape**: product cuts + company names running continuously (products of the advertisers, 2 per company in the prototype). *Why:* the owner's moving shelf; it also promotes the advertisers before anything else.
-5. **Front page lead (3 columns, 6/3/3)**: (a) the issue: framed cover of 560, headline from `magazine.cover` ("مجموعة اليحيى على الغلاف…"), the owner's tagline, buttons "تصفّح العدد 560" (red) and "PDF" (outline), then the big figures strip 1982 · 560 · 45 · 2,831; (b) **في هذا العدد**: contents by page (advertisers and articles with folios, from issue + articles data); (c) **معارض قريبة**: the nearest 6 shows from different countries as ledger rows (from the 2027 list). *Why:* readers come for the issue, what is inside it, and the next shows.
-6. **المعلنون في هذا العدد**: the ruled logo index (29 logos shipped; names and folios for all 35). *Why:* the advertisers pay for the paper and a buyer scans names.
-7. **مقالات العدد | الأخبار** (two columns 8/4 with a rule): one lead article with a framed picture and headline, four text entries with hairlines; the news column as briefs (headline + source). Source: articles + news.
-8. **منتجات وصناعات حديثة**: a ruled row of the 6 groups, each with a picture and its count, leading into the catalogue. Source: modern groups.
-9. **نادي رجال الأعمال**: a notice box framed by a double rule: the club seal, 2,831 members, the two goals, the 8 benefits in two ruled columns, join by number + app icons. Source: club texts.
-10. **تواصل معنا**: the imprint box: number 28 px with the six app icons, e-mails in blue, the English address (LTR), the assistant tab. Source: config.
-11. **Footer colophon** with the newsletter line.
-
-### Header / nav behaviour
-- **PC**: three rows (dateline 44 px, masthead ~180 px, section bar 60 px). After scrolling past the masthead a **compact bar** (72 px, logo 130 px at the start, the 9 sections, "English" at the end) sticks to the top with a 1 px ink rule under it. The sections always fit on one line from 1180 px; between 860 and 1180 px the bar wraps to two ruled rows (the owner's mid-width complaint).
-- **Phone**: dateline (date + "English"), the logo 200 px centred with "التجارة العربية الآسيوية" under it, then the section bar scrolling horizontally with a fade at the edge and a **"الأقسام"** button at the start that opens a full-screen *contents page* listing the 9 sections with one-line descriptions in 22 px rows, plus the languages. The current section is underlined in red.
-
-### Footer content
-Heavy double rule; four columns on PC (stacked on phone): (1) red logo, the three names, "تصدر في تايوان منذ 1982 · 560 عدداً"; (2) الأقسام: the 9 sections + أعلن معنا + الخصوصية; (3) تواصل معنا: the number with the six app icons, info@aatworld.com and marwan@aatworld.com in link-blue; (4) العنوان: "P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C." always LTR English, and the newsletter field "اشترك في نشرة AAT" with a red button. Closing band: 56 px aat-red, white 18 px: "© 2026 مجموعة التجارة العربية الآسيوية · العدد 560 · أكتوبر 2026".
+**Footer.** As row 10 above; e-mail is white underlined on the black footer (blue is for light backgrounds only); the address is English LTR.
 
 ---
 
 ## 7. Key screens
 
-- **Exhibitions (1,460 shows).** Page title "معارض دولية" on the double rule with "1,460 معرضاً · 2027–2028" at the end. A 56 px search field (name, city, venue; Arabic spellings of famous shows as in the assistant index). The **country strip**: a single ruled row of 16 cells (flag 36 × 24, name, count), wrapping to a two-column table on phone; "كل الدول" first. The **field tabs**: 18 square tabs in a ruled strip, scrollable on phone. The **ledger**: month running heads in newsprint ("يناير 2027 · 55 معرضاً"), rows with date stamp | name + venue, city | flag + country | sector; shows known only by month carry the stamp with the month only and no day — no placeholder text. Rows render in batches of 60 as the reader scrolls. Clicking a row opens the **clipping**: a notice box under the row (PC) or a bottom sheet (phone) with dates, venue, city, sector and a "موقع المعرض" button when a site is known; the organizer line is hidden when unknown.
-- **Products (the catalogue).** Index strip of advertisers' logos (ruled grid, folios), then "منتجات المعلنين" grouped by field, each group titled on a rule with its count; entries 3 per row on PC, 1 on phone: framed picture when shipped, name 22 px, company 18 px, folio. Second part with the exact title "منتجات وصناعات حديثة": 6 groups, 40 entries; pictures only where shipped. A search field at the top of the page (56 px) filters both parts.
-- **Magazine reader (#issue).** Opens full-screen in the newsprint room. Toolbar: a 64 px ruled bar with المحتويات · صفحة كبيرة · ملء الشاشة · PDF · English, 20 px buttons (PC); on phone the same as a bottom bar. The spread fits the **window height exactly** (page height = window − toolbar − folios), two pages when both fit, else one; folios "ص 6 · ص 7" under the pages; page turn by arrows, swipe, keys. Tapping an ad (a company page) opens the **advertiser panel** on the end side (PC, 420 px column, a notice box with the real logo, about, products with pictures, phone, e-mail in blue, site button) or as a bottom sheet (phone) — the spread does not move. Under the reader: the contents of the issue as a ruled list with folios, the advertisers' index, the cover of 559.
-- **Business Club.** Page title with "2,831 عضواً". A notice box framed by a double rule: the AAT Business Club seal (kept, drawn as a rubber stamp in red-deep), the two goals as paragraphs, join buttons (number + six app icons). Below: "مزايا الأعضاء" as a numbered list in two ruled columns with 32 px numerals; the members table with search and pages; "مشاريع تسليم المفتاح" as entries with the owner's Arabic text and the industry pictures.
-- **Contact (the imprint).** A notice box: "الهاتف" with the number at 28 px LTR and the six app icons at 48 px with their names (WhatsApp and Viber open, Botim/imo/BiP/LINE copy the number with a "تم النسخ" line); "البريد الإلكتروني" both addresses in link-blue; "العنوان" in English, LTR; the assistant opens from a "محادثة 24 ساعة" button in the same box.
-- **Assistant chat.** A red **tab** fixed to the side edge (not a round bubble) reading "محادثة 24 ساعة" vertically on PC and as a 56 px bar at the bottom edge on phone. It opens a notice-box panel (420 px, full height on phone) titled "محادثة 24 ساعة" with the dateline rule; answers are entries separated by hairlines, show answers are ledger rows with stamps, product answers are catalogue entries. Input 56 px, "إرسال" red button. Same answering engine as today (from the site's content).
+- **Exhibitions (1,464 shows).** Title + note "1,464 معرضاً · 16 دولة · من يناير 2027". A rule-framed filter strip: country tabs (flag + name + count, "كل الدول"), field select (18 groups with counts), month tabs (يناير 2027 … يوليو 2028), a search box (show name / city). Below, the calendar table grouped by month: a month header bar (ink, white text: "مارس 2027 · 46 معرضاً"), rows date | show (Franklin 700) | city with flag | venue | field tag (rectangular, grey). Month-only rows print the month in the date column and close the month. Rows are rendered per month on demand (never 1,464 DOM rows at once); a row expands in place with its details. Phone: rows stack (date on top), the filter strip becomes a sticky "تصفية" button opening a full-screen panel.
+- **Products directory.** PC: a side index of the 13 fields with counts and the 6 modern groups; main: one band per field with the section title + count, products in a hairline grid (`minmax(240px,1fr)`): picture on white (if shipped), name (Franklin 700 18 px), company (16 px) + folio; without a picture the cell is a text row. Search above the index. Part 2, "منتجات وصناعات حديثة": six group sections, each item a row with its Arabic/English name, first paragraph and picture when it exists.
+- **Magazine reader.** Full screen on a `newsprint` desk. Top bar 60 px: logo 90 px, "العدد 560 · أكتوبر 2026", "4 / 100", buttons المحتويات · PDF · ملء الشاشة · إغلاق (18 px bold). Page height = window height − 60 − 70; two pages side by side when 2 × (h × 1100 / 1555) fits the width, else one; RTL order (right page first); 56 px arrows at the sides; a 70 px thumbnail strip at the bottom; keyboard and swipe turn pages. **Tapping an ad page opens the company card as a side panel (PC) or bottom sheet (phone) — never navigates.** Contents opens a list of articles and advertisers with page numbers.
+- **Business Club.** Title; seal + 2,831 + lead; "أهداف نادي رجال الأعمال" (two paragraphs); "مزايا الأعضاء" 1–8 as a numbered list with 30 px red serif numerals; "سجل الأعضاء": a search box and 2,831 names in four newspaper columns (one on phones); "دراسات أولية لمشاريع صناعية" as rule-separated groups; join block with phone, apps and e-mail.
+- **Contact.** The newsprint band of the tile: lead line, phone 44 px, apps row (real icons for Botim, imo, BiP; WhatsApp, Viber and LINE as labelled buttons until official icons are supplied), e-mail in link-blue, the address in English LTR, newsletter box with a 54 px input and red button.
+- **Assistant.** A red tab fixed at the bottom-start corner, "اسأل AAT · محادثة 24 ساعة". It opens a 420 px panel (full screen on phones) with a 3 px-rule header "مساعد AAT", messages in Naskh 19 px, answers built from the same components (show rows, company cells, article headlines), a 54 px input and an "أرسل" button. Nothing in it is smaller than 16 px.
 
 ---
 
 ## 8. RTL and languages
 
-- The document is `dir="rtl"` by default; the whole layout uses logical properties (`margin-inline-start`, `inset-inline-end`, grid with `direction`), so the English version is the mirror without a second stylesheet: masthead names swap sides, the date stamp sits at the start of each row, column rules follow the reading direction, the section bar starts with "Front Page".
-- Latin runs inside Arabic (show names, company names, product codes, "P.O. Box 568…", phone numbers, web addresses) are wrapped in `<bdi>` or `<span dir="ltr">` so word order never flips; number ranges use an en dash inside `<bdi>`.
-- The Taiwan address is always the English block, LTR, left-aligned inside its box, even on the Arabic page. Phone numbers are LTR.
-- Ticks, arrows and the reader's page-turn arrows are mirrored in RTL; the ticker runs toward the reading direction (right-to-left in Arabic, left-to-right in English).
-- English version: Newsreader headlines, Readex Pro text, same scale; the masthead names read "Arab Asian Trade · التجارة العربية الآسيوية · 中阿商業雜誌". Chinese and Malay use the English layout with their own strings.
+- `html dir="rtl"` for Arabic. All CSS uses logical properties (`margin-inline-start`, `border-inline-start`, `inset-inline-start`), so columns, rules, the ticker direction and the chat tab mirror themselves; the English version is `dir="ltr"` with the same markup.
+- Latin runs inside Arabic — company, product, show and venue names, the phone number, web and e-mail addresses — are wrapped in `<bdi dir="ltr">`/`.lt` and set in Libre Franklin, so their word order never flips; day ranges and years are isolated the same way.
+- The Taiwan address is always English, LTR, aligned to the paragraph side (right edge in Arabic).
+- Arrows (reader, ticker, "more" lines) are CSS glyphs flipped by `[dir=rtl]`; ticks and numbers keep their shape.
+- English: Newsreader headlines and text, Franklin UI, the strip reads "Arab Asian Trade · التجارة العربية الآسيوية · 中阿商業雜誌". zh-TW / zh-CN / Malay use the same slots (Noto Sans TC/SC for Chinese; Latin faces for Malay).
 
 ---
 
 ## 9. Motion
 
-- **Moves:** the ticker tape (translate animation, about 45 px/s, continuous, pauses while the pointer or a finger is on it; duplicated content for a seamless loop; `will-change: transform`; on phones the same speed); page turning in the reader; the hover fill of ledger rows; the opening of the advertiser panel and the clipping (a 200 ms slide). The ticker keeps moving under `prefers-reduced-motion` but at half speed, because the owner has asked repeatedly that the shelf never stop.
-- **Never moves:** the masthead and section bar (no shrinking animation, the compact bar simply replaces it), headlines and text, backgrounds; no parallax, no reveal-on-scroll, no counting numbers, no carousels, no auto-sliding hero, no splash. The first paint is the final layout (space reserved for the ticker, the cover and the logos).
+Moves: the product ticker (continuous, ~42 px/s, pauses on hover and touch, resumes); page turns in the reader (a 300 ms slide); the section bar becoming sticky. Never moves: headlines, columns, grids, backgrounds — no reveal-on-scroll, no parallax, no splash, no counting numbers, no hover lifts, no layout jump after first paint. The front page is as still as paper.
 
 ---
 
 ## 10. Why the owner will love it
 
-1. "VERY DIFFERENT, I want to see the restructure" — the first screen is a masthead and a front page with columns and rules; nothing of the pill menu, the gradient hero or the rounded cards remains.
-2. "LARGE MODE everywhere" — body 20 px in a face made for weak eyes, nothing under 17 px, 56 px buttons, 48 px tabs, headlines 40–52 px; the ledger and the index are built from big rows, not small cards.
-3. "Why is it not moving any more?" — the ticker tape of his advertisers' products runs on every page load, on PC and phone, and is the first thing under the masthead.
-4. "Use original logos, not recreated" and "the site promotes its owner" — the advertisers' index of real logos is the second block of the front page; the external partner logos and the dotted map leave the home page.
-5. "Sections must be visibly separated", "just one title", "no small labels" — every section is one headline on a red double rule with its count beside it; separation is the rule itself, impossible to miss, and the AAT red is on every screen without a symbol he removed.
+1. **LARGE MODE** — nothing under 16 px (audited in the tile: minimum 16 px), body 20 px Naskh, section bar 20 px bold Kufi, 54 px buttons, 64 px figures, a 44 px phone number.
+2. **"VERY DIFFERENT, I want to see the restructure"** — a centred masthead, red name strip, black section bar and three ruled columns replace the floating pill menu, gradient banner and cards; the difference is visible before the first scroll (`ref-vs-new.png`).
+3. **"Sections must be visibly separated" / "Just one of them!"** — every section opens with a 3 px rule, a red square and one title; hairlines between rows; no kicker labels, no duplicate "see all" links.
+4. **"Why is it not moving any more?"** — the product shelf is still the first thing under the menu, now the ticker with real products, logos and page numbers; the magazine still opens full screen with pages fitted to the height.
+5. **"Use original logos, not recreated"** — 29 real logos in a classifieds grid, the real cover, real product pictures on white; items without a picture become text rows, never placeholders.

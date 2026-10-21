@@ -12,6 +12,7 @@ const here = __dirname;
     ['tile-ar.html', 390, 844, 'tile-ar-390-full.png', true],
     ['tile-ar.html', 1366, 768, 'tile-ar-1366.png', false],
     ['tile-en.html', 390, 844, 'tile-en-390.png', false],
+    ['tile-en.html', 1920, 950, 'tile-en-full.png', true],
   ];
   for (const [file, w, h, out, full] of jobs) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });

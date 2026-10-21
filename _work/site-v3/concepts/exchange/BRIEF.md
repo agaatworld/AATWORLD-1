@@ -8,7 +8,7 @@ Today's structure, in one paragraph (so the concept departs from it on purpose):
 
 ## 1. Difference statement
 
-1. **Navigation.** Today: one centred floating pill menu of 8 content types; phone: hamburger. New: a two-tier working header: a white tool bar (red logo at the start, an always-visible search field, a red "تواصل معنا +886 966 404681" button, language switch + globe) and a navy rail of 8 sections with a red "you are here" underline. On phones the rail becomes a fixed bottom tab bar (الرئيسية · معارض · مصانع · منتجات · المجلة) with the rest under the ≡ button.
+1. **Navigation.** Today: one centred floating pill menu of 8 content types; phone: hamburger. New: a two-tier working header: a sticky white tool bar (red logo at the start, a search field, a red "تواصل معنا +886 966 404681" button, language switch + globe) and a navy rail of 8 sections with a red "you are here" underline. The tool-bar search is shown on every inner page and, on the home page, only once the big search of the opening board has scrolled away, so a search field is never shown twice on one screen. On phones the rail becomes a fixed bottom tab bar (الرئيسية · معارض · مصانع · منتجات · المجلة) with the rest under the ≡ button.
 2. **Home page.** Today: a marketing scroll (shelf → red "45 years" hero → map → logos → sector tiles → products → articles → news → shows → contact). New: a buyer's board: search + four live counters + the current issue with a red stamp, then the nearest-shows board, the product conveyor, the factory directory, the issue index, news & articles, the club, contact. The visitor can find a show, a factory or a product without leaving the first screen.
 3. **Grouping of content.** Today: by media type (magazine, articles, news, products, shows, club). New: by what a buyer is looking for: **Shows**, **Factories** (a directory of the 35 advertisers, today hidden behind the magazine), **Products** (advertisers' products, with the modern industries as a second board on the same page), **Magazine** (reader + issue index), **Business Club**, **News & articles** (one reading page, two lists), **About** (about + advertising positions together), **Contact**.
 4. **Layout language.** Today: rounded cards, red gradients, soft pink shadows, pill chips, cream bands. New: a flat ledger: 4px corners, 2px rules, boards (tables) with a navy header row, white and cool-grey bands separated by a 4px ink rule, no shadows (only the fixed assistant button), one square red marker before each section title.
@@ -48,7 +48,7 @@ The owner sees the difference in three seconds: navy instead of red gradient, a 
 
 Where red is **not** used: section backgrounds, paragraphs, table headers, chips, footer, borders, counters. Red never carries text on navy (3.0:1).
 
-Contrast (WCAG, computed): ink/paper 16.1 · ink/floor 14.2 · ink/zebra #F8FAFC 15.4 · ink/mark 13.1 · slate/paper 7.3 · slate/floor 6.4 · slate/zebra 7.0 · slate/mark 5.9 · signal text/paper 5.3 · signal text/floor 4.7 · white/signal 5.3 · white/deep 8.2 · white/ink 16.1 · white/navy 12.3 · link/paper 6.4 · link/floor 5.6. All text pairs ≥ 4.5:1; the only pair below (signal on ink, 3.0) is forbidden by rule.
+Contrast (WCAG, computed): ink/paper 16.1 · ink/floor 14.2 · ink/zebra #F8FAFC 15.4 · ink/mark 13.0 · slate/paper 7.3 · slate/floor 6.4 · slate/zebra 7.0 · slate/mark 5.9 · signal text/paper 5.3 · signal text/floor 4.7 · white/signal 5.3 · white/deep 8.2 · white/ink 16.1 · white/navy 12.3 · link/paper 6.4 · link/floor 5.6. All text pairs ≥ 4.5:1; the only pair below (signal on ink, 3.0) is forbidden by rule.
 
 ## 4. Typography
 
@@ -63,7 +63,7 @@ Contrast (WCAG, computed): ink/paper 16.1 · ink/floor 14.2 · ink/zebra #F8FAFC
 - **Grid.** Content width 1760px with 32px gutters (16px on phones), 12 columns, 16px gaps; boards span the full width; the factory grid is 6 columns on PC, 4 at ≤1500px, 2 on phones.
 - **Rhythm.** Sections are 48/56px tall bands alternating paper and floor. Every section begins with a 4px ink rule across the width, then one title row: an 18px red square, the H2, and under it the count line in slate (data, not a kicker), with the section's one action button at the end side. No kicker labels, no duplicated titles, no "see all" links in the body; one button per section.
 - **Boards (tables).** 2px ink frame, 4px radius, navy header row 56px with white 18px labels, rows ≥ 76px, zebra #F8FAFC, floor on hover; each row is one link. Columns: Date 230 · Show 1fr · City 200 · Country 220 · Field 280. Under 1180px the header hides and each row becomes a two-column block; on phones one column (date, name, city, country, field stacked).
-- **Cards.** White, 2px rule border, 4px corners, no shadow; hover = ink border. Product tile 300×(210 picture + name + company); factory tile 6-col with 92px logo area; companies without a logo show their name large in the logo area, never a placeholder.
+- **Cards.** White, 2px rule border, 4px corners, no shadow; hover = ink border. Product tile 300×(210 picture + name + company); factory tile 6-col with 92px logo area and a name of up to three lines (Latin names are set LTR inside the RTL tile so the ellipsis, if any, sits at the end of the name); companies without a logo show their name large in the logo area, never a placeholder.
 - **Buttons.** 56px min height, 20px/700, 24px side padding, 4px radius: red fill (primary), ink fill (section actions), ink 2px outline (secondary), white outline on navy. Phone 52px/18px.
 - **Chips / filters.** 2px rule, 4px radius, 16–18px/500–600, ≥48px tall with a flag or count pill; selected = ink fill with white text. Country strip: flag 30×21 + name + count.
 - **Images.** Logos and products `object-fit: contain` on white in a ruled frame; photos `cover` with a 1px rule; flags 30×21 with a 1px rule; the cover with a 1px rule. Items without a shipped picture show no picture box.
@@ -96,7 +96,7 @@ Pages (hash routes):
 8. **تواصل معنا:** number + app icons, e-mails, address (English), newsletter field. Source: `config`.
 9. **Footer (navy):** white logo, group name in three languages, since-1982 line, section links, contact column, rights line, tagline.
 
-**Header.** PC: tool bar (logo, search, red contact button with the number, "English/العربية" switch, globe with all five languages) + navy rail (الرئيسية · معارض دولية · دليل المصانع · المنتجات · المجلة · نادي رجال الأعمال · الأخبار والمقالات · من نحن); the rail wraps to two rows between 860 and 1180px, never hides. The tool bar is sticky; the rail scrolls away. Phone: logo + search field + ≡; a fixed bottom tab bar with five tabs; ≡ opens a full-screen sheet with the other sections, contact and languages.
+**Header.** PC: tool bar (logo, search, red contact button with the number, "English/العربية" switch, globe with all five languages) + navy rail (الرئيسية · معارض دولية · دليل المصانع · المنتجات · المجلة · نادي رجال الأعمال · الأخبار والمقالات · من نحن); the rail wraps to two rows between 860 and 1180px, never hides. The tool bar is sticky; the rail scrolls away. The tool-bar search field appears only when the opening board's big search is off screen (on inner pages it is always there), so the visitor never sees two search fields at once. Phone: logo + search field + ≡; a fixed bottom tab bar with five tabs; ≡ opens a full-screen sheet with the other sections, contact and languages.
 
 **Footer.** Navy: logo, مجموعة التجارة العربية الآسيوية · Arab Asian Trade Group · 中阿商業雜誌, one line about the magazine, the section list, contact (phone, apps as chips, e-mail, address in English, LTR), © 2026 AAT (Arab Asian Trade) · جميع الحقوق محفوظة, "AAT · Ideas For Business · www.aatworld.com".
 
@@ -121,7 +121,7 @@ Pages (hash routes):
 ## 9. Motion
 
 - **Moves:** the product conveyor (70s linear loop, duplicated track, pauses on hover/touch, stops under `prefers-reduced-motion`).
-- **Never moves:** the opening board, counters (no count-up), boards, cards (no hover lift, colour change only), the stamp, the assistant button, page transitions (instant), the reader (page change is a swap, no flip animation; the flip may come back only if the owner asks).
+- **Never moves:** the opening board, counters (no count-up), boards, cards (no hover lift, colour change only), the stamp, the assistant button, page transitions (instant), the reader (page change is a swap, no flip animation; the flip may come back only if the owner asks). The tool-bar search field appears and disappears instantly as the big search leaves or re-enters the screen; no animation.
 
 ## 10. Why the owner will love it
 
