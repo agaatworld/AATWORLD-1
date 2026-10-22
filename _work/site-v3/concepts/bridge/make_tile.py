@@ -17,16 +17,16 @@ L = {
   title='التجارة العربية الآسيوية · لوحة الطرق', issue='العدد 560 · أكتوبر 2026', langbtn='English', globe='اللغات',
   nav=['الأسواق','معارض دولية','منتجات وصناعات حديثة','المجلة','نادي رجال الأعمال','مقالات وأخبار','تواصل معنا'], menu='القائمة',
   h1='من مصانع آسيا<br>إلى أسواق العرب وأفريقيا', h1b="From Asia's factories to Arab and African markets",
-  lead='مجلة تجارية مطبوعة وإلكترونية تصدر في تايوان منذ 1982، تحمل منتجات مصانع آسيا إلى المستوردين ورجال الأعمال في العالم العربي وأفريقيا، بالعربية والإنجليزية والصينية.',
-  btn1='تصفّح العدد 560', btn2='معارض دولية 2027',
-  photo_cap='من داخل المصانع المعلنة في العدد 560', photo_cap2='تصنيع الأغذية · تايوان',
-  route_cap='خط التجارة: 16 سوقاً من تايوان إلى الجزائر · 1,464 معرضاً دولياً في 2027', shows_w=lambda n: f'{n:,} معرضاً',
-  shelf_t='منتجات المعلنين', shelf_n='133 منتجاً من 35 شركة',
-  shows_t='معارض دولية', shows_n='كل معارض 2027: 1,464', all_markets='كل الأسواق', details='التفاصيل', shows_btn='كل معارض 2027 حسب السوق والمجال',
-  sup_t='موردون من آسيا والعالم العربي', sup_n='35 شركة في العدد 560',
+  
+  btn1='تصفّح العدد 560', btn2='معارض دولية',
+  photo_cap='منتجات وصناعات حديثة',
+  route_cap=lambda n: f'خط التجارة: 16 سوقاً من تايوان إلى الجزائر · {n:,} معرضاً دولياً من يناير 2027', shows_w=lambda n: f'{n:,} معرضاً',
+  shelf_t='منتجات المعلنين', shelf_n=lambda p, c: f'{p} منتجاً من {c} شركة',
+  shows_t='معارض دولية', shows_n=lambda n: f'كل المعارض: {n:,}', all_markets='كل الأسواق', details='التفاصيل', shows_btn='كل المعارض الدولية حسب السوق والمجال',
+  sup_t='موردون من آسيا والعالم العربي', sup_n=lambda n: f'{n} شركة في العدد 560',
   from_tw='من تايوان', from_sy='من سورية', from_other='من ماليزيا وإندونيسيا وباكستان وتركيا والهند والسعودية',
   co_w=lambda n: f'{n} شركة' if n>=11 or n==1 else f'{n} شركات',
-  ft_site='الموقع', ft_markets='الأسواق', ft_contact='تواصل معنا', ft_about='مجلة إعلانية تجارية مطبوعة وإلكترونية تصدر في تايوان منذ 1982، بالعربية والإنجليزية والصينية.',
+  ft_site='الموقع', ft_markets='الأسواق', ft_contact='تواصل معنا', 
   ft_links=['المجلة','معارض دولية','منتجات وصناعات حديثة','نادي رجال الأعمال','مقالات وأخبار','من نحن','أعلن معنا','تواصل معنا'],
   copy='© 2026 مجموعة التجارة العربية الآسيوية · جميع الحقوق محفوظة', ft_phone_l='الهاتف وتطبيقات المحادثة', ft_email_l='البريد الإلكتروني', ft_addr_l='العنوان',
   assist='مساعد AAT', assist2='محادثة 24 ساعة', since='منذ 1982',
@@ -35,16 +35,16 @@ L = {
   title='Arab Asian Trade · Route board', issue='Issue 560 · October 2026', langbtn='العربية', globe='Languages',
   nav=['Markets','International exhibitions','Products & modern industries','Magazine','Business Club','Articles & news','Contact'], menu='Menu',
   h1="From Asia's factories<br>to Arab and African markets", h1b='من مصانع آسيا إلى أسواق العرب وأفريقيا',
-  lead='A printed and online trade magazine published in Taiwan since 1982, carrying the products of Asia\'s factories to importers and businessmen across the Arab world and Africa, in Arabic, English and Chinese.',
-  btn1='Read issue 560', btn2='Trade shows 2027',
-  photo_cap='Inside the factories advertising in issue 560', photo_cap2='Food processing · Taiwan',
-  route_cap='The trade line: 16 markets from Taiwan to Algeria · 1,464 international trade shows in 2027', shows_w=lambda n: f'{n:,} shows',
-  shelf_t="Advertisers' products", shelf_n='133 products from 35 companies',
-  shows_t='International exhibitions', shows_n='All 2027 shows: 1,464', all_markets='All markets', details='Details', shows_btn='All 2027 shows by market and field',
-  sup_t='Suppliers from Asia and the Arab world', sup_n='35 companies in issue 560',
+  
+  btn1='Read issue 560', btn2='International exhibitions',
+  photo_cap='Modern products and industries',
+  route_cap=lambda n: f'The trade line: 16 markets from Taiwan to Algeria · {n:,} international trade shows from January 2027', shows_w=lambda n: f'{n:,} shows',
+  shelf_t="Advertisers' products", shelf_n=lambda p, c: f'{p} products from {c} companies',
+  shows_t='International exhibitions', shows_n=lambda n: f'All shows: {n:,}', all_markets='All markets', details='Details', shows_btn='All international exhibitions by market and field',
+  sup_t='Suppliers from Asia and the Arab world', sup_n=lambda n: f'{n} companies in issue 560',
   from_tw='From Taiwan', from_sy='From Syria', from_other='From Malaysia, Indonesia, Pakistan, Türkiye, India and Saudi Arabia',
   co_w=lambda n: f'{n} companies' if n!=1 else '1 company',
-  ft_site='Site', ft_markets='Markets', ft_contact='Contact us', ft_about='A printed and online trade magazine published in Taiwan since 1982, in Arabic, English and Chinese.',
+  ft_site='Site', ft_markets='Markets', ft_contact='Contact us', 
   ft_links=['Magazine','International exhibitions','Products & modern industries','Business Club','Articles & news','About us','Advertise with us','Contact'],
   copy='© 2026 Arab Asian Trade Group · All rights reserved', ft_phone_l='Phone and chat apps', ft_email_l='Email', ft_addr_l='Address',
   assist='AAT Assistant', assist2='24-hour chat', since='Since 1982',
@@ -80,6 +80,7 @@ def build(lang):
     T = L[lang]; rtl = lang == 'ar'; o = 'ar' if rtl else 'en'
     C = D['countries']; cats = D['cats']; fields = {f['id']: f for f in D['fields']}
     comps = [c for c in D['companies'] if c.get('cat') != 'event']
+    n_prod = sum(len(c.get('products', [])) for c in D['companies']); n_pco = sum(1 for c in D['companies'] if c.get('products'))
     # ---- header
     nav = ''.join(f'<a href="#" class="{"on" if i==0 else ""}">{E(n)}</a>' for i, n in enumerate(T['nav']))
     header = f'''
@@ -107,13 +108,13 @@ def build(lang):
   <div class="open-text">
    <h1>{T['h1']}</h1>
    <p class="h1b" dir="{'ltr' if rtl else 'rtl'}">{E(T['h1b'])}</p>
-   <p class="lead">{E(T['lead'])}</p>
+   <p class="lead">{E(D['about']['claim'][o])}</p>
    <div class="btns"><a class="btn btn-red" href="#magazine">{T['btn1']}</a><a class="btn btn-ghost" href="#exhibitions">{T['btn2']}</a></div>
   </div>
-  <figure class="photo"><img src="{IMG}img/modern/m5.jpg" alt=""><figcaption><span>{E(T['photo_cap'])}</span><span class="cap2">{E(m5['name'][o])} · {E(C['tw'][o])}</span></figcaption></figure>
+  <figure class="photo"><img src="{IMG}img/modern/m5.jpg" alt=""><figcaption><span>{E(T['photo_cap'])}</span><span class="cap2">{E(m5['name'][o])} · {E(C['my'][o])}</span></figcaption></figure>
  </div>
  <div class="wrap"><div class="route">
-  <p class="route-cap"><span class="dot"></span>{E(T['route_cap'])}</p>
+  <p class="route-cap"><span class="dot"></span>{E(T['route_cap'](len(D['shows'])))}</p>
   <ol class="stops">{stops}</ol>
  </div></div>
 </section>'''
@@ -132,7 +133,7 @@ def build(lang):
         tiles += f'<a class="tile" href="#company-{c["id"]}"><div class="pimg"><img src="{IMG}{p["img"]}" alt=""></div><div class="pn"><bdi>{E(p["n"])}</bdi></div><div class="pc">{logo}{flag}<span>{E(city)}</span></div></a>'
     shelf = f'''
 <section class="sec band shelf-sec">
- <div class="wrap"><div class="sec-h"><h2>{T['shelf_t']}</h2><span class="rule"></span><span class="sec-n">{T['shelf_n']}</span></div></div>
+ <div class="wrap"><div class="sec-h"><h2>{T['shelf_t']}</h2><span class="rule"></span><span class="sec-n">{T['shelf_n'](n_prod, n_pco)}</span></div></div>
  <div class="shelf"><div class="track">{tiles}{tiles}</div></div>
 </section>'''
     # ---- shows
@@ -161,7 +162,7 @@ def build(lang):
     shows = f'''
 <section class="sec">
  <div class="wrap">
-  <div class="sec-h"><h2>{T['shows_t']}</h2><span class="rule"></span><a class="sec-n" href="#exhibitions">{T['shows_n']}</a></div>
+  <div class="sec-h"><h2>{T['shows_t']}</h2><span class="rule"></span><a class="sec-n" href="#exhibitions">{T['shows_n'](len(D['shows']))}</a></div>
   <div class="chips">{chips}</div>
   <div class="rows">{rows}</div>
   <p class="more"><a class="btn btn-sea" href="#exhibitions">{T['shows_btn']}</a></p>
@@ -173,10 +174,10 @@ def build(lang):
         name = c['nameAr'] if (rtl and c.get('nameAr')) else c['company']
         city = c['city'][o] if isinstance(c['city'], dict) else c['city']
         cat = cats.get(c.get('cat'), {}).get(o, '')
-        return f'<a class="lcard" href="#company-{c["id"]}">{logo}<b><bdi>{E(name)}</bdi></b><span>{E(cat)}</span><span class="ct">{E(city)}</span></a>'
-    tw = [c for c in comps if origin_cc(c) == 'tw' and c.get('logo')][:8]
-    sy = [c for c in comps if origin_cc(c) == 'sy' and c.get('logo')]
-    other = [c for c in comps if origin_cc(c) in ('my','id','pk','tr','in','sa') and c.get('logo')]
+        return f'<a class="lcard{"" if logo else " nologo"}" href="#company-{c["id"]}">{logo}<b><bdi>{E(name)}</bdi></b><span>{E(cat)}</span><span class="ct">{E(city)}</span></a>'
+    tw = [c for c in comps if origin_cc(c) == 'tw']
+    sy = [c for c in comps if origin_cc(c) == 'sy']
+    other = [c for c in comps if origin_cc(c) in ('my','id','pk','tr','in','sa')]
     n_tw = sum(1 for c in comps if origin_cc(c) == 'tw'); n_sy = sum(1 for c in comps if origin_cc(c) == 'sy'); n_ot = sum(1 for c in comps if origin_cc(c) in ('my','id','pk','tr','in','sa'))
     def group(title, flag_cc, n, lst):
         fl = f'<img src="{IMG}{C[flag_cc]["flag"]}" alt="">' if flag_cc else ''
@@ -184,7 +185,7 @@ def build(lang):
     suppliers = f'''
 <section class="sec band">
  <div class="wrap">
-  <div class="sec-h"><h2>{T['sup_t']}</h2><span class="rule"></span><span class="sec-n">{T['sup_n']}</span></div>
+  <div class="sec-h"><h2>{T['sup_t']}</h2><span class="rule"></span><span class="sec-n">{T['sup_n'](len(comps))}</span></div>
   {group(T['from_tw'], 'tw', n_tw, tw)}
   {group(T['from_sy'], 'sy', n_sy, sy)}
   {group(T['from_other'], None, n_ot, other)}
@@ -197,7 +198,7 @@ def build(lang):
     footer = f'''
 <footer class="ft">
  <div class="wrap ft-grid">
-  <div class="ft-brand"><img src="{IMG}img/brand/aat-logo-white.svg" alt="AAT · Ideas For Business"><p class="np">التجارة العربية الآسيوية · <span dir="ltr">Arab Asian Trade</span> · <span lang="zh-TW">中阿商業雜誌</span></p><p>{E(T['ft_about'])}</p></div>
+  <div class="ft-brand"><img src="{IMG}img/brand/aat-logo-white.svg" alt="AAT · Ideas For Business"><p class="np"><span>التجارة العربية الآسيوية</span> · <span dir="ltr">Arab Asian Trade</span> · <span lang="zh-TW">中阿商業雜誌</span></p><p>{E(D['about']['heroLead'][o])}</p></div>
   <div class="ft-col"><h3>{T['ft_site']}</h3><ul>{links}</ul></div>
   <div class="ft-col markets"><h3>{T['ft_markets']}</h3><ul>{mk}</ul></div>
   <div class="ft-col"><h3>{T['ft_contact']}</h3>
@@ -209,7 +210,7 @@ def build(lang):
  </div>
  <div class="ft-bottom"><div class="wrap"><span>{T['copy']}</span><span dir="ltr">AAT · Arab Asian Trade · www.aatworld.com</span></div></div>
 </footer>
-<a class="assist" href="#assistant">{CHAT}<span>{T['assist']}<br>{T['assist2']}</span></a>'''
+<a class="assist" href="#assistant">{CHAT}<span><span class="a1">{T['assist']}</span><br class="abr"><span class="a2">{T['assist2']}</span></span></a>'''
     page = f'''<!doctype html>
 <html lang="{lang}" dir="{'rtl' if rtl else 'ltr'}">
 <head>
@@ -218,6 +219,7 @@ def build(lang):
 <title>{E(T['title'])}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap&text=%E4%B8%AD%E9%98%BF%E5%95%86%E6%A5%AD%E9%9B%9C%E8%AA%8C" rel="stylesheet">
 <style>{CSS}</style>
 </head>
 <body>
@@ -246,6 +248,7 @@ img{display:block;max-width:100%}
 bdi{unicode-bidi:isolate}
 .wrap{max-width:1760px;margin:0 auto;padding:0 40px}
 h1,h2,h3{margin:0;font-family:var(--fd);line-height:1.3}
+[lang=zh-TW]{font-family:'Noto Sans TC',var(--fb)}
 p{margin:0}
 /* header: two decks */
 .deck1{background:var(--sea);color:#fff;font-size:17px;font-weight:500}
@@ -265,7 +268,7 @@ nav.main a.on{border-bottom-color:var(--red);color:var(--red)}
 nav.main a:hover{text-decoration:none;border-bottom-color:var(--sea)}
 .menubtn{display:none}
 /* opening: the route board */
-.open{background:var(--sea);color:#fff;padding:56px 0 0}
+.open{background:var(--sea);color:#fff;padding:44px 0 0}
 .open-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:56px;align-items:center}
 .open h1{font-size:56px;font-weight:800;line-height:1.3;color:#fff}
 html[dir=ltr] .open h1{line-height:1.12}
@@ -284,11 +287,11 @@ html[dir=ltr] .h1b{text-align:left}
 .btn-line{border-color:var(--sea);color:var(--sea);background:#fff}
 .btn-line:hover{background:var(--sea);color:#fff}
 .photo{margin:0;border:4px solid #fff;background:#fff}
-.photo img{width:100%;height:400px;object-fit:cover}
+.photo img{width:100%;height:360px;object-fit:cover}
 .photo figcaption{background:#fff;color:var(--ink);padding:12px 18px;font-size:18px;font-weight:600;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;line-height:1.4}
 .photo .cap2{color:var(--sea)}
-.route{margin-top:52px;padding:26px 0 40px;border-top:1px solid rgba(255,255,255,.3)}
-.route-cap{font-size:19px;font-weight:600;margin:0 0 24px;display:flex;gap:12px;align-items:center;line-height:1.5}
+.route{margin-top:40px;padding:24px 0 36px;border-top:1px solid rgba(255,255,255,.3)}
+.route-cap{font-size:19px;font-weight:600;margin:0 0 20px;display:flex;gap:12px;align-items:center;line-height:1.5}
 .route-cap .dot{width:16px;height:16px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 3px #fff}
 .stops{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:6px;position:relative}
 .stops:before{content:"";position:absolute;left:3%;right:3%;top:21px;height:3px;background:rgba(255,255,255,.55)}
@@ -354,11 +357,14 @@ html[dir=rtl] .track{animation-name:run-rtl}
 .lcard b{font-size:18px;font-weight:600;line-height:1.4}
 .lcard span{font-size:17px;color:var(--muted);margin-top:6px;line-height:1.4}
 .lcard .ct{color:var(--sea);font-weight:500}
+.lcard.nologo{justify-content:center}
+.lcard.nologo b{font-family:var(--fd);font-size:24px;font-weight:700;line-height:1.25;color:var(--sea)}
 /* footer */
 .ft{background:var(--sea);color:#fff;padding:56px 0 0}
 .ft-grid{display:grid;grid-template-columns:1.3fr .9fr 1fr 1.3fr;gap:40px}
 .ft-brand img{height:64px;width:auto;margin-bottom:18px}
 .ft-brand .np{font-weight:600;font-size:19px;margin-bottom:8px}
+.ft-brand .np span{white-space:nowrap;display:inline-block}
 .ft-brand p{font-size:18px;line-height:1.7}
 .ft h3{font-family:var(--fd);font-size:24px;font-weight:700;margin-bottom:12px}
 .ft a{color:#fff}
@@ -378,6 +384,9 @@ html[dir=rtl] .ft .addr,html[dir=rtl] .ft .mail{text-align:right}
 .assist{position:fixed;bottom:20px;inset-inline-end:20px;background:var(--sea);color:#fff;border:2px solid #fff;border-radius:8px;padding:10px 18px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);font-weight:600;font-size:18px;line-height:1.3;z-index:50}
 /* laptops: the trade line becomes two rows of stop cards */
 @media(max-width:1500px){
+ .deck2 .wrap{gap:22px}
+ nav.main{gap:0}
+ nav.main a{padding:8px 9px;font-size:19px}
  .stops{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
  .stops:before{display:none}
  .stop{display:flex;align-items:center;gap:14px;text-align:start;padding:8px 12px;border:1px solid rgba(255,255,255,.4);border-radius:6px;min-width:0;overflow:hidden}
@@ -424,7 +433,7 @@ html[dir=rtl] .ft .addr,html[dir=rtl] .ft .mail{text-align:right}
  .stop span{font-size:16px}
  .sec{padding:40px 0}
  .sec-h{gap:14px;flex-wrap:wrap;margin-bottom:22px}
- .sec-h h2{font-size:28px;white-space:normal}
+ .sec-h h2{font-size:28px;white-space:normal;flex:1 1 0;min-width:0}
  .sec-h .rule{display:none}
  .sec-h .sec-n{font-size:17px;white-space:normal;flex-basis:100%;padding-inline-start:30px}
  .tile{width:196px}
@@ -442,7 +451,9 @@ html[dir=rtl] .ft .addr,html[dir=rtl] .ft .mail{text-align:right}
  .ft{padding-top:40px}
  .ft-grid{grid-template-columns:1fr;gap:30px}
  .ft .markets ul{columns:2}
- .assist{bottom:14px;inset-inline-end:14px;padding:8px 14px;font-size:17px}
+ .assist{bottom:14px;inset-inline-end:14px;padding:8px 14px;font-size:17px;gap:10px}
+ .assist .a1,.assist .abr{display:none}
+ .assist svg{width:24px;height:24px}
 }
 '''
 for lg in ('ar', 'en'):
