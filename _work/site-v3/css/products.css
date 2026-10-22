@@ -1,0 +1,14 @@
+/* =============================================================================
+   AAT World v3 · css/products.css — PRODUCTS + MODERN
+   Owner: the products page builder. Only this builder edits this file.
+   Routes: #products, #products-CAT, #product-NN-K, #modern, #modern-GROUP, #modern-N
+   Spec: DESIGN.md §6.9, §6.10, §6.11
+   Rules (CONTRACT.md):
+   - every class in this file starts with .pr- (products) and .md- (modern industries)  (shared classes live in css/site.css: read only)
+   - colours only from the :root tokens (var(--night) …); no new colours, no gradients except the
+     navy light pools; no !important; low specificity (one or two classes)
+   - LARGE MODE: no text under 16px (17px except the four exceptions of DESIGN.md §3.3); use the
+     --t-* type tokens, which already change per breakpoint
+   - logical properties only (margin-inline-start, inset-inline-end, text-align:start …)
+   - side gutters come from .wrap; never add horizontal padding shorthands to full-width bands
+============================================================================= */

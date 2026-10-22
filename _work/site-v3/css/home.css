@@ -1,0 +1,14 @@
+/* =============================================================================
+   AAT World v3 · css/home.css — HOME
+   Owner: the home page builder. Only this builder edits this file.
+   Routes: #home (and the empty hash)
+   Spec: DESIGN.md §6.2 (home bands 1–8)
+   Rules (CONTRACT.md):
+   - every class in this file starts with .hm-  (shared classes live in css/site.css: read only)
+   - colours only from the :root tokens (var(--night) …); no new colours, no gradients except the
+     navy light pools; no !important; low specificity (one or two classes)
+   - LARGE MODE: no text under 16px (17px except the four exceptions of DESIGN.md §3.3); use the
+     --t-* type tokens, which already change per breakpoint
+   - logical properties only (margin-inline-start, inset-inline-end, text-align:start …)
+   - side gutters come from .wrap; never add horizontal padding shorthands to full-width bands
+============================================================================= */

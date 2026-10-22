@@ -1,0 +1,41 @@
+<title>AAT World</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- AAT World v3 · "Trade Bridge" · shell.html (architect). The SOURCE fragment: tools/build.js inlines
+     every local stylesheet into ONE <style> and every local script into ONE <script> → page.html.
+     Builders: read only. Add nothing here; ask the architect for new slots. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa:wght@500..800&family=Readex+Pro:wght@400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&text=%E4%B8%AD%E9%98%BF%E5%95%86%E6%A5%AD%E9%9B%9C%E8%AA%8C&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/magazine.css">
+<link rel="stylesheet" href="css/companies.css">
+<link rel="stylesheet" href="css/products.css">
+<link rel="stylesheet" href="css/reading.css">
+<link rel="stylesheet" href="css/exhibitions.css">
+<link rel="stylesheet" href="css/club.css">
+<link rel="stylesheet" href="css/assistant.css">
+<!-- header slot (display:contents): ribbon, masthead row, sticky menu bar. Static Arabic first frame, re-rendered by js/app.js -->
+<div id="hdr"><!--ff:header--><a class="skip" href="#view">انتقل إلى المحتوى</a><div class="rib"><div class="wrap rib-in"><p class="rib-names rib-full"><span lang="ar" dir="rtl">التجارة العربية الآسيوية</span><span class="dot" aria-hidden="true">·</span><span lang="en" dir="ltr">Arab Asian Trade</span><span class="dot" aria-hidden="true">·</span><span lang="zh-TW" class="zh">中阿商業雜誌</span></p><p class="rib-names rib-short"><span lang="ar" dir="rtl">التجارة العربية الآسيوية</span><span class="dot" aria-hidden="true">·</span><span lang="zh-TW" class="zh">中阿商業雜誌</span></p><p class="rib-issue">العدد 560 · أكتوبر 2026</p></div></div><header class="mast"><div class="wrap mast-in"><a class="mast-logo" href="#home" aria-label="AAT · التجارة العربية الآسيوية · الصفحة الرئيسية"><img src="img/brand/aat-logo-red.svg" alt="AAT · Ideas For Business" width="192" height="64"></a><div class="mast-group"><b>مجموعة التجارة العربية الآسيوية</b><span>مفتاح النجاح بين المستوردين والمصدّرين</span></div><div class="mast-end"><a class="mast-ph" href="tel:+886966404681" aria-label="اتصل بنا +886 966 404681"><span class="mast-ph-ic"><svg class="ic ic-phone" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg></span><bdi dir="ltr">+886 966 404681</bdi></a><button class="btn btn-line btn-s mast-lang" type="button" data-act="lang" data-lang="en" lang="en" dir="ltr">English</button><div class="lm-wrap"><button class="btn btn-line btn-s mast-globe" type="button" data-act="globe" aria-expanded="false" aria-controls="lm"><svg class="ic ic-globe" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c3 3.5 3 16.5 0 20M12 2c-3 3.5-3 16.5 0 20"/></svg><span>اللغات</span></button><ul class="lm" id="lm" hidden><li><button type="button" data-act="lang" data-lang="ar" lang="ar" dir="rtl" aria-current="true"><span>العربية</span><span class="tick"><svg class="ic ic-check" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></button></li><li><button type="button" data-act="lang" data-lang="en" lang="en" dir="ltr" aria-current="false"><span>English</span></button></li><li><button type="button" data-act="lang" data-lang="zh-TW" lang="zh-TW" dir="ltr" aria-current="false"><span>繁體中文</span></button></li><li><button type="button" data-act="lang" data-lang="zh-CN" lang="zh-CN" dir="ltr" aria-current="false"><span>简体中文</span></button></li><li><button type="button" data-act="lang" data-lang="ms" lang="ms" dir="ltr" aria-current="false"><span>Bahasa Melayu</span></button></li></ul></div><button class="btn btn-red btn-s mast-chat" type="button" data-act="assistant"><svg class="ic ic-chat" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" focusable="false"><path stroke-linejoin="round" d="M4 5h16v11H9l-5 4z"/></svg><span>محادثة 24 ساعة</span></button><button class="btn btn-navy btn-s mast-secs" type="button" data-act="sheet" aria-expanded="false"><svg class="ic ic-menu" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" focusable="false"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg><span>الأقسام</span></button></div></div></header><nav class="nav" aria-label="القائمة الرئيسية"><div class="wrap"><ul class="nav-l"><li><a href="#home" data-nav="home">الرئيسية</a></li><li><a href="#magazine" data-nav="magazine">المجلة</a></li><li><a href="#exhibitions" data-nav="exhibitions">معارض دولية</a></li><li><a href="#companies" data-nav="companies">دليل الشركات</a></li><li><a href="#products" data-nav="products">المنتجات</a></li><li><a href="#reading" data-nav="reading">مقالات وأخبار</a></li><li><a href="#club" data-nav="club">نادي رجال الأعمال</a></li><li><a href="#contact" data-nav="contact">تواصل معنا</a></li></ul></div></nav><!--/ff:header--></div>
+<!-- the page: every route renders into #view -->
+<main id="view" tabindex="-1"></main>
+<!-- the floor contact band above the footer (every page except #contact and the reader) -->
+<div id="contact-slot"></div>
+<!-- footer, phone tab bar, sections sheet, assistant panel + floating chat button -->
+<div id="ftr"></div>
+<div id="tabs"></div>
+<div id="sheet-slot"></div>
+<div id="assistant-root"></div>
+<script src="data/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pages/pages.js"></script>
+<script src="js/pages/home.js"></script>
+<script src="js/pages/magazine.js"></script>
+<script src="js/pages/companies.js"></script>
+<script src="js/pages/products.js"></script>
+<script src="js/pages/reading.js"></script>
+<script src="js/pages/exhibitions.js"></script>
+<script src="js/pages/club.js"></script>
+<script src="js/pages/assistant.js"></script>
+<script src="js/boot.js"></script>
