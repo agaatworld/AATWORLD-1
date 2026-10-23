@@ -11,4 +11,288 @@
      --t-* type tokens, which already change per breakpoint
    - logical properties only (margin-inline-start, inset-inline-end, text-align:start …)
    - side gutters come from .wrap; never add horizontal padding shorthands to full-width bands
+   Contents
+     1. opening boards (fan of three product pictures, product picture, maker logo board, long H1)
+     2. the conveyor (full bleed, JS-driven)
+     3. field index deck (sticky under the menu bar on PC)
+     4. field bands: picture-card flow (last row centred), text rows, one/two cards beside their rows, makers
+     5. search results
+     6. product page: details + supplier card
+     7. modern industries: cards, rows, item page
+     8. breakpoints
 ============================================================================= */
+
+/* ---------- 1. opening boards ---------- */
+.pr-fan{ display:flex; justify-content:center; align-items:center; width:100%; max-width:760px; padding-block:26px 40px; padding-inline:22px; }
+.pr-fan-i{ position:relative; display:block; flex:0 1 280px; min-width:0; margin-inline:-20px; transition:transform .2s var(--ease); }
+.pr-fan-i:nth-child(1){ transform:rotate(-6deg) translateY(22px); }
+.pr-fan-i:nth-child(2){ z-index:2; transform:scale(1.12); }
+.pr-fan-i:nth-child(3){ transform:rotate(6deg) translateY(22px); }
+[dir=rtl] .pr-fan-i:nth-child(1){ transform:rotate(6deg) translateY(22px); }
+[dir=rtl] .pr-fan-i:nth-child(3){ transform:rotate(-6deg) translateY(22px); }
+.pr-fan-i:hover, .pr-fan-i:focus-visible{ z-index:3; transform:translateY(-8px) scale(1.14); }
+.pr-fan .frame{ padding:8px; }
+.pr-fan .frame img, .pr-shot .frame img{ object-fit:contain; background:var(--paper); }
+.pr-fan .pstamp, .pr-shot .pstamp{ position:absolute; z-index:1; top:16px; inset-inline-start:16px; }
+.pr-fan-i:nth-child(3) .pstamp{ inset-inline-start:auto; inset-inline-end:16px; }
+.pr-shot{ position:relative; width:100%; max-width:560px; }
+.pr-shot .pstamp{ top:22px; inset-inline-start:22px; }
+.pr-logob{ display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; max-width:460px; padding:34px 36px 30px; background:var(--paper); color:var(--ink);
+  border-radius:var(--r); border-top:6px solid var(--red); box-shadow:var(--sh-n); text-align:center; transition:transform .2s var(--ease); }
+.pr-logob:hover, .pr-logob:focus-visible{ transform:translateY(-5px); }
+.pr-logob-i{ display:grid; place-items:center; min-height:112px; }
+.pr-logob-i img{ max-height:112px; width:auto; max-width:100%; object-fit:contain; }
+.pr-logob-i .pr-type{ font-size:34px; }
+.pr-logob-n{ font:700 var(--t-row)/1.4 var(--f-t); }
+.pr-logob .pr-place{ justify-content:center; }
+.pr-obm{ display:inline-flex; align-items:center; gap:10px; font:600 19px/1.45 var(--f-t); color:var(--white); }
+.pr-obm .ic{ color:var(--mist); flex:none; }
+.ob h1.pr-long{ font-size:calc(var(--t-h1i) * .74); line-height:1.25; }
+.md-ob-f{ width:100%; max-width:640px; }
+.md-item-f{ width:100%; max-width:600px; }
+/* the frame is a flex item of the board: let the picture keep its own height so the caption (static on phones) is not cut */
+.md-ob-f img, .md-item-f img, .pr-shot .frame img, .pr-fan .frame img{ height:auto; }
+
+/* ---------- 2. the conveyor (full bleed) ---------- */
+.pr-beltband .shead{ margin-bottom:22px; }
+.pr-conv{ position:relative; }
+.pr-belt{ overflow:hidden; padding-block:12px 4px; touch-action:pan-y; cursor:grab;
+  -webkit-mask-image:linear-gradient(90deg, transparent, var(--ink) 6%, var(--ink) 94%, transparent);
+          mask-image:linear-gradient(90deg, transparent, var(--ink) 6%, var(--ink) 94%, transparent); }
+.pr-dragging .pr-belt{ cursor:grabbing; }
+.pr-dragging .pc{ pointer-events:none; }
+.pr-track{ display:flex; gap:24px; width:max-content; will-change:transform; padding-bottom:14px; }
+.pr-track > li{ flex:none; width:300px; display:flex; }
+.pr-track .pc{ -webkit-user-drag:none; user-select:none; -webkit-user-select:none; }
+.pr-track .pc img{ -webkit-user-drag:none; }
+.pr-ctl{ position:absolute; z-index:2; inset-inline:0; top:12px; height:220px; display:flex; align-items:center; justify-content:space-between; pointer-events:none;
+  padding-left:max(20px, env(safe-area-inset-left, 0px)); padding-right:max(20px, env(safe-area-inset-right, 0px)); }
+.pr-arw{ pointer-events:auto; display:grid; place-items:center; width:60px; height:60px; border-radius:50%; border:3px solid var(--white); background:var(--night); color:var(--white);
+  box-shadow:var(--sh-2); cursor:pointer; transition:background .18s, transform .18s var(--ease); }
+.pr-arw:hover{ background:var(--red); transform:scale(1.06); }
+.pr-arw:focus-visible{ outline:3px solid var(--red); outline-offset:3px; }
+.b-night .pr-arw:focus-visible{ outline-color:var(--white); }
+
+/* ---------- 3. field index deck: sticky under the menu bar (PC), a scrollable strip of chips ---------- */
+.pr-cats{ position:relative; }
+.pr-deck{ position:sticky; top:calc(env(safe-area-inset-top, 0px) + var(--pr-top, var(--nav-h))); z-index:30; background:var(--paper); border-bottom:1px solid var(--line); box-shadow:var(--sh-1);
+  padding-block:14px 6px; }
+.pr-chips{ scroll-behavior:smooth; }
+.pr-chips .chip{ min-height:52px; }
+.pr-chip-md{ border-color:var(--red); }
+.pr-chip-md .n{ background:var(--paper); }
+
+/* ---------- 4. field bands ---------- */
+.pr-band .shead h2::after{ transition:width .5s var(--ease); }
+.pr-band.pr-hit .shead h2::after{ width:180px; }
+.pr-cat{ display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:40px; align-items:start; }
+.pr-main{ min-width:0; container-type:inline-size; }
+/* picture cards: a flow of equal cards whose last row is centred (never a lone card at the start of a wide row) */
+.pr-flow{ --k:4; display:flex; flex-wrap:wrap; justify-content:center; gap:24px; }
+.pr-flow > li{ display:flex; flex:0 0 calc((100% - (var(--k) - 1) * 24px) / var(--k) - .5px); min-width:0; }
+@container (max-width:1099px){ .pr-flow{ --k:3; } }
+@container (max-width:799px){ .pr-flow{ --k:2; } }
+/* one or two cards beside their rows (or beside their descriptions) */
+.pr-mix{ display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:24px; align-items:start; }
+.pr-mix-2{ grid-template-columns:minmax(0,624px) minmax(0,1fr); }
+.pr-mix > .pr-flow{ --k:1; justify-content:flex-start; }
+.pr-mix-2 > .pr-flow{ --k:2; }
+.pr-mix > .pr-rows{ margin-top:0; grid-template-columns:minmax(0,1fr); }
+.pr-mix > .pr-rows > .row{ border-inline-end:0; }
+@container (max-width:999px){
+  .pr-mix-2{ grid-template-columns:minmax(0,1fr); }
+  .pr-mix-2 > .pr-flow{ --k:3; justify-content:center; }
+}
+@container (max-width:720px){
+  .pr-mix{ grid-template-columns:minmax(0,1fr); }
+  .pr-mix > .pr-flow{ --k:2; justify-content:center; }
+  .pr-mix-1 > .pr-flow{ max-width:340px; }
+}
+/* text rows: a white board, two columns when wide */
+.pr-rows{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:28px; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--sh-1); overflow:hidden; }
+.pr-rows > .row{ border-bottom:0; border-top:1px solid var(--line); }
+.pr-rows > .row:nth-child(-n+2){ border-top:0; }
+.pr-rows > .row:nth-child(odd){ border-inline-end:1px solid var(--line); }
+.pr-rows-1{ grid-template-columns:minmax(0,1fr); }
+.pr-rows-1 > .row{ border-inline-end:0; }
+.pr-rows .row{ min-height:68px; }
+.pr-rows .row-t{ font:700 19px/1.4 var(--f-t); overflow-wrap:break-word; min-width:12ch; }
+.pr-rows .muted{ font:500 17px/1.4 var(--f-t); flex:0 1 38%; }
+@container (max-width:799px){
+  .pr-rows{ grid-template-columns:minmax(0,1fr); }
+  .pr-rows > .row:nth-child(odd){ border-inline-end:0; }
+  .pr-rows > .row:nth-child(2){ border-top:1px solid var(--line); }
+}
+/* names + descriptions beside one or two lone cards */
+.pr-descs{ display:flex; flex-direction:column; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sh-1); overflow:hidden; }
+.pr-dl{ position:relative; display:flex; flex-direction:column; gap:6px; padding-block:18px; padding-inline:24px; border-top:1px solid var(--line); transition:background .15s; }
+.pr-dl:first-child{ border-top:0; }
+.pr-dl:hover, .pr-dl:focus-visible{ background:var(--floor); }
+.pr-dl-n{ font:700 var(--t-row)/1.4 var(--f-t); }
+.pr-dl-d{ font:400 19px/1.65 var(--f-t); color:var(--muted); }
+.pr-dl-co{ background:var(--floor); }
+.pr-dl-co:hover, .pr-dl-co:focus-visible{ background:var(--paper); }
+/* the makers of a field */
+.pr-makers{ min-width:0; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-top:6px solid var(--red); border-radius:var(--r); box-shadow:var(--sh-1);
+  padding-block:20px 8px; padding-inline:22px; position:sticky; top:calc(env(safe-area-inset-top, 0px) + var(--pr-top, var(--nav-h)) + 100px); }
+.pr-makers .h3{ margin-bottom:8px; }
+.pr-makers li + li{ border-top:1px solid var(--line); }
+.pr-mk{ display:flex; align-items:center; gap:14px; padding-block:14px; border-radius:var(--r-s); transition:background .15s; }
+.pr-mk:hover, .pr-mk:focus-visible{ background:var(--floor); }
+.pr-mk-logo{ display:grid; place-items:center; flex:none; width:96px; height:60px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-s); padding:6px; }
+.pr-mk-logo img{ max-height:46px; width:auto; max-width:100%; object-fit:contain; }
+.pr-type{ font:800 19px/1.1 var(--f-d); color:var(--ink); text-align:center; overflow-wrap:anywhere; }
+.pr-mk-logo .pr-type{ font-size:17px; }
+.pr-mk-t{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.pr-mk-n{ font:700 18px/1.35 var(--f-t); overflow-wrap:anywhere; }
+.pr-mk-c{ font:600 17px/1.35 var(--f-t); color:var(--ink); }
+.pr-place{ display:flex; align-items:center; gap:8px; font:500 17px/1.35 var(--f-t); color:var(--muted); min-width:0; }
+.pr-place img{ width:27px; height:18px; object-fit:cover; border:1px solid var(--line); border-radius:2px; flex:none; }
+.ob .pr-place{ color:var(--muted); }
+/* the navy teaser of the six modern groups; white cards on navy keep the ink colour */
+.pr-mds{ align-items:stretch; }
+.pr-mds .mc, .b-night .pr-flow, .b-night .pr-track, .b-night .pr-res-cos{ color:var(--ink); }
+
+/* ---------- 5. search results ---------- */
+.pr-res .meta{ color:var(--ink); }
+.pr-q{ font-weight:700; }
+.pr-res-h{ margin-top:36px; margin-bottom:16px; }
+.pr-res-h + .pr-rows{ margin-top:0; }
+.pr-res-cos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.pr-none{ display:flex; flex-direction:column; gap:16px; align-items:flex-start; }
+.pr-none .empty{ width:100%; }
+
+/* ---------- 6. product page ---------- */
+.pr-det{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,460px); gap:56px; align-items:start; }
+.pr-det-main{ min-width:0; display:flex; flex-direction:column; gap:28px; }
+.pr-desc{ font:400 var(--t-lead)/1.75 var(--f-t); max-width:62ch; }
+html[dir=ltr] .pr-desc{ line-height:1.6; }
+.pr-det .facts{ max-width:760px; }
+.pr-det .facts > div{ grid-template-columns:200px minmax(0,1fr); }
+.pr-flink{ display:inline-flex; }
+.pr-flink:hover .tag, .pr-flink:focus-visible .tag{ border-color:var(--ink); }
+.pr-url{ font:600 20px/1.5 var(--f-t); }
+.pr-web{ display:inline-flex; align-items:center; gap:8px; }
+.pr-url .ic{ margin-inline-start:8px; vertical-align:-3px; }
+.pr-sup{ display:flex; flex-direction:column; gap:18px; padding:24px 28px 28px; min-width:0; }
+.pr-sup-co{ display:flex; align-items:center; gap:16px; padding:10px; margin-inline:-10px; border-radius:var(--r-s); transition:background .15s; }
+.pr-sup-co:hover, .pr-sup-co:focus-visible{ background:var(--floor); }
+.pr-sup-logo{ display:grid; place-items:center; flex:none; width:130px; height:84px; border:1px solid var(--line); border-radius:var(--r-s); padding:8px; background:var(--paper); }
+.pr-sup-logo img{ max-height:66px; width:auto; max-width:100%; object-fit:contain; }
+.pr-sup-names{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+.pr-sup-ar, .pr-sup-n{ font:700 var(--t-row)/1.4 var(--f-t); overflow-wrap:anywhere; }
+.pr-sup-lt{ font:500 17px/1.4 var(--f-t); color:var(--muted); overflow-wrap:anywhere; }
+.pr-sup-about{ font:400 19px/1.7 var(--f-t); }
+.pr-sup-r{ display:flex; flex-direction:column; align-items:flex-start; gap:8px; min-width:0; max-width:100%; }
+.pr-sup-r .cf{ max-width:100%; }
+.pr-sup-r .mail{ font-size:20px; }
+.pr-mcf{ flex-direction:column; align-items:flex-start; gap:8px; }
+.pr-mcf + .pr-mcf{ margin-top:10px; }
+.pr-sup-addr{ font:500 19px/1.55 var(--f-t); overflow-wrap:anywhere; }
+.pr-web{ font:600 20px/1.4 var(--f-t); }
+
+/* ---------- 7. modern industries ---------- */
+.md-flow{ --k:3; }
+@container (max-width:860px){ .md-flow{ --k:2; } }
+.md-card{ display:flex; flex-direction:column; width:100%; min-width:0; background:var(--paper); color:var(--ink); border-radius:var(--r); overflow:hidden; box-shadow:var(--sh-1);
+  transition:transform .2s var(--ease), box-shadow .2s; }
+.md-card:hover, .md-card:focus-visible{ transform:translateY(-6px); box-shadow:var(--sh-2); }
+.md-pic{ display:block; aspect-ratio:16/10; overflow:hidden; background:var(--paper); border-bottom:4px solid var(--red); }
+.md-pic img{ width:100%; height:100%; object-fit:contain; padding:10px; transition:transform .5s var(--ease); }
+.md-card:hover .md-pic img{ transform:scale(1.05); }
+.md-body{ display:flex; flex-direction:column; gap:8px; padding:18px 22px 22px; min-width:0; }
+.md-t{ font:700 21px/1.45 var(--f-t); }
+.md-en{ font:500 17px/1.4 var(--f-t); color:var(--muted); }
+.md-desc{ font:400 19px/1.7 var(--f-t); color:var(--muted); }
+.md-rows{ margin-top:28px; }
+.md-flow + .md-rows{ margin-top:28px; }
+.pr-main > .md-rows:first-child{ margin-top:0; }
+.md-row{ justify-content:space-between; }
+.md-row .ic{ color:var(--red); flex:none; }
+.md-row-x{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.md-row-t{ font:700 19px/1.45 var(--f-t); }
+.md-row-en{ font:500 17px/1.4 var(--f-t); color:var(--muted); }
+/* item page: reading column + contact card */
+.md-det{ display:grid; grid-template-columns:minmax(0,760px) minmax(0,420px); justify-content:space-between; gap:56px; align-items:start; }
+.md-read[dir=rtl]{ line-height:1.95; text-align:right; }
+.md-read p, .md-read li{ overflow-wrap:anywhere; }
+.md-read > h3:first-child{ margin-top:0; }
+.md-list{ display:flex; flex-direction:column; gap:10px; }
+.md-list li{ position:relative; padding-inline-start:26px; }
+.md-list li::before{ content:""; position:absolute; inset-inline-start:4px; top:.8em; width:9px; height:9px; border-radius:50%; background:var(--red); }
+.md-aside{ position:sticky; top:calc(env(safe-area-inset-top, 0px) + var(--pr-top, var(--nav-h)) + 24px); }
+
+/* ---------- 8. breakpoints ---------- */
+@media (max-width:1699px){
+  .pr-cat{ grid-template-columns:minmax(0,1fr) 320px; gap:32px; }
+  .pr-det{ grid-template-columns:minmax(0,1fr) minmax(0,420px); gap:44px; }
+  .md-det{ grid-template-columns:minmax(0,1fr) minmax(0,400px); gap:44px; }
+}
+@media (max-width:1180px){
+  .pr-cat{ grid-template-columns:minmax(0,1fr); gap:28px; }
+  .pr-makers{ position:static; }
+  .pr-makers ul{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:24px; }
+  .pr-makers li + li{ border-top:0; }
+  .pr-makers li{ border-bottom:1px solid var(--line); }
+  .pr-det, .md-det{ grid-template-columns:minmax(0,1fr); }
+  .md-aside{ position:static; }
+  .pr-fan{ max-width:620px; }
+  .pr-ob .ob-pic{ justify-content:center; }
+}
+@media (max-width:960px){
+  .pr-deck{ position:static; box-shadow:none; padding-block:12px 4px; }
+  .pr-belt{ padding-block:8px 0; }
+  .pr-ctl{ position:static; height:auto; justify-content:center; gap:20px; margin-top:6px; }
+  .pr-arw{ width:56px; height:56px; }
+  .pr-track{ gap:16px; }
+  .pr-track > li{ width:250px; }
+  .pr-fan{ max-width:520px; padding-block:14px 30px; }
+  .pr-fan-i{ flex-basis:200px; }
+}
+@media (max-width:760px){
+  /* phones: picture cards become a swipeable strip; the makers a strip of tiles */
+  .pr-main > .pr-flow, .pr-mix > .pr-flow, .pr-res .pr-flow{ flex-wrap:nowrap; justify-content:flex-start; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:12px; gap:14px;
+    scrollbar-width:thin; overscroll-behavior-x:contain; }
+  .pr-main > .pr-flow > li, .pr-mix > .pr-flow > li{ flex:0 0 250px; scroll-snap-align:start; }
+  .pr-mix-1 > .pr-flow{ max-width:none; }
+  .pr-main > .md-flow > li{ flex:0 0 280px; }
+  .pr-rows{ margin-top:18px; }
+  .pr-rows .row{ flex-wrap:wrap; gap:6px 12px; }
+  .pr-rows .row-t{ flex:1 1 100%; }
+  .pr-rows .muted{ flex:1 1 auto; }
+  .pr-makers{ padding-inline:16px; }
+  .pr-makers ul{ display:flex; overflow-x:auto; gap:12px; padding-bottom:10px; scrollbar-width:thin; }
+  .pr-makers li{ flex:0 0 230px; border:1px solid var(--line); border-radius:var(--r-s); }
+  .pr-mk{ flex-direction:column; align-items:flex-start; padding:12px; height:100%; }
+  .pr-mk-logo{ width:100%; height:64px; }
+  .pr-fan{ padding-block:10px 26px; }
+  .pr-fan-i{ flex-basis:150px; margin-inline:-12px; }
+  .pr-fan .pstamp{ top:10px; inset-inline-start:10px; }
+  .pr-fan .frame{ padding:5px; }
+  .pr-sup{ padding:20px 18px 22px; }
+  .pr-sup-logo{ width:104px; height:72px; }
+  .pr-logob{ padding:24px 20px; }
+  .pr-det .facts > div{ grid-template-columns:minmax(0,1fr); }
+  .pr-res-cos{ grid-template-columns:minmax(0,1fr); }
+  .md-pic{ aspect-ratio:16/10; }
+}
+@media (max-width:400px){
+  .pr-fan-i{ flex-basis:128px; }
+}
+/* phones fold long row lists (the button exists only there) */
+.pr-fold-w{ display:none; }
+@media (max-width:760px){
+  .pr-fold-w{ display:block; }
+  .pr-fold-w .more{ margin-top:16px; }
+  .pr-fold-w .btn{ width:100%; }
+  .pr-fold:not(.open) > .row:nth-child(n+6){ display:none; }
+  .pr-rows .row-t{ display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+  .pr-rows .muted{ flex:1 1 0; min-width:0; }
+  .pr-rows .md-row{ flex-wrap:nowrap; }
+  .pr-mds{ display:flex; overflow-x:auto; gap:14px; padding-bottom:12px; scroll-snap-type:x mandatory; scrollbar-width:thin; }
+  .pr-mds > .mc{ flex:0 0 280px; scroll-snap-align:start; }
+}
+@media (prefers-reduced-motion:reduce){
+  .pr-band .shead h2::after{ transition:none; }
+}
