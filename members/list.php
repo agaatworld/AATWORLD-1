@@ -44,6 +44,7 @@ function clean_name($file) {
     $s = preg_replace('/(\p{L})\d+$/u', '$1', $s);        // drop a trailing copy number ("Salmi1")
     $s = preg_replace('/\s+\d+$/u', '', $s);             // drop a trailing " 1" copy number ("Sami El Khateeb 1")
     $s = preg_replace('/\s+/u', ' ', $s);
+    $s = preg_replace('/\b(Dr|Prof)\s/u', '$1. ', $s);   // "Dr Nidal" -> "Dr. Nidal"
     return trim($s);
 }
 
@@ -61,7 +62,15 @@ if (is_dir($base)) {
         $members[] = $m;
     }
 }
-usort($members, function ($a, $b) { return strnatcasecmp($a['name'], $b['name']); });
+// the newest photos folder (e.g. photos/2026/10/) comes first: the club's new members are seen at once; then everyone by name
+$latest = '';
+foreach ($members as $m) { if (preg_match('#^members/photos/(\d{4}/\d{2})/#', $m['photo'], $g) && $g[1] > $latest) { $latest = $g[1]; } }
+usort($members, function ($a, $b) use ($latest) {
+    $na = $latest !== '' && strpos($a['photo'], 'members/photos/' . $latest . '/') === 0;
+    $nb = $latest !== '' && strpos($b['photo'], 'members/photos/' . $latest . '/') === 0;
+    if ($na !== $nb) { return $na ? -1 : 1; }
+    return strnatcasecmp($a['name'], $b['name']);
+});
 
 $out = json_encode(['count' => count($members), 'members' => $members], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 @file_put_contents($cache, $out, LOCK_EX);
