@@ -17,6 +17,8 @@ import json as _j
 _U=_j.load(open('mark/user_symbols.json'))
 PAIRP,PW,PH=_U['pair']['d'],_U['pair']['w'],_U['pair']['h']
 ONEP,OW,OH=_U['one']['d'],_U['one']['w'],_U['one']['h']
+# owner (25 Oct 2026): the main AAT symbol is the SINGLE swash, not the overlapping pair -> arcs and pattern use the single swash
+PAIRP,PW,PH=ONEP,OW,OH
 logo_red=open('aat-logo-red.svg').read(); logo_white=open('aat-logo-white.svg').read()
 def inner(svg): return svg[svg.index('>')+1:svg.rindex('</svg>')]
 # vCard QR
@@ -32,7 +34,7 @@ def sym(x,y,s,rot=0,fill='#D21F26',flip=False):
     return '<g transform="translate(%g %g) rotate(%g) scale(%g %g) translate(%g %g)"><path fill="%s" d="%s"/></g>'%(x,y,rot,-s if flip else s,s,-W/2,-H/2,fill,SWP)
 # ---- WHITE side ----
 import math as m2
-PD=-27.8   # pair's main axis (bottom-left -> top-right)
+PD=-33.0   # single swash's main axis (curl at bottom-left -> tip at top-right)
 def pair(x,y,sc,rot,fill='#D21F26'):
     return '<g transform="translate(%g %g) rotate(%g) scale(%g) translate(%g %g)"><path fill="%s" d="%s"/></g>'%(x,y,rot,sc,-PW/2,-PH/2,fill,PAIRP)
 def arc_at(cx,cy,R,a0,a1,n,sc,sgn):
@@ -41,10 +43,10 @@ def arc_at(cx,cy,R,a0,a1,n,sc,sgn):
         t=m2.radians(a0+(a1-a0)*i/(n-1))
         x=cx+sgn*R*m2.cos(t); y=cy+sgn*R*m2.sin(t)
         tang=m2.degrees(t)+90
-        o+=pair(x,y,sc,tang-PD)
+        o+=pair(x,y,sc,0)   # single swash: every one upright, same direction as in the logo
     return o
-arc=arc_at(0,0,255,16,74,3,0.085,1)
-arc2=arc_at(CW,CH,415,14,76,4,0.085,-1)
+arc=arc_at(0,0,255,16,74,3,0.06,1)
+arc2=arc_at(CW,CH,415,14,76,4,0.06,-1)
 front=('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">'%(CW,CH,CW,CH)+
  '<rect width="%d" height="%d" fill="#fff"/>'%(CW,CH)+arc+arc2+
  '<g transform="translate(%g 52) scale(%g)" fill="#D21F26">%s</g>'%((CW-390)/2,390/413,inner(logo_red))+

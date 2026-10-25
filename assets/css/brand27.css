@@ -1,4 +1,4 @@
-/* AAT Brand Kit 2027 look (owner, 25 Oct 2026): colours and surfaces from the brand kit, the AAT swash-pair symbol used
+/* AAT Brand Kit 2027 look (owner, 25 Oct 2026): colours and surfaces from the brand kit, the AAT single swash (the main symbol) used
    very lightly (a faint pattern and one large faint watermark in the red openings and the footer). FONTS ARE NOT CHANGED.
    Loaded after app.css and mag.css; remove this one <link> from index.html to return to the previous look. */
 :root:not([data-theme="dark"]) {
@@ -16,7 +16,7 @@ body::before { opacity: 0 !important; }
 #hdr .hd-nav a[aria-current="page"] { color: var(--red); }
 #hdr .hd-ind { height: 3px; background: var(--red); }
 
-/* red openings (home and every inner page): flat AAT red, the swash-pair pattern barely visible, one big faint swash pair at the end side */
+/* red openings (home and every inner page): flat AAT red, the single-swash pattern barely visible, one big faint single swash at the end side */
 #app header.ph:not(.co):not(.mz-ph), #app section.hero {
   background: url("../img/brand/aat-pattern-red.svg") 0 0 / 96px 96px repeat, #D21F26 !important;
   box-shadow: inset 0 -6px 0 var(--aat-deep); isolation: isolate; overflow: hidden; }
@@ -24,7 +24,7 @@ body::before { opacity: 0 !important; }
 #app header.ph:not(.co):not(.mz-ph)::after, #app section.hero::after {
   content: "" !important; display: block !important; position: absolute; z-index: -1; pointer-events: none;
   inset-block: 8% 6%; inset-inline-end: 3%; width: min(40vw, 540px);
-  background: url("../img/brand/aat-pair-white.svg") center / contain no-repeat; opacity: .035; }
+  background: url("../img/brand/aat-swash-white.svg") center / contain no-repeat; opacity: .035; }
 [dir="rtl"] #app header.ph:not(.co):not(.mz-ph)::after, [dir="rtl"] #app section.hero::after { transform: scaleX(-1); }
 #app section.hero::after { inset-inline-end: auto; inset-inline-start: 2%; opacity: .035; }
 #app header.ph:not(.co):not(.mz-ph) .h1 { text-shadow: none; }
