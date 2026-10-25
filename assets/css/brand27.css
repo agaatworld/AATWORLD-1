@@ -1,5 +1,5 @@
-/* AAT Brand Kit 2027 look (owner, 25 Oct 2026): colours and surfaces from the brand kit, the AAT single swash (the main symbol) used
-   very lightly (a faint pattern and one large faint watermark in the red openings and the footer). FONTS ARE NOT CHANGED.
+/* AAT Brand Kit 2027 look (owner, 25 Oct 2026): colours and surfaces from the brand kit. FONTS ARE NOT CHANGED.
+   Owner (25 Oct): NO swash symbol on the website at all — no pattern, no watermark.
    Loaded after app.css and mag.css; remove this one <link> from index.html to return to the previous look. */
 :root:not([data-theme="dark"]) {
   --red: #D21F26; --red-2: #D21F26; --red-t: #C4141C;
@@ -16,17 +16,10 @@ body::before { opacity: 0 !important; }
 #hdr .hd-nav a[aria-current="page"] { color: var(--red); }
 #hdr .hd-ind { height: 3px; background: var(--red); }
 
-/* red openings (home and every inner page): flat AAT red, the single-swash pattern barely visible, one big faint single swash at the end side */
-#app header.ph:not(.co):not(.mz-ph), #app section.hero {
-  background: url("../img/brand/aat-pattern-red.svg") 0 0 / 96px 96px repeat, #D21F26 !important;
-  box-shadow: inset 0 -6px 0 var(--aat-deep); isolation: isolate; overflow: hidden; }
+/* red openings (home and every inner page): flat AAT red, no symbol, no pattern */
+#app header.ph:not(.co):not(.mz-ph), #app section.hero { background: #D21F26 !important; box-shadow: inset 0 -6px 0 var(--aat-deep); }
 #app header.ph:not(.co):not(.mz-ph) { margin-top: 0; padding-top: clamp(40px, 5.2vw, 76px); }
-#app header.ph:not(.co):not(.mz-ph)::after, #app section.hero::after {
-  content: "" !important; display: block !important; position: absolute; z-index: -1; pointer-events: none;
-  inset-block: 8% 6%; inset-inline-end: 3%; width: min(40vw, 540px);
-  background: url("../img/brand/aat-swash-white.svg") center / contain no-repeat; opacity: .035; }
-[dir="rtl"] #app header.ph:not(.co):not(.mz-ph)::after, [dir="rtl"] #app section.hero::after { transform: scaleX(-1); }
-#app section.hero::after { inset-inline-end: auto; inset-inline-start: 2%; opacity: .035; }
+#app header.ph:not(.co):not(.mz-ph)::after, #app section.hero::after { content: none !important; display: none !important; }
 #app header.ph:not(.co):not(.mz-ph) .h1 { text-shadow: none; }
 
 /* bands: white and the brand's silk sand, a thin warm line between sections */
@@ -39,9 +32,9 @@ body::before { opacity: 0 !important; }
 .btn-red { box-shadow: 0 10px 24px -12px rgba(210, 31, 38, .7); }
 .btn-red:hover { background: #C4141C; }
 
-/* dark boxes and the footer: brand ink, with the swash pattern at 5 % and a red rule on top */
-.cta { background: url("../img/brand/aat-pattern-ink.svg") 0 0 / 96px 96px repeat, #1A1314; }
-#ftr { background: url("../img/brand/aat-pattern-ink.svg") 0 0 / 96px 96px repeat, #1A1314; border-top: 6px solid #D21F26; }
+/* dark boxes and the footer: brand ink with a red rule on top */
+.cta { background: #1A1314; }
+#ftr { background: #1A1314; border-top: 6px solid #D21F26; }
 .ft-nl, .ft-b { border-color: #3A2E30; }
 
 /* AAT Business Club: gold is kept for the club (brand kit: anniversaries, awards, the Business Club) */
