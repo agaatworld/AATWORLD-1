@@ -540,7 +540,7 @@ body:has(.fbx) #hdr, body.is-mag #hdr, body.is-mag #ftr { display: none !importa
 
 /* ===== speed (update 16) ===== */
 /* decorations pause while the page scrolls, so scrolling stays smooth */
-html.is-scrolling *, html.is-scrolling *::before, html.is-scrolling *::after { animation-play-state: paused !important; }
+/* (update 38) the rule that paused every animation while scrolling is removed: switching it on and off restyled the whole page at the start and end of every scroll (the main lag on slow computers); the moving parts pause in mag.js instead */
 /* slow computers: no moving decorations, no costly glow filters (content, ads and the map stay) */
 html.lite .mz-wbg i, html.lite .mz-blob, html.lite .mz-L1 .mz-bpat::after, html.lite #app::before, html.lite .mz-av img, html.lite .mz-adp img:only-child, html.lite .mz-rglow, html.lite .xc-f .fl, html.lite .btn-adv::after, html.lite .btn-adv .ic, html.lite .mz-cta::after, html.lite .mz-ad::after { animation: none !important; }
 html.lite .tm-glow, html.lite .mz-wbg i { filter: none !important; }
@@ -595,8 +595,7 @@ body.is-mag #chat { display: none !important; }
 .ft-b bdi { white-space: nowrap; }
 .ft-r { white-space: nowrap; }
 /* while scrolling, every animation pauses to keep the page smooth, except the "45 years" counter and the trade map (owner's request) */
-html.is-scrolling .yrs, html.is-scrolling .yrs *, html.is-scrolling .yrs *::before, html.is-scrolling .yrs *::after,
-html.is-scrolling .live-map, html.is-scrolling .live-map *, html.is-scrolling .live-map *::before, html.is-scrolling .live-map *::after { animation-play-state: running !important; }
+
 /* the apps as icons */
 ul.apps li, .ft ul.apps li { padding: 0; background: none; border-radius: 0; }
 .app-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: 0 4px 12px -6px rgba(0, 0, 0, .45); }
@@ -715,3 +714,13 @@ html:not(.js) #app > .view { opacity: 0; animation: aat-show 0s 6s forwards; }
 #app .pr-grp > .h2 { margin: 0 0 24px; display: block; }
 #app .pr-n { vertical-align: middle; margin-inline-start: 10px; }
 #app .pr-n { display: inline-grid; place-items: center; min-width: 40px; height: 34px; padding: 0 10px; border-radius: 999px; background: #D21F26; color: #fff; font-size: 18px; font-weight: 800; }
+
+/* ---------- update 38: smooth scrolling (owner: "all lag!") — same look, less work for the browser ----------
+   Every section is a solid band now, so the full-screen moving background (canvas of trade icons), the fixed colour wash,
+   the masked icon layer and the page-tall colour glows were hidden behind the bands but still redrawn on every scroll. */
+body::before, body::after, #app::before { content: none !important; display: none !important; }
+html, body, html.mz-bgon, html.mz-bgon body { background: var(--bg, #FBFAF8) !important; background-attachment: scroll !important; }
+/* the exhibitions' logo strip was the one place where the glow showed through: it keeps the same soft warm light on its own */
+#app section.sec.trust { background: radial-gradient(55% 140% at 62% 100%, rgba(232, 137, 12, .13), transparent 70%), #F9F5EF !important; }
+/* the moving strip at the top of the home page keeps the same faint warm pink it had from the old background */
+#app section.mz-top { background: radial-gradient(40% 110% at 16% 45%, rgba(236, 29, 37, .07), transparent 70%), #FFF3EE; }

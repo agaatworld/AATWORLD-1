@@ -143,9 +143,10 @@
   function headerScroll() {
     /* opening the magazine from any link goes full screen (browsers only allow this on a click) */
     doc.addEventListener("click", function (ev) { var a = ev.target.closest && ev.target.closest('a[href^="#flip"], a[href="#magazine"].hero-cover'); if (!a) return; var el = doc.documentElement; try { if (!doc.fullscreenElement && !doc.webkitFullscreenElement) { if (el.requestFullscreen) el.requestFullscreen().catch(function () {}); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } } catch (e) { /* not allowed */ } }, true);
-    var last = W.scrollY, tick = false, bar = $("#progress");
+    var last = W.scrollY, tick = false, bar = $("#progress"), hAt = 0, hMax = 0;
     function upd() {
-      tick = false; var y = W.scrollY, h = root.scrollHeight - W.innerHeight;
+      /* the page height is read at most twice a second, not on every scroll frame (reading it forced a full layout each frame) */
+      tick = false; var y = W.scrollY, now = Date.now(); if (now - hAt > 500) { hAt = now; hMax = root.scrollHeight - W.innerHeight; } var h = hMax;
       if (bar) bar.style.transform = "scaleX(" + (h > 0 ? Math.min(y / h, 1) : 0).toFixed(4) + ")";
       /* the top bar stays put: same size, always visible, no hiding or shrinking while scrolling */
       var open = ($("#mnav") && !$("#mnav").hidden) || ($(".lang-m") && !$(".lang-m").hidden);

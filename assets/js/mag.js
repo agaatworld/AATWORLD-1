@@ -595,6 +595,9 @@
     "M17 2l14 7v16l-14 7-14-7V9zM3 9l14 7 14-7M17 16v16"
   ];
   function bg() {
+    /* update 38: the full-screen moving background is hidden behind the solid section bands, yet it was redrawn all the time
+       (and on every scroll) — switched off for smooth scrolling on slow computers */
+    return;
     if (doc.getElementById("mz-bg") || !W.Path2D) return;
     var cv = doc.createElement("canvas"); cv.id = "mz-bg"; cv.setAttribute("aria-hidden", "true");
     doc.body.insertBefore(cv, doc.body.firstChild); root.classList.add("mz-bgon");
@@ -739,7 +742,11 @@
     function up(ev) { if (ev) ev.preventDefault(); W.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" }); }
     top.addEventListener("click", up); fl.addEventListener("click", function (ev) { if (/^#?(home)?$/.test(location.hash)) up(ev); });
     var tick = 0;
-    function upd() { tick = 0; var y = W.pageYOffset || 0, hdr = doc.getElementById("hdr"), lv = doc.querySelector("#app .live"), thr = lv ? lv.getBoundingClientRect().bottom + y - 70 : 720, past = y > thr;
+    /* the threshold is measured once per page (and on resize), not on every scroll frame: measuring forced a full layout each frame */
+    var thrAt = -1, thrV = 720;
+    function thrNow(y) { var k = location.hash + "|" + W.innerWidth; if (thrAt !== k) { thrAt = k; var lv = doc.querySelector("#app .live"); thrV = lv ? lv.getBoundingClientRect().bottom + y - 70 : 720; } return thrV; }
+    W.addEventListener("resize", function () { thrAt = -1; }); W.addEventListener("hashchange", function () { thrAt = -1; });
+    function upd() { tick = 0; var y = W.pageYOffset || 0, hdr = doc.getElementById("hdr"), thr = thrNow(y), past = y > thr;
        root.classList.toggle("mz-past", past);
       root.classList.toggle("mz-float", past && !!hdr && hdr.classList.contains("hide")); root.classList.toggle("mz-totop", y > 700); }
     function req() { if (!tick) tick = W.requestAnimationFrame(function () { W.setTimeout(upd, 0); }); }
