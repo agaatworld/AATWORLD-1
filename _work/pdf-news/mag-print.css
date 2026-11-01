@@ -43,3 +43,22 @@ body.aatpdf > :not(#book) { display: none !important; }
 #book .endp::after { content: " ■"; color: var(--red); font-size: .8em; }
 /* news pictures */
 #book .nhead .fig, #book .nhead .fx { margin: 0 0 .5em; border-radius: 3px; }
+
+/* ---- 2 Nov: 13 pt text, tighter lines, small news items filling the end of a page ---- */
+#book .flow { line-height: 1.62 !important; }
+#book .dek { line-height: 1.55; font-size: 1.06em; }
+#book .pq { font-size: 1.12em; line-height: 1.55; margin: .3em 0 .6em; padding: .4em 1em .5em; }
+#book .flow p { margin-bottom: .45em !important; }
+#book .fnh { break-inside: avoid; margin: .9em 0 .4em; padding-top: .7em; border-top: 3px solid var(--red); }
+#book .fnh .fnk { display: inline-block; font-family: var(--kufi); font-weight: 800; font-size: .8em; color: #fff; background: var(--red); padding: 1px 10px; border-radius: 2px; margin-bottom: .45em; }
+#book .fnh .fig, #book .fnh .fx { border-radius: 3px; margin-bottom: .4em; }
+#book .fnh b { display: block; font-family: var(--kufi); font-weight: 800; font-size: 1.05em; line-height: 1.5; color: var(--deep, #7A0A10); }
+
+/* exactly 13 pt body text (owner, 2 Nov): the magazine scales paragraphs itself, so the size is set on the text */
+#book .flow p, #book .flow .bp { font-size: 17.33px !important; }
+#book .flow h3 { font-size: 19px !important; }
+#book .dek { font-size: 18.5px !important; }
+#book .titimg .ahb { background: none; border: 0; padding: 0; margin: 0 0 10px; }
+/* pull quote: one light line — the quote mark and the words together (owner, 2 Nov) */
+#book .pq { border-top: 1px solid #D9CFC7 !important; border-bottom: 1px solid #D9CFC7 !important; padding: .35em .6em !important; margin: .4em 0 .6em !important; font-size: 18.5px !important; font-weight: 700 !important; line-height: 1.6 !important; text-align: center; }
+#book .pq::before { display: inline !important; font-size: 1.5em !important; line-height: 0 !important; vertical-align: -.2em; margin: 0 0 0 .25em !important; }

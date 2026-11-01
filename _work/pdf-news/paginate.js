@@ -29,7 +29,7 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
     var fr = f.getBoundingClientRect(), L = lim(s), kids = f.children;
     for (var i = 0; i < kids.length; i++) {
       var rs = kids[i].getClientRects();
-      for (var j = 0; j < rs.length; j++) { var r = rs[j]; if (r.height === 0) continue; if (r.left < fr.left - 1 || r.right > fr.right + 1 || r.bottom > L + 1) return false; }
+      for (var j = 0; j < rs.length; j++) { var r = rs[j]; if (r.height === 0) continue; if (r.left < fr.left - 1 || r.right > fr.right + 1 || r.bottom > L + 1) { window.LASTFAIL = [kids[i].className || kids[i].tagName, Math.round(r.left - fr.left), Math.round(fr.right - r.right), Math.round(r.bottom - L)].join(' '); return false; } }
     }
     return true;
   }
@@ -99,9 +99,9 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
       if (room > area * 0.36) {
         var fw = f.getBoundingClientRect().width;
         /* try: picture up to 230px with the standfirst, then a smaller picture with the standfirst as a normal paragraph */
-        var tries = [[230, true], [170, false]];
+        var tries = [[200, true], [150, false]];
         for (var q = 0; q < tries.length; q++) {
-          var im = fig(a.img, r, fw, 150, tries[q][0], 'inim'), added = [];
+          var im = fig(a.img, r, fw, 120, tries[q][0], 'inim'), added = [];
           var head = node('<div class="inhd"><h1>' + t + '</h1>' + byline(P.by) + im.html + '</div>'); f.appendChild(head); added.push(head);
           var blocks = P.blocks.slice();
           if (P.dek) { if (tries[q][1]) { var dk = node(dekHtml(P.dek)); f.appendChild(dk); added.push(dk); } else blocks.unshift(para(P.dek)); }
@@ -116,20 +116,45 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
         if (q < tries.length) return;
       }
     }
-    if (r < 1.25) {  /* tall or square picture: beside the red title box */
-      var im1 = fig(a.img, r, W / 2, 400, 560);
+    if (a.titleInImg) {  /* the picture carries the title (owner: do not write it twice): the picture is the opening */
+      var im0 = fig(a.img, r, W, 220, 330, 'hero');
+      s = sheet('art L-feature titimg', im0.html + '<div class="pad" style="top:' + (im0.h + 22) + 'px">' + (P.by ? '<header class="ah ahb">' + byline(P.by) + '</header>' : '') + '<div class="flow">' + dekHtml(P.dek) + '</div></div>');
+    } else if (r < 1.25) {  /* tall or square picture: beside the red title box */
+      var im1 = fig(a.img, r, W / 2, 300, 360);
       s = sheet('art L-split', '<div class="top" style="height:' + im1.h + 'px"><div class="im">' + im1.html + '</div><div class="tt"><h1>' + t + '</h1>' + byline(P.by) + '</div></div><div class="pad" style="top:' + (im1.h + 26) + 'px"><div class="flow">' + dekHtml(P.dek) + '</div></div>');
       fitTitle(s.querySelector('.tt'));
     } else if (r <= 2) {  /* normal picture: big on top, title card over its lower edge */
-      var im2 = fig(a.img, r, W, 300, 470, 'hero');
+      var im2 = fig(a.img, r, W, 230, 310, 'hero');
       s = sheet('art L-feature', im2.html + '<div class="pad" style="top:' + (im2.h - 64) + 'px"><header class="ah"><h1>' + t + '</h1>' + byline(P.by) + '</header><div class="flow">' + dekHtml(P.dek) + '</div></div>');
     } else {  /* wide picture: strip across the page under the title */
-      var im3 = fig(a.img, r, W, 200, 400, 'strip');
+      var im3 = fig(a.img, r, W, 160, 240, 'strip');
       s = sheet('art L-band', '<div class="pad"><header class="ah"><h1>' + t + '</h1>' + byline(P.by) + im3.html + '</header><div class="flow">' + dekHtml(P.dek) + '</div></div>');
     }
     s = pour(s, P.blocks.slice(), cont, run);
   });
 
+  /* fill the space left on the last page with short news items that fit whole (owner, 2 Nov 2026: no white space) */
+  var used = [];
+  if (D.fill && D.fill.length && s) {
+    var f0 = s.querySelector('.flow'); f0.classList.add('bal');
+    var cw = (f0.getBoundingClientRect().width - 30) / 2, order = D.fill.slice().sort(function (x, y) { return y.len - x.len; }), added = true;
+    while (added) {
+      added = false;
+      for (var z = 0; z < order.length; z++) {
+        var n = order[z]; if (used.indexOf(n.id) > -1) continue;
+        var ok = false;
+        /* picture 100-140 px, then 70-90 px, then no picture */
+        for (var v = 0; v < 3 && !ok; v++) {
+          var pic = v === 2 ? '' : fig(n.img, n.ratio || 1.5, cw, v ? 70 : 100, v ? 90 : 140).html, els = [];
+          var hd = node('<div class="fnh"><span class="fnk">خبر</span>' + pic + '<b>' + iso(n.title) + '</b></div>'); f0.appendChild(hd); els.push(hd);
+          n.body.forEach(function (p, j) { var e = node(para(p, j === n.body.length - 1)); f0.appendChild(e); els.push(e); });
+          if (fits(s)) ok = true; else els.forEach(function (e) { f0.removeChild(e); });
+        }
+        if (ok) { used.push(n.id); added = true; break; }
+      }
+    }
+  }
+  document.body.setAttribute('data-used', used.join(','));
   if (D.news && D.news.length) {
   /* news: the magazine's briefs pages, every item with its own picture at its real proportions */
     var briefs = [];
