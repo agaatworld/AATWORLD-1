@@ -61,13 +61,13 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
   }
   /* the title in a fixed box gets smaller until title + writer's line fit inside the box (never below 22px) */
   function fitTitle(box) {
-    var h = box.querySelector('h1'), px = parseFloat(getComputedStyle(h).fontSize);
+    var h = box.querySelector('h1') || box.querySelector('.tdek'); if (!h) return; var px = parseFloat(getComputedStyle(h).fontSize);
     function over() {
       var cs = getComputedStyle(box), avail = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom), used = 0;
       [].forEach.call(box.children, function (c) { var m = getComputedStyle(c); used += c.offsetHeight + parseFloat(m.marginTop) + parseFloat(m.marginBottom); });
       return used > avail;
     }
-    while (over() && px > 22) { px -= 1; h.style.fontSize = px + 'px'; h.style.lineHeight = '1.45'; }
+    while (over() && px > 16) { px -= 1; h.style.fontSize = px + 'px'; h.style.lineHeight = '1.5'; }
   }
   function prep(a) {
     var p = a.body.slice(), by = '', dek = '';
@@ -90,7 +90,7 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
   var s = null;
   D.arts.forEach(function (a, i) {
     var t = iso(a.title), r = a.ratio || 1.5, P = prep(a), run = '<div class="runhd"><b>' + (a.kind === 'news' ? 'أخبار' : 'مقالات') + '</b><span>' + t + '</span></div>';
-    var cont = 'art ' + (r < 1.25 ? 'L-split' : r <= 2 ? 'L-feature' : 'L-band') + ' cont';
+    var cont = 'art L-split cont';
     /* next article on the same page, when the last page of the previous one is less than ~60 % full */
     if (s) {
       var f = s.querySelector('.flow');
@@ -116,20 +116,12 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
         if (q < tries.length) return;
       }
     }
-    if (a.titleInImg) {  /* the picture carries the title (owner: do not write it twice): the picture is the opening */
-      var im0 = fig(a.img, r, W, 220, 330, 'hero');
-      s = sheet('art L-feature titimg', im0.html + '<div class="pad" style="top:' + (im0.h + 22) + 'px">' + (P.by ? '<header class="ah ahb">' + byline(P.by) + '</header>' : '') + '<div class="flow">' + dekHtml(P.dek) + '</div></div>');
-    } else if (r < 1.25) {  /* tall or square picture: beside the red title box */
-      var im1 = fig(a.img, r, W / 2, 300, 360);
-      s = sheet('art L-split', '<div class="top" style="height:' + im1.h + 'px"><div class="im">' + im1.html + '</div><div class="tt"><h1>' + t + '</h1>' + byline(P.by) + '</div></div><div class="pad" style="top:' + (im1.h + 26) + 'px"><div class="flow">' + dekHtml(P.dek) + '</div></div>');
-      fitTitle(s.querySelector('.tt'));
-    } else if (r <= 2) {  /* normal picture: big on top, title card over its lower edge */
-      var im2 = fig(a.img, r, W, 230, 310, 'hero');
-      s = sheet('art L-feature', im2.html + '<div class="pad" style="top:' + (im2.h - 64) + 'px"><header class="ah"><h1>' + t + '</h1>' + byline(P.by) + '</header><div class="flow">' + dekHtml(P.dek) + '</div></div>');
-    } else {  /* wide picture: strip across the page under the title */
-      var im3 = fig(a.img, r, W, 160, 240, 'strip');
-      s = sheet('art L-band', '<div class="pad"><header class="ah"><h1>' + t + '</h1>' + byline(P.by) + im3.html + '</header><div class="flow">' + dekHtml(P.dek) + '</div></div>');
-    }
+    /* opening (owner, 2 Nov): the picture on the left half, the title on the right half, at the picture's height */
+    var im1 = fig(a.img, r, W / 2, 230, 340), right;
+    if (a.titleInImg) right = byline(P.by) + (P.dek ? '<p class="tdek">' + iso(P.dek) + '</p>' : '');   /* the picture already carries the title */
+    else right = '<h1>' + t + '</h1>' + byline(P.by);
+    s = sheet('art L-split', '<div class="top" style="height:' + im1.h + 'px"><div class="im">' + im1.html + '</div><div class="tt">' + right + '</div></div><div class="pad" style="top:' + (im1.h + 24) + 'px"><div class="flow">' + (a.titleInImg ? '' : dekHtml(P.dek)) + '</div></div>');
+    fitTitle(s.querySelector('.tt'));
     s = pour(s, P.blocks.slice(), cont, run);
   });
 

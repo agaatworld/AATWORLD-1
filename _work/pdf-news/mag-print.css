@@ -62,3 +62,8 @@ body.aatpdf > :not(#book) { display: none !important; }
 /* pull quote: one light line — the quote mark and the words together (owner, 2 Nov) */
 #book .pq { border-top: 1px solid #D9CFC7 !important; border-bottom: 1px solid #D9CFC7 !important; padding: .35em .6em !important; margin: .4em 0 .6em !important; font-size: 18.5px !important; font-weight: 700 !important; line-height: 1.6 !important; text-align: center; }
 #book .pq::before { display: inline !important; font-size: 1.5em !important; line-height: 0 !important; vertical-align: -.2em; margin: 0 0 0 .25em !important; }
+
+/* split opening: title box on the right half */
+#book .L-split .top .tt { padding: 26px 34px 22px 26px !important; justify-content: center; }
+#book .L-split h1 { font-size: 30px !important; line-height: 1.45 !important; margin-top: 0 !important; }
+#book .L-split .tdek { margin: 10px 0 0; color: #fff; font-family: var(--kufi); font-weight: 700; font-size: 20px; line-height: 1.6; }
