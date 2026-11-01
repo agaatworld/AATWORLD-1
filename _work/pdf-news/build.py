@@ -41,7 +41,7 @@ def build(pages):
     # contents
     row = lambda t, k: '<li><span class="t">%s</span><i></i><b>%s</b></li>' % (isolate((short(t, 78))), pages.get(k, '00'))
     h.append('<section class="toc"><h2 class="sec-h">المحتويات</h2><h3 class="toc-h">المقالات</h3><ol>' + ''.join(row(a['title']['ar'], a['id']) for a in ARTS) + '</ol>'
-             '<h3 class="toc-h">الأخبار</h3><ol>' + ''.join(row(n['title'], n['img']) for n in NEWS) + '</ol></section>')
+             '<h3 class="toc-h nh">الأخبار</h3><ol>' + ''.join(row(n['title'], n['img']) for n in NEWS) + '</ol></section>')
     # articles: three openings in turn, so pages do not repeat
     for i, a in enumerate(ARTS):
         pg = 'a' + a['id'].replace('-', '')

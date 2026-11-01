@@ -1,0 +1,19 @@
+/* print overrides on top of the magazine's own styles */
+@page { size: 794px 1123px; margin: 0; }
+html, body.aatpdf { margin: 0; padding: 0; background: #fff; overflow: visible !important; height: auto !important; }
+body.aatpdf > :not(#book) { display: none !important; }
+#book { display: block; }
+#book .sheet { display: block !important; position: relative !important; transform: none !important; margin: 0; break-after: page; page-break-after: always; box-shadow: none !important; }
+/* pictures are never cut: whole picture, sand background around it */
+#book .sheet img { object-fit: contain !important; background: #F4EEEA; }
+/* news items: a line, the picture, the title, then the text (paragraphs may continue in the next column) */
+#book .nhead { break-inside: avoid; margin: 0 0 .5em; padding-top: .8em; border-top: 1px solid var(--line, #E6DCD7); }
+#book .nhead.first { border-top: 0; padding-top: 0; }
+#book .nhead .bimg { height: 165px; margin: 0 0 .5em; border-radius: 3px; overflow: hidden; background: #F4EEEA; }
+#book .nhead .bimg img { width: 100%; height: 100%; display: block; }
+#book .nhead b { display: block; font-family: var(--kufi); font-size: 1.12em; line-height: 1.6; color: var(--deep, #7A0A10); }
+#book .folio { font-size: 13px; }
+#book .runhd { font-size: 13px; }
+#book .L-briefs .ah.nh1 { display: block; }
+#book .L-briefs .ah.nh1 h1 { font-size: 34px; }
+#book .L-briefs .flow { column-fill: auto; }
