@@ -724,3 +724,9 @@ html, body, html.mz-bgon, html.mz-bgon body { background: var(--bg, #FBFAF8) !im
 #app section.sec.trust { background: radial-gradient(55% 140% at 62% 100%, rgba(232, 137, 12, .13), transparent 70%), #F9F5EF !important; }
 /* the moving strip at the top of the home page keeps the same faint warm pink it had from the old background */
 #app section.mz-top { background: radial-gradient(40% 110% at 16% 45%, rgba(236, 29, 37, .07), transparent 70%), #FFF3EE; }
+
+/* update 43: a picture whose shape differs from its box is shown whole over a blurred copy of itself (never cut) */
+.pfit { position: relative; overflow: hidden; isolation: isolate; background-color: #1A1314 !important; }
+.pfit::before { content: ""; position: absolute; inset: -14%; z-index: 0; background: var(--pbg) center / cover no-repeat; filter: blur(18px) brightness(.72) saturate(1.1); }
+.pfit > img { position: relative !important; z-index: 1; inset: auto !important; left: auto !important; top: auto !important; width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center !important; transform: none !important; animation: none !important; mix-blend-mode: normal !important; opacity: 1 !important; }
+.pfit::after { z-index: 2; }

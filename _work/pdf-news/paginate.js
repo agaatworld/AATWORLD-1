@@ -7,7 +7,7 @@
    - when an article ends with a lot of space left, the next article starts on the same page under a red rule
    Owner, 1 Nov 2026: same design as the latest magazine, large text, whole pictures, no cover / contents / back page. */
 window.addEventListener('load', function () { document.fonts.ready.then(function () {
-  var D = window.PDFDATA, book = document.getElementById('book'), page = 0, FS = 1.3, W = 794;
+  var D = window.PDFDATA, book = document.getElementById('book'), page = 0, FS = window.FSOVR || D.fs || 1.1, W = 794;
   var FOOT = 'التجارة العربية الآسيوية · مقالات وأخبار · 2026';
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   /* Latin words, phone numbers and web addresses inside Arabic keep their own direction */
@@ -89,7 +89,7 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
 
   var s = null;
   D.arts.forEach(function (a, i) {
-    var t = iso(a.title), r = a.ratio || 1.5, P = prep(a), run = '<div class="runhd"><b>مقالات</b><span>' + t + '</span></div>';
+    var t = iso(a.title), r = a.ratio || 1.5, P = prep(a), run = '<div class="runhd"><b>' + (a.kind === 'news' ? 'أخبار' : 'مقالات') + '</b><span>' + t + '</span></div>';
     var cont = 'art ' + (r < 1.25 ? 'L-split' : r <= 2 ? 'L-feature' : 'L-band') + ' cont';
     /* next article on the same page, when the last page of the previous one is less than ~60 % full */
     if (s) {
@@ -130,14 +130,21 @@ window.addEventListener('load', function () { document.fonts.ready.then(function
     s = pour(s, P.blocks.slice(), cont, run);
   });
 
+  if (D.news && D.news.length) {
   /* news: the magazine's briefs pages, every item with its own picture at its real proportions */
-  var briefs = [];
-  D.news.forEach(function (n, k) {
-    var im = fig(n.img, n.ratio || 1.5, 330, 140, 210);
-    briefs.push('<div class="nhead' + (k ? '' : ' first') + '">' + im.html + '<b>' + iso(n.title) + '</b></div>');
-    n.body.forEach(function (p, j) { briefs.push(para(p, j === n.body.length - 1)); });
-  });
-  s = sheet('art L-briefs', '<div class="pad"><header class="ah nh1"><div><h1>أخبار التجارة والصناعة</h1></div></header><div class="flow"></div></div>');
-  pour(s, briefs, 'art L-briefs cont', '<div class="runhd"><b>أخبار</b><span>أخبار التجارة والصناعة</span></div>');
+    var briefs = [];
+    D.news.forEach(function (n, k) {
+      var im = fig(n.img, n.ratio || 1.5, 330, 140, 210);
+      briefs.push('<div class="nhead' + (k ? '' : ' first') + '">' + im.html + '<b>' + iso(n.title) + '</b></div>');
+      n.body.forEach(function (p, j) { briefs.push(para(p, j === n.body.length - 1)); });
+    });
+    s = sheet('art L-briefs', '<div class="pad"><header class="ah nh1"><div><h1>أخبار التجارة والصناعة</h1></div></header><div class="flow"></div></div>');
+    pour(s, briefs, 'art L-briefs cont', '<div class="runhd"><b>أخبار</b><span>أخبار التجارة والصناعة</span></div>');
+  }
+  /* how full the last page is (0-1), so the builder can tighten the text size when only a few lines spill over */
+  var last = book.lastElementChild, lf = last && last.querySelector('.flow');
+  if (lf) { var top = last.querySelector('.pad').getBoundingClientRect().top, bot = 0; [].forEach.call(lf.querySelectorAll('*'), function (e) { var r = e.getBoundingClientRect(); if (r.height) bot = Math.max(bot, r.bottom); });
+    var fr = lf.getBoundingClientRect(), cols = 0; [].forEach.call(lf.children, function (e) { [].forEach.call(e.getClientRects(), function (r) { if (r.height) cols = Math.max(cols, r.left < fr.left + fr.width / 2 ? 2 : 1); }); });
+    var h = last.querySelector('.folio').getBoundingClientRect().top - top; document.body.setAttribute('data-fill', ((bot - top) / h * (cols === 2 ? 1 : .5)).toFixed(2)); }
   document.body.setAttribute('data-pages', page);
 }); });

@@ -5,6 +5,18 @@
   var $ = function (s, r) { return (r || doc).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); };
   var reduce = W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hdr, app, ftr, route = { v: "home" }, timers = [];
+  /* pictures are never cut (owner, 1 Nov 2026: article banners carry words): when a picture's shape differs from its box,
+     it is shown whole over a blurred copy of itself. Works for every card, reel and slide, also for future pictures. */
+  var FITSEL = ".ac-img, .nc-img, .mz-av, .mz-scv, .sl-img, .ih, .cc-img, .tk-p, .ind-c";
+  function fitPic(im) {
+    var box = im.parentNode; if (!box || !box.matches || !box.matches(FITSEL) || !im.naturalWidth) return;
+    var bw = box.clientWidth, bh = box.clientHeight; if (!bw || !bh) return;
+    var r = (im.naturalWidth / im.naturalHeight) / (bw / bh), cut = r > 1.12 || r < 1 / 1.12;
+    box.classList.toggle("pfit", cut);
+    if (cut) box.style.setProperty("--pbg", 'url("' + im.currentSrc.replace(/"/g, "%22") + '")');
+  }
+  doc.addEventListener("load", function (e) { if (e.target && e.target.tagName === "IMG") fitPic(e.target); }, true);
+  function fitAll() { $$("img").forEach(function (im) { if (im.complete) fitPic(im); }); }
 
   /* ---------- theme and language ---------- */
   function applyTheme(th) { root.setAttribute("data-theme", th); var m = $('meta[name="theme-color"]'); if (m) m.setAttribute("content", th === "dark" ? "#0D0D0F" : "#FFFFFF"); }
@@ -442,5 +454,8 @@
     initPrefs(); chrome(); render(true); bind(); headerScroll(); aiInit(); /* no intro splash: it came after the page was already showing and looked like a restart */
     root.classList.add("js");
   }
+  W.addEventListener("resize", function () { clearTimeout(fitAll.t); fitAll.t = setTimeout(fitAll, 250); });
+  W.addEventListener("hashchange", function () { setTimeout(fitAll, 60); setTimeout(fitAll, 900); });
+  setInterval(fitAll, 2500);
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", start); else start();
 })(window);
