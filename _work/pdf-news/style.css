@@ -1,0 +1,76 @@
+@font-face { font-family: Jazeera, "Inter Tight", sans-serif; src: url(../../assets/fonts/aljazeera-regular.ttf); font-weight: 400; }
+@font-face { font-family: Jazeera, "Inter Tight", sans-serif; src: url(../../assets/fonts/aljazeera-bold.ttf); font-weight: 700; }
+@font-face { font-family: "Inter Tight"; src: url(../../assets/fonts/inter-tight-latin-400-normal.woff2); font-weight: 400; }
+@font-face { font-family: "Inter Tight"; src: url(../../assets/fonts/inter-tight-latin-800-normal.woff2); font-weight: 700; }
+@page { size: A4; margin: 20mm 15mm 19mm;
+  @top-right { content: "مقالات"; font: 700 10.5pt Jazeera, "Inter Tight", sans-serif; color: #D21F26; vertical-align: bottom; padding-bottom: 3mm; border-bottom: .4mm solid #D21F26; }
+  @top-left { content: ""; font: 700 10.5pt Jazeera, "Inter Tight", sans-serif; color: #1A1314; vertical-align: bottom; padding-bottom: 3mm; border-bottom: .4mm solid #D21F26; }
+  @bottom-right { content: counter(page); font: 700 12pt Jazeera, "Inter Tight", sans-serif; color: #fff; background: #D21F26; width: 11mm; height: 8mm; text-align: center; vertical-align: middle; margin-top: 4mm; }
+  @bottom-center { content: "www.aatworld.com"; font: 700 10.5pt Jazeera, "Inter Tight", sans-serif; color: #0B4F9C; text-align: right; padding-right: 4mm; margin-top: 4mm; vertical-align: middle; }
+  @bottom-left { content: "التجارة العربية الآسيوية · مقالات وأخبار"; font: 700 10.5pt Jazeera, "Inter Tight", sans-serif; color: #1A1314; margin-top: 4mm; vertical-align: middle; }
+}
+@page news { @top-right { content: "أخبار"; } @top-left { content: "أخبار التجارة والصناعة"; } }
+@page cover { margin: 0; @top-right { content: none; border: 0; } @top-left { content: none; border: 0; } @bottom-right { content: none; background: none; } @bottom-center { content: none; } @bottom-left { content: none; } }
+@page toc { @top-right { content: "المحتويات"; } }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font-family: Jazeera, "Inter Tight", sans-serif; color: #1A1314; font-size: 12.3pt; line-height: 1.78; }
+bdi { unicode-bidi: isolate; }
+.mk { position: absolute; font-size: 1pt; color: #fff; line-height: 0; }
+img { display: block; max-width: 100%; }
+/* cover and back page fill the whole sheet */
+.cover, .back { page: cover; width: 210mm; height: 297mm; box-sizing: border-box; break-after: page; position: relative; overflow: hidden; }
+.cover { background: #fff; display: flex; flex-direction: column; }
+.cv-top { padding: 22mm 18mm 10mm; text-align: center; }
+.cv-logo { width: 112mm; margin: 0 auto; }
+.cv-names { margin-top: 6mm; font-size: 14pt; font-weight: 700; color: #1A1314; }
+.cv-names, .b-names { font-family: Jazeera, "Inter Tight", "Noto Sans TC", sans-serif; }
+.cv-band { background: #D21F26; color: #fff; padding: 12mm 18mm; text-align: center; }
+.cv-band h1 { margin: 0; font-size: 44pt; line-height: 1.15; }
+.cv-band p { margin: 3mm 0 0; font-size: 15pt; font-weight: 700; }
+.cv-grid { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 2.5mm; padding: 2.5mm; background: #fff; }
+.cv-c { background-size: cover; background-position: center; border-radius: 1.5mm; }
+.cv-foot { display: flex; justify-content: space-around; background: #1A1314; color: #fff; font-size: 14pt; font-weight: 700; padding: 6mm 10mm; }
+.back { background: #D21F26; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8mm; break-after: auto; }
+.back img { width: 120mm; }
+.b-names { font-size: 15pt; font-weight: 700; }
+.b-lines p { margin: 2.5mm 0; font-size: 15pt; font-weight: 700; }
+.b-lines .addr { font-size: 13pt; }
+/* contents */
+.toc { page: toc; break-after: page; }
+.sec-h { margin: 0 0 3mm; font-size: 28pt; color: #1A1314; }
+.sec-h::after { content: ""; display: block; width: 22mm; height: 2mm; background: #D21F26; margin-top: 3mm; }
+.toc-h { font-size: 15pt; color: #D21F26; margin: 3mm 0 1mm; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { display: flex; align-items: baseline; gap: 3mm; font-size: 11.4pt; line-height: 1.3; padding: .7mm 0; border-bottom: .2mm solid #E6DCD7; }
+.toc li .t { flex: 0 1 auto; }
+.toc li i { flex: 1; }
+.toc li b { color: #D21F26; min-width: 9mm; text-align: left; font-variant-numeric: tabular-nums; }
+/* articles */
+.art { break-before: page; position: relative; }
+.ttl { font-size: 23pt; line-height: 1.35; margin: 0 0 4mm; color: #1A1314; }
+.lead { font-size: 13.3pt; font-weight: 700; color: #3A2E30; margin: 0 0 5mm; padding-right: 4mm; border-right: 1.4mm solid #D21F26; }
+figure { margin: 0; }
+figure img { width: 100%; height: 100%; object-fit: cover; }
+figure.fit img, .hero.fit img, .wide.fit img { object-fit: contain; background: #F4EEEA; }
+.hero { height: 92mm; margin: 0 0 6mm; border-radius: 2mm; overflow: hidden; }
+.side { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; align-items: center; margin-bottom: 4mm; }
+.side figure { height: 74mm; border-radius: 2mm; overflow: hidden; }
+.side .lead { margin-bottom: 0; }
+.band { background: #D21F26; margin: 0 0 6mm; padding: 6mm 7mm; border-radius: 1.5mm; }
+.band .ttl { color: #fff; margin: 0; }
+.wide { height: 70mm; margin: 0 0 6mm; border-radius: 2mm; overflow: hidden; }
+.cols { column-count: 2; column-gap: 8mm; column-rule: .2mm solid #E6DCD7; text-align: justify; }
+.cols p { margin: 0 0 3mm; }
+.cols h3, .nw h4 { font-size: 13.8pt; color: #1A1314; margin: 4mm 0 2mm; break-after: avoid; }
+.cols h3::before { content: ""; display: inline-block; width: 3mm; height: 3mm; background: #D21F26; margin-left: 2.5mm; vertical-align: middle; }
+/* news */
+.news { break-before: page; }
+.nb { margin-bottom: 6mm; }
+.ncols { column-count: 2; column-gap: 8mm; column-rule: .2mm solid #E6DCD7; }
+.nw { break-inside: avoid; margin: 0 0 7mm; padding-bottom: 5mm; border-bottom: .3mm solid #E6DCD7; position: relative; }
+.nw figure { height: 42mm; border-radius: 1.5mm; overflow: hidden; margin-bottom: 3mm; }
+.nw.big { column-span: all; display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.nw.big figure { height: 70mm; grid-row: span 3; margin: 0; }
+.nt { font-size: 14.6pt; line-height: 1.45; margin: 0 0 2mm; color: #D21F26; }
+.nw p { margin: 0 0 2.4mm; font-size: 11.8pt; text-align: justify; }
+.nw.big .nt { font-size: 17pt; }
