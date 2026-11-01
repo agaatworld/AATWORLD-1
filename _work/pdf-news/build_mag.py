@@ -2,6 +2,7 @@
    Owner (1 Nov 2026): same design as the latest magazine; no cover, no contents, no back page; large text; pictures never cut.
    python3 _work/pdf-news/build_mag.py  -> _work/pdf-news/AAT-articles-news.pdf"""
 import json, re, os, subprocess
+from PIL import Image
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')); os.chdir(ROOT)
 OUT = '_work/pdf-news'
 src = open('assets/js/data/extra2.js', encoding='utf-8').read().split('\n')
@@ -13,8 +14,10 @@ NEWS.sort(key=lambda n: (int(n['img'][3:]) < 19, int(n['img'][3:])))
 assert len(ARTS) == 15 and len(NEWS) == 12
 mag = open('issue560/index.html', encoding='utf-8').read()
 styles = ''.join(re.findall(r'<style[^>]*>(.*?)</style>', mag, re.S))
-data = {'arts': [{'id': a['id'], 'title': a['title']['ar'], 'img': '../assets/img/' + a['img'], 'body': a['body']['ar']} for a in ARTS],
-        'news': [{'title': n['title'], 'img': '../assets/img/' + n['img'] + '.jpg', 'body': n['body']} for n in NEWS]}
+def ratio(p):
+    w, h = Image.open(p).size; return round(w / h, 4)
+data = {'arts': [{'id': a['id'], 'title': a['title']['ar'], 'img': '../assets/img/' + a['img'], 'ratio': ratio('assets/img/' + a['img']), 'body': a['body']['ar']} for a in ARTS],
+        'news': [{'title': n['title'], 'img': '../assets/img/' + n['img'] + '.jpg', 'ratio': ratio('assets/img/' + n['img'] + '.jpg'), 'body': n['body']} for n in NEWS]}
 doc = ('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><base href="../../issue560/">'
        '<style>' + styles + '</style><link rel="stylesheet" href="../_work/pdf-news/mag-print.css"></head>'
        '<body class="aatpdf"><div id="book"></div><script>window.PDFDATA=' + json.dumps(data, ensure_ascii=False) + ';</script>'
