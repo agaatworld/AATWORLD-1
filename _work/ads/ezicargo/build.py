@@ -1,5 +1,5 @@
-"""EZICARGO ads for AAT magazine: centre spread (2 x A4) + cover box.
-   python3 _work/ads/ezicargo/build.py      -> out/ (300 dpi JPG + PDF, with and without 3 mm bleed)"""
+"""EZICARGO ads for AAT magazine: two centre pages (each its own A4, 3 mm bleed) + the main cover picture.
+   python3 _work/ads/ezicargo/build.py      -> out/*.png at 300 dpi (SCALE=1 for a quick look)"""
 import json, os, re, subprocess
 H = os.path.dirname(os.path.abspath(__file__)); os.chdir(H)
 ui = open('../../../assets/js/ui.js', encoding='utf-8').read()
@@ -29,6 +29,5 @@ def fill(src, dst):
     open(dst, 'w', encoding='utf-8').write(s)
 
 os.makedirs('out', exist_ok=True)
-fill('spread.html', '_spread.html')
-if os.path.exists('cover.html'): fill('cover.html', '_cover.html')
+fill('ad.html', '_ad.html')
 subprocess.run(['node', 'render.js'], check=True)

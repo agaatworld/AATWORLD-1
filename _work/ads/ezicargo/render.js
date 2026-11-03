@@ -1,21 +1,16 @@
-// Renders _spread.html (and _cover.html) to 300 dpi images and print PDFs.  SCALE env: 1 for a quick look.
+// Renders every data-shot element of _ad.html to PNG.  SCALE env: 1 for a quick look, default 3.125 = 300 dpi.
 const { chromium } = require('/opt/node-tools/node_modules/playwright'); const fs = require('fs'); const path = require('path');
-const S = Number(process.env.SCALE || 3.125);   // 96 css px per inch -> 300 dpi
+const S = Number(process.env.SCALE || 3.125);
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-  for (const [name, w, h] of [['spread', 1612, 1147], ['cover', 0, 0]]) {
-    const f = path.join(__dirname, '_' + name + '.html'); if (!fs.existsSync(f)) continue;
-    const p = await b.newPage({ viewport: { width: (w || 1200) + 40, height: (h || 1200) + 40 }, deviceScaleFactor: S });
-    const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('requestfailed', r => errs.push('FAILED ' + r.url()));
-    await p.goto('file://' + f, { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready);
-    await p.waitForTimeout(400);
-    const info = await p.evaluate(() => [...new Set([...document.fonts].filter(x => x.status === 'loaded').map(x => x.family))].join(','));
-    for (const el of await p.$$('[data-shot]')) {
-      const id = await el.getAttribute('data-shot');
-      await el.screenshot({ path: path.join(__dirname, 'out', id + (S < 2 ? '-preview' : '') + '.png') });
-    }
-    console.log(name, 'fonts:', info, errs.length ? 'ERR ' + errs.join(' | ') : 'ok');
-    await p.close();
+  const p = await b.newPage({ viewport: { width: 900, height: 1300 }, deviceScaleFactor: S });
+  const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('requestfailed', r => errs.push('FAILED ' + r.url()));
+  await p.goto('file://' + path.join(__dirname, '_ad.html'), { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(500);
+  const fonts = await p.evaluate(() => [...new Set([...document.fonts].filter(x => x.status === 'loaded').map(x => x.family))].join(','));
+  for (const el of await p.$$('[data-shot]')) {
+    const id = await el.getAttribute('data-shot');
+    await el.screenshot({ path: path.join(__dirname, 'out', id + (S < 2 ? '-preview' : '') + '.png') });
   }
+  console.log('fonts:', fonts, errs.length ? 'ERR ' + errs.join(' | ') : 'ok');
   await b.close();
 })();
