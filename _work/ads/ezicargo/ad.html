@@ -23,7 +23,7 @@ body { display: flex; flex-direction: column; gap: 30px; padding: 20px; align-it
 .card { position: absolute; right: 30px; top: 26px; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 16px; border-radius: 16px; background: rgba(255,255,255,.96); box-shadow: 0 10px 30px rgba(10,20,40,.18); }
 .card img { height: 96px; display: block; }
 .card b { display: block; font: 700 28px/1.3 Jazeera; color: var(--ink); }
-.card i { display: block; font: 700 16px/1.5 Arimo; font-style: normal; letter-spacing: 1.4px; color: var(--red2); direction: ltr; text-align: right; }
+.card i { display: inline-block; font: 700 16px/1.5 Arimo; font-style: normal; color: var(--red2); direction: ltr; text-align: left; white-space: nowrap; }
 .head { position: absolute; left: 30px; right: 30px; top: 232px; text-align: center; }
 .head h1 { margin: 0; font: 700 66px/1.12 Jazeera; color: var(--ink); }
 .head h1 em { font-style: normal; color: var(--red); }
@@ -98,19 +98,27 @@ body { display: flex; flex-direction: column; gap: 30px; padding: 20px; align-it
 .ct .r3 svg, .ct .ad svg { width: 22px; height: 22px; flex: none; }
 .ct .ad { margin-top: 12px; justify-content: center; direction: ltr; font: 400 17.5px/1.3 Arimo; color: #EDE5DE; }
 
-/* ---------------- cover picture (130 x 183 mm: the free area of the cover between the contents column, the red band, the issue bar and the side text) ---------------- */
-.cov { position: relative; width: 490px; height: 691px; overflow: hidden; background: url(img/petronas.jpg) 50% 30% / cover no-repeat; font-family: Jazeera, Arimo, sans-serif; }
-.cov::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(120,0,0,0) 34%, rgba(150,0,0,.62) 58%, rgba(140,0,0,.94) 74%, #7A0000 100%); }
-.cov .lg { position: absolute; z-index: 2; right: 18px; top: 18px; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,.96); box-shadow: 0 8px 22px rgba(0,0,0,.2); }
-.cov .lg img { height: 104px; display: block; }
-.cov .tx { position: absolute; z-index: 2; left: 18px; right: 18px; bottom: 22px; text-align: center; color: #fff; }
-.cov .tx b { display: block; font: 700 52px/1.12 Jazeera; text-shadow: 0 3px 14px rgba(0,0,0,.35); }
-.cov .tx .m { margin-top: 6px; font: 700 23px/1.3 Jazeera; }
+/* ---------------- cover picture: the whole picture area of the cover, 193 x 183 mm (owner: no contents list, the ad takes it all) ---------------- */
+.cov { position: relative; width: 727px; height: 691px; overflow: hidden; background: url(img/petronas.jpg) 50% 34% / cover no-repeat; font-family: Jazeera, Arimo, sans-serif; }
+.cov::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(120,0,0,0) 36%, rgba(150,0,0,.6) 56%, rgba(140,0,0,.93) 72%, #7A0000 100%); }
+.cov .lg { position: absolute; z-index: 2; right: 22px; top: 22px; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; border-radius: 16px; background: rgba(255,255,255,.96); box-shadow: 0 8px 22px rgba(0,0,0,.2); }
+.cov .lg img { height: 112px; display: block; }
+.cov .lg b { display: block; font: 700 30px/1.3 Jazeera; color: var(--ink); }
+.cov .lg i { display: inline-block; font: 700 17px/1.5 Arimo; font-style: normal; color: var(--red2); direction: ltr; text-align: left; white-space: nowrap; }
+.cov .tx { position: absolute; z-index: 2; left: 20px; right: 20px; bottom: 62px; text-align: center; color: #fff; }
+.cov .tx b { display: block; font: 700 58px/1.1 Jazeera; white-space: nowrap; text-shadow: 0 3px 14px rgba(0,0,0,.35); }
+.cov .tx .m { margin-top: 8px; font: 700 31px/1.3 Jazeera; }
 .cov .tx .m .lat { font-weight: 700; }
-.cov .tx .of { margin: 14px auto 0; width: max-content; padding: 9px 28px 8px; border-radius: 40px; background: #fff; color: var(--red2); font: 700 30px/1.1 Jazeera; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
-.cov .tx .see { margin: 10px auto 0; display: flex; align-items: center; justify-content: center; gap: 10px; font: 700 21px/1.3 Jazeera; }
-.cov .tx .see i { display: inline-block; width: 64px; height: 30px; border: 2px solid #fff; border-radius: 6px; }
-.cov .tx .nm { margin-top: 12px; font: 700 21px/1.3 Jazeera; opacity: .95; }
+.cov .tx .of { margin: 18px auto 0; width: max-content; padding: 12px 40px 10px; border-radius: 50px; background: #fff; color: var(--red2); font: 700 42px/1.1 Jazeera; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+/* ---------------- corner box of the cover (34 x 47 mm, where Astral's box was) ---------------- */
+.box { width: 128px; height: 178px; background: #fff; display: flex; flex-direction: column; align-items: center; font-family: Jazeera, Arimo, sans-serif; color: var(--ink); }
+.box img { width: 74px; height: 74px; object-fit: contain; display: block; margin-top: 2px; }
+.box .nm { margin-top: 0; font: 700 17px/1.15 Jazeera; }
+.box .of { margin-top: 3px; width: 124px; padding: 3px 0 4px; border-radius: 5px; background: linear-gradient(90deg, #A80000, var(--red)); color: #fff; text-align: center; }
+.box .of b { display: block; font: 700 16.5px/1.15 Jazeera; }
+.box .of span { display: block; font: 700 12.5px/1.25 Jazeera; }
+.box .see { margin-top: 3px; width: 124px; border-top: 1px solid #BDBDBD; padding-top: 3px; display: flex; align-items: center; justify-content: center; gap: 4px; font: 700 13px/1.3 Jazeera; color: #222; white-space: nowrap; }
+.box .see i { display: inline-block; flex: none; width: 24px; height: 15px; border: 1.3px solid #555; border-radius: 3px; }
 </style></head>
 <body>
 
@@ -165,13 +173,30 @@ body { display: flex; flex-direction: column; gap: 30px; padding: 20px; align-it
 
 <!-- main picture of the cover -->
 <div class="cov" data-shot="cover-picture">
-  <div class="lg"><img src="brand/logo-full.png" alt=""></div>
+  <div class="lg"><img src="brand/logo-full.png" alt=""><div><b>شركة ايزي كارجو المحدودة</b><i>EZICARGO RICH SDN. BHD.</i></div></div>
   <div class="tx">
-    <b>المعارض الدولية<br>في ماليزيا</b>
+    <b>المعارض الدولية في ماليزيا</b>
     <div class="m">يناير · فبراير · مارس <span class="lat">2027</span></div>
     <div class="of">السكن مجّاني خلال المعارض</div>
-    <div class="nm">شركة ايزي كارجو المحدودة</div>
-    <div class="see">انظر صفحة رقم <i></i></div>
   </div>
 </div>
+
+<!-- corner box of the cover -->
+<div class="box" data-shot="cover-box">
+  <img src="brand/logo-full.png" alt="">
+  <div class="nm">ايزي كارجو</div>
+  <div class="of"><b>السكن مجّاني</b><span>خلال معارض ماليزيا</span></div>
+  <div class="see">انظر صفحة رقم <i></i></div>
+</div>
+<script>
+/* the English company name is stretched to the exact width of the Arabic name above it */
+document.fonts.ready.then(function () {
+  document.querySelectorAll('.card, .cov .lg').forEach(function (c) {
+    var b = c.querySelector('b'), i = c.querySelector('i'), n = i.textContent.length;
+    i.style.letterSpacing = '0px'; var d = b.getBoundingClientRect().width - i.getBoundingClientRect().width;
+    i.style.letterSpacing = (d / n) + 'px';
+  });
+  document.body.setAttribute('data-ready', '1');
+});
+</script>
 </body></html>
