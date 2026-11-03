@@ -21,7 +21,7 @@ window.addEventListener('load', function () {
     pg.className = 'pg ' + lang + (count % 2 ? ' odd' : ' even'); pg.lang = lang;
     pg.innerHTML = '<div class="bar"></div><img class="wm" src="' + D.logo + '" alt=""><div class="body"></div>' +
       '<div class="ft">عند التواصل مع المعلنين بالمجلة.. ننصحكم بذكر: مجلة التجارة العربية الآسيوية</div>' +
-      '<div class="fb"><i class="st"></i><span class="ur">www.aatworld.com</span><i class="no"></i></div>';
+      '<div class="fb"><i class="st"></i><span class="ur"><b>www.aatworld.com</b></span><i class="no"></i></div>';
     book.appendChild(pg); return pg;
   }
   function fits(pg) {
@@ -255,6 +255,24 @@ window.addEventListener('load', function () {
   }
   newsPages(arPool, 'ar');
   newsPages(enPool, 'en');
+  function colGap(pg) {   /* space under the shorter column of the last band of the page */
+    var b = pg.querySelector('.body'), br = b.getBoundingClientRect(), mid = br.left + br.width / 2, top = br.top, cols = [br.top, br.top];
+    [].forEach.call(b.children, function (c) { if (getComputedStyle(c).columnSpan === 'all') top = Math.max(top, c.getBoundingClientRect().bottom); });
+    [].forEach.call(b.children, function (c) { if (getComputedStyle(c).columnSpan === 'all') return; [].forEach.call(c.getClientRects(), function (r) { if (!r.height || r.bottom <= top + 1) return; var k = (r.left + r.right) / 2 < mid ? 0 : 1; cols[k] = Math.max(cols[k], r.bottom); }); });
+    return br.bottom - Math.min(cols[0], cols[1]);
+  }
+  /* a full page that still ends early (a sub-heading had to move on): share the space between paragraphs, then lines */
+  [].forEach.call(document.querySelectorAll('.pg'), function (pg) {
+    var body = pg.querySelector('.body'); if (body.style.columnFill === 'balance' || colGap(pg) < 20 || colGap(pg) > 300 || !fits(pg)) return;
+    var base = pg.classList.contains('ar') ? 1.72 : 1.5, ps = 6, ph = 24;
+    function ok() { return fits(pg); }
+    body.style.setProperty('--ps', ph + 'px');
+    if (!ok()) { for (var k = 0; k < 8; k++) { var m = (ps + ph) / 2; body.style.setProperty('--ps', m + 'px'); if (ok()) ps = m; else ph = m; } body.style.setProperty('--ps', ps + 'px'); }
+    if (colGap(pg) < 20) return;
+    var lo = base, hi = base + 0.25;
+    function setLH(v) { body.style.lineHeight = v; pg.querySelectorAll('.hd .fr').forEach(function (f) { f.style.lineHeight = base; }); }
+    setLH(hi); if (!ok()) { for (var i = 0; i < 10; i++) { var mm = (lo + hi) / 2; setLH(mm); if (ok()) lo = mm; else hi = mm; } setLH(lo); }
+  });
   /* ـ (kashida) fills the justified Arabic lines instead of wide gaps between the words */
   var JOIN = 'بتثجحخسشصضطظعغفقكلمنهيئىـ', LET = /[\u0621-\u064A]/, HAR = /[\u064B-\u0652\u0670]/;
   function spots(w) {   /* places inside a word where a ـ can go, best first (near the end of the word) */

@@ -4,14 +4,15 @@ html, body { margin: 0; padding: 0; background: #888; }
 .pg { position: relative; width: 794px; height: 1123px; background: #fff; overflow: hidden; margin: 0 0 20px; box-sizing: border-box; }
 .pg .bar { position: absolute; inset: 0 0 auto 0; height: 20px; background: linear-gradient(90deg, #7A0A10, #B3121A 45%, #D21F26); }
 .pg .wm { position: absolute; left: 50%; top: 52%; width: 600px; transform: translate(-50%, -50%); opacity: .045; pointer-events: none; }
-.pg .ft { position: absolute; left: 56px; right: 56px; bottom: 40px; height: 22px; border-radius: 3px; background: var(--red); color: #fff; font: 700 13px/22px "Noto Naskh Arabic", serif; text-align: center; direction: rtl; }
-.pg .fb { position: absolute; left: 0; right: 0; bottom: 8px; height: 20px; }
-.pg .fb .st { position: absolute; top: 0; height: 20px; width: 70px; background: repeating-linear-gradient(115deg, #F2B705 0 9px, transparent 9px 16px); }
-.pg .fb .ur { position: absolute; top: 0; height: 20px; width: 210px; background: var(--red); color: #fff; font: 700 12.5px/20px Arimo, Arial, sans-serif; text-align: center; letter-spacing: .3px; }
-.pg .fb .no { position: absolute; top: 0; height: 20px; width: 34px; background: var(--deep); }   /* page number box: left empty (owner) */
-.pg.odd .fb .st { right: 250px; } .pg.odd .fb .ur { right: 34px; } .pg.odd .fb .no { right: 0; }
-.pg.even .fb .st { left: 250px; transform: scaleX(-1); } .pg.even .fb .ur { left: 34px; } .pg.even .fb .no { left: 0; }
-.pg .body { position: absolute; left: 40px; right: 40px; top: 42px; bottom: 80px; column-count: 2; column-gap: 26px; column-rule: 1px solid #EBD3D3; column-fill: auto; }
+.pg .ft { position: absolute; left: 40px; right: 40px; bottom: 60px; height: 32px; background: #C00000; color: #fff; font: 700 17px/32px "Noto Kufi Arabic", sans-serif; text-align: center; direction: rtl; letter-spacing: 0; }   /* larger (owner, 3 Nov) */
+.pg .fb { position: absolute; left: 0; right: 0; bottom: 26px; height: 24px; background: #E6E7E8; }   /* grey strip as in the July issue */
+.pg .fb .st { position: absolute; top: 0; height: 24px; width: 30px; background: #F7B500; clip-path: polygon(14px 0, 30px 0, 16px 100%, 0 100%); }
+.pg .fb .ur { position: absolute; top: 0; height: 24px; width: 180px; background: #ED1C24; color: #fff; font: 700 15px/24px Arimo, Arial, sans-serif; text-align: center; letter-spacing: .4px; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); padding-right: 10px; box-sizing: border-box; }
+.pg .fb .no { position: absolute; top: 0; height: 24px; width: 64px; background: #ED1C24; }   /* page-number box, left empty for the number (owner) */
+.pg .fb .no::after { content: ""; position: absolute; top: 0; bottom: 0; width: 6px; background: #fff; }
+.pg.odd .fb .no { left: 0; } .pg.odd .fb .no::after { right: -6px; } .pg.odd .fb .ur { left: 70px; } .pg.odd .fb .st { left: 238px; }
+.pg.even .fb .no { right: 0; } .pg.even .fb .no::after { left: -6px; } .pg.even .fb .ur { right: 70px; transform: scaleX(-1); } .pg.even .fb .ur b { display: block; transform: scaleX(-1); } .pg.even .fb .st { right: 238px; transform: scaleX(-1); }
+.pg .body { position: absolute; left: 40px; right: 40px; top: 42px; bottom: 104px; column-count: 2; column-gap: 26px; column-rule: 1px solid #EBD3D3; column-fill: auto; }
 .pg.ar .body { direction: rtl; }
 .pg.en .body { direction: ltr; }
 /* text */
@@ -62,3 +63,4 @@ html, body { margin: 0; padding: 0; background: #888; }
 .hd.banner .pic { margin-bottom: 10px; }
 .body p.sp { text-align-last: justify; }
 .en .body p { hyphens: auto; }
+.pg .fb .ur b { font-weight: 700; }
