@@ -1,5 +1,5 @@
 """Stage 2 (after build.py): footer strips with the right page numbers, bleed, spine, PDFs.
-   python3 finish.py [spine_mm]      (spine width: ask the printer; default 6 mm for 100 pages)
+   python3 finish.py [spine_mm]      (spine width: ask the printer; default 9 mm: 96 inner pages on 180 gsm + 300 gsm cover)
    out/print/  AAT-561-November-2026-print.pdf   100 pages, 216 x 303 mm (A4 + 3 mm bleed), TrimBox = A4
                AAT-561-cover-spread-with-spine.pdf/.jpg   front | spine | back (Arabic binding on the right)
    out/web/    p001.jpg ... p100.jpg (A4, no bleed, 1240 px wide) + AAT-561-November-2026.pdf (A4, for download)"""
@@ -8,7 +8,7 @@ import numpy as np, img2pdf, pikepdf
 from PIL import Image, ImageDraw, ImageFont
 H = os.path.dirname(os.path.abspath(__file__)); os.chdir(H)
 W, HH, B = 2480, 3508, 35
-SPINE_MM = float(sys.argv[1]) if len(sys.argv) > 1 else 6.0
+SPINE_MM = float(sys.argv[1]) if len(sys.argv) > 1 else 9.0
 FB = '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf'
 for d in ('out/print', 'out/web', 'out/pages'): os.makedirs(d, exist_ok=True)
 info = json.load(open('build/info.json'))
