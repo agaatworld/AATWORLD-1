@@ -194,7 +194,7 @@
     if ((m = /^modern-(\d+)$/.exec(h))) return { v: "modern", id: +m[1], nav: "products" };
     if ((m = /^news-(\d+)$/.exec(h))) return { v: "newsitem", id: +m[1], nav: "news" };
     if ((m = /^(?:exhibition|event)-([\w-]+)$/.exec(h))) return { v: "exhibition", id: m[1], nav: "exhibitions" };
-    if ((m = /^flip(?:-(\d+))?$/.exec(h))) return { v: "flip", page: m[1] ? +m[1] : 1, nav: "magazine" };
+    if ((m = /^flip(560)?(?:-(\d+))?$/.exec(h))) return { v: "flip", old: !!m[1], page: m[2] ? +m[2] : 1, nav: "magazine" };
     if (/^request-/.test(h)) return { v: "contact", nav: "contact" };
     var simple = { home: "", magazine: "magazine", articles: "articles", news: "news", modern: "products", exhibitions: "exhibitions", club: "club", about: "about", advertise: "advertise", contact: "contact", privacy: "" };
     if (Object.prototype.hasOwnProperty.call(simple, h)) return { v: h, nav: simple[h] };

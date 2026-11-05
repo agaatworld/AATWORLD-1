@@ -43,7 +43,8 @@
       '<div class="yrs"><span class="sr">' + t("yrs_sr") + '</span><b class="yrs-n" aria-hidden="true" data-roll>' + M.years + '</b><span class="yrs-w" aria-hidden="true">' + t("yrs_word") + '</span><span class="yrs-s" aria-hidden="true">' + t("yrs_since") + "</span></div>" +
       '<h1 class="h0" tabindex="-1"><span class="scrib">' + t("h82_first") + '<i class="uline" aria-hidden="true"></i></span></h1>' +
       '<p class="lead">' + t("hero_lead") + '</p><div class="row"><a class="btn btn-adv btn-lg" href="#advertise">' + ic("megaphone", 20) + t("adv_btn") + '</a><a class="btn btn-line btn-lg" href="#flip">' + ic("book", 18) + t("mb_read", { n: M.issue }) + "</a></div></div>" +
-      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div></section>" +
+      '<a class="hero-cover" href="#flip" aria-label="' + esc(t("fl_open")) + '"><span class="book"><img src="' + img("magazine-561.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768"></span><span class="hero-cover-t">' + ic("book", 16) + t("fl_open") + "</span></a></div>" +
+      '<div class="hero-band" aria-hidden="true"><div class="wrap hero-band-in"><span lang="ar">التجارة العربية الآسيوية</span><i></i><span lang="en">Arab Asian Trade</span><i></i><span lang="zh">中阿商業雜誌</span><i></i><span lang="en">Since 1982</span></div></div></section>' +
 
       '<section class="live"><div class="wrap live-g"><div class="live-map">' + U.tradeMap() + '</div><div class="live-s"><p class="live-k"><i></i>' + t("rp_live") + '</p><h2 class="h2">' + t("rn_line") + "</h2>" +
       '<div class="live-kpi"><a href="#flip"><i class="kpi-pre">' + (A.state.lang === "ar" ? "أصدرنا" : "We have published") + '</i><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("mb_f2") + '</span></a><a href="#about"><b>1982</b><span>' + t("mb_f1") + "</span></a>" +
@@ -77,9 +78,11 @@
       '<div class="bar"><div class="wrap"><label class="sr" for="co-q">' + t("ed_search") + '</label><div class="srch">' + ic("search", 18) + '<input id="co-q" type="search" placeholder="' + esc(t("ed_search")) + '" autocomplete="off"></div></div></div>' +
       sec("", '<div class="cg" id="co-list">' + A.byTier(A.companies).map(U.companyCard).join("") + '</div><p class="empty" id="co-none" hidden>' + t("ed_none") + "</p>") };
   }
-  function flip(page) {
-    /* the issue is its own page-turning edition; the site shows it in place */
-    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="issue560/index.html?v=' + REL + '#p-' + A.clamp(page || 1, 1, IS.pages) + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
+  function flip(page, old) {
+    /* the current issue (561, November 2026) is a page-turning book of the page pictures; the October issue (560) stays
+       available at #flip560-N because the company and product data still point to its pages */
+    var url = old ? "issue560/index.html?v=" + REL + "#p-" + A.clamp(page || 1, 1, 100) : "issue561/index.html?v=" + REL + (A.state.lang === "ar" ? "" : "&lang=en") + "#p-" + A.clamp(page || 1, 1, 100);
+    return { title: t("fl_title"), html: '<section class="fbx" style="padding:0"><iframe src="' + url + '" title="' + esc(t("ed_title")) + '" allow="fullscreen" style="display:block;width:100%;height:100vh;height:100dvh;min-height:420px;border:0"></iframe></section>' };
   }
 
   /* ---------- company ---------- */
@@ -133,7 +136,7 @@
     var similar = A.allProducts().filter(function (p) { return p.c !== c && p.c.cat === c.cat; }).slice(0, 4);
     var spec = [[t("pd_supplier"), '<a href="#company-' + c.page + '">' + esc(c.company) + "</a>"], [t("pd_location"), esc(L(c.city))], [t("pd_category"), esc(L(A.cats[c.cat]))]];
     if (c.certs) spec.push([t("pd_certs"), esc(c.certs)]);
-    if (A.inMagazine(c)) spec.push([t("pd_source"), it.src === "web" ? t("prod_view") : t("prod_from_ad")], [t("pd_mag"), '<a href="#flip-' + c.page + '">' + t("ed_page", { n: c.page }) + "</a>"]);
+    if (A.inMagazine(c)) spec.push([t("pd_source"), it.src === "web" ? t("prod_view") : t("prod_from_ad")], [t("pd_mag"), '<a href="#flip560-' + c.page + '">' + t("ed_page", { n: c.page }) + "</a>"]);
     return { title: it.n, html:
       '<section class="sec pd"><div class="wrap">' + U.crumbs([[t("home"), "home"], [t("nav_products"), "products"], [L(A.cats[c.cat]), "products." + c.cat], [it.n]]) + '<div class="pd-g"><div class="pd-m"><img src="' + img(it.img) + '" alt="' + esc(it.n) + '" data-act="zoom"></div><div class="pd-i">' +
       '<h1 class="h1" tabindex="-1">' + esc(it.n) + "</h1>" + (desc ? '<p class="lead">' + esc(desc) + "</p>" : "") +
@@ -210,7 +213,7 @@
     return { title: title, html:
       '<article class="rd" lang="' + bodyLang + '" dir="' + (bodyLang === "ar" ? "rtl" : "ltr") + '"><div class="wrap rd-w">' + '<div dir="' + A.dir() + '">' + U.crumbs([[t("home"), "home"], [t("ar_nav"), "articles"], [title]]) + "</div>" +
       '<h1 class="h1" tabindex="-1">' + esc(title) + '</h1><p class="rd-m">' + (author ? t("ar_by") + " " + esc(author) + " · " : "") + t("mb_issue", { n: D.magazine.issue, m: L(D.magazine.month) }) + "</p>" +
-      (a.img ? '<img class="rd-img" src="' + img(a.img) + '" alt="">' : "") + '<div class="prose">' + paras(body) + '</div><div class="row" dir="' + A.dir() + '"><a class="btn btn-line" href="#' + (a.custom ? "articles" : "flip-" + a.pages[0]) + '">' + ic("book", 18) + (a.custom ? t("ar_back") : t("ar_in_mag")) + "</a></div></div></article>" +
+      (a.img ? '<img class="rd-img" src="' + img(a.img) + '" alt="">' : "") + '<div class="prose">' + paras(body) + '</div><div class="row" dir="' + A.dir() + '"><a class="btn btn-line" href="#' + (a.custom ? "articles" : "flip560-" + a.pages[0]) + '">' + ic("book", 18) + (a.custom ? t("ar_back") : t("ar_in_mag")) + "</a></div></div></article>" +
       (others.length ? sec("alt", U.head(t("ar_nav"), t("ar_more"), ["articles", t("ar_back")]) + '<div class="ag three">' + others.map(function (x) { return U.articleCard(x, false); }).join("") + "</div>") : "") };
   }
   function newsItem(i) {
@@ -298,7 +301,7 @@
   function about() {
     var M = D.magazine;
     return { title: t("about_title"), html: U.pageHead([[t("home"), "home"], [t("nav_about")]], t("about_title"), "") +
-      sec("", '<div class="two"><div class="prose">' + (ABOUT_TXT[A.state.lang] || ABOUT_TXT.en).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-560.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
+      sec("", '<div class="two"><div class="prose">' + (ABOUT_TXT[A.state.lang] || ABOUT_TXT.en).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + '</div><div><a class="ab-cover" href="#flip"><img src="' + img("magazine-561.jpg") + '" alt="' + esc(L(M.name)) + '" width="617" height="768" loading="lazy"></a></div></div>') +
       '<section class="sec facts"><div class="wrap facts-g"><div><b class="count" data-to="' + M.years + '">' + M.years + "</b><span>" + t("fact_years") + '</span></div><div><i class="kpi-pre">' + (A.state.lang === "ar" ? "أصدرنا" : "We have published") + '</i><b class="count" data-to="' + M.issue + '">' + M.issue + "</b><span>" + t("fact_issues") + "</span></div><div><b>" + M.since + "</b><span>" + t("fact_since") + "</span></div></div></section>" +
       '<section class="sec cta"><div class="wrap cta-in"><div><h2 class="h2">' + t("chat_person") + "</h2><p>" + t("tn_p2") + "</p></div>" + U.contactButtons("", true) + "</div></section>" };
   }
@@ -333,7 +336,7 @@
     switch (r.v) {
       case "home": return home();
       case "magazine": return magazine();
-      case "flip": return flip(r.page);
+      case "flip": return flip(r.page, r.old);
       case "company": return company(r.id, r.tab);
       case "products": return products(r.cat);
       case "modern": return r.id === undefined ? modernList() : modern(r.id);

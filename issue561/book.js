@@ -2,11 +2,11 @@
    so the pages are given to StPageFlip in reverse order and the book starts at its last sheet.
    The page fits the window height; two pages side by side when both fit, else one. Pictures load only near the open page. */
 (function () {
-  var N = 100, V = '20261105a', book = document.getElementById('book'), pf = null, cur = 1;
+  var N = 100, V = '20261105a', book = document.getElementById('book'), pf = null, cur = 1, last = null;
   var q = new URLSearchParams(location.search), EN = q.get('lang') === 'en';
   var T = EN ? { home: 'Website', page: 'Page', of: 'of ' + N, full: 'Full screen', exit: 'Exit full screen', pdf: 'PDF', prev: 'Previous', next: 'Next' }
              : { home: 'الموقع', page: 'صفحة', of: 'من ' + N, full: 'ملء الشاشة', exit: 'إنهاء ملء الشاشة', pdf: 'PDF', prev: 'السابق', next: 'التالي' };
-  if (EN) { document.documentElement.lang = 'en'; }
+  if (EN) { document.documentElement.lang = 'en'; document.getElementById('bar').dir = 'ltr'; }
   var I = {
     home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>',
     full: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
@@ -46,6 +46,7 @@
     $('bPrev').disabled = cur <= 1; $('bNext').disabled = cur >= N;
     if (location.hash !== '#p-' + cur) history.replaceState(null, '', '#p-' + cur);
     load(cur);
+    var d = last || dims(); book.style.transform = !d.two ? '' : cur === 1 ? 'translateX(' + Math.round(d.w / 2) + 'px)' : cur === N ? 'translateX(' + (-Math.round(d.w / 2)) + 'px)' : '';
   }
   function build() {
     var d = dims(), html = book;
@@ -71,6 +72,6 @@
   var m = /^#p-(\d+)$/.exec(location.hash); if (m) cur = Math.max(1, Math.min(N, +m[1]));
   load(cur);
   window.addEventListener('hashchange', function () { var m = /^#p-(\d+)$/.exec(location.hash); if (m && +m[1] !== cur) go(+m[1]); });
-  var rt = 0, last = dims(); window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { var d = dims(); if (d.w !== last.w || d.h !== last.h || d.two !== last.two) { last = d; build(); } }, 200); });
+  var rt = 0; last = dims(); window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { var d = dims(); if (d.w !== last.w || d.h !== last.h || d.two !== last.two) { last = d; build(); } }, 200); });
   build();
 })();
