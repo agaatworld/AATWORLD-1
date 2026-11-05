@@ -1,0 +1,5 @@
+_release/
+__pycache__/
+members/photos/*
+!members/photos/.gitkeep
+_work/tools/pdfpages/

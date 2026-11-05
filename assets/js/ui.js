@@ -31,30 +31,29 @@
   }
   function header() {
     var links = navList().map(function (n) { return '<a href="#' + n[0] + '" data-nav="' + n[0] + '">' + navT(n[1]) + "</a>"; }).join("");
-    var cur = A.LANGS.filter(function (x) { return x[0] === A.state.lang; })[0];
     return '<div class="hd"><a class="hd-brand" href="#home" aria-label="' + esc(t("brand_full")) + '">' + logo(34) + "</a>" +
       '<nav class="hd-nav" aria-label="' + esc(t("menu")) + '">' + links + '<i class="hd-ind" aria-hidden="true"></i></nav>' +
-      '<div class="hd-act"><button type="button" class="ib" data-act="theme" aria-label="' + esc(t("theme_toggle")) + '"><span class="i-sun">' + ic("sun") + '</span><span class="i-moon">' + ic("moon") + "</span></button>" +
-      '<div class="lang"><button type="button" class="lang-b" data-act="lang-open" aria-haspopup="true" aria-expanded="false" aria-label="' + esc(t("lang_choose")) + '">' + ic("globe", 17) + "<span>" + cur[2] + '</span></button><div class="lang-m" role="menu" hidden>' + langItems() + "</div></div>" +
-      '<a class="btn btn-adv hd-adv" href="#advertise">' + ic("megaphone", 16) + "<span>" + t("adv_btn") + "</span></a>" +
+      /* one plain language switch: "English" on the Arabic site, "العربية" on every other language (no dark mode, no advertise button in the header) */
+      '<div class="hd-act"><button type="button" class="lang-b lang-sw" data-act="lang" data-lang="' + (A.state.lang === "ar" ? "en" : "ar") + '" lang="' + (A.state.lang === "ar" ? "en" : "ar") + '">' + "<span>" + (A.state.lang === "ar" ? "English" : "العربية") + "</span></button>" +
+      '<div class="lang"><button type="button" class="lang-b lang-g" data-act="lang-open" aria-haspopup="true" aria-expanded="false" aria-label="' + esc(t("lang_choose")) + '" title="' + esc(t("lang_choose")) + '">' + ic("globe", 22) + '</button><div class="lang-m" role="menu" hidden>' + langItems() + "</div></div>" +
       '<button type="button" class="ib hd-menu" data-act="menu" aria-expanded="false" aria-controls="mnav" aria-label="' + esc(t("menu")) + '">' + ic("menu", 24) + "</button></div></div>" +
-      '<nav id="mnav" class="mnav" hidden aria-label="' + esc(t("menu")) + '">' + links + '<a class="btn btn-adv" href="#advertise">' + ic("megaphone", 16) + t("adv_btn") + '</a><div class="mnav-l">' + langItems() + "</div></nav>";
+      '<nav id="mnav" class="mnav" hidden aria-label="' + esc(t("menu")) + '">' + links + '<div class="mnav-l">' + langItems() + "</div></nav>";
   }
 
   function tierBadge() { return ""; }
+  /* one title per section (owner's request): no "see all" link beside it; the title itself opens the page */
   function head(kicker, title, link) {
-    return '<div class="sh"><div>' + '<h2 class="h2 split">' + title + "</h2></div>" + (link ? '<a class="more" href="#' + link[0] + '">' + link[1] + '<span class="flip">' + ic("arrow", 16) + "</span></a>" : "") + "</div>";
+    return '<div class="sh"><div>' + '<h2 class="h2 split">' + (link ? '<a class="sh-a" href="#' + link[0] + '">' + title + "</a>" : title) + "</h2></div></div>";
   }
-  function crumbs(items) {
-    return '<nav class="crumbs" aria-label="Breadcrumb">' + items.map(function (i) { return i[1] ? '<a href="#' + i[1] + '">' + esc(i[0]) + "</a>" : '<span aria-current="page">' + esc(i[0]) + "</span>"; }).join('<i aria-hidden="true">/</i>') + "</nav>";
-  }
+  /* the owner asked for no "Home / page" trail on any page: the header menu is enough */
+  function crumbs() { return ""; }
   function pageHead(trail, title, lead) {
     return '<header class="ph"><div class="wrap">' + crumbs(trail) + '<h1 class="h1 split" tabindex="-1">' + esc(title) + "</h1>" + (lead ? '<p class="lead">' + esc(lead) + "</p>" : "") + "</div></header>";
   }
   /* WhatsApp and email side by side: some countries have no WhatsApp */
   function contactButtons(text, big) {
     var c = D.config, cls = big ? " btn-lg" : "";
-    return '<div class="row"><a class="btn btn-wa' + cls + '" href="' + A.waLink(text) + '" target="_blank" rel="noopener noreferrer">' + ic("chat", 18) + t("wa") + '</a><a class="btn btn-line' + cls + '" href="' + A.mailLink(c.email, "AAT World", text) + '">' + ic("mail", 18) + t("email_word") + "</a></div>";
+    return '<div class="row ctb"><a class="btn btn-line' + cls + ' ctb-ph" href="tel:+' + esc(c.whatsapp) + '" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + apps(text) + '<a class="btn btn-line' + cls + '" href="' + A.mailLink(c.email, "AAT World", text) + '">' + ic("mail", 18) + t("email_word") + "</a></div>";
   }
 
   function companyCard(c) {
@@ -75,12 +74,13 @@
     var b = A.newsBody[i];
     return '<a class="nc rv" href="#news-' + i + '"><span class="nc-img"><img src="' + img(n.img) + '" alt="" loading="lazy"></span><span class="nc-b">' + (b && b.date ? "<small>" + esc(A.fmtDate(b.date)) + "</small>" : "") + "<b>" + esc(L(n.title)) + "</b></span></a>";
   }
+  var fmtCache = {};
   function eventRow(e) {
     var d = A.parseDate(e.start), days = A.daysUntil(e, new Date());
-    var mon; try { mon = new Intl.DateTimeFormat(A.state.lang === "ar" ? "ar-u-nu-latn" : A.state.lang, { month: "short" }).format(d); } catch (x) { mon = d.getMonth() + 1; }
+    var mon; try { var fk = A.state.lang; fmtCache[fk] = fmtCache[fk] || new Intl.DateTimeFormat(fk === "ar" ? "ar-u-nu-latn" : fk, { month: "short" }); mon = fmtCache[fk].format(d); } catch (x) { mon = d.getMonth() + 1; }
     var cn = (A.D.countries || {})[e.country];
     var when = e.approx ? A.fmtMonth(e.start) : A.fmtRange(e.start, e.end);
-    return '<a class="er rv" data-c="' + (e.country || "") + '" href="#exhibition-' + e.id + '"><span class="er-d' + (e.approx ? " mo" : "") + '"><b>' + (e.approx ? esc(mon) : d.getDate()) + "</b><small>" + (e.approx ? d.getFullYear() : esc(mon)) + '</small></span><span class="er-b"><b>' + esc((A.state.lang === "ar" && e.nameAr || e.name)) + "</b>" + (e.sector ? '<em class="er-s">' + esc(L(e.sector)) + "</em>" : "") + "<small>" + esc(when) + (L(e.venue) ? " · " + esc(L(e.venue)) : "") + (cn ? " · " + esc(L(cn)) : "") + '</small></span><span class="er-n">' + (e.approx ? (A.state.lang === "ar" ? "اليوم يُعلن لاحقاً" : "Day to be announced") : days > 0 ? t("days_to_go", { n: days }) : t("on_now")) + "</span></a>";
+    return '<a class="er rv" data-c="' + (e.country || "") + '" data-s="' + esc(e.sector && e.sector.ar || "") + '" href="#exhibition-' + e.id + '"><span class="er-d' + (e.approx ? " mo" : "") + '"><b>' + (e.approx ? esc(mon) : d.getDate()) + "</b><small>" + (e.approx ? d.getFullYear() : esc(mon)) + '</small></span><span class="er-b"><b>' + esc((A.state.lang === "ar" && e.nameAr || e.name)) + "</b>" + (e.sector ? '<em class="er-s">' + esc(L(e.sector)) + "</em>" : "") + "<small>" + esc(when) + (L(e.venue) ? " · " + esc(L(e.venue)) : "") + (cn ? " · " + esc(L(cn)) : "") + '</small></span>' + (e.approx ? "" : '<span class="er-n">' + (days > 0 ? t("days_to_go", { n: days }) : t("on_now")) + "</span>") + "</a>"; /* month-only shows: the month in the date box is enough (no "day to be announced") */
   }
 
   /* Live view: dotted map, glowing two-way trade lines between Asia, the Arab region and Africa (general, no single country) */
@@ -107,16 +107,41 @@
   function newsletter(id) {
     return '<form class="nl" data-form="newsletter" novalidate><label class="sr" for="' + id + '">' + t("nl_label") + '</label><input id="' + id + '" name="email" type="email" autocomplete="email" required placeholder="' + esc(t("nl_label")) + '"><button class="btn btn-red" type="submit">' + t("nl_btn") + '</button><p class="nl-msg" role="status" aria-live="polite"></p></form>';
   }
+  /* the messaging apps the AAT phone number works on */
+  /* app icons: WhatsApp, Viber and LINE are the official logos (Simple Icons, CC0); Botim, imo and BiP are pictures of their original logos (assets/img/apps) */
+  var APP_IC = {"WhatsApp":{"c":"#25D366","p":"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"},"Viber":{"c":"#7360F2","p":"M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.776 6.12 20.36h.003l-.004 2.416s-.037.977.61 1.177c.777.242 1.234-.5 1.98-1.302.407-.44.972-1.084 1.397-1.58 3.85.326 6.812-.416 7.15-.525.776-.252 5.176-.816 5.892-6.657.74-6.02-.36-9.83-2.34-11.546-.596-.55-3.006-2.3-8.375-2.323 0 0-.395-.025-1.037-.017zm.058 1.693c.545-.004.88.017.88.017 4.542.02 6.717 1.388 7.222 1.846 1.675 1.435 2.53 4.868 1.906 9.897v.002c-.604 4.878-4.174 5.184-4.832 5.395-.28.09-2.882.737-6.153.524 0 0-2.436 2.94-3.197 3.704-.12.12-.26.167-.352.144-.13-.033-.166-.188-.165-.414l.02-4.018c-4.762-1.32-4.485-6.292-4.43-8.895.054-2.604.543-4.738 1.996-6.173 1.96-1.773 5.474-2.018 7.11-2.03zm.38 2.602c-.167 0-.303.135-.304.302 0 .167.133.303.3.305 1.624.01 2.946.537 4.028 1.592 1.073 1.046 1.62 2.468 1.633 4.334.002.167.14.3.307.3.166-.002.3-.138.3-.304-.014-1.984-.618-3.596-1.816-4.764-1.19-1.16-2.692-1.753-4.447-1.765zm-3.96.695c-.19-.032-.4.005-.616.117l-.01.002c-.43.247-.816.562-1.146.932-.002.004-.006.004-.008.008-.267.323-.42.638-.46.948-.008.046-.01.093-.007.14 0 .136.022.27.065.4l.013.01c.135.48.473 1.276 1.205 2.604.42.768.903 1.5 1.446 2.186.27.344.56.673.87.984l.132.132c.31.308.64.6.984.87.686.543 1.418 1.027 2.186 1.447 1.328.733 2.126 1.07 2.604 1.206l.01.014c.13.042.265.064.402.063.046.002.092 0 .138-.008.31-.036.627-.19.948-.46.004 0 .003-.002.008-.005.37-.33.683-.72.93-1.148l.003-.01c.225-.432.15-.842-.18-1.12-.004 0-.698-.58-1.037-.83-.36-.255-.73-.492-1.113-.71-.51-.285-1.032-.106-1.248.174l-.447.564c-.23.283-.657.246-.657.246-3.12-.796-3.955-3.955-3.955-3.955s-.037-.426.248-.656l.563-.448c.277-.215.456-.737.17-1.248-.217-.383-.454-.756-.71-1.115-.25-.34-.826-1.033-.83-1.035-.137-.165-.31-.265-.502-.297zm4.49.88c-.158.002-.29.124-.3.282-.01.167.115.312.282.324 1.16.085 2.017.466 2.645 1.15.63.688.93 1.524.906 2.57-.002.168.13.306.3.31.166.003.305-.13.31-.297.025-1.175-.334-2.193-1.067-2.994-.74-.81-1.777-1.253-3.05-1.346h-.024zm.463 1.63c-.16.002-.29.127-.3.287-.008.167.12.31.288.32.523.028.875.175 1.113.422.24.245.388.62.416 1.164.01.167.15.295.318.287.167-.008.295-.15.287-.317-.03-.644-.215-1.178-.58-1.557-.367-.378-.893-.574-1.52-.607h-.018z"},"LINE":{"c":"#00C300","p":"M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"},"Botim":{"c":"#0A1EE0","s":"<path d=\"M8 6.6V13.5A5.2 5.2 0 1 0 13.2 8.3\" fill=\"none\" stroke=\"#fff\" stroke-linecap=\"round\" stroke-width=\"3.3\"/><circle cx=\"8\" cy=\"6.6\" r=\"1.75\" fill=\"#9AA5F0\"/><circle cx=\"13.2\" cy=\"8.3\" r=\"1.75\" fill=\"#9AA5F0\"/>"},"Imo":{"c":"#fff","b":"#d5dbe8","s":"<path d=\"M12.6 3.6a8.2 8.2 0 1 1-5.4 14.4L3.6 19.6l1.8-3.9A8.2 8.2 0 0 1 12.6 3.6z\" fill=\"none\" stroke=\"#2E4F9E\" stroke-width=\"1.9\" stroke-linejoin=\"round\"/><text x=\"12.6\" y=\"11.8\" dy=\".35em\" text-anchor=\"middle\" font-family=\"Arial, sans-serif\" font-weight=\"700\" font-size=\"7.2\" fill=\"#2E4F9E\">imo</text>"},"BiP":{"c":"#4FACF7","s":"<g fill=\"none\" stroke=\"#fff\" stroke-linecap=\"round\" stroke-width=\"2.6\"><path d=\"M3.6 4.6V13\"/><circle cx=\"6.9\" cy=\"13\" r=\"3.3\"/><path d=\"M11.6 11V15.6\"/><path d=\"M15.2 13V20.2\"/><circle cx=\"18.4\" cy=\"13\" r=\"3.2\"/></g><circle cx=\"11.6\" cy=\"7.4\" r=\"1.5\" fill=\"#F8DC5A\"/>"}};
+  /* Botim, imo and BiP: the original app logos, cut from their store pictures (not redrawn) */
+  var APP_IMG = { Botim: "botim", Imo: "imo", imo: "imo", BiP: "bip" };
+  function appIcon(x) {
+    var a = APP_IC[x]; if (!a) return esc(x);
+    if (APP_IMG[x]) return '<span class="app-i app-img"><img src="assets/img/apps/' + APP_IMG[x] + '.png" alt="" width="48" height="48" decoding="async"></span><span class="sr">' + esc(x) + "</span>";
+    var g = a.s ? a.s : a.p ? '<path fill="#fff" d="' + a.p + '"/>' : '<text x="12" y="12" dy=".35em" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="' + a.fs + '" fill="#fff">' + esc(a.w) + "</text>";
+    return '<span class="app-i" style="background:' + a.c + (a.b ? ";box-shadow:inset 0 0 0 1.5px " + a.b : "") + '"><svg viewBox="' + (a.p ? "-3 -3 30 30" : "0 0 24 24") + '" width="30" height="30" aria-hidden="true" focusable="false">' + g + '</svg></span><span class="sr">' + esc(x) + "</span>";
+  }
+  /* WhatsApp and Viber open a chat with the AAT number; Botim, imo, BiP and LINE have no web link for a phone number, so their icon copies the number */
+  function appHref(x, text) {
+    if (x === "WhatsApp") return A.waLink(text);
+    if (x === "Viber") return "viber://chat?number=%2B" + D.config.whatsapp;
+    return "";
+  }
+  function apps(text) {
+    var l = D.config.apps || [], ar = A.state.lang === "ar", ph = D.config.phoneDisplay;
+    return l.length ? '<ul class="apps" aria-label="' + (ar ? "تواصل معنا عبر" : "Contact us on") + '">' + l.map(function (x) {
+      var h = appHref(x, text), tip = h ? (ar ? "راسلنا على " : "Message us on ") + x : (ar ? "انسخ الرقم لـ " : "Copy the number for ") + x;
+      return "<li>" + (h ? '<a class="app-a" href="' + esc(h) + '" target="_blank" rel="noopener noreferrer" title="' + esc(tip) + '">' + appIcon(x) + "</a>"
+        : '<button type="button" class="app-a" data-act="appnum" data-app="' + esc(x) + '" data-copy="' + esc(ph) + '" title="' + esc(tip) + '">' + appIcon(x) + "</button>") + "</li>";
+    }).join("") + "</ul>" : "";
+  }
   function footer() {
     var c = D.config, back = A.companies.filter(function (x) { return x.tier === "back"; })[0];
     return (back ? '<a class="bc" href="#company-' + back.page + '"><span class="wrap bc-in">' + (A.logoOf(back) ? '<img src="' + img(A.logoOf(back)) + '" alt="">' : "") + "<span><b>" + esc(back.company) + '</b></span><span class="bc-go">' + t("ed_open") + '<span class="flip">' + ic("arrow", 16) + "</span></span></span></a>" : "") +
       '<div class="wrap ft"><div class="ft-nl"><div><h2 class="h3">' + t("nl_title") + "</h2><p>" + t("nl_lead") + "</p></div>" + newsletter("ft-email") + "</div>" +
       '<div class="ft-g"><div class="ft-a"><a class="ft-brand" href="#home">' + logo(46) + '</a><p class="ft-n"><b>' + t("brand_full") + "</b><span>" + t("brand_other") + "</span></p><p>" + t("mb_claim") + "</p></div>" +
       '<div><h2 class="ft-h">' + t("footer_explore") + "</h2><ul>" + navList().slice(0, 5).map(function (n) { return '<li><a href="#' + n[0] + '">' + navT(n[1]) + "</a></li>"; }).join("") + '<li><a href="#advertise">' + t("adv_btn") + "</a></li></ul></div>" +
-      '<div><h2 class="ft-h">' + t("nav_contact") + "</h2><ul><li>" + esc(L(c.address)) + '</li><li><a href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer" dir="ltr">' + esc(c.phoneDisplay) + '</a></li><li><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></li><li><a href="mailto:' + esc(c.clubEmail) + '">' + esc(c.clubEmail) + '</a></li><li><a href="' + esc(A.safeUrl(c.social.youtube)) + '" target="_blank" rel="noopener noreferrer">' + t("yt") + "</a></li></ul></div></div>" +
-      '<div class="ft-b"><span>© ' + new Date().getFullYear() + " " + t("brand_full") + " · AAT World · " + t("since82") + ". " + t("footer_rights") + '</span><a href="#privacy">' + t("privacy") + "</a></div></div>";
+      '<div><h2 class="ft-h">' + t("nav_contact") + "</h2><ul><li dir=\"ltr\">" + esc(c.address.en) + '</li><li><a href="' + A.waLink() + '" target="_blank" rel="noopener noreferrer" dir="ltr">' + esc(c.phoneDisplay) + "</a>" + apps() + '</li><li><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></li><li><a href="mailto:' + esc(c.clubEmail) + '">' + esc(c.clubEmail) + "</a></li></ul></div></div>" +
+      '<div class="ft-b"><span>' + t("brand_full") + ' · <bdi dir="ltr">AAT (ARAB ASIAN TRADE)</bdi> · ' + t("since82") + ' · <span class="ft-r">' + t("footer_rights") + ' <bdi dir="ltr">© ' + new Date().getFullYear() + '</bdi></span></span><a href="#privacy">' + t("privacy") + "</a></div></div>";
   }
 
   W.AAT.ui = { newsWord: function () { return navT("@news"); }, ic: ic, logo: logo, NAV: NAV, header: header, footer: footer, tierBadge: tierBadge, head: head, crumbs: crumbs, pageHead: pageHead, contactButtons: contactButtons,
-    companyCard: companyCard, productCard: productCard, articleCard: articleCard, newsCard: newsCard, eventRow: eventRow, tradeMap: tradeMap, newsletter: newsletter };
+    companyCard: companyCard, productCard: productCard, articleCard: articleCard, newsCard: newsCard, eventRow: eventRow, tradeMap: tradeMap, newsletter: newsletter, apps: apps };
 })(window);

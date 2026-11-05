@@ -70,7 +70,7 @@ D={
 }
 cap='<div style="font-size: 22px; font-weight: 700; color: #6b655c">%s</div>\n'
 for k,(t,fd,fbg,fdk,fpb,bd,bbg,bdk,bpb) in D.items():
-    O=('محمد مروان فتال','Mohamad Marwan Fattal','OWNER · <span dir="rtl">المالك</span>','+886 966 404 681','marwanaat@gmail.com')
+    O=('محمد مروان فتال','Mohamad Marwan Fattal','OWNER · <span dir="rtl">المالك</span>','+886 966 404 681','marwan@aatworld.com')
     C=('عبدالرحمن محمد','Abdulrahman Mohammad','CEO · <span dir="rtl">المدير التنفيذي</span>','[CEO PHONE]','[CEO EMAIL]')
     cards=[(front(fd,fbg,fdk,fpb,*O,True,False),'Front · owner · with 45 years'),(back(bd,bbg,bdk,bpb),'Back'),(front(fd,fbg,fdk,fpb,*O,False,True),'Front · owner · without 45 years (address added)'),(front(fd,fbg,fdk,fpb,*C,True,False),'Front · CEO')]
     body=''.join('<div style="display: flex; flex-direction: column; gap: 14px">\n'+c+cap%l+'</div>\n\n' for c,l in cards)
