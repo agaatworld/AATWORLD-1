@@ -83,6 +83,10 @@
                 android:resource="@xml/schedule_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".ScheduleTickReceiver"
+            android:exported="false" />
+
         <service
             android:name=".ScheduleWidgetService"
             android:exported="true"

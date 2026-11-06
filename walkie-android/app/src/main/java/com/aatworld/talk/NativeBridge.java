@@ -96,6 +96,23 @@ public class NativeBridge {
         }
     }
 
+    @JavascriptInterface
+    public void setScheduleNotification(boolean on) {
+        try {
+            ScheduleNotifier.setEnabled(ctx, on);
+            ScheduleNotifier.sync(ctx); // posts or cancels at once; arms/cancels the alarm
+        } catch (Throwable ignored) { }
+    }
+
+    @JavascriptInterface
+    public boolean getScheduleNotification() {
+        try {
+            return ScheduleNotifier.isEnabled(ctx);
+        } catch (Throwable e) {
+            return true;
+        }
+    }
+
     /** Saved schedule JSON, or "" if the user never saved one (web side then uses its own schedule.json). */
     @JavascriptInterface
     public String loadSchedule() {

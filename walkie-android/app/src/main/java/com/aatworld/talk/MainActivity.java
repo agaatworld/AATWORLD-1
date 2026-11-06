@@ -154,6 +154,7 @@ public class MainActivity extends Activity {
             handleWebPermission(r);
         }
         afterPermissions();
+        ScheduleNotifier.sync(this); // notification permission may just have been granted
     }
 
     private void afterPermissions() {
@@ -267,6 +268,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        ScheduleNotifier.sync(this);
         if (webView != null) {
             webView.onResume();
             webView.resumeTimers();

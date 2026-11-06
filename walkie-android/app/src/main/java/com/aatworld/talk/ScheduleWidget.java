@@ -1,6 +1,5 @@
 package com.aatworld.talk;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -12,17 +11,16 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 
-import java.util.Calendar;
-
 /** Daily schedule widget (collection widget with a scrolling list). */
 public class ScheduleWidget extends AppWidgetProvider {
     static final String ACTION_PREV = "com.aatworld.talk.SCHEDULE_PREV";
     static final String ACTION_NEXT = "com.aatworld.talk.SCHEDULE_NEXT";
-    static final String ACTION_TICK = "com.aatworld.talk.SCHEDULE_TICK";
+    static final String ACTION_TICK = ScheduleTickReceiver.ACTION_TICK;
 
     @Override
     public void onUpdate(Context ctx, AppWidgetManager mgr, int[] ids) {
         for (int id : ids) render(ctx, mgr, id);
+        ScheduleNotifier.refresh(ctx);
         scheduleNext(ctx);
     }
 
@@ -38,7 +36,7 @@ public class ScheduleWidget extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context ctx) {
-        cancelAlarm(ctx);
+        scheduleNext(ctx); // keeps the alarm only if the notification still needs it
     }
 
     @Override
@@ -86,7 +84,7 @@ public class ScheduleWidget extends AppWidgetProvider {
         int[] ids = ids(ctx);
         for (int id : ids) render(ctx, mgr, id);
         if (ids.length > 0) mgr.notifyAppWidgetViewDataChanged(ids, R.id.sw_list);
-        scheduleNext(ctx);
+        ScheduleNotifier.sync(ctx);
     }
 
     static void render(Context ctx, AppWidgetManager mgr, int id) {
@@ -150,27 +148,12 @@ public class ScheduleWidget extends AppWidgetProvider {
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    // ---- one inexact alarm at the next event boundary (or midnight) ----
-    private static PendingIntent alarmPi(Context ctx) {
-        Intent i = new Intent(ctx, ScheduleWidget.class).setAction(ACTION_TICK);
-        return PendingIntent.getBroadcast(ctx, 1999, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
+    // ---- one inexact alarm at the next boundary: owned by ScheduleTickReceiver ----
     static void cancelAlarm(Context ctx) {
-        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        if (am != null) am.cancel(alarmPi(ctx));
+        ScheduleTickReceiver.cancel(ctx);
     }
 
     static void scheduleNext(Context ctx) {
-        try {
-            AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-            if (am == null) return;
-            if (ids(ctx).length == 0) { cancelAlarm(ctx); return; }
-            Calendar c = Calendar.getInstance();
-            long msOfDay = ((c.get(Calendar.HOUR_OF_DAY) * 60L + c.get(Calendar.MINUTE)) * 60L
-                    + c.get(Calendar.SECOND)) * 1000L + c.get(Calendar.MILLISECOND);
-            long delay = ScheduleLogic.nextBoundaryDelayMillis(ScheduleStore.todayTimes(ctx), msOfDay) + 1500L;
-            am.setAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + delay, alarmPi(ctx));
-        } catch (Throwable ignored) { }
+        ScheduleTickReceiver.schedule(ctx);
     }
 }
