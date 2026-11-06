@@ -28,7 +28,7 @@ ar: {
   ansStep: 'تم! اعرض هذا الكود لصديقك ليمسحه', waitingOther: 'بانتظار صديقك ليمسح الكود…', done: 'تم',
   paired: 'تم الربط مع', badCode: 'الكود غير صحيح أو انتهى. ابدأ من جديد.', camErr: 'تعذّر تشغيل الكاميرا — استخدم «الصق الكود يدوياً».', copied: 'تم النسخ ✓',
   yourName: 'اسمك', language: 'اللغة', optVib: 'هزاز عندما يتكلم أحد', optBoss: 'وضع المدير: مجموعات وملاحظات وتنبيهات', optToggle: 'اضغط مرة للبدء ومرة للإيقاف (بدون إمساك)',
-  optWake: 'إبقاء الشاشة مضاءة (يستهلك بطارية أكثر)', optStun: 'شبكات مختلفة / إنترنت (يزيد حجم الكود)',
+  optSchedNotif: 'عرض الجدول كإشعار على شاشة القفل', optWake: 'إبقاء الشاشة مضاءة (يستهلك بطارية أكثر)', optStun: 'شبكات مختلفة / إنترنت (يزيد حجم الكود)',
   iosHint: 'لوضع أيقونة على الشاشة الرئيسية: في آيفون اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية». في أندرويد: قائمة المتصفح ثم «تثبيت التطبيق».', batteryNote: 'التطبيق لا يستهلك شيئاً تقريباً وهو ساكن: لا يعمل الميكروفون إلا أثناء الكلام، ولا توجد عمليات تتكرر في الخلفية.',
   testVib: 'تجربة الهزاز', vibYes: 'هذا الجهاز يدعم الهزاز ✓', vibNo: 'هذا الجهاز (آيفون/سفاري) لا يسمح للمواقع بالهزاز — سيظهر وميض ونغمة بدلاً منه.',
   isBoss: 'هذا هو الرئيس (يقبل تنبيهاته)', reconnect: 'إعادة الربط', remove: 'حذف', close: 'إغلاق',
@@ -56,7 +56,7 @@ en: {
   ansStep: 'Done! Show this code to your friend to scan', waitingOther: 'Waiting for your friend to scan…', done: 'Done',
   paired: 'Linked with', badCode: 'Invalid or expired code. Start again.', camErr: 'Camera unavailable — use “paste the code manually”.', copied: 'Copied ✓',
   yourName: 'Your name', language: 'Language', optVib: 'Vibrate when someone talks', optBoss: 'Manager mode: groups, notes and alerts', optToggle: 'Tap once to start, again to stop (no holding)',
-  optWake: 'Keep screen on (uses more battery)', optStun: 'Different networks / internet (bigger code)',
+  optSchedNotif: 'Show schedule as a lock-screen notification', optWake: 'Keep screen on (uses more battery)', optStun: 'Different networks / internet (bigger code)',
   iosHint: 'To put an icon on your home screen: iPhone — tap Share, then “Add to Home Screen”. Android — browser menu, then “Install app”.', batteryNote: 'Idle cost is near zero: the microphone runs only while you talk and nothing repeats in the background.',
   testVib: 'Test vibration', vibYes: 'This device supports vibration ✓', vibNo: 'This device (iPhone/Safari) does not let websites vibrate — a flash and tone are used instead.',
   isBoss: 'This is the boss (accept their alerts)', reconnect: 'Reconnect', remove: 'Remove', close: 'Close',
@@ -544,12 +544,13 @@ function wire() {
   $('#wName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#wStart').click(); });
   $$('[data-lang]').forEach(b => b.onclick = () => { S.lang = b.dataset.lang; persist(); applyLang(); });
   $('#btnAdd').onclick = openPair; $('#emptyAdd').onclick = openPair;
-  $('#btnSet').onclick = () => { $('#sName').value = S.me.name; $('#oVib').checked = S.set.vib; $('#oBoss').checked = !!S.me.boss; $('#oToggle').checked = S.set.toggle; $('#oWake').checked = S.set.wake; $('#oStun').checked = S.set.stun; $('#vibSupport').textContent = canVib() ? tt('vibYes') : tt('vibNo'); show('settings'); };
+  $('#btnSet').onclick = () => { $('#sName').value = S.me.name; $('#oVib').checked = S.set.vib; $('#oBoss').checked = !!S.me.boss; $('#oToggle').checked = S.set.toggle; $('#oWake').checked = S.set.wake; const hasN = !!(window.AATNative && AATNative.getScheduleNotification); $('#rowSN').classList.toggle('hidden', !hasN); if (hasN) $('#oSN').checked = !!AATNative.getScheduleNotification(); $('#oStun').checked = S.set.stun; $('#vibSupport').textContent = canVib() ? tt('vibYes') : tt('vibNo'); show('settings'); };
   $('#setBack').onclick = () => { show('home'); renderAll(); };
   $('#sName').oninput = e => { const n = e.target.value.trim(); if (!n) return; S.me.name = n; persist(); peers.forEach(p => sendCtl(p, { k: 'name', name: n })); renderHeader(); };
   $('#oVib').onchange = e => { S.set.vib = e.target.checked; persist(); };
   $('#oBoss').onchange = e => { S.me.boss = e.target.checked; persist(); renderHeader(); renderGroups(); peers.forEach(p => sendCtl(p, { k: 'hello', id: S.me.id, name: S.me.name, boss: !!S.me.boss })); };
   $('#oToggle').onchange = e => { S.set.toggle = e.target.checked; persist(); renderPTT(); };
+  $('#oSN').onchange = e => { try { AATNative.setScheduleNotification(e.target.checked); } catch {} };
   $('#oWake').onchange = e => { S.set.wake = e.target.checked; persist(); wakeSync(); };
   $('#oStun').onchange = e => { S.set.stun = e.target.checked; persist(); };
   $('#testVib').onclick = () => { if (!vib([300, 100, 300])) { blip(); toast(tt('vibNo')); } };

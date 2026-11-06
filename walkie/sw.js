@@ -1,4 +1,4 @@
-const C='talk-v4',A=['./','index.html','style.css?v=4','app.js?v=4','lib/qrcode.js?v=4','lib/jsQR.js?v=4','manifest.json','schedule.json','icons/icon-192.png','icons/icon-512.png','icons/icon-180.png'];
+const C='talk-v5',A=['./','index.html','style.css?v=5','app.js?v=5','lib/qrcode.js?v=5','lib/jsQR.js?v=5','manifest.json','schedule.json','icons/icon-192.png','icons/icon-512.png','icons/icon-180.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(A)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(C).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request,{ignoreSearch:false}).then(r=>r||caches.match('index.html'))))});
