@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تكلّم · Talk</string>
+    <string name="widget_label">تكلّم · Talk</string>
+    <string name="widget_desc">زر سريع لفتح تكلّم · Quick button to open Talk</string>
+    <string name="widget_button">🎙 تكلّم / Talk</string>
+    <string name="widget_title">تكلّم · Talk</string>
+    <string name="shortcut_short">Talk</string>
+    <string name="shortcut_long">تكلّم · Talk</string>
+    <string name="notif_channel">تكلّم · Talk</string>
+    <string name="notif_title">تكلّم يعمل — Talk is active</string>
+    <string name="notif_text">اضغط للفتح · Tap to open</string>
+</resources>

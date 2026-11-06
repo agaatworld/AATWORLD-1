@@ -27,15 +27,17 @@ ar: {
   scanOffer: 'وجّه الكاميرا نحو الكود على تليفون صديقك', scanAnswer: 'وجّه الكاميرا نحو الكود الظاهر عند صديقك',
   ansStep: 'تم! اعرض هذا الكود لصديقك ليمسحه', waitingOther: 'بانتظار صديقك ليمسح الكود…', done: 'تم',
   paired: 'تم الربط مع', badCode: 'الكود غير صحيح أو انتهى. ابدأ من جديد.', camErr: 'تعذّر تشغيل الكاميرا — استخدم «الصق الكود يدوياً».', copied: 'تم النسخ ✓',
-  yourName: 'اسمك', language: 'اللغة', optVib: 'هزاز عندما يتكلم أحد', optBoss: 'أنا الرئيس (أرسل تنبيهات للجميع)', optToggle: 'اضغط مرة للبدء ومرة للإيقاف (بدون إمساك)',
+  yourName: 'اسمك', language: 'اللغة', optVib: 'هزاز عندما يتكلم أحد', optBoss: 'وضع المدير: مجموعات وملاحظات وتنبيهات', optToggle: 'اضغط مرة للبدء ومرة للإيقاف (بدون إمساك)',
   optWake: 'إبقاء الشاشة مضاءة (يستهلك بطارية أكثر)', optStun: 'شبكات مختلفة / إنترنت (يزيد حجم الكود)',
-  batteryNote: 'التطبيق لا يستهلك شيئاً تقريباً وهو ساكن: لا يعمل الميكروفون إلا أثناء الكلام، ولا توجد عمليات تتكرر في الخلفية.',
+  iosHint: 'لوضع أيقونة على الشاشة الرئيسية: في آيفون اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية». في أندرويد: قائمة المتصفح ثم «تثبيت التطبيق».', batteryNote: 'التطبيق لا يستهلك شيئاً تقريباً وهو ساكن: لا يعمل الميكروفون إلا أثناء الكلام، ولا توجد عمليات تتكرر في الخلفية.',
   testVib: 'تجربة الهزاز', vibYes: 'هذا الجهاز يدعم الهزاز ✓', vibNo: 'هذا الجهاز (آيفون/سفاري) لا يسمح للمواقع بالهزاز — سيظهر وميض ونغمة بدلاً منه.',
   isBoss: 'هذا هو الرئيس (يقبل تنبيهاته)', reconnect: 'إعادة الربط', remove: 'حذف', close: 'إغلاق',
   alertT: 'إرسال تنبيه', alertDur: 'مدة الهزاز والصوت', sec: 'ثانية', untilAck: 'حتى يؤكدوا', alertTo: 'إلى', toAll: 'كل المتصلين', toSel: 'المحددين فقط',
   alertMsgPh: 'رسالة قصيرة (اختياري)', alertSend: 'إرسال التنبيه الآن', alertCancel: 'إيقاف التنبيه', sentTo: 'أُرسل إلى', confirmed: 'أكّد',
   alertFrom: 'تنبيه من', gotIt: 'تم الاستلام ✓', secsLeft: 'ثانية متبقية', alertIgnored: 'تنبيه من شخص ليس رئيساً عندك', nobodyOnline: 'لا يوجد أحد متصل',
-  unnamed: 'بدون اسم', you: 'أنت', members: 'أشخاص'
+  unnamed: 'بدون اسم', you: 'أنت', members: 'أشخاص',
+  msgPh: 'اكتب رسالة…', noMsgs: 'لا توجد رسائل بعد — اكتب أول رسالة', toSelected: 'رسالة للمحددين', sentOk: 'تم الإرسال ✓', pendingMsg: 'ستصل عندما يتصل', pickFirst: 'اختر أشخاصاً أولاً',
+  groupsT: 'المجموعات', groupHow: 'اختر الأشخاص من القائمة ثم اكتب اسماً واحفظهم كمجموعة. بعدها بضغطة واحدة تختارهم كلهم.', gNamePh: 'اسم المجموعة (مثال: المبيعات)', saveGroup: 'حفظ المحدد كمجموعة', notePh: 'ملاحظة عن الشخص (مثال: محاسب، مندوب)', tagsT: 'المجموعات', newGroup: 'مجموعة', deleteG: 'حذف', noSel: 'اختر أشخاصاً من القائمة أولاً'
 },
 en: {
   welcomeTitle: 'Welcome 👋', welcomeSub: 'Type your name so your friends see it on their screen', namePh: 'Type your name', start: 'Start',
@@ -52,15 +54,17 @@ en: {
   scanOffer: 'Point the camera at the code on your friend’s phone', scanAnswer: 'Point the camera at the code on your friend’s screen',
   ansStep: 'Done! Show this code to your friend to scan', waitingOther: 'Waiting for your friend to scan…', done: 'Done',
   paired: 'Linked with', badCode: 'Invalid or expired code. Start again.', camErr: 'Camera unavailable — use “paste the code manually”.', copied: 'Copied ✓',
-  yourName: 'Your name', language: 'Language', optVib: 'Vibrate when someone talks', optBoss: 'I am the boss (send alerts)', optToggle: 'Tap once to start, again to stop (no holding)',
+  yourName: 'Your name', language: 'Language', optVib: 'Vibrate when someone talks', optBoss: 'Manager mode: groups, notes and alerts', optToggle: 'Tap once to start, again to stop (no holding)',
   optWake: 'Keep screen on (uses more battery)', optStun: 'Different networks / internet (bigger code)',
-  batteryNote: 'Idle cost is near zero: the microphone runs only while you talk and nothing repeats in the background.',
+  iosHint: 'To put an icon on your home screen: iPhone — tap Share, then “Add to Home Screen”. Android — browser menu, then “Install app”.', batteryNote: 'Idle cost is near zero: the microphone runs only while you talk and nothing repeats in the background.',
   testVib: 'Test vibration', vibYes: 'This device supports vibration ✓', vibNo: 'This device (iPhone/Safari) does not let websites vibrate — a flash and tone are used instead.',
   isBoss: 'This is the boss (accept their alerts)', reconnect: 'Reconnect', remove: 'Remove', close: 'Close',
   alertT: 'Send alert', alertDur: 'Vibration & sound length', sec: 'sec', untilAck: 'Until confirmed', alertTo: 'To', toAll: 'Everyone online', toSel: 'Selected only',
   alertMsgPh: 'Short message (optional)', alertSend: 'Send alert now', alertCancel: 'Stop alert', sentTo: 'Sent to', confirmed: 'confirmed',
   alertFrom: 'Alert from', gotIt: 'Got it ✓', secsLeft: 'sec left', alertIgnored: 'Alert from someone who is not your boss', nobodyOnline: 'Nobody is online',
-  unnamed: 'No name', you: 'You', members: 'people'
+  unnamed: 'No name', you: 'You', members: 'people',
+  msgPh: 'Type a message…', noMsgs: 'No messages yet — write the first one', toSelected: 'Message to selected', sentOk: 'Sent ✓', pendingMsg: 'Will arrive when online', pickFirst: 'Select people first',
+  groupsT: 'Groups', groupHow: 'Select people in the list, type a name and save them as a group. Then pick them all with one tap.', gNamePh: 'Group name (e.g. Sales)', saveGroup: 'Save selected as group', notePh: 'Note about this person (e.g. accountant)', tagsT: 'Groups', newGroup: 'Group', deleteG: 'Delete', noSel: 'Select people in the list first'
 }};
 const tt = k => (TX[S.lang] && TX[S.lang][k]) || TX.en[k] || k;
 
@@ -70,20 +74,28 @@ const S = {
   contacts: LS.get('contacts', {}),
   sel: new Set(LS.get('sel', [])),
   set: Object.assign({ vib: true, wake: false, toggle: false, stun: false }, LS.get('set', {})),
+  groups: LS.get('groups', []),
   lang: LS.get('lang', 'ar')
 };
 const peers = [];
 const speakers = {};            // id -> {name, grp, t}
 const stats = { audioIn: 0, audioOut: 0, maxRms: 0, vibCalls: 0, timers: 0 };
 window.__aat = { S, peers, stats, speakers };
-const persist = () => { LS.set('me', S.me); LS.set('contacts', S.contacts); LS.set('sel', [...S.sel]); LS.set('set', S.set); LS.set('lang', S.lang); };
+const persist = () => { LS.set('me', S.me); LS.set('contacts', S.contacts); LS.set('sel', [...S.sel]); LS.set('set', S.set); LS.set('lang', S.lang); LS.set('groups', S.groups); };
 
 /* ---------------- helpers ---------------- */
-const show = id => { ['welcome', 'home', 'pair', 'settings'].forEach(s => $('#' + s).classList.toggle('hidden', s !== id)); };
+const show = id => { ['welcome', 'home', 'pair', 'settings', 'chat'].forEach(s => $('#' + s).classList.toggle('hidden', s !== id)); };
 let toastT;
 function toast(msg) { const e = $('#toast'); e.textContent = msg; e.classList.remove('hidden'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.add('hidden'), 2600); }
-const canVib = () => typeof navigator.vibrate === 'function';
-function vib(p) { if (!canVib()) return false; try { stats.vibCalls++; return navigator.vibrate(p); } catch { return false; } }
+const canVib = () => !!window.AATNative || typeof navigator.vibrate === 'function';
+function vib(p) {
+  if (!canVib()) return false;
+  try {
+    stats.vibCalls++;
+    if (window.AATNative) { if (p === 0 || (Array.isArray(p) && !p.length)) { AATNative.cancelVibrate(); return true; } AATNative.vibrate([].concat(p).map(x => Math.round(x)).join(','), -1); return true; }
+    return navigator.vibrate(p);
+  } catch { return false; }
+}
 const initial = n => ([...(n || '?').trim()][0] || '?').toUpperCase();
 const color = id => 'c' + (parseInt((id || '0').slice(0, 4), 16) % 5);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -134,8 +146,9 @@ function onMsg(p, m) {
       peers.filter(q => q !== p && q.id === m.id).forEach(q => { q.ctl.onclose = null; dropPeerQuiet(q); });
       p.id = m.id; p.name = String(m.name || '').slice(0, 24); p.open = p.ctl.readyState === 'open';
       const old = S.contacts[m.id];
-      S.contacts[m.id] = { id: m.id, name: p.name, boss: old ? old.boss : !!m.boss };
+      S.contacts[m.id] = Object.assign({ tags: [], note: '' }, old || {}, { id: m.id, name: p.name, boss: old ? old.boss : !!m.boss });
       persist(); renderAll();
+      flushPending(p.id);
       if (pairWait && pairWait.p === p) { pairWait.done(p); }
       break;
     }
@@ -144,12 +157,14 @@ function onMsg(p, m) {
     case 'alert': onAlert(p, m); break;
     case 'alertoff': if (alertCur && alertCur.id === m.id) endAlert(true); break;
     case 'ack': onAck(p, m); break;
+    case 'msg': onChatMsg(p, m); break;
+    case 'msgack': onMsgAck(p, m); break;
   }
 }
 function dropPeerQuiet(q) { const i = peers.indexOf(q); if (i >= 0) peers.splice(i, 1); q.open = false; try { q.pc.close(); } catch {} }
 
 /* ---------------- render ---------------- */
-function renderAll() { renderHeader(); renderList(); renderBanner(); renderPTT(); }
+function renderAll() { if (!S.me) return; renderHeader(); renderGroups(); renderList(); renderBanner(); renderPTT(); }
 function renderHeader() {
   if (!S.me) return;
   $('#meName').textContent = S.me.name; $('#meAv').textContent = initial(S.me.name);
@@ -166,10 +181,48 @@ function renderList() {
     return `<li class="card ${sel ? 'sel' : ''} ${on ? '' : 'off'} ${speakers[c.id] ? 'speak' : ''}" data-id="${c.id}">
       <span class="avatar ${color(c.id)}">${esc(initial(c.name))}</span>
       <div class="cinfo"><div class="cname">${esc(c.name || tt('unnamed'))}${c.boss ? '<span class="crown">👑</span>' : ''}</div>
-      <div class="cstat ${on ? 'on' : ''}">${on ? '● ' + tt('online') : tt('offline')}</div></div>
-      <span class="check">✓</span><button class="more" data-more="${c.id}" aria-label="menu">⋯</button></li>`;
+      <div class="cstat ${on ? 'on' : ''}">${on ? '● ' + tt('online') : tt('offline')}${noteLine(c)}</div></div>
+      <button class="msgbtn" data-chat="${c.id}" aria-label="chat">💬${(unread[c.id] || 0) ? '<span class="badge">' + unread[c.id] + '</span>' : ''}</button><span class="check">✓</span><button class="more" data-more="${c.id}" aria-label="menu">⋯</button></li>`;
   }).join('');
   $('#selCount').textContent = tt('selected') + ': ' + [...S.sel].filter(id => S.contacts[id]).length;
+}
+const gName = id => (S.groups.find(g => g.id === id) || {}).name;
+function noteLine(c) {
+  const tags = (c.tags || []).map(gName).filter(Boolean);
+  const bits = [c.note ? esc(c.note) : '', tags.length ? tags.map(x => '#' + esc(x)).join(' ') : ''].filter(Boolean);
+  return bits.length ? ' <span class="cnote">· ' + bits.join(' · ') + '</span>' : '';
+}
+const members = gid => Object.values(S.contacts).filter(c => (c.tags || []).includes(gid)).map(c => c.id);
+function renderGroups() {
+  const box = $('#groups'); if (!box || !S.me) return;
+  box.classList.toggle('hidden', !S.me.boss);
+  if (!S.me.boss) return;
+  box.innerHTML = S.groups.map(g => {
+    const ms = members(g.id), on = ms.filter(id => openPeer(id)).length, all = ms.length > 0 && ms.every(id => S.sel.has(id));
+    return `<button class="chip g ${all ? 'on' : ''}" data-g="${g.id}">${esc(g.name)} <small>${on}/${ms.length}</small></button>`;
+  }).join('') + `<button class="chip gnew" data-gnew="1">＋ ${tt('newGroup')}</button>`;
+}
+function toggleGroup(gid) {
+  const ms = members(gid); if (!ms.length) { toast(tt('noSel')); return; }
+  const all = ms.every(id => S.sel.has(id));
+  ms.forEach(id => all ? S.sel.delete(id) : S.sel.add(id)); persist(); renderList(); renderGroups(); renderPTT();
+}
+function openGroups() {
+  $('#gName').value = ''; renderGList(); $('#gSheet').classList.remove('hidden');
+}
+function renderGList() {
+  $('#gList').innerHTML = S.groups.map(g => `<div class="row"><span>${esc(g.name)} <small class="cnote">(${members(g.id).length})</small></span><button class="chip" data-gdel="${g.id}">${tt('deleteG')}</button></div>`).join('');
+}
+function saveGroup() {
+  const name = $('#gName').value.trim(); const sel = [...S.sel].filter(id => S.contacts[id]);
+  if (!sel.length) { toast(tt('noSel')); return; } if (!name) { $('#gName').focus(); return; }
+  let g = S.groups.find(x => x.name === name); if (!g) { g = { id: rid(), name }; S.groups.push(g); }
+  sel.forEach(id => { const c = S.contacts[id]; c.tags = c.tags || []; if (!c.tags.includes(g.id)) c.tags.push(g.id); });
+  persist(); $('#gName').value = ''; renderGList(); renderAll(); toast(tt('sentOk'));
+}
+function renderCTags() {
+  const id = $('#cSheet').dataset.id, c = S.contacts[id]; if (!c) return;
+  $('#cTags').innerHTML = S.groups.length ? S.groups.map(g => `<button class="chip ${(c.tags || []).includes(g.id) ? 'on' : ''}" data-t="${g.id}">${esc(g.name)}</button>`).join('') : '<span class="hint">—</span>';
 }
 function renderBanner() {
   const b = $('#banner'), ids = Object.keys(speakers);
@@ -179,13 +232,15 @@ function renderBanner() {
 }
 function targets() { return [...S.sel].filter(id => openPeer(id)); }
 function renderPTT() {
+  if (!S.me) return;
   const t = targets(), btn = $('#ptt');
   btn.classList.toggle('dis', t.length === 0 && !talking);
   btn.classList.toggle('live', talking);
   $('#pttIcon').textContent = talking ? '🔴' : '🎙️';
   $('#pttTxt').textContent = talking ? (S.set.toggle ? tt('tapStop') : tt('talking')) : (S.set.toggle ? tt('tapTalk') : tt('holdTalk'));
   const names = t.map(id => S.contacts[id].name);
-  $('#talkTo').innerHTML = names.length ? tt('talkTo') + ': <b>' + esc(names.length > 2 ? names.slice(0, 2).join('، ') + ' +' + (names.length - 2) : names.join(S.lang === 'ar' ? '، ' : ', ')) + '</b>' : tt('talkToNone');
+  const gm = S.me.boss ? S.groups.find(g => { const ms = members(g.id); return ms.length > 1 && ms.length === t.length && ms.every(x => t.includes(x)); }) : null;
+  $('#talkTo').innerHTML = names.length ? tt('talkTo') + ': <b>' + esc(gm ? gm.name + ' (' + t.length + ')' : names.length > 2 ? names.slice(0, 2).join('، ') + ' +' + (names.length - 2) : names.join(S.lang === 'ar' ? '، ' : ', ')) + '</b>' : tt('talkToNone');
 }
 
 /* ---------------- speaker (incoming) ---------------- */
@@ -333,6 +388,55 @@ function sendAlert() {
 }
 function cancelAlert() { if (!alertOut) return; alertOut.sent.forEach(pid => { const p = openPeer(pid); if (p) sendCtl(p, { k: 'alertoff', id: alertOut.id }); }); alertOut = null; renderAlertStat(); $('#aCancel').classList.add('hidden'); }
 
+/* ---------------- text messages (stored only on the phones, sent directly) ---------------- */
+const threads = {}, unread = LS.get('unread', {});
+const getT = id => threads[id] || (threads[id] = LS.get('chat.' + id, []));
+const saveT = id => { const t = getT(id); if (t.length > 300) t.splice(0, t.length - 300); LS.set('chat.' + id, t); };
+const saveUnread = () => LS.set('unread', unread);
+let chatId = null;
+window.__aat.getT = getT; window.__aat.unread = unread;
+function openChat(id) {
+  chatId = id; if (id !== '*') { unread[id] = 0; saveUnread(); }
+  const sel = [...S.sel].filter(x => S.contacts[x]);
+  $('#chatTitle').textContent = id === '*' ? tt('toSelected') + ' (' + sel.length + ')' : (S.contacts[id] || {}).name || '';
+  show('chat'); renderChat(); renderList(); setTimeout(() => $('#chatIn').focus(), 50);
+}
+function renderChat() {
+  const box = $('#chatList'); if (!box || chatId == null || $('#chat').classList.contains('hidden')) return;
+  if (chatId === '*') { box.innerHTML = '<div class="chatempty">' + esc(tt('toSelected')) + '</div>'; return; }
+  const t = getT(chatId);
+  box.innerHTML = t.length ? t.map(m => '<div class="bub ' + (m.me ? 'me' : 'them') + '">' + esc(m.x) + '<small>' + new Date(m.t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + (m.me ? ' ' + (m.s === 'd' ? '✓✓' : m.s === 's' ? '✓' : '⏳') : '') + '</small></div>').join('') : '<div class="chatempty">' + esc(tt('noMsgs')) + '</div>';
+  box.scrollTop = box.scrollHeight;
+}
+function sendMsg(ids, text) {
+  text = String(text || '').trim().slice(0, 1000); if (!text) return false;
+  ids.forEach(id => {
+    const m = { i: rid(), me: 1, t: Date.now(), x: text, s: 'p' };
+    getT(id).push(m);
+    const p = openPeer(id); if (p) { sendCtl(p, { k: 'msg', id: m.i, t: m.t, x: text }); m.s = 's'; }
+    saveT(id);
+  });
+  renderChat(); return true;
+}
+function flushPending(id) {
+  const p = openPeer(id); if (!p) return; let n = 0;
+  getT(id).forEach(m => { if (m.me && m.s === 'p') { sendCtl(p, { k: 'msg', id: m.i, t: m.t, x: m.x }); m.s = 's'; n++; } });
+  if (n) { saveT(id); renderChat(); }
+}
+function onChatMsg(p, m) {
+  if (!p.id) return;
+  const t = getT(p.id), mid = String(m.id || '');
+  if (!t.some(x => x.i === mid)) {
+    t.push({ i: mid, me: 0, t: +m.t || Date.now(), x: String(m.x || '').slice(0, 1000) }); saveT(p.id);
+    const viewing = chatId === p.id && !$('#chat').classList.contains('hidden');
+    if (!viewing) { unread[p.id] = (unread[p.id] || 0) + 1; saveUnread(); toast('💬 ' + p.name + ': ' + String(m.x).slice(0, 60)); }
+    if (S.set.vib) { if (!vib([120, 60, 120])) blip(); }
+    renderList(); renderChat();
+  }
+  sendCtl(p, { k: 'msgack', id: mid });
+}
+function onMsgAck(p, m) { if (!p.id) return; const x = getT(p.id).find(y => y.i === m.id); if (x && x.s !== 'd') { x.s = 'd'; saveT(p.id); renderChat(); } }
+
 /* ---------------- pairing ---------------- */
 const b64u = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
@@ -427,6 +531,7 @@ document.addEventListener('visibilitychange', () => { wakeSync(); });
 function openContact(id) {
   const c = S.contacts[id]; if (!c) return;
   $('#cName').textContent = c.name; $('#cBoss').checked = !!c.boss; $('#cSheet').dataset.id = id;
+  $('#cMgr').classList.toggle('hidden', !S.me.boss); $('#cNote').value = c.note || ''; renderCTags();
   $('#cSheet').classList.remove('hidden');
 }
 function wire() {
@@ -441,7 +546,7 @@ function wire() {
   $('#setBack').onclick = () => { show('home'); renderAll(); };
   $('#sName').oninput = e => { const n = e.target.value.trim(); if (!n) return; S.me.name = n; persist(); peers.forEach(p => sendCtl(p, { k: 'name', name: n })); renderHeader(); };
   $('#oVib').onchange = e => { S.set.vib = e.target.checked; persist(); };
-  $('#oBoss').onchange = e => { S.me.boss = e.target.checked; persist(); renderHeader(); peers.forEach(p => sendCtl(p, { k: 'hello', id: S.me.id, name: S.me.name, boss: !!S.me.boss })); };
+  $('#oBoss').onchange = e => { S.me.boss = e.target.checked; persist(); renderHeader(); renderGroups(); peers.forEach(p => sendCtl(p, { k: 'hello', id: S.me.id, name: S.me.name, boss: !!S.me.boss })); };
   $('#oToggle').onchange = e => { S.set.toggle = e.target.checked; persist(); renderPTT(); };
   $('#oWake').onchange = e => { S.set.wake = e.target.checked; persist(); wakeSync(); };
   $('#oStun').onchange = e => { S.set.stun = e.target.checked; persist(); };
@@ -450,15 +555,33 @@ function wire() {
   $('#selAll').onclick = () => { Object.keys(S.contacts).forEach(id => S.sel.add(id)); persist(); renderList(); renderPTT(); };
   $('#selNone').onclick = () => { S.sel.clear(); persist(); renderList(); renderPTT(); };
   $('#list').onclick = e => {
+    const cb = e.target.closest('[data-chat]'); if (cb) { openChat(cb.dataset.chat); return; }
     const mb = e.target.closest('[data-more]'); if (mb) { openContact(mb.dataset.more); return; }
     const li = e.target.closest('.card'); if (!li) return; const id = li.dataset.id;
     if (!openPeer(id)) { openPair(); return; }
     S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); persist(); renderList(); renderPTT();
   };
-  $('#cClose').onclick = () => $('#cSheet').classList.add('hidden');
+  $('#cClose').onclick = () => { $('#cSheet').classList.add('hidden'); renderAll(); };
+  $('#cNote').oninput = e => { const c = S.contacts[$('#cSheet').dataset.id]; if (c) { c.note = e.target.value.trim(); persist(); } };
+  $('#cTags').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; const c = S.contacts[$('#cSheet').dataset.id]; if (!c) return; c.tags = c.tags || []; const i = c.tags.indexOf(b.dataset.t); i >= 0 ? c.tags.splice(i, 1) : c.tags.push(b.dataset.t); persist(); renderCTags(); };
+  $('#groups').onclick = e => { const g = e.target.closest('[data-g]'); if (g) { toggleGroup(g.dataset.g); return; } if (e.target.closest('[data-gnew]')) openGroups(); };
+  $('#gSave').onclick = saveGroup; $('#gClose').onclick = () => { $('#gSheet').classList.add('hidden'); renderAll(); };
+  $('#gList').onclick = e => { const d = e.target.closest('[data-gdel]'); if (!d) return; const gid = d.dataset.gdel; S.groups = S.groups.filter(g => g.id !== gid); Object.values(S.contacts).forEach(c => c.tags = (c.tags || []).filter(x => x !== gid)); persist(); renderGList(); renderAll(); };
   $('#cBoss').onchange = e => { const id = $('#cSheet').dataset.id; if (S.contacts[id]) { S.contacts[id].boss = e.target.checked; persist(); renderList(); } };
   $('#cDel').onclick = () => { const id = $('#cSheet').dataset.id; delete S.contacts[id]; S.sel.delete(id); peers.filter(p => p.id === id).forEach(p => { p.ctl.onclose = null; dropPeerQuiet(p); }); persist(); $('#cSheet').classList.add('hidden'); renderAll(); };
   $('#cReco').onclick = () => { $('#cSheet').classList.add('hidden'); openPair(); };
+
+  $('#chatBack').onclick = () => { chatId = null; show('home'); renderAll(); };
+  const doSend = () => {
+    const el = $('#chatIn'); const ids = chatId === '*' ? [...S.sel].filter(x => S.contacts[x]) : [chatId];
+    if (!ids.length) { toast(tt('pickFirst')); return; }
+    if (sendMsg(ids, el.value)) { el.value = ''; el.style.height = ''; if (chatId === '*') toast(tt('sentOk')); }
+    el.focus();
+  };
+  $('#chatSend').onclick = doSend;
+  $('#chatIn').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); } });
+  $('#chatIn').addEventListener('input', e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px'; });
+  $('#selMsg').onclick = () => { if (![...S.sel].some(x => S.contacts[x])) { toast(tt('pickFirst')); return; } openChat('*'); };
 
   /* push to talk */
   const ptt = $('#ptt');

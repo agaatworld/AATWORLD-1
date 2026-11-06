@@ -115,3 +115,46 @@ details{margin:12px 0;color:var(--mut)}summary{cursor:pointer;font-size:17px;pad
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 220px);transform:translateX(-50%);background:#1d2550;border:1.5px solid var(--gold);padding:12px 18px;border-radius:16px;font-weight:700;z-index:60;max-width:90vw;text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 @media (max-height:640px){.ptt{width:130px;height:130px}.ptt b{font-size:38px}.side{width:68px;height:68px}}
+
+/* chat */
+.msgbtn{position:relative;width:44px;height:44px;border-radius:14px;border:1.5px solid var(--line);background:rgba(255,255,255,.06);font-size:21px;cursor:pointer;flex:none}
+.badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:22px;height:22px;border-radius:11px;background:var(--red);color:#fff;font-size:14px;font-weight:800;display:grid;place-items:center;padding:0 5px}
+.chatlist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px 10px;-webkit-overflow-scrolling:touch}
+.bub{max-width:82%;padding:10px 14px;border-radius:20px;font-size:19px;line-height:1.45;word-break:break-word;white-space:pre-wrap;-webkit-user-select:text;user-select:text}
+.bub.them{background:var(--card);border:1.5px solid var(--line);margin-inline-end:auto;border-end-start-radius:6px}
+.bub.me{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2a1e05;margin-inline-start:auto;border-end-end-radius:6px;font-weight:600}
+.bub small{display:block;font-size:14px;opacity:.7;margin-top:2px;text-align:end}
+.chatempty{text-align:center;color:var(--mut);margin:auto;font-size:18px;padding:20px}
+.composer{display:flex;gap:10px;align-items:flex-end;padding-top:8px}
+.composer .field{flex:1;resize:none;max-height:120px;margin:0}
+.composer .send{width:58px;height:58px;margin:0;padding:0;font-size:24px;flex:none;border-radius:50%}
+
+/* ===== medium size (normal app proportions) ===== */
+body{font-size:16px}
+h1{font-size:26px}h2{font-size:19px}h3{font-size:18px;margin-bottom:8px}
+.sub{font-size:16px}.hint{font-size:14px}.err{font-size:15px}
+.field{font-size:16px;padding:11px 14px;border-radius:14px}.field.big{font-size:18px;padding:13px}
+.btn{font-size:16px;padding:12px 16px;border-radius:14px;margin:8px 0}.btn.sm{font-size:15px;padding:9px 12px}.btn.big{font-size:17px;padding:14px 16px}
+.chip{font-size:14px;padding:6px 12px}
+.icon{width:40px;height:40px;border-radius:13px;font-size:19px}
+.logo{width:84px;height:84px;line-height:84px;font-size:46px;border-radius:26px}
+.avatar{width:40px;height:40px;font-size:17px}
+.hi{font-size:13px}.myname{font-size:17px}
+.banner{font-size:15px;padding:10px 14px;min-height:46px;border-radius:16px}
+.listhead{font-size:14px;margin:10px 2px 6px}.listhead .chip{font-size:13px;padding:5px 10px}
+.card{gap:11px;padding:9px 12px;border-radius:16px;margin-bottom:8px}
+.cname{font-size:16px}.cstat{font-size:13px}.cnote{color:var(--gold2);font-size:13px}
+.check{width:26px;height:26px;font-size:15px}
+.msgbtn{width:36px;height:36px;font-size:17px;border-radius:12px}.badge{min-width:18px;height:18px;font-size:11px;top:-5px}
+.more{width:32px;height:32px;font-size:20px}
+.talkto{font-size:14px;min-height:22px}
+.ptt{width:122px;height:122px}.ptt b{font-size:36px}.ptt i{font-size:13px;max-width:100px}
+.side{width:60px;height:60px;border-radius:18px;font-size:22px}.side small{font-size:12px}
+.qrbox{width:min(70vw,300px)}
+.step{font-size:16px}.step b{width:26px;height:26px;font-size:14px}
+.lbl{font-size:14px}.row{font-size:16px;padding:11px 2px}.row input{width:24px;height:24px}
+.bub{font-size:16px;padding:8px 12px}.bub small{font-size:12px}.composer .send{width:46px;height:46px;font-size:19px}
+.alertov h1{font-size:26px}.almsg{font-size:24px}.altimer{font-size:18px}.bell{font-size:80px}
+.groups{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.groups::-webkit-scrollbar{display:none}
+.groups .chip{white-space:nowrap;flex:none}.groups .chip small{opacity:.75;font-size:12px}.groups .gnew{border-style:dashed}
+.bub.me{margin-inline-start:0;margin-inline-end:auto}.bub.them{margin-inline-end:0;margin-inline-start:auto}

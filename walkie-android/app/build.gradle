@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.aatworld.talk'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.aatworld.talk'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            // web app is copied here at build time (never committed)
+            assets.srcDirs += "$buildDir/generated/walkie-assets"
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+}
+
+// Copy the web app (../../walkie) into assets at build time.
+def walkieSrc = file("$rootDir/../walkie")
+def walkieOut = layout.buildDirectory.dir('generated/walkie-assets')
+tasks.register('copyWalkieAssets', Sync) {
+    from walkieSrc
+    into walkieOut
+    doFirst {
+        if (!walkieSrc.exists()) throw new GradleException("Web app not found: $walkieSrc")
+    }
+}
+tasks.named('preBuild') { dependsOn 'copyWalkieAssets' }
+tasks.configureEach { t ->
+    if (t.name.startsWith('merge') && t.name.endsWith('Assets')) t.dependsOn 'copyWalkieAssets'
+    if (t.name.endsWith('LintVitalAnalyzeRelease') || t.name.startsWith('lint')) t.dependsOn 'copyWalkieAssets'
+}

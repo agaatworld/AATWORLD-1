@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="style.css?v=1">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -40,9 +40,11 @@
     <span class="dot"></span><span id="bannerTxt"></span>
   </div>
 
+  <div id="groups" class="groups hidden"></div>
+
   <div class="listhead">
     <span id="selCount"></span>
-    <span><button class="chip" id="selAll" data-i="selAll"></button><button class="chip" id="selNone" data-i="selNone"></button></span>
+    <span><button class="chip" id="selMsg">💬</button><button class="chip" id="selAll" data-i="selAll"></button><button class="chip" id="selNone" data-i="selNone"></button></span>
   </div>
 
   <ul id="list" class="list"></ul>
@@ -108,6 +110,13 @@
   </div>
 </section>
 
+<!-- ============ CHAT ============ -->
+<section id="chat" class="screen hidden">
+  <header class="top"><button class="icon" id="chatBack" aria-label="back">→</button><h2 id="chatTitle"></h2><span style="width:48px"></span></header>
+  <div id="chatList" class="chatlist"></div>
+  <div class="composer"><textarea id="chatIn" class="field" rows="1" maxlength="1000" data-ph="msgPh"></textarea><button id="chatSend" class="btn gold send" aria-label="send">➤</button></div>
+</section>
+
 <!-- ============ SETTINGS ============ -->
 <section id="settings" class="screen hidden">
   <header class="top"><button class="icon" id="setBack" aria-label="back">→</button><h2 data-i="settings"></h2><span style="width:48px"></span></header>
@@ -123,6 +132,7 @@
     <label class="row"><span data-i="optWake"></span><input type="checkbox" id="oWake"></label>
     <label class="row"><span data-i="optStun"></span><input type="checkbox" id="oStun"></label>
     <p class="hint" data-i="batteryNote"></p>
+    <p class="hint" data-i="iosHint"></p>
     <p class="hint" id="vibSupport"></p>
     <button id="testVib" class="btn sm" data-i="testVib"></button>
   </div>
@@ -131,10 +141,21 @@
 <!-- ============ CONTACT SHEET ============ -->
 <div id="cSheet" class="sheet hidden"><div class="sheetin">
   <h3 id="cName"></h3>
+  <div id="cMgr"><input id="cNote" class="field" maxlength="40" data-ph="notePh"><div class="lbl" data-i="tagsT"></div><div class="chips" id="cTags"></div></div>
   <label class="row"><span data-i="isBoss"></span><input type="checkbox" id="cBoss"></label>
   <button id="cReco" class="btn gold" data-i="reconnect"></button>
   <button id="cDel" class="btn danger" data-i="remove"></button>
   <button id="cClose" class="btn" data-i="close"></button>
+</div></div>
+
+<!-- ============ GROUPS SHEET ============ -->
+<div id="gSheet" class="sheet hidden"><div class="sheetin">
+  <h3 data-i="groupsT"></h3>
+  <p class="hint" data-i="groupHow"></p>
+  <input id="gName" class="field" maxlength="24" data-ph="gNamePh">
+  <button id="gSave" class="btn gold" data-i="saveGroup"></button>
+  <div id="gList"></div>
+  <button id="gClose" class="btn" data-i="close"></button>
 </div></div>
 
 <!-- ============ BOSS ALERT SHEET ============ -->
@@ -170,8 +191,8 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="lib/qrcode.js?v=1"></script>
-<script src="lib/jsQR.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="lib/qrcode.js?v=3"></script>
+<script src="lib/jsQR.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
