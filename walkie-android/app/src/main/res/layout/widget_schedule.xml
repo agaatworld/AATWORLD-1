@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sw_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    android:padding="8dp"
+    android:background="@drawable/sw_card_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layoutDirection="rtl"
+        android:gravity="center_vertical"
+        android:paddingBottom="4dp">
+
+        <!-- RTL: first child sits on the right = "previous day" (arrow points right) -->
+        <TextView
+            android:id="@+id/sw_prev"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="▶"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#3B4944"
+            android:contentDescription="اليوم السابق"
+            android:background="@drawable/sw_arrow_light" />
+
+        <LinearLayout
+            android:id="@+id/sw_pill"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:minHeight="38dp"
+            android:orientation="horizontal"
+            android:layoutDirection="rtl"
+            android:gravity="center"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/sw_pill_gold">
+
+            <TextView
+                android:id="@+id/sw_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/sw_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="● اليوم"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sw_next"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="◀"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#3B4944"
+            android:contentDescription="اليوم التالي"
+            android:background="@drawable/sw_arrow_light" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/sw_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layoutDirection="rtl"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/sw_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/sw_empty"
+            android:textColor="#3B4944"
+            android:textSize="14sp" />
+    </FrameLayout>
+</LinearLayout>

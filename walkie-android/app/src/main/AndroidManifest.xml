@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -64,5 +65,37 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/talk_widget_info" />
         </receiver>
+
+        <receiver
+            android:name=".ScheduleWidget"
+            android:exported="true"
+            android:label="@string/sw_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/schedule_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".ScheduleWidgetService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name=".ScheduleWidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/ConfigTheme"
+            android:label="@string/swc_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -31,6 +31,7 @@
   <header class="top">
     <div class="who"><span class="avatar me" id="meAv"></span><div><div class="hi" data-i="hi"></div><div class="myname" id="meName"></div></div></div>
     <div class="topbtns">
+      <button id="btnSched" class="icon" aria-label="schedule" data-aria="schedT">📅</button>
       <button id="btnAdd" class="icon" aria-label="add" data-aria="add">＋</button>
       <button id="btnSet" class="icon" aria-label="settings" data-aria="settings">⚙</button>
     </div>
@@ -107,6 +108,16 @@
       <button id="doneBtn" class="btn gold big" data-i="done"></button>
     </div>
     <p id="pairErr" class="err"></p>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section id="sched" class="screen hidden">
+  <header class="top"><button class="icon" id="schBack" aria-label="back">→</button><h2 data-i="schedT"></h2><button class="icon" id="schEdit" aria-label="edit">✎</button></header>
+  <div class="sbox" id="schBox">
+    <div class="sdays" id="schDays"></div>
+    <div id="schRows"></div>
+    <div id="schTools" class="schtools hidden"><button class="btn sm" id="schAdd" data-i="addRow"></button><button class="btn sm danger" id="schReset" data-i="resetSched"></button></div>
   </div>
 </section>
 
@@ -191,8 +202,8 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="lib/qrcode.js?v=3"></script>
-<script src="lib/jsQR.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script src="lib/qrcode.js?v=4"></script>
+<script src="lib/jsQR.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

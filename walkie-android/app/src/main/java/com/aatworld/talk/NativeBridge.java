@@ -7,6 +7,9 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.webkit.JavascriptInterface;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /** Exposed to JS as window.AATNative. Methods run on a WebView binder thread. */
 public class NativeBridge {
     private final Context ctx;
@@ -65,5 +68,41 @@ public class NativeBridge {
             Vibrator v = vib();
             if (v != null) v.cancel();
         } catch (Throwable ignored) { }
+    }
+
+    // ---- schedule widget data (web screen <-> native widget) ----
+    /** Validates and stores the schedule JSON, then refreshes all schedule widgets. Returns true if saved. */
+    @JavascriptInterface
+    public boolean saveSchedule(String json) {
+        try {
+            if (json == null || json.length() > 500000) return false;
+            JSONArray days = new JSONObject(json).getJSONArray("days");
+            if (days.length() == 0) return false;
+            for (int i = 0; i < days.length(); i++) {
+                JSONObject d = days.getJSONObject(i);
+                JSONArray its = d.getJSONArray("items");
+                for (int k = 0; k < its.length(); k++) {
+                    JSONObject it = its.getJSONObject(k);
+                    it.getString("t");
+                    it.getString("x");
+                }
+            }
+            ctx.getSharedPreferences(ScheduleStore.DATA_PREFS, Context.MODE_PRIVATE)
+                    .edit().putString("json", json).apply();
+            ScheduleWidget.refreshAll(ctx);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
+    /** Saved schedule JSON, or "" if the user never saved one (web side then uses its own schedule.json). */
+    @JavascriptInterface
+    public String loadSchedule() {
+        try {
+            return ScheduleStore.saved(ctx);
+        } catch (Throwable e) {
+            return "";
+        }
     }
 }

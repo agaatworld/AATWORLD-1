@@ -37,6 +37,7 @@ ar: {
   alertFrom: 'تنبيه من', gotIt: 'تم الاستلام ✓', secsLeft: 'ثانية متبقية', alertIgnored: 'تنبيه من شخص ليس رئيساً عندك', nobodyOnline: 'لا يوجد أحد متصل',
   unnamed: 'بدون اسم', you: 'أنت', members: 'أشخاص',
   msgPh: 'اكتب رسالة…', noMsgs: 'لا توجد رسائل بعد — اكتب أول رسالة', toSelected: 'رسالة للمحددين', sentOk: 'تم الإرسال ✓', pendingMsg: 'ستصل عندما يتصل', pickFirst: 'اختر أشخاصاً أولاً',
+  schedT: 'الجدول', addRow: '＋ إضافة بند', resetSched: 'استرجاع الجدول الأصلي', todayLbl: 'اليوم', noSched: 'تعذّر تحميل الجدول', confirmReset: 'استرجاع الجدول الأصلي؟ ستضيع تعديلاتك.',
   groupsT: 'المجموعات', groupHow: 'اختر الأشخاص من القائمة ثم اكتب اسماً واحفظهم كمجموعة. بعدها بضغطة واحدة تختارهم كلهم.', gNamePh: 'اسم المجموعة (مثال: المبيعات)', saveGroup: 'حفظ المحدد كمجموعة', notePh: 'ملاحظة عن الشخص (مثال: محاسب، مندوب)', tagsT: 'المجموعات', newGroup: 'مجموعة', deleteG: 'حذف', noSel: 'اختر أشخاصاً من القائمة أولاً'
 },
 en: {
@@ -64,6 +65,7 @@ en: {
   alertFrom: 'Alert from', gotIt: 'Got it ✓', secsLeft: 'sec left', alertIgnored: 'Alert from someone who is not your boss', nobodyOnline: 'Nobody is online',
   unnamed: 'No name', you: 'You', members: 'people',
   msgPh: 'Type a message…', noMsgs: 'No messages yet — write the first one', toSelected: 'Message to selected', sentOk: 'Sent ✓', pendingMsg: 'Will arrive when online', pickFirst: 'Select people first',
+  schedT: 'Schedule', addRow: '＋ Add item', resetSched: 'Restore original schedule', todayLbl: 'Today', noSched: 'Could not load the schedule', confirmReset: 'Restore the original schedule? Your edits will be lost.',
   groupsT: 'Groups', groupHow: 'Select people in the list, type a name and save them as a group. Then pick them all with one tap.', gNamePh: 'Group name (e.g. Sales)', saveGroup: 'Save selected as group', notePh: 'Note about this person (e.g. accountant)', tagsT: 'Groups', newGroup: 'Group', deleteG: 'Delete', noSel: 'Select people in the list first'
 }};
 const tt = k => (TX[S.lang] && TX[S.lang][k]) || TX.en[k] || k;
@@ -84,7 +86,7 @@ window.__aat = { S, peers, stats, speakers };
 const persist = () => { LS.set('me', S.me); LS.set('contacts', S.contacts); LS.set('sel', [...S.sel]); LS.set('set', S.set); LS.set('lang', S.lang); LS.set('groups', S.groups); };
 
 /* ---------------- helpers ---------------- */
-const show = id => { ['welcome', 'home', 'pair', 'settings', 'chat'].forEach(s => $('#' + s).classList.toggle('hidden', s !== id)); };
+const show = id => { ['welcome', 'home', 'pair', 'settings', 'chat', 'sched'].forEach(s => $('#' + s).classList.toggle('hidden', s !== id)); };
 let toastT;
 function toast(msg) { const e = $('#toast'); e.textContent = msg; e.classList.remove('hidden'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.add('hidden'), 2600); }
 const canVib = () => !!window.AATNative || typeof navigator.vibrate === 'function';
@@ -613,11 +615,71 @@ function wire() {
   $('#alOk').onclick = () => endAlert(false);
 }
 
+/* ---------------- daily schedule ---------------- */
+let SCH = null, schDay = null, schEdit = false, schT = 0, schSaveT = 0;
+const mins = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); return m ? +m[1] * 60 + +m[2] : 0; };
+const shortT = t => String(t || '').replace(/^0/, '');
+async function fetchOriginalSched() { const r = await fetch('schedule.json?v=' + Date.now()); return r.json(); }
+async function loadSched() {
+  if (SCH) return SCH;
+  let raw = null;
+  try { if (window.AATNative && AATNative.loadSchedule) { const s = AATNative.loadSchedule(); if (s) raw = JSON.parse(s); } } catch {}
+  if (!raw) raw = LS.get('sched', null);
+  if (!raw) { try { raw = await fetchOriginalSched(); } catch {} }
+  SCH = raw && raw.days ? raw : null; return SCH;
+}
+function pickDay(days, wd) {
+  const hit = days.find(d => d.wd === wd); if (hit) return hit.id;
+  for (let k = 1; k <= 7; k++) { const w = ((wd - 1 + k) % 7) + 1; const d = days.find(x => x.wd === w); if (d) return d.id; }
+  return days[0].id;
+}
+function curIdx(items, nowMin) { let r = -1; items.forEach((it, i) => { if (mins(it.t) <= nowMin) r = i; }); return r; }
+function pushSched() { LS.set('sched', SCH); try { if (window.AATNative && AATNative.saveSchedule) AATNative.saveSchedule(JSON.stringify(SCH)); } catch {} }
+function saveSched() { clearTimeout(schSaveT); schSaveT = setTimeout(pushSched, 300); }
+async function openSched() {
+  show('sched'); await loadSched();
+  if (!SCH) { $('#schRows').innerHTML = '<div class="schempty">' + esc(tt('noSched')) + '</div>'; return; }
+  const d = new Date(); if (!schDay || !SCH.days.some(x => x.id === schDay)) schDay = pickDay(SCH.days, d.getDay() + 1);
+  schEdit = false; renderSched(true);
+  clearInterval(schT); schT = setInterval(() => { if (!schEdit) renderSched(false); }, 60000);   // only while this screen is open
+}
+function closeSched() {
+  clearInterval(schT); schT = 0; clearTimeout(schSaveT); if (SCH) pushSched();
+  show('home'); renderAll(); if (location.hash === '#schedule') history.replaceState(null, '', location.pathname + location.search);
+}
+function renderSched(scroll) {
+  if (!SCH) return;
+  const now = new Date(), todayId = (SCH.days.find(x => x.wd === now.getDay() + 1) || {}).id;
+  $('#schDays').innerHTML = SCH.days.map(d => `<button class="sday ${d.id === schDay ? 'on' : ''}" data-day="${d.id}">${esc(d.name)}${d.id === todayId ? '<small>' + tt('todayLbl') + '</small>' : ''}</button>`).join('');
+  const day = SCH.days.find(x => x.id === schDay), items = day.items;
+  const cur = day.id === todayId ? curIdx(items, now.getHours() * 60 + now.getMinutes()) : -1;
+  $('#schTools').classList.toggle('hidden', !schEdit); $('#schEdit').textContent = schEdit ? '✓' : '✎';
+  $('#schRows').innerHTML = items.map((it, i) => schEdit
+    ? `<div class="srow edit"><button data-del="${i}" aria-label="delete">✕</button><input type="time" value="${esc(it.t)}" data-ti="${i}"><input class="tx" value="${esc(it.x)}" data-xi="${i}" maxlength="80"></div>`
+    : `<div class="srow ${day.id === todayId ? (i < cur ? 'past' : i === cur ? 'now' : '') : ''}" ${i === cur ? 'id="schNow"' : ''}><span class="stime">${esc(shortT(it.t))}</span><span class="sx">${esc(it.x)}</span></div>`).join('');
+  if (scroll) { const n = $('#schNow'); if (n) n.scrollIntoView({ block: 'center' }); else $('#schBox').scrollTop = 0; }
+}
+function wireSched() {
+  $('#btnSched').onclick = openSched; $('#schBack').onclick = closeSched;
+  $('#schEdit').onclick = () => { if (!SCH) return; if (schEdit) { SCH.days.forEach(d => d.items.sort((a, b) => mins(a.t) - mins(b.t))); pushSched(); } schEdit = !schEdit; renderSched(false); };
+  $('#schDays').onclick = e => { const b = e.target.closest('[data-day]'); if (!b) return; schDay = b.dataset.day; renderSched(true); };
+  $('#schRows').addEventListener('input', e => {
+    const day = SCH.days.find(x => x.id === schDay), t = e.target;
+    if (t.dataset.ti != null) day.items[+t.dataset.ti].t = t.value || '00:00'; else if (t.dataset.xi != null) day.items[+t.dataset.xi].x = t.value;
+    saveSched();
+  });
+  $('#schRows').onclick = e => { const d = e.target.closest('[data-del]'); if (!d) return; SCH.days.find(x => x.id === schDay).items.splice(+d.dataset.del, 1); saveSched(); renderSched(false); };
+  $('#schAdd').onclick = () => { const day = SCH.days.find(x => x.id === schDay); day.items.push({ t: '12:00', x: '' }); saveSched(); renderSched(false); const xs = $$('#schRows input.tx'); xs[xs.length - 1].focus(); };
+  $('#schReset').onclick = async () => { if (!confirm(tt('confirmReset'))) return; try { SCH = await fetchOriginalSched(); pushSched(); schEdit = false; renderSched(true); } catch {} };
+  addEventListener('hashchange', () => { if (location.hash === '#schedule' && S.me) openSched(); });
+}
+
 /* ---------------- boot ---------------- */
 function boot() {
-  wire();
+  wire(); wireSched();
   if (S.me) { show('home'); } else { show('welcome'); }
   applyLang();
+  if (S.me && location.hash === '#schedule') openSched();
   wakeSync();
   if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }

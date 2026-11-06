@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    android:padding="8dp"
+    android:background="@drawable/sw_card_light">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="الجمعة"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:background="@drawable/sw_pill_gold" />
+
+    <LinearLayout style="@style/SwPreviewRow">
+        <TextView style="@style/SwPreviewTime" android:text="12:30" android:background="@drawable/sw_pill_past" />
+        <TextView style="@style/SwPreviewEvent" android:text="التبكير للمصلى" android:background="@drawable/sw_pill_past" />
+    </LinearLayout>
+    <LinearLayout style="@style/SwPreviewRow">
+        <TextView style="@style/SwPreviewTime" android:text="13:00" android:textColor="#2B2417" android:background="@drawable/sw_pill_gold" />
+        <TextView style="@style/SwPreviewEvent" android:text="صلاة الجمعة" android:textColor="#2B2417" android:background="@drawable/sw_pill_gold" />
+    </LinearLayout>
+    <LinearLayout style="@style/SwPreviewRow">
+        <TextView style="@style/SwPreviewTime" android:text="13:30" android:background="@drawable/sw_pill_normal" />
+        <TextView style="@style/SwPreviewEvent" android:text="وجبة الغداء" android:background="@drawable/sw_pill_normal" />
+    </LinearLayout>
+    <LinearLayout style="@style/SwPreviewRow">
+        <TextView style="@style/SwPreviewTime" android:text="14:15" android:background="@drawable/sw_pill_normal" />
+        <TextView style="@style/SwPreviewEvent" android:text="الورشة الأولى" android:background="@drawable/sw_pill_normal" />
+    </LinearLayout>
+</LinearLayout>

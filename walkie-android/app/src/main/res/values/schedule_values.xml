@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sw_label">جدول اليوم</string>
+    <string name="sw_desc">جدول البرنامج اليومي — يتحدّث تلقائيًا ويُظهر الفقرة الحالية</string>
+    <string name="sw_empty">لا يوجد جدول</string>
+    <string name="swc_title">إعداد جدول اليوم</string>
+    <string name="swc_theme">المظهر</string>
+    <string name="swc_light">فاتح</string>
+    <string name="swc_dark">داكن</string>
+    <string name="swc_size">حجم الخط</string>
+    <string name="swc_small">صغير</string>
+    <string name="swc_medium">متوسط</string>
+    <string name="swc_large">كبير</string>
+    <string name="swc_daymode">اليوم المعروض</string>
+    <string name="swc_auto">تلقائي حسب اليوم</string>
+    <string name="swc_fixed">ثابت</string>
+    <string name="swc_hide">إخفاء الأحداث الماضية</string>
+    <string name="swc_save">حفظ</string>
+
+    <style name="SwPreviewRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layoutDirection">rtl</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+    </style>
+    <style name="SwPreviewTime">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="SwPreviewEvent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="ConfigTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@color/sw_ivory</item>
+    </style>
+    <color name="sw_ivory">#F4EFEA</color>
+</resources>

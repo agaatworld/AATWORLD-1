@@ -109,7 +109,9 @@ public class MainActivity extends Activity {
     }
 
     private String urlForIntent(Intent i) {
-        if (i != null && "talk".equals(i.getStringExtra("open"))) return START_URL + "#talk";
+        String o = i == null ? null : i.getStringExtra("open");
+        if ("talk".equals(o)) return START_URL + "#talk";
+        if ("schedule".equals(o)) return START_URL + "#schedule";
         return START_URL;
     }
 
@@ -117,8 +119,9 @@ public class MainActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        if (intent != null && "talk".equals(intent.getStringExtra("open")) && webView != null) {
-            webView.evaluateJavascript("location.hash='#talk';", null);
+        String o = intent == null ? null : intent.getStringExtra("open");
+        if (webView != null && ("talk".equals(o) || "schedule".equals(o))) {
+            webView.evaluateJavascript("location.hash='#" + o + "';", null);
         }
     }
 

@@ -158,3 +158,20 @@ h1{font-size:26px}h2{font-size:19px}h3{font-size:18px;margin-bottom:8px}
 .groups{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.groups::-webkit-scrollbar{display:none}
 .groups .chip{white-space:nowrap;flex:none}.groups .chip small{opacity:.75;font-size:12px}.groups .gnew{border-style:dashed}
 .bub.me{margin-inline-start:0;margin-inline-end:auto}.bub.them{margin-inline-end:0;margin-inline-start:auto}
+
+/* schedule (same look as the printed program: ivory page, gold day pill, dark rounded rows) */
+.sbox{flex:1;overflow-y:auto;background:#F4EFEA;border-radius:20px;padding:12px 12px 18px;color:#2c3532;-webkit-overflow-scrolling:touch}
+.sdays{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}.sdays::-webkit-scrollbar{display:none}
+.sday{flex:none;border:none;border-radius:999px;padding:8px 16px;font-size:15px;font-weight:800;font-family:inherit;background:#E3DCD2;color:#5a625f;cursor:pointer}
+.sday.on{background:#B8924A;color:#fff}.sday small{display:block;font-size:11px;font-weight:700;opacity:.85}
+.srow{display:flex;gap:7px;margin-bottom:7px;align-items:stretch}
+.stime{flex:none;width:66px;text-align:center;background:#3B4944;color:#fff;border-radius:999px;padding:9px 0;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.sx{flex:1;background:#3B4944;color:#fff;border-radius:999px;padding:9px 16px;font-size:15px;font-weight:600;line-height:1.35}
+.srow.past .stime,.srow.past .sx{background:#8b9692;color:#eef1f0}
+.srow.now .stime,.srow.now .sx{background:#B8924A;color:#1f1a0d;box-shadow:0 3px 10px rgba(184,146,74,.5)}
+.srow.edit{align-items:center}
+.srow.edit input{font:inherit;border:1.5px solid #cfc6b9;border-radius:12px;padding:7px 9px;background:#fff;color:#2c3532;-webkit-user-select:text;user-select:text;min-width:0}
+.srow.edit input[type=time]{width:104px;flex:none}.srow.edit input.tx{flex:1}
+.srow.edit button{flex:none;width:34px;height:34px;border-radius:50%;border:none;background:#e9d4d6;color:#a0121f;font-size:16px;cursor:pointer}
+.schtools{display:flex;gap:8px;margin-top:12px}.schtools .btn{margin:0;background:#E3DCD2;color:#2c3532}.schtools .danger{color:#a0121f}
+.schempty{text-align:center;padding:30px;color:#6b7773}
