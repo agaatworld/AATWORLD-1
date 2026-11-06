@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#070a14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Talk">
+<title>تكلّم · Talk</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+
+<!-- ============ WELCOME (first run: everyone types their own name) ============ -->
+<section id="welcome" class="screen hidden">
+  <div class="logo">🎙️</div>
+  <h1 data-i="welcomeTitle"></h1>
+  <p class="sub" data-i="welcomeSub"></p>
+  <input id="wName" class="field big" maxlength="24" autocomplete="off" data-ph="namePh">
+  <button id="wStart" class="btn gold big" data-i="start"></button>
+  <div class="langrow"><button class="chip" data-lang="ar">العربية</button><button class="chip" data-lang="en">English</button></div>
+</section>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="screen hidden">
+  <header class="top">
+    <div class="who"><span class="avatar me" id="meAv"></span><div><div class="hi" data-i="hi"></div><div class="myname" id="meName"></div></div></div>
+    <div class="topbtns">
+      <button id="btnAdd" class="icon" aria-label="add" data-aria="add">＋</button>
+      <button id="btnSet" class="icon" aria-label="settings" data-aria="settings">⚙</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner idle" aria-live="polite">
+    <span class="dot"></span><span id="bannerTxt"></span>
+  </div>
+
+  <div class="listhead">
+    <span id="selCount"></span>
+    <span><button class="chip" id="selAll" data-i="selAll"></button><button class="chip" id="selNone" data-i="selNone"></button></span>
+  </div>
+
+  <ul id="list" class="list"></ul>
+
+  <div id="empty" class="empty hidden">
+    <div class="qrill">▦</div>
+    <h2 data-i="emptyT"></h2>
+    <p data-i="emptyS"></p>
+    <button id="emptyAdd" class="btn gold" data-i="addFriend"></button>
+  </div>
+
+  <footer class="bar">
+    <div class="talkto" id="talkTo"></div>
+    <div class="barrow">
+      <button id="btnAlert" class="side alertbtn hidden" aria-label="alert">🔔<small data-i="alert"></small></button>
+      <button id="ptt" class="ptt" aria-label="talk"><span class="ring"></span><span class="pttin"><b id="pttIcon">🎙️</b><i id="pttTxt"></i></span></button>
+      <button id="btnStopAll" class="side hidden"></button>
+    </div>
+  </footer>
+</section>
+
+<!-- ============ PAIR ============ -->
+<section id="pair" class="screen hidden">
+  <header class="top"><button class="icon" id="pairBack" aria-label="back">→</button><h2 data-i="addFriend"></h2><span style="width:48px"></span></header>
+  <div class="pairbody">
+    <div id="pChoose" class="panel">
+      <p class="sub" data-i="pairIntro"></p>
+      <button id="pHostBtn" class="btn gold big"><b>①</b> <span data-i="pHost"></span></button>
+      <button id="pJoinBtn" class="btn big"><b>②</b> <span data-i="pJoin"></span></button>
+      <p class="hint" data-i="pairNet"></p>
+    </div>
+
+    <div id="pHost" class="panel hidden">
+      <p class="step"><b>1</b> <span data-i="hostStep1"></span></p>
+      <div class="qrbox"><canvas id="hostQR"></canvas><div class="wait" id="hostWait" data-i="making"></div></div>
+      <div class="two"><button class="btn sm" id="hostCopy" data-i="copyCode"></button><button class="btn sm" id="hostShare" data-i="shareCode"></button></div>
+      <p class="step"><b>2</b> <span data-i="hostStep2"></span></p>
+      <button id="hostScan" class="btn gold big" data-i="scanReply"></button>
+      <details><summary data-i="pasteInstead"></summary><textarea id="hostPaste" class="field" rows="3" dir="ltr"></textarea><button id="hostPasteGo" class="btn sm" data-i="connect"></button></details>
+    </div>
+
+    <div id="pScan" class="panel hidden">
+      <p class="step" id="scanTitle"></p>
+      <div class="camwrap"><video id="cam" playsinline muted></video><div class="frame"></div></div>
+      <canvas id="scanCv" class="hidden"></canvas>
+      <p class="hint" id="camErr"></p>
+      <details><summary data-i="pasteInstead"></summary><textarea id="scanPaste" class="field" rows="3" dir="ltr"></textarea><button id="scanPasteGo" class="btn sm" data-i="connect"></button></details>
+    </div>
+
+    <div id="pAnswer" class="panel hidden">
+      <p class="step"><b>✓</b> <span data-i="ansStep"></span></p>
+      <div class="qrbox"><canvas id="ansQR"></canvas><div class="wait" id="ansWait" data-i="making"></div></div>
+      <div class="two"><button class="btn sm" id="ansCopy" data-i="copyCode"></button><button class="btn sm" id="ansShare" data-i="shareCode"></button></div>
+      <p class="hint" data-i="waitingOther"></p>
+    </div>
+
+    <div id="pDone" class="panel hidden center">
+      <div class="okmark">✓</div>
+      <h2 id="doneTxt"></h2>
+      <button id="doneBtn" class="btn gold big" data-i="done"></button>
+    </div>
+    <p id="pairErr" class="err"></p>
+  </div>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section id="settings" class="screen hidden">
+  <header class="top"><button class="icon" id="setBack" aria-label="back">→</button><h2 data-i="settings"></h2><span style="width:48px"></span></header>
+  <div class="setbody">
+    <label class="lbl" data-i="yourName"></label>
+    <input id="sName" class="field big" maxlength="24" autocomplete="off">
+    <label class="lbl" data-i="language"></label>
+    <div class="langrow left"><button class="chip" data-lang="ar">العربية</button><button class="chip" data-lang="en">English</button></div>
+
+    <label class="row"><span data-i="optVib"></span><input type="checkbox" id="oVib"></label>
+    <label class="row"><span data-i="optBoss"></span><input type="checkbox" id="oBoss"></label>
+    <label class="row"><span data-i="optToggle"></span><input type="checkbox" id="oToggle"></label>
+    <label class="row"><span data-i="optWake"></span><input type="checkbox" id="oWake"></label>
+    <label class="row"><span data-i="optStun"></span><input type="checkbox" id="oStun"></label>
+    <p class="hint" data-i="batteryNote"></p>
+    <p class="hint" id="vibSupport"></p>
+    <button id="testVib" class="btn sm" data-i="testVib"></button>
+  </div>
+</section>
+
+<!-- ============ CONTACT SHEET ============ -->
+<div id="cSheet" class="sheet hidden"><div class="sheetin">
+  <h3 id="cName"></h3>
+  <label class="row"><span data-i="isBoss"></span><input type="checkbox" id="cBoss"></label>
+  <button id="cReco" class="btn gold" data-i="reconnect"></button>
+  <button id="cDel" class="btn danger" data-i="remove"></button>
+  <button id="cClose" class="btn" data-i="close"></button>
+</div></div>
+
+<!-- ============ BOSS ALERT SHEET ============ -->
+<div id="aSheet" class="sheet hidden"><div class="sheetin">
+  <h3>🔔 <span data-i="alertT"></span></h3>
+  <div class="lbl" data-i="alertDur"></div>
+  <div class="chips" id="aDur">
+    <button class="chip on" data-s="5">5 <span data-i="sec"></span></button>
+    <button class="chip" data-s="15">15 <span data-i="sec"></span></button>
+    <button class="chip" data-s="30">30 <span data-i="sec"></span></button>
+    <button class="chip" data-s="60">60 <span data-i="sec"></span></button>
+    <button class="chip" data-s="0" data-i="untilAck"></button>
+  </div>
+  <div class="lbl" data-i="alertTo"></div>
+  <div class="chips" id="aTo"><button class="chip on" data-to="all" data-i="toAll"></button><button class="chip" data-to="sel" data-i="toSel"></button></div>
+  <input id="aMsg" class="field" maxlength="80" data-ph="alertMsgPh">
+  <button id="aSend" class="btn red big" data-i="alertSend"></button>
+  <div id="aStat" class="astat"></div>
+  <button id="aCancel" class="btn hidden" data-i="alertCancel"></button>
+  <button id="aClose" class="btn" data-i="close"></button>
+</div></div>
+
+<!-- ============ INCOMING ALERT OVERLAY ============ -->
+<div id="alertOv" class="alertov hidden" role="alertdialog">
+  <div class="alin">
+    <div class="bell">🔔</div>
+    <h1 id="alFrom"></h1>
+    <p id="alMsg" class="almsg"></p>
+    <div id="alTimer" class="altimer"></div>
+    <button id="alOk" class="btn white big" data-i="gotIt"></button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="lib/qrcode.js?v=1"></script>
+<script src="lib/jsQR.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
