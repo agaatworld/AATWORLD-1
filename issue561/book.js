@@ -2,7 +2,7 @@
    so the pages are given to StPageFlip in reverse order and the book starts at its last sheet.
    The page fits the window height; two pages side by side when both fit, else one. Pictures load only near the open page. */
 (function () {
-  var N = 100, V = '20261105b', book = document.getElementById('book'), pf = null, cur = 1, last = null;
+  var N = 100, V = '20261110a', book = document.getElementById('book'), pf = null, cur = 1, last = null;
   var q = new URLSearchParams(location.search), EN = q.get('lang') === 'en';
   var T = EN ? { home: 'Website', page: 'Page', of: 'of ' + N, full: 'Full screen', exit: 'Exit full screen', pdf: 'PDF', prev: 'Previous', next: 'Next' }
              : { home: 'الموقع', page: 'صفحة', of: 'من ' + N, full: 'ملء الشاشة', exit: 'إنهاء ملء الشاشة', pdf: 'PDF', prev: 'السابق', next: 'التالي' };
