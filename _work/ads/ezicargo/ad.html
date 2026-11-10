@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Noto+Sans+SC:wght@700&display=block">
+<style>
+/* EZICARGO ads for AAT magazine (owner round 2, 3 Nov 2026):
+   two separate A4 pages for the centre (each printed on its own, 3 mm bleed) + the main picture of the cover.
+   Arabic: Al-Jazeera (the AAT magazine/site font). Latin and digits: Arimo (Arial family). */
+@font-face { font-family: Jazeera; src: url(../../../assets/fonts/aljazeera-regular.ttf); font-weight: 400; }
+@font-face { font-family: Jazeera; src: url(../../../assets/fonts/aljazeera-bold.ttf); font-weight: 700; }
+:root { --red: #D90A0A; --red2: #A80000; --deep: #5C0004; --ink: #15151A; --gold: #C8A15A; --mist: #F5F2EE; --line: #E7DED6; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #888; }
+body { display: flex; flex-direction: column; gap: 30px; padding: 20px; align-items: flex-start; }
+.pg { position: relative; width: 818px; height: 1147px; background: #fff; overflow: hidden; font-family: Jazeera, Arimo, sans-serif; color: var(--ink); }
+.trim { position: absolute; left: 12px; top: 12px; width: 794px; height: 1123px; }
+.lat { font-family: Arimo, Arial, sans-serif; direction: ltr; unicode-bidi: isolate; }
+.zh { font-family: "Noto Sans SC", sans-serif; }
+.ic svg { display: block; }
+
+/* ---------------- page 1 ---------------- */
+.p1 .photo { position: absolute; left: 0; top: 0; width: 818px; height: 318px; background: url(img/kl-day.jpg) center 58% / cover no-repeat; }
+.p1 .photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0) 52%, rgba(255,255,255,.8) 85%, #fff 100%); }
+.card { position: absolute; right: 30px; top: 26px; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 16px; border-radius: 16px; background: rgba(255,255,255,.96); box-shadow: 0 10px 30px rgba(10,20,40,.18); }
+.card img { height: 96px; display: block; }
+.card b { display: block; font: 700 28px/1.3 Jazeera; color: var(--ink); }
+.card i { display: inline-block; font: 700 16px/1.5 Arimo; font-style: normal; color: var(--red2); direction: ltr; text-align: left; white-space: nowrap; }
+.head { position: absolute; left: 30px; right: 30px; top: 232px; text-align: center; }
+.head h1 { margin: 0; font: 700 66px/1.12 Jazeera; color: var(--ink); }
+.head h1 em { font-style: normal; color: var(--red); }
+.head .m { margin-top: 4px; display: flex; justify-content: center; align-items: center; gap: 16px; font: 700 31px/1.3 Jazeera; color: #2a2a30; }
+.head .m::before, .head .m::after { content: ""; width: 70px; height: 2px; background: var(--gold); }
+.head .m .lat { font-weight: 700; color: var(--red2); }
+.offer { margin: 14px auto 0; width: max-content; display: flex; align-items: center; gap: 16px; padding: 12px 42px; color: #fff; border-radius: 60px;
+  background: linear-gradient(90deg, #9A0000, var(--red) 50%, #9A0000); box-shadow: 0 10px 26px rgba(200,0,0,.28); }
+.offer svg { width: 44px; height: 44px; }
+.offer b { font: 700 46px/1 Jazeera; }
+.offer span { font: 700 24px/1.25 Jazeera; text-align: right; }
+.intro { position: absolute; left: 34px; right: 34px; top: 538px; }
+.hello { margin: 0 0 4px; font: 700 28px/1.4 Jazeera; color: var(--red2); text-align: center; }
+.intro p { margin: 0; font: 400 22px/1.6 Jazeera; color: #222; text-align: center; }
+.intro p b { font-weight: 700; }
+/* incentives as a journey: icons along a dotted route, zig-zag */
+.route { position: absolute; left: 34px; right: 34px; top: 708px; height: 316px; }
+.route .rt { position: absolute; left: 0; top: 0; text-align: left; font: 700 27px/1.3 Jazeera; color: var(--red2); }
+.route .rt small { display: block; font: 400 20px/1.4 Jazeera; color: #444; }
+.route svg.path { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.stop { position: absolute; display: flex; align-items: center; gap: 16px; }
+.stop .ic { flex: none; width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center; background: var(--red); box-shadow: 0 6px 16px rgba(200,0,0,.3), 0 0 0 5px #fff, 0 0 0 7px #F1C9C9; }
+.stop .ic svg { width: 38px; height: 38px; }
+.stop b { display: block; font: 700 29px/1.25 Jazeera; color: var(--ink); }
+.stop span { display: block; font: 400 21px/1.35 Jazeera; color: #333; }
+.stop.big b { font-size: 36px; color: var(--red); }
+.stop.big .ic { width: 80px; height: 80px; background: linear-gradient(135deg, #A80000, var(--red)); }
+.chips { display: flex; gap: 6px; margin-top: 4px; }
+.chips span { font: 700 18px/1 Jazeera; padding: 6px 11px 5px; border-radius: 20px; background: #fff; border: 1.5px solid #E3CFCF; color: var(--ink); }
+.chips span.lat { font: 700 17px/1 Arimo; padding-top: 7px; }
+.chips span.zh { font: 700 17px/1 "Noto Sans SC"; }
+
+/* page 1 foot strip */
+.f1 { position: absolute; left: 0; bottom: 0; width: 818px; height: 98px; background: linear-gradient(135deg, #17171C, #2A0306 60%, #5C0004); }
+.f1::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--gold); }
+.f1t { position: absolute; left: 40px; right: 40px; top: 1046px; height: 66px; display: flex; align-items: center; justify-content: space-between; color: #fff; }
+.f1t .apps { display: flex; gap: 6px; }
+.f1t .apps i { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; }
+.f1t .apps i svg { width: 23px; height: 23px; }
+.f1t .apps i img { width: 38px; height: 38px; border-radius: 10px; display: block; }
+.f1t .num { font: 700 30px/1 Arimo; letter-spacing: 1px; direction: ltr; }
+.f1t .w { font: 700 19px/1 Arimo; direction: ltr; color: #F1DDB0; }
+/* ---------------- page 2 ---------------- */
+.p2 .top { position: absolute; left: 0; top: 0; width: 818px; height: 12px; background: linear-gradient(90deg, var(--red2), var(--red), var(--red2)); }
+.p2 .h2 { position: absolute; left: 36px; right: 36px; top: 40px; text-align: center; }
+.p2 .h2 b { display: block; font: 700 46px/1.2 Jazeera; color: var(--ink); }
+.p2 .h2 b em { font-style: normal; color: var(--red); }
+.p2 .h2 span { display: inline-flex; align-items: center; gap: 14px; margin-top: 4px; font: 700 24px/1.3 Jazeera; color: #333; }
+.p2 .h2 span::before, .p2 .h2 span::after { content: ""; width: 60px; height: 2px; background: var(--gold); }
+.fairs { position: absolute; left: 36px; right: 36px; top: 158px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fair { border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(30,10,10,.08); }
+.fair .ph { position: relative; height: 160px; background-size: cover; background-position: center; }
+.fair .dt { position: absolute; right: 14px; bottom: -16px; padding: 7px 16px 6px; border-radius: 30px; background: var(--red); color: #fff; font: 700 21px/1.25 Jazeera; box-shadow: 0 4px 12px rgba(168,0,0,.3); }
+.fair .bd { padding: 24px 14px 12px; }
+.fair h5 { margin: 0 0 4px; font: 700 22px/1.3 Jazeera; color: var(--ink); }
+.fair .en { margin: 0 0 6px; font: 700 16px/1.35 Arimo; color: #555; direction: ltr; text-align: left; }
+.fair .w { font: 700 17.5px/1.2 Arimo; color: var(--red2); direction: ltr; text-align: left; }
+.note { position: absolute; left: 36px; right: 36px; top: 814px; padding: 12px 18px; border-radius: 12px; border: 1.5px dashed var(--gold); background: #FFFBF3; font: 400 20px/1.55 Jazeera; color: #2b2b31; text-align: center; }
+.note b { color: var(--red2); }
+.contact { position: absolute; left: 0; bottom: 0; width: 818px; height: 232px; background: linear-gradient(135deg, #17171C 0%, #2A0306 60%, #5C0004 100%); color: #fff; }
+.contact::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--gold); }
+.ct { position: absolute; left: 48px; right: 48px; top: 936px; height: 170px; color: #fff; }
+.ct .r1 { display: flex; align-items: center; justify-content: space-between; }
+.ct .lb { font: 700 26px/1.3 Jazeera; color: var(--gold); }
+.ct .apps { display: flex; gap: 8px; }
+.ct .apps i { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; }
+.ct .apps i svg { width: 28px; height: 28px; }
+.ct .apps i img { width: 46px; height: 46px; border-radius: 12px; display: block; }
+.ct .num { margin-top: 10px; text-align: center; font: 700 46px/1 Arimo; letter-spacing: 1.5px; direction: ltr; }
+.ct .r3 { margin-top: 16px; display: flex; justify-content: center; gap: 34px; direction: ltr; font: 700 19px/1.2 Arimo; }
+.ct .r3 span, .ct .ad { display: flex; align-items: center; gap: 9px; }
+.ct .r3 svg, .ct .ad svg { width: 22px; height: 22px; flex: none; }
+.ct .ad { margin-top: 12px; justify-content: center; direction: ltr; font: 400 17.5px/1.3 Arimo; color: #EDE5DE; }
+
+/* ---------------- cover picture: the whole picture area of the cover, 193 x 183 mm (owner: no contents list, the ad takes it all) ---------------- */
+.cov { position: relative; width: 727px; height: 691px; overflow: hidden; background: url(img/petronas.jpg) 50% 34% / cover no-repeat; font-family: Jazeera, Arimo, sans-serif; }
+.cov::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(120,0,0,0) 36%, rgba(150,0,0,.6) 56%, rgba(140,0,0,.93) 72%, #7A0000 100%); }
+.cov .lg { position: absolute; z-index: 2; right: 22px; top: 22px; display: flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; border-radius: 16px; background: rgba(255,255,255,.96); box-shadow: 0 8px 22px rgba(0,0,0,.2); }
+.cov .lg img { height: 112px; display: block; }
+.cov .lg b { display: block; font: 700 30px/1.3 Jazeera; color: var(--ink); }
+.cov .lg i { display: inline-block; font: 700 17px/1.5 Arimo; font-style: normal; color: var(--red2); direction: ltr; text-align: left; white-space: nowrap; }
+.cov .tx { position: absolute; z-index: 2; left: 20px; right: 20px; bottom: 62px; text-align: center; color: #fff; }
+.cov .tx b { display: block; font: 700 58px/1.1 Jazeera; white-space: nowrap; text-shadow: 0 3px 14px rgba(0,0,0,.35); }
+.cov .tx .m { margin-top: 8px; font: 700 31px/1.3 Jazeera; }
+.cov .tx .m .lat { font-weight: 700; }
+.cov .tx .of { margin: 18px auto 0; width: max-content; padding: 12px 40px 10px; border-radius: 50px; background: #fff; color: var(--red2); font: 700 42px/1.1 Jazeera; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+/* ---------------- corner box of the cover (34 x 47 mm, where Astral's box was) ---------------- */
+.box { width: 128px; height: 178px; background: #fff; display: flex; flex-direction: column; align-items: center; font-family: Jazeera, Arimo, sans-serif; color: var(--ink); }
+.box img { width: 74px; height: 74px; object-fit: contain; display: block; margin-top: 2px; }
+.box .nm { margin-top: 0; font: 700 17px/1.15 Jazeera; }
+.box .of { margin-top: 3px; width: 124px; padding: 3px 0 4px; border-radius: 5px; background: linear-gradient(90deg, #A80000, var(--red)); color: #fff; text-align: center; }
+.box .of b { display: block; font: 700 16.5px/1.15 Jazeera; }
+.box .of span { display: block; font: 700 12.5px/1.25 Jazeera; }
+.box .see { margin-top: 3px; width: 124px; border-top: 1px solid #BDBDBD; padding-top: 3px; display: flex; align-items: center; justify-content: center; gap: 4px; font: 700 13px/1.3 Jazeera; color: #222; white-space: nowrap; }
+.box .see i { display: inline-block; flex: none; width: 24px; height: 15px; border: 1.3px solid #555; border-radius: 3px; }
+</style></head>
+<body>
+
+<!-- page 1: first (right-hand) page -->
+<div class="pg p1" data-shot="page1-bleed">
+  <div class="photo"></div>
+  <div class="f1"></div>
+  <div class="trim" data-shot="page1">
+    <div class="f1t"><div class="apps">{{APPS}}</div><div class="num">0060 17 280 0208</div><div class="w">www.ezicargo.com</div></div>
+    <div class="card"><img src="brand/logo-full.png" alt=""><div><b>شركة ايزي كارجو المحدودة</b><i>EZICARGO RICH SDN. BHD.</i></div></div>
+    <div class="head">
+      <h1>المعارض الدولية<br><em>في ماليزيا</em></h1>
+      <div class="m">يناير · فبراير · مارس <span class="lat">2027</span></div>
+      <div class="offer">{{KEY}}<b>السكن مجّاني</b><span>خلال أيام المعارض<br>في ماليزيا</span></div>
+    </div>
+    <div class="intro">
+      <div class="hello">سعادة الإخوة الكرام التجار ورجال الأعمال</div>
+      <p>تقدّم <b>«شركة ايزي كارجو المحدودة»</b> خدمات متنوعة وكثيرة، تساعد التجار ورجال الأعمال على النموّ والتوسّع، وتزوّدهم بالأدوات والمعرفة اللازمة للنجاح في أسواقهم ونشاطاتهم، بالإضافة إلى الدعم التقني. ونوفّر لكم حوافز لرحلتكم إلى المعارض:</p>
+    </div>
+    <div class="route">
+      <svg class="path" viewBox="0 0 726 316" preserveAspectRatio="none"><path d="M691 40 C 691 92 511 64 511 116 C 511 168 691 140 691 192 C 691 244 501 222 501 274" fill="none" stroke="#D90A0A" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1 11"/></svg>
+      <div class="rt">حوافز رحلتكم<small>إلى معارض ماليزيا</small></div>
+      <div class="stop" style="right:0;top:5px"><div class="ic">{{FACTORY}}</div><div><b>زيارات المصانع والمصدّرين</b><span>للمنتجات التي تختارونها</span></div></div>
+      <div class="stop" style="right:180px;top:81px"><div class="ic">{{TALK}}</div><div><b>ترجمة مع المصانع</b><div class="chips"><span>العربية</span><span class="lat">English</span><span class="lat">Melayu</span><span class="zh">中文</span></div></div></div>
+      <div class="stop" style="right:0;top:157px"><div class="ic">{{PALM}}</div><div><b>برنامج سياحي</b><span>لمن يرغب: يوم أو يومين أو أكثر</span></div></div>
+      <div class="stop big" style="right:185px;top:234px"><div class="ic">{{KEY}}</div><div><b>السكن مجّاني</b><span>خلال أيام المعارض في ماليزيا</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- page 2: second (left-hand) page -->
+<div class="pg p2" data-shot="page2-bleed">
+  <div class="top"></div>
+  <div class="contact"></div>
+  <div class="trim" data-shot="page2">
+    <div class="h2"><b>المعارض الدولية <em>في ماليزيا</em></b><span>يناير / كانون الثاني · فبراير / شباط · مارس / آذار <i class="lat" style="font-style:normal">2027</i></span></div>
+    <div class="fairs">
+      <div class="fair"><div class="ph" style="background-image:url(img/jewel2.jpg);background-position:center 55%"><span class="dt">15 – 18 يناير</span></div><div class="bd"><h5>معرض ماليزيا الدولي للمجوهرات</h5><div class="en">Malaysia International Jewellery Fair</div><div class="w">www.mijf.com.my</div></div></div>
+      <div class="fair"><div class="ph" style="background-image:url(img/reef.jpg);background-position:center 40%"><span class="dt">19 – 21 فبراير</span></div><div class="bd"><h5>معرض الغوص والمنتجعات والسفر</h5><div class="en">DRT – Diving, Resort and Travel Show – Malaysia 2027</div><div class="w">www.drtexpo.com/malaysia</div></div></div>
+      <div class="fair"><div class="ph" style="background-image:url(img/showroom.jpg);background-position:center 60%"><span class="dt">1 – 4 مارس</span></div><div class="bd"><h5>معرض ماليزيا الدولي للأثاث</h5><div class="en">MIFF – Malaysian International Furniture Fair 2027</div><div class="w">miff.com.my</div></div></div>
+      <div class="fair"><div class="ph" style="background-image:url(img/woodtable.jpg);background-position:center 55%"><span class="dt">2 – 4 مارس</span></div><div class="bd"><h5>معرض الأثاث المخصّص للتصدير</h5><div class="en">International Export Furniture Exhibition (EFE)</div><div class="w">www.efe.my</div></div></div>
+    </div>
+    <div class="note">الإخوة الذين يرغبون في زيارة أيّ معرض في ماليزيا بتاريخ مختلف عن الأشهر الثلاثة أعلاه… يمكنهم التواصل معنا لإرسال المعلومات المطلوبة للمعارض التي يرغبون زيارتها</div>
+    <div class="ct">
+      <div class="r1"><div class="lb">للتواصل معنا</div><div class="apps">{{APPS}}</div></div>
+      <div class="num">0060 17 280 0208</div>
+      <div class="r3"><span>{{MAIL}}ezicargo20@gmail.com</span><span>{{WEB}}www.ezicargo.com</span></div>
+      <div class="ad">{{PIN}}No. 42-1 Jalan Usahawan 7 of Jalan Kilang, 53300 WP Kuala Lumpur, Malaysia</div>
+    </div>
+  </div>
+</div>
+
+<!-- main picture of the cover -->
+<div class="cov" data-shot="cover-picture">
+  <div class="lg"><img src="brand/logo-full.png" alt=""><div><b>شركة ايزي كارجو المحدودة</b><i>EZICARGO RICH SDN. BHD.</i></div></div>
+  <div class="tx">
+    <b>المعارض الدولية في ماليزيا</b>
+    <div class="m">يناير · فبراير · مارس <span class="lat">2027</span></div>
+    <div class="of">السكن مجّاني خلال المعارض</div>
+  </div>
+</div>
+
+<!-- corner box of the cover -->
+<div class="box" data-shot="cover-box">
+  <img src="brand/logo-full.png" alt="">
+  <div class="nm">ايزي كارجو</div>
+  <div class="of"><b>السكن مجّاني</b><span>خلال معارض ماليزيا</span></div>
+  <div class="see">انظر صفحة رقم <i></i></div>
+</div>
+<script>
+/* the English company name is stretched to the exact width of the Arabic name above it */
+document.fonts.ready.then(function () {
+  document.querySelectorAll('.card, .cov .lg').forEach(function (c) {
+    var b = c.querySelector('b'), i = c.querySelector('i'), n = i.textContent.length;
+    i.style.letterSpacing = '0px'; var d = b.getBoundingClientRect().width - i.getBoundingClientRect().width;
+    i.style.letterSpacing = (d / n) + 'px';
+  });
+  document.body.setAttribute('data-ready', '1');
+});
+</script>
+</body></html>

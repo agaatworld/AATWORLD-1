@@ -73,7 +73,7 @@ add('G5','17 · Twin circles (Mastercard)',d('left: -110px; top: -110px; width: 
 add('G6','18 · Soft gradient (Samsung / Google calm)',d('left: 0; right: 0; top: 0; height: 10px; background: linear-gradient(90deg, #7A0A10, #D21F26, #FF8A80, #D21F26, #7A0A10)')+d('left: 0; right: 0; bottom: 0; height: 10px; background: linear-gradient(90deg, #7A0A10, #D21F26, #FF8A80, #D21F26, #7A0A10)'),'radial-gradient(ellipse at 50% 45%, #fff 45%, #FFE7E3 100%)',False,10,10,
   d('left: 0; right: 0; top: 0; height: 10px; background: rgba(255,255,255,.6)')+d('left: 0; right: 0; bottom: 0; height: 10px; background: rgba(255,255,255,.6)'),'radial-gradient(ellipse at 50% 45%, #E3242B 30%, #7A0A10 100%)',True,10,10)
 cap='<div style="font-size: 26px; font-weight: 700; color: #6b655c">%s</div>\n'
-O=('محمد مروان فتال','Mohamad Marwan Fattal','OWNER · <span dir="rtl">المالك</span>','+886 966 404 681','marwanaat@gmail.com')
+O=('محمد مروان فتال','Mohamad Marwan Fattal','OWNER · <span dir="rtl">المالك</span>','+886 966 404 681','marwan@aatworld.com')
 C=('عبدالرحمن محمد','Abdulrahman Mohammad','CEO · <span dir="rtl">المدير التنفيذي</span>','+886 000 000 000','ceo@aatworld.com')
 SHEET='<div style="width: 1920px; height: 1300px; box-sizing: border-box; padding: 40px; background: #F3EFEA; font-family: \'Alexandria\', sans-serif; color: #1b1a18; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px">\n\n%s</div>'
 canvas={"v":3,"createdOnFiles":{"v":1,"at":"2026-10-11T01:15:00Z"},"title":"AAT Name Cards","launch":{"view":"canvas"},"pages":[],"boards":{},"order":[],"notes":{"head":{"x":0,"y":-300,"text":"AAT name cards · 18 directions","kind":"title1","maxW":5920}},"designSystems":[]}

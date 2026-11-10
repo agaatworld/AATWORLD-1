@@ -17,10 +17,12 @@ import json as _j
 _U=_j.load(open('mark/user_symbols.json'))
 PAIRP,PW,PH=_U['pair']['d'],_U['pair']['w'],_U['pair']['h']
 ONEP,OW,OH=_U['one']['d'],_U['one']['w'],_U['one']['h']
+# owner (25 Oct 2026): the main AAT symbol is the SINGLE swash, not the overlapping pair -> arcs and pattern use the single swash
+PAIRP,PW,PH=ONEP,OW,OH
 logo_red=open('aat-logo-red.svg').read(); logo_white=open('aat-logo-white.svg').read()
 def inner(svg): return svg[svg.index('>')+1:svg.rindex('</svg>')]
 # vCard QR
-vc='\r\n'.join(['BEGIN:VCARD','VERSION:3.0','N:Fattal;Mohamad Marwan','FN:Mohamad Marwan Fattal','ORG:AAT','TEL:+886966404681','EMAIL:marwanaat@gmail.com','URL:aatworld.com','END:VCARD'])
+vc='\r\n'.join(['BEGIN:VCARD','VERSION:3.0','N:Fattal;Mohamad Marwan','FN:Mohamad Marwan Fattal','ORG:AAT','TEL:+886966404681','EMAIL:marwan@aatworld.com','URL:aatworld.com','END:VCARD'])
 q=segno.make(vc,error='l',micro=False)
 buf=io.BytesIO(); q.save(buf,kind="svg",scale=1,border=0,dark="#1b1a18",xmldecl=False,svgns=True,nl=False,omitsize=True); QR=buf.getvalue().decode()
 qn=q.symbol_size(scale=1,border=0)[0]
@@ -32,7 +34,7 @@ def sym(x,y,s,rot=0,fill='#D21F26',flip=False):
     return '<g transform="translate(%g %g) rotate(%g) scale(%g %g) translate(%g %g)"><path fill="%s" d="%s"/></g>'%(x,y,rot,-s if flip else s,s,-W/2,-H/2,fill,SWP)
 # ---- WHITE side ----
 import math as m2
-PD=-27.8   # pair's main axis (bottom-left -> top-right)
+PD=-33.0   # single swash's main axis (curl at bottom-left -> tip at top-right)
 def pair(x,y,sc,rot,fill='#D21F26'):
     return '<g transform="translate(%g %g) rotate(%g) scale(%g) translate(%g %g)"><path fill="%s" d="%s"/></g>'%(x,y,rot,sc,-PW/2,-PH/2,fill,PAIRP)
 def arc_at(cx,cy,R,a0,a1,n,sc,sgn):
@@ -41,10 +43,10 @@ def arc_at(cx,cy,R,a0,a1,n,sc,sgn):
         t=m2.radians(a0+(a1-a0)*i/(n-1))
         x=cx+sgn*R*m2.cos(t); y=cy+sgn*R*m2.sin(t)
         tang=m2.degrees(t)+90
-        o+=pair(x,y,sc,tang-PD)
+        o+=pair(x,y,sc,0)   # single swash: every one upright, same direction as in the logo
     return o
-arc=arc_at(0,0,255,16,74,3,0.085,1)
-arc2=arc_at(CW,CH,415,14,76,4,0.085,-1)
+arc=arc_at(0,0,255,16,74,3,0.06,1)
+arc2=arc_at(CW,CH,415,14,76,4,0.06,-1)
 front=('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">'%(CW,CH,CW,CH)+
  '<rect width="%d" height="%d" fill="#fff"/>'%(CW,CH)+arc+arc2+
  '<g transform="translate(%g 52) scale(%g)" fill="#D21F26">%s</g>'%((CW-390)/2,390/413,inner(logo_red))+
@@ -56,7 +58,7 @@ F=('<div style="position:relative;width:%dpx;height:%dpx;overflow:hidden;backgro
  '<div style="font-size:33px;font-weight:800;line-height:1.15">Mohamad Marwan Fattal</div>'
  '<div style="font-size:24px;font-weight:800;color:#D21F26;letter-spacing:2px;margin-bottom:26px">OWNER · <span dir="rtl">المالك</span></div>'
  '<div style="font-size:28px;font-weight:700">+886 966 404 681</div>'
- '<div style="font-size:28px;font-weight:700">marwanaat@gmail.com</div></div>'
+ '<div style="font-size:28px;font-weight:700">marwan@aatworld.com</div></div>'
  '<div style="position:absolute;right:56px;bottom:52px;display:flex;flex-direction:column;align-items:center;gap:8px">'
  '<div style="width:142px;height:142px;padding:7px;box-sizing:border-box;background:#fff;border:3px solid #D21F26;border-radius:12px">'+QR.replace('<svg ','<svg width="122" height="122" style="display:block" ',1)+'</div>'
  '<div style="font-size:16px;font-weight:700;color:#6b655c">Scan to save</div></div></div>')
