@@ -102,7 +102,12 @@ C. Second batch (21 Nov) — square 1:1 with `fbsq.py`, delivered, **captions aw
    - https://www.facebook.com/share/v/1D7uqmMLur — login-only; the owner UPLOADED it («369K views… video.mp4», Taiz «قالت تعزّ قلت عزّ», منصة عبدالله خليدي) → `06-taiz-ishqtuki.mp4` (other page's red card + logo cropped out; music removed).
    - Two photos (embrace B&W, boy with jambiya) → light brand touch: `brand-touch/hug-brand.jpg`, `boy-brand.jpg`.
 D. Funeral procession film — 5 uploaded parts «00-00…01-30», «01-30…03-00», «03-00…04-30», «04-30…05-30», «05-30…06-22» (406×720, total 6:22)
-   + song link https://youtu.be/Cs-W6tCbp4o — see §7-A. **Owner must re-upload the 5 parts and upload the song file.**
+   + song «قسماً بربك يا شهيد» https://youtu.be/Cs-W6tCbp4o (YouTube refused the download: "Sign in to confirm you're not a bot" — do NOT bypass; the owner UPLOADED the song video instead, 6:11, 450×360).
+   DONE and delivered (21 Nov):
+   - `procession-film/janazat-raed-alkahlani-taiz.mp4` — crowd/commentator sound version, 6:26 (`film.py` + `timeline.py`).
+   - `procession-film/qasaman-ya-shahid-raed-alkahlani-film.mp4` — SONG version, 4:19, 1080×1920, −14 LUFS (`film2.py` + `timeline2.py`), the one the owner asked for.
+   - `song-qasaman/` — song without the music-only intro, music removed (mp4 + vocals mp3) and the transcript (`data/transcripts/song-qasaman.txt`).
+   Waiting for the owner's verdict on the song film. If the owner sends 2–3 photos of the martyr, swap them into PHOTO in `timeline2.py`.
 E. Last batch (21 Nov, sent just before handoff, no instruction yet — channel-style edits expected; ask nothing, just follow the rules):
    - https://www.facebook.com/reel/1503231298323095/ — أحمد عبدالعليم الرامسي, 98.6 s, 360×640, about «القائد رائد رحل وترك خلفه ألف قائد» (fighters seated on rocks; a speech with verses, ends «نستشهد ألفاً كي تعيش عقيدته…»), no music — NEW.
    - https://www.facebook.com/reel/4558136637739612 — محمد مهيوب احمد علي, 239 s, 720×960, nasheed «ما وهنا» (حمزة عبدالجبار الحميدي, on stage: «قباب الحق خوذتنا… خذ دمانا نحن من يروي اللواء»), no music detected — NEW.
@@ -117,28 +122,28 @@ E. Last batch (21 Nov, sent just before handoff, no instruction yet — channel-
    - So the NEW ones to edit: 1503231298323095 (الرامسي), 4558136637739612 (ما وهنا), 19zkmR88d1 (الجندبي), 18oUrC9BuU (حي على الجهاد).
 
 ## 7. Open tasks (in priority order)
-A. **Procession film** (الشهيد رائد الكحلاني funeral, Taiz, ~10,000+ people). Owner wants: remove the video's own sound, put the song from
-   https://youtu.be/Cs-W6tCbp4o in its place, transcribe the song FIRST and send the words as copyable text, then a cinematic tribute
-   (his long master prompt: digital camera moves, documentary grade, meaning-driven Arabic typography, the deceased's photos as revelations, dignified ending).
-   Done so far: `film.py` + `timeline.py` (vertical 1080×1920, 30 fps): per-shot camera keyframes (cuts at 44.29, 74.46, 134.04, 205.02, 209.89, 353.12, 366.79 s;
-   coffin under the flag at ~26–31 s, (184,545)→(93,630) in source px), LUT grade, vignette, grain, phrase styles loss/strength/remember/scale/legacy/name,
-   word-by-word narration captions, the real photo of Raed in 4 treatments (from darkness; eyes→full; cut-out above the blurred crowd; farewell),
-   closing card «الشهيد النقيب / رائد الكحلاني / 4/4/1984 — 18/11/2026 / تعز على العهد والوعد» + «الثبات عز · الكلمة مقاومة», brand outro.
-   The current timeline is synced to the crowd chants + commentator (transcript `data/transcripts/procession-voices.txt`), which the owner does NOT want as the sound.
-   Next: get the song file → Demucs (vocals only, unless he wants it as is) → transcribe → send words → re-time CAM/PHR/PHOTO to the song
-   (replace the narration `cap()` lines with song lines) → render 4 parts (~25 min) → QC → send. The owner will also send 2–3 photos of the martyr — swap them in.
+A. **Song film — owner's verdict** (`procession-film/film2.py` + `timeline2.py`). Film clock = song clock; 0 = first «قسماً» (= 42.3 s in the uploaded song).
+   Song audio: `<scratch>/fb8/work/v_norm.wav` (Demucs vocals of 42.3–295.3 s, −14 LUFS) — recreate from the uploaded song if the scratchpad is gone:
+   cut 42.3–295.3 → Demucs two-stems → loudnorm −14. Shot plan `SEGS`, camera keys, `mood(t)`, effects (warm sweep, amber streaks, heritage frame,
+   converge «عدنٌ/وصنعا», expand «كلُّ الحدود», pulse «تجري بقلبي كالدمِ»), climax «الكلُّ شعبٌ واحدٌ سيعيشُ خفّاقَ البنود», designed closing frame
+   (logo + «الثبات عز» + «الكلمة مقاومة», no animated outro — the owner's prompt forbids a generic outro). Uncertain word «ولْتَزُلْ» could not be verified → omitted on screen.
+   Commands: `python3 film2.py render <i> 4` ×4 in parallel, then `python3 film2.py finish 4`.
+   The crowd film's closing card says «18/11/2026» (from the biography); the owner corrected video 02 to 19/11 — ask if the film card should also be 19/11.
 B. **Square videos sq1–sq3**: read the owner's studio edits (`ArtifactData query lines where key in [sq1,sq2,sq3]`), patch `caps` in the cfg JSONs, re-render.
    Points to confirm: khatib line 2 «الهصور» (heard «اليسور»), line 6 «معركة ذات المصابيح»; poem lines 9–10 (not in the burned subtitles); the whole Taiz poem.
 C. **Last batch (§6-E)**: edit the 4 NEW videos in channel style (vertical → reel with fbreel2-style panel; landscape nasheed → square with fbsq), add them to the studio.
 D. **Memorial design** (`memorial-design/`): owner to choose 1 of 3 (سجلّ الشرف / القائد / الوثيقة); asks pending: photographer credit name (cut-off «…اد البريهي»
    on the original photo), whether «يوليو 2016» should be «يوليو 2015». Cut-out was redone to keep both his arms and the rifle hand. Main points are big, details small.
 E. Need the file for reel 1762821274824063.
+F. **«شاهد على العصر» transcript** (asked 21 Nov): PDF + TXT, easy to read, sectioned by question/answer, NO added titles except the episode title,
+   clickable table of contents ("glossary"). Waiting for the owner to say WHICH episode (guest + episode number) or send the file/link.
 
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
 - `<scratch>/taiz/fonts/th/*.ttf` (Thmanyah), `<scratch>/sfx3/m<id>.wav` (sound effects; scripts also look in sfx/s and sfx2/m),
   `<scratch>/demrepo/` (Demucs weights), `/home/user/final/brand-kit/` (brand kit), `/home/user/final/kahlani/assets/` (portraits, logo, textures),
-  outputs: `/home/user/final/fb-edits/`, `/home/user/final/fb-edits2/`, `/home/user/final/procession-film/`.
+  outputs: `/home/user/final/fb-edits/`, `/home/user/final/fb-edits2/`, `/home/user/final/procession-film/`, `/home/user/final/song-qasaman/`.
+- Song work files: `<scratch>/fb8/song.mp4` (uploaded), `<scratch>/fb8/work/` (`asr.py`, `voc.json`, `v_norm.wav`); `film2.py` reads `fb8/work/v_norm.wav`.
 
 ## 9. Private artifact contents (published paths)
 - `fonts/*.ttf` — Thmanyah Sans/Serif Display/Serif Text (all weights), Amiri Quran, Reem Kufi

@@ -311,6 +311,6 @@ elif MODE == 'finish':
         f'[0:v]setsar=1,fps=30,format=yuv420p,settb=1/30[m];[2:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p,settb=1/30[o];[m][o]xfade=transition=fade:duration={XF}:offset={off:.3f},format=yuv420p[v];'
         f'[1:a]aformat=sample_rates=48000:channel_layouts=stereo,apad=whole_dur={off + 4.63:.3f}[va];'
         f'[2:a]aformat=sample_rates=48000:channel_layouts=stereo,afade=t=in:d=0.6,adelay={int(off * 1000)}|{int(off * 1000)},volume=0.8[oa];[va][oa]amix=inputs=2:normalize=0:duration=first[a]',
-        '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-level', '4.1',
+        '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '21', '-maxrate', '8M', '-bufsize', '16M', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-level', '4.1',
         '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', out], check=True)
     print('ok', out)

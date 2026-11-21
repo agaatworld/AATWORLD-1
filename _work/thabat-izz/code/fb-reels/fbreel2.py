@@ -228,7 +228,8 @@ def mix(name, voice_n, total, voice_t0, cues, beds):
     """voice (already −14 LUFS) starts at voice_t0; cues: (clip, t, dB); beds: (array, dB) ducked under speech; result normalised to −14 LUFS"""
     n = int(total * SR); v, sr = sf.read(voice_n, dtype='float32'); v = v.mean(1) if v.ndim > 1 else v
     V = np.zeros(n, np.float32); j = int(voice_t0 * SR); V[j:j + len(v)] = v[:n - j]
-    env = np.sqrt(np.convolve(V ** 2, np.ones(int(0.25 * SR)) / int(0.25 * SR), 'same')); env = np.clip(env / (np.percentile(env[env > 0], 90) + 1e-6), 0, 1)
+    from scipy.ndimage import uniform_filter1d
+    env = np.sqrt(np.maximum(uniform_filter1d(V ** 2, int(0.25 * SR)), 0)); env = np.clip(env / (np.percentile(env[env > 0], 90) + 1e-6), 0, 1)
     fx = np.zeros(n, np.float32)
     def add(x, t, db):
         k = int(t * SR); m = min(len(x), n - k)
@@ -275,6 +276,8 @@ def run(fr, n, name, audio_fn, body_dur, stream=None):
             if len(got) == len(STILLS): break
         for w in STILLS: cv2.imwrite(WK + f'{name}_{w:.1f}.jpg', np.clip(fr(*got[w]), 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 90])
         return
+    if os.environ.get('REUSE') and os.path.exists(WK + name + '_body2.mp4'):        # frames already rendered: only the cover, sound and outro
+        cover = fr(T0 * 0.5, None); finish(name, WK + name + '_body2.mp4', audio_fn(), body_dur, cover); return
     enc = subprocess.Popen(['ffmpeg', '-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                             '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', WK + name + '_body2.mp4'], stdin=subprocess.PIPE)
     last = None; cover = None
@@ -367,8 +370,8 @@ def v2():
     edge = ((al > 0.02) & (al < 0.95)).astype(np.float32) * right; cut[..., :3] *= (1 - 0.3 * edge)[..., None]; cut[..., 3] = al
     s = 0.78; cw, ch = int(cut.shape[1] * s), int(cut.shape[0] * s); cut = cv2.resize(cut, (cw, ch), interpolation=cv2.INTER_AREA); CX0, CY0 = 540 - 790 * s, 392
     fade = np.clip((np.arange(ch)[:, None] + CY0 - 1180) / 300, 0, 1); cut[..., 3] *= (1 - fade) ** 1.2; cut[..., :3] = grade(cut[..., :3])
-    f = F('thmanyahsans-Black.ttf', 400); bb = f.getbbox('18/11'); dw = bb[2] - bb[0] + 40; dh = bb[3] - bb[1] + 30
-    im = Image.new('L', (dw, dh), 0); ImageDraw.Draw(im).text((20 - bb[0], 15 - bb[1]), '18/11', font=f, fill=255); dm = np.array(im).astype(np.float32) / 255
+    f = F('thmanyahsans-Black.ttf', 400); bb = f.getbbox('19/11'); dw = bb[2] - bb[0] + 40; dh = bb[3] - bb[1] + 30
+    im = Image.new('L', (dw, dh), 0); ImageDraw.Draw(im).text((20 - bb[0], 15 - bb[1]), '19/11', font=f, fill=255); dm = np.array(im).astype(np.float32) / 255
     gy = np.linspace(0, 1, dh)[:, None]; date = np.zeros((dh, dw, 4), np.float32)
     for k in range(3): date[..., k] = (WHITE[k] * (1 - gy) * 0.92 + STEEL[k] * gy) * np.ones_like(dm)
     date[..., 3] = dm * (1 - 0.75 * gy); DCX, DCY = 540, SAFE_T + 30 + dh / 2
