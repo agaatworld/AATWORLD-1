@@ -104,16 +104,17 @@ C. Second batch (21 Nov) — square 1:1 with `fbsq.py`, delivered, **captions aw
 D. Funeral procession film — 5 uploaded parts «00-00…01-30», «01-30…03-00», «03-00…04-30», «04-30…05-30», «05-30…06-22» (406×720, total 6:22)
    + song link https://youtu.be/Cs-W6tCbp4o — see §7-A. **Owner must re-upload the 5 parts and upload the song file.**
 E. Last batch (21 Nov, sent just before handoff, no instruction yet — channel-style edits expected; ask nothing, just follow the rules):
-   - https://www.facebook.com/reel/1503231298323095/ — أحمد عبدالعليم الرامسي, 98.6 s, 360×640, about «القائد رائد رحل وترك خلفه ألف قائد» (fighters seated on rocks) — NEW.
-   - https://www.facebook.com/reel/4558136637739612 — محمد مهيوب احمد علي, 239 s, 720×960, nasheed «ما وهنا» (حمزة عبدالجبار الحميدي, on stage) — NEW; check music.
+   - https://www.facebook.com/reel/1503231298323095/ — أحمد عبدالعليم الرامسي, 98.6 s, 360×640, about «القائد رائد رحل وترك خلفه ألف قائد» (fighters seated on rocks; a speech with verses, ends «نستشهد ألفاً كي تعيش عقيدته…»), no music — NEW.
+   - https://www.facebook.com/reel/4558136637739612 — محمد مهيوب احمد علي, 239 s, 720×960, nasheed «ما وهنا» (حمزة عبدالجبار الحميدي, on stage: «قباب الحق خوذتنا… خذ دمانا نحن من يروي اللواء»), no music detected — NEW.
    - https://www.facebook.com/reel/1762821274824063 — login-only (same as B-4). Need the file.
    - https://www.facebook.com/share/r/1E41LhZXJk/ — قناة يمن شباب, «وصية أم من تعز» 21 s — ALREADY DONE (reel 03, Nov 20).
    - https://www.facebook.com/share/r/1CSznNJEbC/ — يوسف العليمي, «طفلة من تعز» 19 s — ALREADY DONE (reel 02 / girl).
-   - https://www.facebook.com/share/r/19zkmR88d1/ — ابراهيم الجندبي, العميد عمار الجندبي 20.7 s, 960×1280 — NEW.
-   - https://www.facebook.com/share/r/1AFS3YXyUN/ — عبدالله قديش, 28.6 s, 1080×1920, man on a mountain road about Taiz — NEW.
-   - https://www.facebook.com/share/v/18oUrC9BuU/ — ميون للإنتاج الفني والإعلامي, nasheed «حي على الجهاد» 25.8 s, 1920×1080 (landscape → square) — NEW; has music → vocals only.
+   - https://www.facebook.com/share/r/19zkmR88d1/ — ابراهيم الجندبي, العميد عمار الجندبي 20.7 s, 960×1280 («الحوثيون الآن يدافعون عن صنعاء في تعز…»), no music — NEW.
+   - https://www.facebook.com/share/r/1AFS3YXyUN/ — عبدالله قديش, 28.6 s, 1080×1920, man on a mountain road singing «نحن أحفاد الصحابة» — ALREADY DONE (reel 01, Nov 20; owner's wording «يدكّ معاقل الرفض العين», not «اللعين»). Has music.
+   - https://www.facebook.com/share/v/18oUrC9BuU/ — ميون للإنتاج الفني والإعلامي, nasheed «حي على الجهاد» 25.8 s, 1920×1080 (landscape → square; «سنعيش أحرارا وقادة…»), heavy music → vocals only — NEW.
    - Repeated in that message (already done): 1D7uqmMLur, 1WcVh15q9v, 1JYSt8dTMC (with the khatib caption text).
-   - Transcripts of the NEW ones (if finished before handoff): `data/transcripts/new-batch-*.json`.
+   - Raw transcripts + music check of this batch: `data/transcripts/new-batch-all.txt` and `new-batch-*.json` (not reviewed by the owner yet).
+   - So the NEW ones to edit: 1503231298323095 (الرامسي), 4558136637739612 (ما وهنا), 19zkmR88d1 (الجندبي), 18oUrC9BuU (حي على الجهاد).
 
 ## 7. Open tasks (in priority order)
 A. **Procession film** (الشهيد رائد الكحلاني funeral, Taiz, ~10,000+ people). Owner wants: remove the video's own sound, put the song from
@@ -128,7 +129,7 @@ A. **Procession film** (الشهيد رائد الكحلاني funeral, Taiz, ~1
    (replace the narration `cap()` lines with song lines) → render 4 parts (~25 min) → QC → send. The owner will also send 2–3 photos of the martyr — swap them in.
 B. **Square videos sq1–sq3**: read the owner's studio edits (`ArtifactData query lines where key in [sq1,sq2,sq3]`), patch `caps` in the cfg JSONs, re-render.
    Points to confirm: khatib line 2 «الهصور» (heard «اليسور»), line 6 «معركة ذات المصابيح»; poem lines 9–10 (not in the burned subtitles); the whole Taiz poem.
-C. **Last batch (§6-E)**: edit the 5 NEW videos in channel style (vertical → reel with fbreel2-style panel; landscape nasheed → square with fbsq), add them to the studio.
+C. **Last batch (§6-E)**: edit the 4 NEW videos in channel style (vertical → reel with fbreel2-style panel; landscape nasheed → square with fbsq), add them to the studio.
 D. **Memorial design** (`memorial-design/`): owner to choose 1 of 3 (سجلّ الشرف / القائد / الوثيقة); asks pending: photographer credit name (cut-off «…اد البريهي»
    on the original photo), whether «يوليو 2016» should be «يوليو 2015». Cut-out was redone to keep both his arms and the rifle hand. Main points are big, details small.
 E. Need the file for reel 1762821274824063.
