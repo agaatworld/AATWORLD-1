@@ -2,6 +2,11 @@
 
 Read this whole file before doing anything. It replaces the long chat history.
 
+> **Second project in this repo — the «الثبات عز» channel (Taiz, Yemen; videos, captions, brand).**
+> If the user talks about الثبات عز, Facebook reels, martyrs, Taiz, captions studio or videos, it is THAT project, not AAT World:
+> read **`_work/thabat-izz/HANDOFF.md`** first (rules, brand, tools, every link and its status, open tasks).
+> Private files (fonts, photos, brand kit, sound effects) are in the private artifact https://claude.ai/artifact/GxcScwGz3SNA6y3e78vVs7 — never commit them here (this repo is public).
+
 ## Who and what
 - Owner: **Mohamad Marwan Fattal (محمد مروان فتال)**, founder of **Arab Asian Trade (AAT) · التجارة العربية الآسيوية · 中阿商業雜誌**, a printed + online B2B trade magazine since 1982, Taiwan office (P.O. BOX 568, Yonghe, New Taipei City 234964, Taiwan R.O.C., +886 966 404 681, marwanaat@gmail.com, www.aatworld.com).
 - He is not technical. He writes in Arabic or English (often capitals). **Reply in Arabic when he writes Arabic.** Short, plain, outcome first, no jargon. He gets angry when something "didn't change": always say exactly what changed and how he can see it.

@@ -1,0 +1,194 @@
+<title>استوديو الثبات عز</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@500;700&display=swap">
+<style>
+/* layout: video tabs on top, then one column of phrase rows — play control at the reading start (right), the text box fills the rest */
+:root{--bg:#0F1B2D;--card:#15253B;--card2:#1B2E47;--ink:#F4E9D8;--muted:#A8B3C1;--line:#2A405B;--accent:#F2A541;--accent-ink:#1A1205;--strong:#FF8A3D;--ok:#5CC28A;--warn:#E8B04A;
+  --text:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;--ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:17px;direction:rtl}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
+h1{font-size:26px;margin:0 0 4px;text-wrap:balance}h1 span{color:var(--accent)}
+.lead{margin:0 0 12px;color:var(--muted);line-height:1.7;max-width:62ch}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.tab{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 14px;font:700 15px var(--ui);min-height:44px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.tab[aria-selected="true"]{border-color:var(--accent);background:var(--card2)}
+.tab small{font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.prog{flex:1 1 180px;min-width:0}.prog b{font-variant-numeric:tabular-nums}
+.track{height:8px;border-radius:4px;background:var(--line);margin-top:6px;overflow:hidden}.fill{height:100%;width:0;background:var(--ok);transition:width .3s}
+button{font-family:var(--ui);font-size:15px;font-weight:700;border-radius:999px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);padding:8px 14px;cursor:pointer;min-height:42px}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent);color:var(--accent-ink)}
+.note{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--muted);line-height:1.6}
+.note[data-kind="warn"]{color:var(--warn);border-color:var(--warn)}.note[data-kind="ok"]{color:var(--ok);border-color:rgba(92,194,138,.5)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--muted);margin-top:8px}
+.legend code{font-family:var(--ui);background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:0 7px;color:var(--ink)}
+.review{margin-top:10px;padding:10px 14px;border-radius:12px;border:1px solid rgba(232,176,74,.45);color:var(--warn);font-size:15px;line-height:1.7}
+.review ul{margin:4px 0 0;padding-inline-start:20px}.review li{margin:2px 0}
+ol{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+#list>li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+#list>li.playing{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+#list>li.done{border-inline-start:6px solid var(--ok)}
+#list>li.title-row{background:var(--card2)}
+.side{display:flex;flex-direction:column;align-items:center;gap:6px;width:66px}
+.num{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.time{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;direction:ltr}
+.play{width:56px;height:56px;border-radius:50%;padding:0;background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-size:22px;display:grid;place-items:center}
+.main{min-width:0;display:flex;flex-direction:column;gap:8px}
+textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:62px;font-family:var(--text);font-size:23px;line-height:1.7;direction:rtl;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:8px 12px}
+.pv{font-family:var(--text);font-size:19px;line-height:1.6;color:var(--muted);min-height:1em}
+.pv .s{color:var(--strong);font-weight:700}.pv .g{color:var(--accent);font-weight:700}
+.row2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row2 button{font-size:13.5px;padding:5px 11px;min-height:36px}
+.tm{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}
+.tm button{min-height:32px;padding:2px 9px;font-size:14px}
+.tm b{font-variant-numeric:tabular-nums;direction:ltr;color:var(--ink);min-width:44px;text-align:center}
+.st{font-size:13.5px;color:var(--muted);margin-inline-start:auto}
+.st[data-s="saved"]{color:var(--ok)}.st[data-s="error"]{color:var(--warn)}
+#copybox{width:100%;min-height:240px;font-size:16px;margin-top:12px}
+@media (max-width:520px){textarea{font-size:20px}.side{width:58px}.play{width:50px;height:50px}h1{font-size:22px}}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+<div class="wrap">
+  <h1>استوديو <span>الثبات عز</span></h1>
+  <p class="lead">اختر الفيديو، اضغط ▶ لتسمع كل جملة، وصحّح النص في المربع. يُحفظ تلقائياً بعد توقفك عن الكتابة. عدّل الوقت بأزرار − و + إذا الجملة تبدأ أو تنتهي مبكراً أو متأخراً. اضغط «تم ✓» لما تنتهي من الجملة.</p>
+  <div class="legend"><span><code>[[كلمة]]</code> كلمة قوية بالبرتقالي مع مؤثر</span><span><code>/</code> سطر جديد</span><span><code>قلي~ل</code> مدّ مع الإيقاع</span><span>أو ظلّل كلمة واضغط «⭐ قوية»</span></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="الفيديوهات"></nav>
+  <div class="bar">
+    <div class="prog"><span>تم <b id="dn">0</b> من <b id="tot">0</b></span><div class="track"><div class="fill" id="fill"></div></div></div>
+    <button id="spd" type="button" aria-pressed="false">السرعة ١×</button>
+    <button id="auto" type="button" aria-pressed="false">تشغيل متتابع</button>
+    <button id="copy" type="button">نسخ النص كله</button>
+  </div>
+  <p class="note" id="note">جارٍ الاتصال بالحفظ…</p>
+  <div class="review" id="review" hidden></div>
+  <ol id="list"></ol>
+  <textarea id="copybox" aria-label="النص كله" hidden></textarea>
+</div>
+<audio id="au" preload="auto"></audio>
+<script>
+const V = __DATA__;
+const $ = (id) => document.getElementById(id);
+const au = $('au'); let rate = 1, autoNext = false, cur = -1, stopAt = 0, raf = 0, vk = null, rows = [];
+let db = null; const chain = {}, live = {};
+const fmt = (s) => { s = Math.max(0, s); const m = Math.floor(s / 60), x = (s - m * 60).toFixed(1); return m + ':' + (x.length < 4 ? '0' + x : x); };
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const styled = (t) => esc(t).replace(/~/g, 'ـــ').replace(/\[\[(.+?)\]\]/g, '<span class="s">$1</span>').replace(/\{(.+?)\}/g, '<span class="g">$1</span>').replace(/\s\/\s/g, ' ⏎ ');
+const did = (k, n) => k + '-' + String(n).padStart(3, '0');
+function tabs() {
+  $('tabs').innerHTML = '';
+  V.forEach((v) => {
+    const b = document.createElement('button'); b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(v.key === vk));
+    const done = v.lines.filter((l) => (live[did(v.key, l.n)] || {}).done ?? store.get('dn-' + did(v.key, l.n)) === '1').length;
+    b.innerHTML = esc(v.name) + ' <small>' + done + '/' + v.lines.length + '</small>';
+    b.addEventListener('click', () => { if (vk !== v.key) { stop(); open(v.key); } });
+    $('tabs').append(b);
+  });
+}
+function open(key) {
+  vk = key; store.set('studio-tab', key); const v = V.find((x) => x.key === key);
+  au.src = 'audio/' + key + '.mp3'; au.load();
+  const rv = $('review');
+  if (v.review && v.review.length) { rv.hidden = false; rv.innerHTML = '<b>كلمات تحتاج مراجعة</b><ul>' + v.review.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul>'; } else rv.hidden = true;
+  const ol = $('list'); ol.innerHTML = ''; rows = [];
+  const all = [{ n: 0, a: 0, b: 0, t: v.title, isTitle: true }].concat(v.lines);
+  all.forEach((p) => {
+    const id = did(key, p.n), saved = live[id] || {};
+    const li = document.createElement('li'); if (p.isTitle) li.className = 'title-row';
+    const side = document.createElement('div'); side.className = 'side';
+    const num = document.createElement('span'); num.className = 'num'; num.textContent = p.isTitle ? 'العنوان' : p.n;
+    side.append(num);
+    let btn = null, tmA = null, tmB = null;
+    if (!p.isTitle) {
+      btn = document.createElement('button'); btn.className = 'play'; btn.type = 'button'; btn.setAttribute('aria-label', 'تشغيل الجملة ' + p.n); btn.textContent = '▶';
+      const tm = document.createElement('span'); tm.className = 'time'; tm.textContent = fmt(p.a); side.append(btn, tm);
+    }
+    const main = document.createElement('div'); main.className = 'main';
+    const ta = document.createElement('textarea'); ta.id = 't-' + id; ta.rows = 2; ta.setAttribute('aria-label', p.isTitle ? 'عنوان الفيديو' : 'نص الجملة ' + p.n);
+    const local = store.get('tx-' + id); ta.value = saved.text != null ? saved.text : (local != null ? local : p.t);
+    const pv = document.createElement('div'); pv.className = 'pv'; pv.innerHTML = styled(ta.value);
+    const r2 = document.createElement('div'); r2.className = 'row2';
+    const done = document.createElement('button'); done.type = 'button'; done.textContent = 'تم ✓';
+    const star = document.createElement('button'); star.type = 'button'; star.textContent = '⭐ قوية';
+    const orig = document.createElement('button'); orig.type = 'button'; orig.textContent = 'النص الأصلي';
+    const st = document.createElement('span'); st.className = 'st';
+    r2.append(done, star);
+    const row = { p, id, li, ta, pv, done, st, isDone: saved.done != null ? saved.done : store.get('dn-' + id) === '1', a: saved.a != null ? saved.a : p.a, b: saved.b != null ? saved.b : p.b, timer: 0 };
+    if (!p.isTitle) {
+      const mk = (lab, f) => { const w = document.createElement('span'); w.className = 'tm'; const m = document.createElement('button'); m.type = 'button'; m.textContent = '−'; m.setAttribute('aria-label', lab + ' أبكر');
+        const b = document.createElement('b'); const pl = document.createElement('button'); pl.type = 'button'; pl.textContent = '+'; pl.setAttribute('aria-label', lab + ' أخّر');
+        const upd = () => { b.textContent = fmt(row[f]); };
+        m.addEventListener('click', () => { row[f] = Math.max(0, Math.round((row[f] - 0.1) * 100) / 100); upd(); queue(row); });
+        pl.addEventListener('click', () => { row[f] = Math.round((row[f] + 0.1) * 100) / 100; upd(); queue(row); });
+        w.append(lab + ' ', m, b, pl); upd(); row['up' + f] = upd; return w; };
+      r2.append(mk('البداية', 'a'), mk('النهاية', 'b'));
+    }
+    r2.append(orig, st);
+    main.append(ta, pv, r2); li.append(side, main); ol.append(li);
+    rows.push(row); paintDone(row);
+    if (btn) btn.addEventListener('click', () => (cur === rows.indexOf(row) && !au.paused ? stop() : play(rows.indexOf(row))));
+    ta.addEventListener('input', () => { pv.innerHTML = styled(ta.value); store.set('tx-' + id, ta.value); setSt(row, 'typing'); queue(row, 900); });
+    ta.addEventListener('blur', () => { if (row.timer) { clearTimeout(row.timer); save(row); } });
+    done.addEventListener('click', () => { row.isDone = !row.isDone; store.set('dn-' + id, row.isDone ? '1' : '0'); paintDone(row); save(row); tabs(); });
+    star.addEventListener('click', () => { const s = ta.selectionStart, e = ta.selectionEnd; if (s === e) { ta.focus(); return; }
+      const v0 = ta.value, sel = v0.slice(s, e).trim(); if (!sel) return; ta.value = v0.slice(0, s) + '[[' + sel + ']]' + v0.slice(e); ta.dispatchEvent(new Event('input')); });
+    orig.addEventListener('click', () => { ta.value = p.t; row.a = p.a; row.b = p.b; if (row.upa) { row.upa(); row.upb(); } ta.dispatchEvent(new Event('input')); });
+  });
+  tabs(); progress(); window.scrollTo(0, 0);
+}
+function paintDone(r) { r.li.classList.toggle('done', r.isDone); r.done.classList.toggle('on', r.isDone); r.done.setAttribute('aria-pressed', String(r.isDone)); progress(); }
+function progress() { const rs = rows.filter((r) => !r.p.isTitle); const n = rs.filter((r) => r.isDone).length; $('dn').textContent = n; $('tot').textContent = rs.length; $('fill').style.width = (rs.length ? 100 * n / rs.length : 0) + '%'; }
+function setSt(r, s, why) { r.st.dataset.s = s; r.st.textContent = s === 'saved' ? 'محفوظ ✓' : s === 'saving' ? 'يحفظ…' : s === 'typing' ? '' : s === 'local' ? 'محفوظ على هذا الجهاز' : s === 'error' ? 'لم يُحفظ' + (why ? ' (' + why + ')' : '') + ' — بقي على هذا الجهاز' : ''; }
+function queue(r, ms) { clearTimeout(r.timer); r.timer = setTimeout(() => save(r), ms || 600); }
+function save(r) {
+  clearTimeout(r.timer); r.timer = 0;
+  if (!db) { setSt(r, 'local'); return; }
+  const body = { key: vk, n: r.p.n, text: r.ta.value.trim(), done: !!r.isDone, a: r.a, b: r.b, original: r.p.t, ts: Date.now() };
+  setSt(r, 'saving');
+  chain[r.id] = (chain[r.id] || Promise.resolve()).then(() => db.doc('lines/' + r.id).set(body))
+    .then(() => { live[r.id] = body; setSt(r, 'saved'); }, (e) => setSt(r, 'error', e && e.code === 'permission_denied' ? 'ليس لك صلاحية التعديل' : (e && e.code) || ''));
+}
+function play(i) {
+  const r = rows[i]; if (!r || r.p.isTitle) return;
+  rows.forEach((x) => x.li.classList.remove('playing')); r.li.classList.add('playing'); cur = i;
+  au.playbackRate = rate; stopAt = r.b + 0.15;
+  const go = () => { try { au.currentTime = Math.max(0, r.a - 0.1); } catch (e) {} au.play().catch(() => {}); };
+  if (au.readyState >= 1) go(); else au.addEventListener('loadedmetadata', go, { once: true });
+  cancelAnimationFrame(raf);
+  const tick = () => { if (au.currentTime >= stopAt) { au.pause(); r.li.classList.remove('playing');
+      if (autoNext && rows[cur + 1]) { play(cur + 1); rows[cur].li.scrollIntoView({ block: 'center', behavior: 'smooth' }); } return; } raf = requestAnimationFrame(tick); };
+  raf = requestAnimationFrame(tick);
+}
+function stop() { au.pause(); cancelAnimationFrame(raf); if (rows[cur]) rows[cur].li.classList.remove('playing'); }
+$('spd').addEventListener('click', (e) => { rate = rate === 1 ? 0.75 : 1; au.playbackRate = rate; e.currentTarget.textContent = rate === 1 ? 'السرعة ١×' : 'السرعة ٠٫٧٥×'; e.currentTarget.classList.toggle('on', rate !== 1); e.currentTarget.setAttribute('aria-pressed', String(rate !== 1)); });
+$('auto').addEventListener('click', (e) => { autoNext = !autoNext; e.currentTarget.classList.toggle('on', autoNext); e.currentTarget.setAttribute('aria-pressed', String(autoNext)); });
+$('copy').addEventListener('click', () => {
+  const v = V.find((x) => x.key === vk);
+  const txt = v.name + '\n' + rows.map((r) => (r.p.isTitle ? 'العنوان' : fmt(r.a) + '–' + fmt(r.b)) + ' | ' + r.ta.value.trim()).join('\n');
+  const box = $('copybox');
+  navigator.clipboard.writeText(txt).then(() => { $('copy').textContent = 'تم النسخ ✓'; setTimeout(() => { $('copy').textContent = 'نسخ النص كله'; }, 1800); })
+    .catch(() => { box.hidden = false; box.value = txt; box.focus(); box.select(); });
+});
+const first = store.get('studio-tab'); open(V.find((v) => v.key === first) ? first : V[0].key);
+(async () => {
+  const note = $('note');
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { note.dataset.kind = 'warn'; note.textContent = 'الحفظ المشترك غير متاح في هذا العرض (افتح الرابط في المتصفح وأنت مسجّل الدخول). تعديلاتك تبقى على هذا الجهاز — وتقدر تضغط «نسخ النص كله» وترسله لي.'; rows.forEach((r) => { if (store.get('tx-' + r.id) != null) setSt(r, 'local'); }); return; }
+  note.textContent = 'جارٍ تحميل تعديلاتك المحفوظة…';
+  const t10 = setTimeout(() => { note.dataset.kind = 'warn'; note.textContent = 'الحفظ بطيء الآن. تقدر تكمل، وكل شيء محفوظ على جهازك ويُرفع عندما يرد.'; }, 10000);
+  db.collection('lines').onSnapshot((snap) => {
+    clearTimeout(t10); note.dataset.kind = 'ok'; note.textContent = 'متصل ✓ — كل تعديل يُحفظ تلقائياً وأقرؤه أنا مباشرة.';
+    snap.docs.forEach((d) => { const x = d.data(); if (!x) return; live[d.id] = x;
+      const r = rows.find((y) => y.id === d.id); if (!r) return;
+      if (document.activeElement !== r.ta && !r.timer && typeof x.text === 'string' && r.ta.value !== x.text) { r.ta.value = x.text; r.pv.innerHTML = styled(x.text); }
+      if (typeof x.done === 'boolean' && x.done !== r.isDone) { r.isDone = x.done; paintDone(r); }
+      if (!r.timer) { if (typeof x.a === 'number') { r.a = x.a; r.upa && r.upa(); } if (typeof x.b === 'number') { r.b = x.b; r.upb && r.upb(); } }
+      if (r.st.dataset.s !== 'saving' && r.st.dataset.s !== 'error') setSt(r, 'saved'); });
+    tabs();
+    rows.forEach((r) => { const loc = store.get('tx-' + r.id); if (loc != null && !live[r.id] && loc !== r.p.t) save(r); });   // edits made while offline go up now
+  }, (e) => { clearTimeout(t10); note.dataset.kind = 'warn'; note.textContent = 'انقطع الاتصال بالحفظ' + (e && e.code ? ' (' + e.code + ')' : '') + '. تعديلاتك على هذا الجهاز؛ أعد فتح الصفحة لاحقاً أو اضغط «نسخ النص كله».'; });
+})();
+</script>

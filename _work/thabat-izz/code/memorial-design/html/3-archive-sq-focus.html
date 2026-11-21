@@ -1,0 +1,73 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>3-archive</title><style>:root{--W:1080px;--H:1080px}
+@font-face{font-family:ThSans;src:url(../fonts/thmanyahsans-Medium.ttf);font-weight:500}
+@font-face{font-family:ThSans;src:url(../fonts/thmanyahsans-Bold.ttf);font-weight:700}
+@font-face{font-family:ThSans;src:url(../fonts/thmanyahsans-Black.ttf);font-weight:900}
+@font-face{font-family:ThSerif;src:url(../fonts/thmanyahserifdisplay-Bold.ttf);font-weight:700}
+@font-face{font-family:ThSerif;src:url(../fonts/thmanyahserifdisplay-Black.ttf);font-weight:900}
+@font-face{font-family:ThText;src:url(../fonts/thmanyahseriftext-Medium.ttf);font-weight:500}
+@font-face{font-family:ThText;src:url(../fonts/thmanyahseriftext-Bold.ttf);font-weight:700}
+@font-face{font-family:Quran;src:url(../fonts/g_AmiriQuran-Regular.ttf)}
+:root{--navy:#0F1B2D;--navy2:#15253B;--steel:#2E4A68;--amber:#F2A541;--orange:#FF8A3D;--white:#F4E9D8;--mute:#A8B3C1;--ink:#1F2A44;--paper:#F1E6D3}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:var(--W);height:var(--H);overflow:hidden}
+body{direction:rtl;font-family:ThSans,sans-serif;color:var(--white);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+.page{position:relative;width:var(--W);height:var(--H);overflow:hidden}
+.num{font-weight:700;direction:ltr;unicode-bidi:isolate;font-variant-numeric:lining-nums tabular-nums}
+ul,ol{list-style:none}
+.logo{position:absolute;width:var(--logo,96px);height:var(--logo,96px);border-radius:50%;box-shadow:0 6px 18px rgba(0,0,0,.45);z-index:5}
+.verse{font-family:Quran;line-height:1.9}
+.cols2{column-count:2;column-gap:var(--cg,34px)}
+.cols2 li{break-inside:avoid}
+.key{font-weight:900;font-size:1.24em;line-height:1.25}
+
+.page{background:var(--paper) url(../assets/paper.jpg);background-size:cover;color:var(--ink)}
+.page:before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(96,64,30,.28))}
+.border{position:absolute;inset:22px;border:2px solid var(--ink);opacity:.85}
+.border:after{content:"";position:absolute;inset:6px;border:1px solid var(--ink);opacity:.6}
+.verse{color:var(--ink)}
+.oval{position:absolute;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--ink),0 0 0 11px var(--paper),0 0 0 12px #A0662B}
+.oval img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.38) contrast(1.12) brightness(1.04)}
+.oval img.cut{object-position:50% 2%;background:#DCCDB5}
+.kick{font:700 var(--kick) ThText;color:#8A4F1F}
+.name{font:900 var(--name)/1.18 ThSerif;color:var(--ink)}
+.rank{font:700 var(--rank) ThSerif;color:#8A4F1F}
+.life{display:flex;align-items:center;justify-content:center;gap:14px;font:700 var(--life) ThSerif;color:var(--ink);white-space:nowrap}
+.life i{font-style:normal;color:#A0662B;font-size:.7em}
+.orn{display:flex;align-items:center;gap:12px;color:#A0662B}
+.orn:before,.orn:after{content:"";flex:1;height:1px;background:currentColor}
+.sec h3{font:700 var(--h3) ThSerif;color:#8A4F1F;border-bottom:1px solid rgba(31,42,68,.35);padding-bottom:4px;margin-bottom:8px}
+.kv div{display:flex;gap:10px;font:500 var(--body)/1.6 ThText}.kv dt{color:#8A4F1F;flex:none;width:var(--kw)}
+.qual li{font:500 var(--body)/1.55 ThText;padding-inline-start:14px;position:relative}
+.qual li:before{content:"◆";position:absolute;inset-inline-start:0;font-size:.55em;top:.6em;color:#A0662B}
+.qual li.badges{display:flex;gap:6px;flex-wrap:wrap;padding:4px 0}.qual li.badges:before{display:none}
+.badge{border:1px solid var(--ink);padding:0 8px;font:500 var(--small) ThText}.badge b{color:#8A4F1F;margin-inline-start:6px}
+.career li{display:flex;gap:8px;font:500 var(--body)/1.55 ThText;margin-bottom:5px}
+.career .n{font:700 var(--body) ThSerif;color:#A0662B;font-style:normal;flex:none;width:24px}
+.career .when{font-weight:700;color:#8A4F1F;margin-inline-end:6px}
+.ledger .wounds li{display:grid;grid-template-columns:1fr;padding:6px 0;border-bottom:1px dashed rgba(31,42,68,.35);font:500 var(--small)/1.45 ThText}
+.ledger .wounds .dot{display:none}
+.ledger .wounds .w-head{display:flex;justify-content:space-between;align-items:baseline}
+.ledger .wounds .w-lab{font-weight:700;color:#8A4F1F}
+.ledger .wounds .w-when{font:700 var(--h3) ThSerif;color:var(--ink)}
+.ledger .wounds .w-where{color:#6B5A44;font-weight:700}
+.ledger .wounds li.martyr{border:0;background:var(--ink);color:var(--paper);padding:8px 12px;margin-top:8px}
+.ledger .wounds li.martyr .w-lab,.ledger .wounds li.martyr .w-when{color:#F2A541}
+.seal{position:absolute;display:flex;align-items:center;gap:14px;font:700 var(--body) ThSerif;color:#6B5A44}
+.seal img{width:var(--logo);height:var(--logo);border-radius:50%;filter:sepia(.2);flex:none}
+.career p,.qual li,.ledger .wounds p{color:#3E4A63}.key{color:var(--ink);font-family:ThText;font-weight:700}
+.ledger .wounds li.martyr p{color:var(--paper)}
+.prow{display:flex;justify-content:center;gap:26px;margin-top:8px;text-align:center}.prow span{display:block;font:700 var(--small) ThText;color:#8A4F1F}.prow b{display:block;font:700 var(--body)/1.35 ThText;color:var(--ink)}
+</style></head><body><div class="page" style="--kick:19px;--name:50px;--rank:28px;--life:30px;--h3:23px;--body:17.5px;--small:16px;--verse:22px;--logo:64px;--kw:86px">
+<div class="border"></div>
+<div style="position:absolute;left:60px;right:60px;top:40px;text-align:center;font-size:var(--verse)"><div class="verse">﴿مِنَ الْمُؤْمِنِينَ رِجَالٌ صَدَقُوا مَا عَاهَدُوا اللَّهَ عَلَيْهِ ۖ فَمِنْهُم مَّن قَضَىٰ نَحْبَهُ﴾</div></div>
+<div class="oval" style="right:78px;top:104px;width:204px;height:258px"><img class="p focus" src="../assets/portrait_focus_tall.jpg" style="object-position:54% 22%" alt=""></div>
+<div style="position:absolute;right:316px;left:56px;top:104px;text-align:center">
+ <div class="kick">سيرة ومسيرة الشهيد</div><div class="rank">النقيب</div><div class="name">رائد أحمد محمد سيف الكحلاني</div>
+ <div class="orn" style="margin:6px 30px"><span class="life"><span class="num">4/4/1984</span><i>✦</i><span class="num">18/11/2026</span></span></div>
+ <div class="prow"><div><span>تاريخ الميلاد</span><b><span class="num">4/4/1984</span></b></div><div><span>الأسرة</span><b>أبٌ لخمسة أطفال</b></div><div><span>التعليم</span><b>الثانوية العامة — مدرسة السعادة، شقب</b></div></div>
+</div>
+<div style="position:absolute;right:56px;left:56px;top:386px;bottom:44px;display:grid;grid-template-columns:1.4fr 1fr;gap:30px">
+ <div style="display:flex;flex-direction:column;justify-content:space-between"><section class="sec " style=""><h3>المسيرة الميدانية</h3><ol class="career "><li><i class="n num">01</i><p><span class="when">فبراير <span class="num">2015</span></span>أخذ إجازة من اللواء الأول حماية رئاسية <b class="key">لزيارة أهله في تعز</b>، فوصل إلى منزله في قرية كحلان ومكث أياماً قليلة.</p></li><li><i class="n num">02</i><p>سمع خبر بداية المواجهات مع مليشيا الحوثي الانقلابية فلم يهدأ له بال، وانطلق إلى <b class="key">جبل جرة</b> للدفاع عن مدينته تعز بقيادة الشيخ حمود المخلافي.</p></li><li><i class="n num">03</i><p><span class="when">يوليو <span class="num">2016</span></span>استمر في العمل حتى عادت مليشيا الحوثي الانقلابية بالالتفاف من <b class="key">طريق الأقروض</b>.</p></li><li><i class="n num">04</i><p>عاد إلى قريته كحلان و<b class="key">فتح جبهة جبل ضحيح</b> لقطع خط إمداد المليشيات المؤدي إلى المسراخ ثم مدينة تعز، وتولّى قيادة جبهة جبل ضحيح – كحلان.</p></li><li><i class="n num">05</i><p><span class="when">أواخر <span class="num">2015</span></span>تولّى <b class="key">قيادة جبهة الشقب</b>، ثم <b class="key">أركان حرب القطاع السادس</b>.</p></li><li><i class="n num">06</i><p><span class="when"><span class="num">9/3/2016</span></span>أعلن انضمامه إلى <b class="key">اللواء <span class="num">35</span> مدرع</b> بقيادة الشهيد عدنان الحمادي، الذي عيّنه <b class="key">قائداً لجبهتي ضحيح كحلان والشقب</b> التابعتين للواء <span class="num">35</span> مدرع.</p></li></ol></section><section class="sec " style=""><h3>التأهيل العسكري</h3><ul class="qual"><li>التحق <b class="key">بالحرس الجمهوري</b> عام <span class="num">2004</span>.</li><li>نال العديد من الشهادات خلال مسيرته العسكرية.</li><li class="badges"><span class="badge">المهارات القتالية <b>امتياز</b></span><span class="badge">دورات الصاعقة <b>امتياز</b></span><span class="badge">دورات المظلات <b>امتياز</b></span></li><li>بعد إكمال الدورات العسكرية التحق <b class="key">باللواء الأول حماية رئاسية</b> عام <span class="num">2010</span>.</li></ul></section></div>
+ <div style="display:flex;flex-direction:column;justify-content:space-between"><div class="ledger"><section class="sec " style=""><h3>سجلّ الإصابات والتضحيات</h3><ol class="wounds "><li class="w1"><i class="dot"></i><div class="w-head"><b class="w-lab">الإصابة الأولى</b></div><p><span class="w-where">معارك جبل جرة:</span> طلقة قناص في <b class="key">يده اليسرى</b>.</p></li><li class="w2"><i class="dot"></i><div class="w-head"><b class="w-lab">الإصابة الثانية</b><span class="w-when">مطلع <span class="num">2016</span></span></div><p><span class="w-where">جبهة جبل ضحيح – كحلان:</span> طلقة قناص في <b class="key">الجانب الأيسر من الصدر</b>.</p></li><li class="w3"><i class="dot"></i><div class="w-head"><b class="w-lab">الإصابة الثالثة</b><span class="w-when"><span class="num">2018</span></span></div><p><span class="w-where">جبهة الشقب:</span> طلق ناري في <b class="key">القدم اليمنى</b> أثناء قيادته معركة تحرير تبة الصالحين.</p></li><li class="w4"><i class="dot"></i><div class="w-head"><b class="w-lab">الإصابة الرابعة</b><span class="w-when"><span class="num">10/10/2026</span></span></div><p><span class="w-where">جبهة ضحيح:</span> طلقتان في <b class="key">البطن والفخذ</b>؛ أربعة أيام في المستشفى ثم عاد إلى الجبهة <b class="key">يتقدّم الصفوف الأولى</b>.</p></li><li class="w5"><i class="dot"></i><div class="w-head"><b class="w-lab">الإصابة الأخيرة</b><span class="w-when"><span class="num">9/11/2026</span></span></div><p>طلقة قناصة في <b class="key">الرأس</b>؛ دخل على إثرها المستشفى وبقي في حالة موت سريري حتى استشهاده.</p></li><li class="martyr"><i class="dot"></i><div class="w-head"><b class="w-lab">الاستشهاد</b><span class="w-when"><span class="num">18/11/2026</span></span></div><p>ارتقى شهيداً</p></li></ol></section></div>
+ <div class="seal" style="position:static"><img src="../assets/logo.png"><span>رحم الله الشهيد وتقبّله في الشهداء</span></div></div>
+</div></div></body></html>

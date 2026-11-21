@@ -1,0 +1,190 @@
+VIDEO ANALYSIS — 4 Facebook videos — for building an editing prompt
+Channel: «الثبات عز» (Taiz, Yemen) · logo slogan «الكلمة مقاومة» · cover slogan «كلنا مقاومة»
+Measured with real tools: frame-by-frame review, Whisper large-v3 transcription with word timings, Demucs voice/music separation, colour clustering (k-means), motion measurement, EBU R128 loudness.
+
+====================================================================
+0) SUMMARY
+====================================================================
+#1  facebook.com/share/v/1Ea3DaNvRr  · page: فهيم المخلافي · 10.3 s · 1428×1604 (≈9:10, near-portrait) · raw phone clip · NO music (voice only) · 70.8K views, 5.3K reactions, 243 shares
+#2  facebook.com/share/v/1CvuFAbkzS  · page: مقدام الدباء · 26.3 s · 1040×1296 (4:5) · one still poster + audio waveform + captions · HAS MUSIC (soft bed under speech, then a nasheed with instruments in the last 8 s) · 11.7K views, 1.8K reactions
+#3  facebook.com/share/r/19xev832Dr  · page: أديم الأرض · 25.3 s · 1080×1920 (9:16) · talking head + news screenshot · NO music (voice only) · 199.7K views
+#4  facebook.com/share/v/1NKSQzgwV4  · could NOT be opened (Facebook asks for login for this reel). Send the video file or a screen recording to analyse it.
+
+All three are mixed at about −14 LUFS (normal social-media loudness).
+
+====================================================================
+1) VIDEO 1 — the old woman with the rifle (فهيم المخلافي)
+====================================================================
+Caption on the post: «صبر وما ادرك ماصبر لذلك باذن الله وبقوته نحن منصورين»
+
+TRANSCRIPT (Taizi dialect; ASR + corrected reading; (؟) = unclear)
+0.0–0.9   إيه يا بابا، الله…
+0.9–2.4   والله (…) نشتي نقاتل الحوثي        [ASR heard «نصير اشتقاتي»: most likely «نشتي نقاتل» = we want to fight]
+2.4–4.3   والله العظيم إنّا نشتي نقاتل الحوثي
+4.3–5.5   والله إن احنا منصورين
+5.5–7.3   والله واللي خلقك إن احنا نشتي (نقاتل؟)…   [end of line unclear]
+7.3–9.2   الله أكبر، الله أكبر
+Strong words: «الحوثي» · «منصورين» · «والله العظيم» · «الله أكبر»
+
+WHAT IT LOOKS LIKE
+- Subject: elderly woman, wide-brim straw hat (golden straw), white face veil covering mouth and nose, cream scarf, patterned floral dress, rifle with wooden stock held across her body, strap across the chest. Only her eyes speak — very strong, authentic image.
+- Background: grey-brown granite rock face with lichen; other women around her (blue-and-white patterned dresses, a pink bag at the edge).
+- Light: harsh midday sun, hard shadows, warm.
+- Image quality: low-res source that was AI-upscaled → waxy, posterised, "painted" textures on cloth and rock. Do NOT sharpen it more.
+- Colour palette (share of image): #362A29 dark brown 25% · #5D4D45 earth 22% · #140D10 near-black 21% · #80746E taupe 18% · #A49D9D grey 10% · #EDE5E3 veil white 5%. Average brightness 80/255, saturation 85/255 (earthy, warm, medium).
+- Text/graphics on video: none.
+
+MOVEMENT
+- Handheld phone, very shaky (motion 17–31 per second on a 0–255 scale = strong shake all the time).
+- 0.0–4.5 s: camera close on her chest/rifle, face partly out of the top of frame.
+- 4.5–5.0 s: face appears; 5.0–5.6 s: camera drops to the rock wall (subject lost); 6.0–10 s: steady-ish medium close-up of her face — the best part.
+- No cuts, no transitions.
+
+AUDIO
+- Pure voice. Music separation: accompaniment is 42 dB below voice (= nothing). No music to remove.
+- Crowd/outdoor ambience, wind.
+
+HOW TO RE-EDIT IN OUR STYLE
+- Reel 1080×1920: video in the middle (scaled to 1080 wide), navy designed bands above/below with the title and source. Or post 1080×1350.
+- Stabilise strongly; punch-in or cut the 5.0–5.6 s rock moment; keep her face always in the middle.
+- Captions word-by-word in dialect; highlight only 1–2 words in amber/orange (e.g. «منصورين», «الله أكبر»).
+- Source: «المصدر: فهيم المخلافي».
+
+====================================================================
+2) VIDEO 2 — «19/11» poster with captions (مقدام الدباء)
+====================================================================
+Post text: «#جمعتكم #عزة و #نصر — الشهيد #رائد_الكحلاني»
+
+TRANSCRIPT (male voice — a recorded speech; the post links it to الشهيد رائد الكحلاني, not confirmed that it is his own voice)
+0.0–2.1    والذي لا إله غيره
+2.1–5.2    لم تمرّوا إلا على جثثنا
+5.2–7.8    نحن على حق، وأنتم على باطل
+7.8–10.4   سنقاوم، سنقاتل
+10.4–14.4  مهما دمّرتم، مهما أحرقتم، مهما قتلتم من الأطفال ومن النساء
+14.4–17.9  نحن صامدون، نحن شهداء بإذن الله
+17.9–25.7  [nasheed with music, lyric partly unclear — check by ear] «ومقداماً … ويضرب بالـ(لظى؟) … وغداً أبيّاً (ثائراً؟) منتفضاً»
+Strong words: «جثثنا» · «حق» · «باطل» · «سنقاوم» · «سنقاتل» · «صامدون» · «شهداء»
+
+ON-SCREEN CAPTIONS (timed from frames)
+1.0 «والذي لا إله» · 2.0 «غيره» · 3.0 «لم تمروا» · 4.5 «إلا على جثثنا» · 6.0 «نحن على حق» · 7.0 «وأنتم على باطل» · 9.0 «سنقاوم سنقاتل» · 11.0 «مهما دمرتم» · 12.0 «مهما أحرقتم» · 13.0 «مهما قتلتم من الأطفال» · 14.0 «ومن النساء» · 15.0 «نحن صامدون» · 17.0 «نحن شهداء» · 17.5 «بإذن الله» · after 18 s: no captions while the nasheed plays.
+Caption style: white heavy Arabic sans, dark soft shadow, 2–4 words at a time (phrase-by-phrase, not word-by-word), centred at about 60% of the height (over his legs), in/out with a short blur dissolve (~0.2 s).
+
+WHAT IT LOOKS LIKE
+- One still image the whole time (motion 0.1–0.4 = nothing moves except the waveform and captions).
+- Subject: a fighter walking toward the camera on a mountain trail, black tactical jacket and trousers, tan/camo chest rig with radio, camo keffiyeh, rifle in right hand. NOTE: the figure looks AI-generated/stylised — the face does NOT match the real photo of الشهيد رائد الكحلاني.
+- Background: misty mountains, fog fading to pure white at the top; desaturated, almost black-and-white.
+- Typography/graphics:
+  · Giant «19/11» at the top, heavy black grotesque numerals, dark-charcoal gradient fading to light toward the bottom; the man's head is placed IN FRONT of the slash (depth layering — nice touch).
+  · «2026» thin grey + «اليوم العالمي للرجل» bold Arabic, right side.
+  · Centre: horizontal audio-waveform visualiser (dashed bars, grey/white, symmetric) at chest height, pulsing with the voice.
+  · Bottom left: «19th of November / International Men's Day» (white, English). Bottom right: «القائد البطل / رائد الكحلاني» (Arabic with kashida stretch).
+  · A vertical handle on the left side of the number (another account's watermark).
+- Colour palette: #24262E charcoal 28% · #FEFDFE white 23% · #47484D dark grey 18% · #747174 11% · #D7D6D7 11% · #A6A5A7 9%. Brightness 133/255, saturation 26/255 (monochrome).
+
+AUDIO
+- Voice + music. Separation: music bed sits ~9 dB under the speech for 0–17 s, then rises to the same level as the voice from 17.9 s (nasheed with instruments).
+- Per channel rule → remove the music, keep voice only. End the edit at 17.9 s («بإذن الله»), or keep the nasheed only if a clean vocal-only version exists.
+
+HOW TO RE-EDIT IN OUR STYLE
+- Replace the AI figure with the real enhanced photo of الشهيد رائد الكحلاني (we have it: full photo with him in focus + clean cut-out).
+- Keep the strong ideas: giant date behind the subject (depth), voice waveform, short captions — but in our colours and fonts.
+- Do NOT copy the other account's handle or the «International Men's Day» framing unless wanted.
+
+====================================================================
+3) VIDEO 3 — talking head + Al Jazeera «عاجل» card (أديم الأرض)
+====================================================================
+Post text: «باب المندب مفتوح للسفن الإسرائيلية؟! #اكسبلور #أديم_الأرض #أهل_السنة»
+
+TRANSCRIPT (ASR + corrected reading)
+0.0–3.2    سفن إسرائيلية تعبر باب المندب دون اعتراض       [reads the headline as the hook]
+3.2–5.8    وين هي شعاراتكم لنصرة الأقصى؟                    [ASR «تبين هي»]
+5.8–8.4    أما «الموت لأمريكا، الموت لإسرائيل»؟            [ASR heard «الموز» twice — may be deliberate mockery; check by ear]
+8.4–10.3   وبالنهاية في أهداف المسلمين (؟)                 [unclear]
+10.3–14.0  هل بقي مسلم عاقل يصدّق هؤلاء الأنجاس؟
+14.0–16.6  أحفاد القرامطة، أحذية الإيرانيين
+16.6–18.9  وهم يتغطّون بشعار تحرير الأقصى
+18.9–22.2  أسأل الله أن يحفظ إخواننا أهل السنة في اليمن
+22.2–25.0  وكفاهم شرّ من ظلمهم، وحقن دماءهم
+Caution: 10.3–16.6 s are insults; Facebook may flag them as hate speech (the account was just rate-limited) — better not to caption/highlight them, or cut them.
+
+WHAT IT LOOKS LIKE
+- Layout (fixed for the whole video):
+  · Top 65%: young bearded man, selfie camera, eye level, face centred, very close; dark room, olive-green curtain behind him, one soft warm frontal light, deep shadows (low-key).
+  · Bottom 35%: screenshot of an Al Jazeera «عاجل» news card, inset about 80% width (y≈1250–1900 of 1920): container ship (MSC) at Bab al-Mandab, map inset with a red location pin, red banner «مصادر: سفن تجارية إسرائيلية تعبر باب المندب دون اعتراض من قبل الحوثيين», white sub-line, blue ticker, «مباشر» tag, channel logo.
+- No captions, no logo of his own, no title.
+- Colour palette: #15170F olive-black 62% · #414B55 slate 12% · #99765F skin 10% · #7E8FA8 sea/sky 9% · #90070A news red 4% · #DDCBC4 3%. Brightness 56/255 (dark), saturation 116/255 (mainly from the red banner).
+
+MOVEMENT
+- Phone on a stand (motion 1–4 = still camera). Energy comes from fast, expressive hand gestures (pointing, counting fingers, hand near face) and wide-eyed delivery.
+- No cuts. Ending: at ~24.3 s the speaker layer blurs out (Gaussian blur) while the news card stays sharp — a simple outro.
+
+AUDIO
+- Pure voice, clear, close mic. Separation: accompaniment 45 dB under voice (= no music).
+- Fast pace, about 3 words per second, short sentences, rising rhetorical questions.
+
+HOW TO RE-EDIT IN OUR STYLE
+- Keep the split layout but frame the news card in our style (navy panel, thin amber line), credit «المصدر: أديم الأرض · لقطة: الجزيرة».
+- Add word-by-word captions inside the safe zone (the original has none).
+- Replace the blur ending with our outro (lens effect, hold 1–2 s, fade to black).
+
+====================================================================
+4) OUR BRAND KIT (use exactly)
+====================================================================
+COLOURS — rule 60 / 30 / 10
+- Navy #0F1B2D (RGB 15,27,45) — backgrounds, 60%
+- Steel blue #2E4A68 (RGB 46,74,104) — rings, secondary panels, 30%
+- Amber #F2A541 (RGB 242,165,65) — lines, arrows, frames, 10%
+- Warm white #F4E9D8 (RGB 244,233,216) — all text
+- Orange #FF8A3D (RGB 255,138,61) — «عز» and the ONE highlighted word only
+- Muted grey for small labels/source: #A8B3C1
+- Contrast on navy: text 14.4 · amber 8.4 · orange 7.4 (all pass WCAG)
+- Forbidden: long red or orange text · more than 2 highlighted words per design/caption · pure white on pure black.
+
+FONTS
+- Titles: Thmanyah Serif Display (Bold/Black)
+- Body, captions and «الثبات عز»: Thmanyah Sans (Medium/Bold/Black)
+- Numbers keep left-to-right direction inside Arabic lines.
+
+LOGO
+- Round logo, one corner only, never stretched, never recoloured. Small corner badge on videos.
+
+====================================================================
+5) CHANNEL RULES (fixed)
+====================================================================
+1. Every video is checked for music; any music is removed and only voices (speech/nasheed vocals) stay.
+2. Any landscape video becomes square 1:1 (1080×1080): video in the middle, the empty space designed in the channel style.
+3. Captions inside the Reels safe zone: away from top 270 px, bottom 420 px, right 120 px (on 1080×1920); word-by-word with the voice; strong words get an effect (slam/glow/punch), 1–2 per line.
+4. Main person always in the centre of the frame.
+5. Rings draw themselves at the start, then rotate slowly with the speech; arrows enter and move with each new line.
+6. Outro transition smooth (~0.6 s cross-fade), no frozen frame. Intro/outro: lens/focus effect, calm sound (camera, wind, air — no loud bass/drums, nothing repeated), hold 1–2 s, then fade to black.
+7. Source always credited clearly at the bottom, no extra empty space under it.
+8. Never show other channels' end cards, handles or logos.
+9. Covers use «كلنا مقاومة».
+10. When a nasheed is added: choose a strong part that fits the meaning (vocal only, no instruments).
+
+====================================================================
+6) "TINY TOUCHES" — subtle branding (keep the original footage the star)
+====================================================================
+- Grade: shadows tinted 10–15% toward navy #0F1B2D, highlights slightly warm toward #F4E9D8. Never turn the whole video blue.
+- One thin amber line or corner brackets (#F2A541, 2 px at 1080, ~60% opacity).
+- Small round logo in one corner (~90 px on 1080 wide, ~90% opacity).
+- Captions warm white with soft navy shadow; only 1–2 words amber/orange.
+- Small source line in muted grey #A8B3C1, Thmanyah Sans ~26 px.
+- Very light film grain / amber dust particles (5–10% opacity).
+- Navy vignette in the corners (light).
+
+REFERENCE IMAGES sent with this request
+A) Boy portrait (vertical): warm natural daylight, shallow depth of field, calm direct gaze, traditional Yemeni dress (grey thobe, beige shawl, jambiya with silver hilt, blue-stone ring and watch), red patterned carpet and cushion. Keep its natural colours; brand touch = logo corner + thin amber line + light navy vignette + one short line of text.
+B) Black-and-white photo: two fighters embracing and smiling (one in camo keffiyeh and fatigues, one with curly hair), dramatic grey smoke/cloud background, high contrast, grain. Keep it monochrome or a navy/warm-white duotone; amber on one word only; logo corner.
+
+====================================================================
+7) WHAT TO ASK FOR IN THE PROMPT (checklist)
+====================================================================
+- Output sizes: Reel 1080×1920 (safe zone respected), post 1080×1350, square 1080×1080 for landscape sources.
+- Remove music (Demucs or similar), keep voice; loudness −14 LUFS.
+- Stabilise shaky phone footage; no extra sharpening on AI-upscaled clips.
+- Word-by-word captions synced to the transcript above, Thmanyah Sans, strong words with one effect.
+- Motion graphics: rings that draw then rotate slowly, arrows per line, subtle particles; calm, not flashy.
+- Intro/outro from the brand kit; smooth 0.6 s transition; no frozen frame.
+- Credit the source; remove other accounts' watermarks/end cards.
+- Use real photos, not AI figures, for real people (martyrs especially).

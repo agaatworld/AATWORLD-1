@@ -1,0 +1,68 @@
+{
+ "name": "r3",
+ "mode": "voice",
+ "voice": "/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/vid16/sep2/04573f0d/r3v/vocals.wav",
+ "asr": "/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/vid16/asr_r3.json",
+ "t1": 16.6,
+ "out": "/home/user/final/reels-nov20/03-wasiyyat-umm-min-taiz.mp4",
+ "broll": {
+  "src": "/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/vid16/broll_r3.mp4",
+  "t0": 0,
+  "t1": 17.8,
+  "speed": 1.0,
+  "crop": [
+   0,
+   48,
+   1280,
+   624
+  ],
+  "dark": 0.5
+ },
+ "title": [
+  "وصيّة أمّ من تعز لابنها"
+ ],
+ "credit": "قناة يمن شباب · اللقطات: الصيت",
+ "cover_t": 8.6,
+ "csize": 86,
+ "cap_y": 960,
+ "top_alpha": 0.45,
+ "bot_alpha": 0.5,
+ "particles": 0.6,
+ "caps": [
+  [
+   0.0,
+   2.8,
+   "يا عبد الرحمن.. شفنا الدنيا حامية الوطيس"
+  ],
+  [
+   2.8,
+   4.4,
+   "تواصل على خالك"
+  ],
+  [
+   4.4,
+   5.7,
+   "قُل له: [[يا خال أنا معك]]"
+  ],
+  [
+   5.7,
+   7.9,
+   "واطرحني [[بالصفوف الأولى]]"
+  ],
+  [
+   7.9,
+   9.9,
+   "الله يجعلك [[من الشهداء]] يا ولدي"
+  ],
+  [
+   9.9,
+   11.85,
+   "أقسم بالله يا عبد الرحمن"
+  ],
+  [
+   11.85,
+   15.0,
+   "[[جنّةٌ]] عرضها السماوات والأرض للشهداء"
+  ]
+ ]
+}
