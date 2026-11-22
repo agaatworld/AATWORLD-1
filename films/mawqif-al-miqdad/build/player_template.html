@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>موقف المقداد رضي الله عنه</title>
+<style>
+@font-face{font-family:"AmiriB";src:url(__FONT_AMIRI_B__) format("woff2");font-weight:700}
+@font-face{font-family:"AmiriR";src:url(__FONT_AMIRI_R__) format("woff2")}
+@font-face{font-family:"AmiriQ";src:url(__FONT_AMIRI_Q__) format("woff2")}
+@font-face{font-family:"NaskhS";src:url(__FONT_NASKH__) format("woff2");font-weight:600}
+:root{--gold:#d9b56a;--ink:#0b0a0d}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;color:#f1e6cf;font-family:"NaskhS","AmiriR",serif}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+#wrap{position:relative;height:100%;max-height:100vh;aspect-ratio:9/16;max-width:100vw}
+@supports not (aspect-ratio:9/16){#wrap{width:56.25vh}}
+canvas{display:block;width:100%;height:100%;background:#000}
+#ui{position:absolute;left:0;right:0;bottom:0;padding:14px 16px 16px;background:linear-gradient(transparent,rgba(0,0,0,.72));
+  transition:opacity .45s;direction:ltr}
+#ui.hide{opacity:0;pointer-events:none}
+#bar{position:relative;height:22px;cursor:pointer;margin-bottom:8px;touch-action:none}
+#bar .tr{position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
+#bar .fi{position:absolute;left:0;top:9px;height:4px;border-radius:2px;background:var(--gold);width:0}
+#bar .kn{position:absolute;top:4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#f3e6c8;left:0}
+#row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#row button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f3e6c8;border-radius:10px;
+  min-width:44px;height:40px;padding:0 10px;font:600 16px "NaskhS",sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+#row button:hover{background:rgba(255,255,255,.16)}
+#row button.off{opacity:.5;text-decoration:line-through}
+#row svg{width:18px;height:18px;fill:currentColor}
+#time{font:600 15px ui-monospace,monospace;color:#e9dcc0;min-width:96px}
+#vol{width:90px;accent-color:var(--gold)}
+.sp{flex:1}
+#cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  background:radial-gradient(ellipse at 50% 45%,rgba(20,24,40,.35),rgba(0,0,0,.78));cursor:pointer;text-align:center}
+#cover h1{margin:0;font:700 clamp(30px,7vh,64px)/1.25 "AmiriB",serif;color:#f3e6c8;text-shadow:0 2px 18px #000}
+#cover h1 small{display:block;font:400 .55em "AmiriR",serif;color:var(--gold)}
+#cover .play{width:92px;height:92px;border-radius:50%;border:2px solid rgba(243,230,200,.8);display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.35)}
+#cover .play svg{width:40px;height:40px;fill:#f3e6c8;margin-left:6px}
+#cover .msg{font:600 18px "NaskhS",sans-serif;color:#e9dcc0;min-height:24px}
+#cover.loading{cursor:progress}
+#cover.hidden{display:none}
+</style>
+</head>
+<body>
+<div id="stage"><div id="wrap">
+<canvas id="c" width="1080" height="1920" aria-label="فيلم موقف المقداد رضي الله عنه"></canvas>
+<div id="cover" class="loading"><h1>موقف المقداد<small>رضي الله عنه</small></h1>
+  <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></div>
+  <div class="msg" id="msg">جارٍ التحميل…</div></div>
+<div id="ui" class="hide">
+  <div id="bar" aria-label="شريط التقدم"><div class="tr"></div><div class="fi"></div><div class="kn"></div></div>
+  <div id="row">
+    <button id="bPlay" title="تشغيل / إيقاف مؤقت" aria-label="تشغيل"><svg viewBox="0 0 24 24"><path id="pIcon" d="M6 4l15 8-15 8z"/></svg></button>
+    <button id="bReplay" title="إعادة" aria-label="إعادة"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg></button>
+    <span id="time">0:00 / 1:06</span>
+    <span class="sp"></span>
+    <button id="bSub" title="الترجمة العربية" aria-label="الترجمة">نص</button>
+    <label title="صوت السرد" style="display:inline-flex;align-items:center;gap:6px;font:600 15px NaskhS,sans-serif">السرد
+      <input id="vol" type="range" min="0" max="1" step="0.01" value="1"></label>
+    <button id="bSfx" title="المؤثرات الصوتية" aria-label="المؤثرات">مؤثرات</button>
+    <button id="bFs" title="ملء الشاشة" aria-label="ملء الشاشة"><svg viewBox="0 0 24 24"><path d="M3 3h7v2H5v5H3zm11 0h7v7h-2V5h-5zM3 14h2v5h5v2H3zm16 0h2v7h-7v-2h5z"/></svg></button>
+  </div>
+</div>
+</div></div>
+<script>
+window.__ASSETS__ = __ASSETS_JSON__;
+window.__FILM__ = __FILM_JSON__;
+window.__MAN__ = __MANIFEST_JSON__;
+</script>
+<script>
+(function(){
+'use strict';
+const A = window.__ASSETS__, F = window.__FILM__, MAN = window.__MAN__;
+const W = 1080, H = 1920, FPS = 24, DUR = F.dur;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const IM = {};
+const pool = [];
+let poolI = 0;
+function off(w, h){ let o = pool[poolI]; if(!o){ o = document.createElement('canvas'); pool[poolI] = o; } poolI++;
+  if(o.width < w) o.width = Math.ceil(w); if(o.height < h) o.height = Math.ceil(h); return o; }
+const buf = document.createElement('canvas'); buf.width = W; buf.height = H; const bctx = buf.getContext('2d');
+
+// ---------------------------------------------------------------- deterministic noise
+function hash(n){ n = Math.sin(n*127.1+311.7)*43758.5453; return n - Math.floor(n); }
+function ease(t, e){ t = Math.max(0, Math.min(1, t)); if(e==='lin') return t; if(e==='in') return t*t; if(e==='out') return 1-(1-t)*(1-t);
+  return t*t*(3-2*t); }
+function camAt(keys, t){ if(t <= keys[0].t) return keys[0]; for(let i=0;i<keys.length-1;i++){ const a=keys[i], b=keys[i+1];
+    if(t>=a.t && t<=b.t){ const u = ease((t-a.t)/Math.max(1e-6,b.t-a.t), b.e); return {z:a.z+(b.z-a.z)*u, x:a.x+(b.x-a.x)*u, y:a.y+(b.y-a.y)*u}; } }
+  return keys[keys.length-1]; }
+
+// ---------------------------------------------------------------- sprite frame selection (held drawings, 12 drawings/s)
+function frameOf(seqs, acts, t){
+  let act = acts[0];
+  for(const a of acts){ if(t >= a.t) act = a; }
+  const frames = seqs[act.seq]; if(!frames) return null;
+  const n = frames.length; let i;
+  if(act.frame !== undefined) i = act.frame < 0 ? n + act.frame : act.frame;
+  else if(act.hold_first && act.t < -50) i = 0;
+  else { i = Math.floor((t - act.t) * (act.fps || 12) + 1e-6); i = act.loop ? ((i % n) + n) % n : Math.min(i, n-1); }
+  if(act.reverse) i = n - 1 - i;
+  return frames[Math.max(0, Math.min(n-1, i))];
+}
+
+const GRADES = { night:[0.43,0.49,0.69], night_calm:[0.40,0.46,0.66], dawn:[0.82,0.79,0.86] };
+function flick(t){ return 0.86 + 0.08*Math.sin(t*12.7) + 0.05*Math.sin(t*29.3+1.3) + 0.03*Math.sin(t*5.1+0.4); }
+
+// ---------------------------------------------------------------- draw one shot at time t into context c
+function drawShot(c, S, t){
+  poolI = 0;
+  const cm0 = camAt(S.cam, t);
+  const cz = Math.max(1, cm0.z);
+  const cm = {z: cz, x: Math.max(540/cz, Math.min(1080-540/cz, cm0.x)), y: Math.max(960/cz, Math.min(1920-960/cz, cm0.y))};
+  const grade = GRADES[S.grade] || GRADES.night;
+  const els = S.els.slice().sort((a,b)=>a.z-b.z);
+  let fireEl = null; for(const e of els) if(e.type==='fire'){ fireEl = e; break; }
+  const boost = S.light && S.light.fire_boost ? ease((t - S.light.fire_boost[0]) / (S.light.fire_boost[1]-S.light.fire_boost[0]), 'inout') : 0;
+  function T(e){ const p = e.p===undefined?1:e.p; const cx = 540 + (cm.x-540)*p, cy = 960 + (cm.y-960)*p, z = 1 + (cm.z-1)*p;
+    return {z, X:(wx)=> (wx-cx)*z + 540, Y:(wy)=> (wy-cy)*z + 960}; }
+  const fireScreen = fireEl ? (()=>{ const tr=T(fireEl); return {x:tr.X(fireEl.x), y:tr.Y(fireEl.y - 60*fireEl.s), r:780*Math.max(0.6,fireEl.s)*tr.z}; })() : null;
+  c.save();
+  c.fillStyle = '#05060a'; c.fillRect(0,0,W,H);
+  for(const e of els){
+    const tr = T(e);
+    if(e.type === 'img'){
+      const im = IM[e.img]; if(!im) continue;
+      const isBg = e.img.startsWith('bg/');
+      const os = isBg ? (e.img.endsWith('_sky') ? 1.16 : 1.0) : 1.0;
+      const w = e.w * tr.z * os, h = w * im.height / im.width;
+      const x = tr.X(e.x), y = tr.Y(e.y);
+      c.save(); c.globalAlpha = e.alpha===undefined?1:e.alpha; c.translate(x, y); if(e.rot) c.rotate(e.rot*Math.PI/180); if(e.flip) c.scale(-1,1);
+      if(isBg || e.img.startsWith('fx/')) c.drawImage(im, -w*e.ax, -h*e.ay, w, h);
+      else lit(c, im, -w*e.ax, -h*e.ay, w, h, false, grade, null, 0);
+      c.restore();
+    } else if(e.type === 'moon'){
+      const im = IM['fx/moon']; const s = 360*e.s*tr.z; c.drawImage(im, tr.X(e.x)-s/2, tr.Y(e.y)-s/2, s, s);
+    } else if(e.type === 'char' || e.type === 'horse'){
+      const man = e.type==='char' ? MAN.chars[e.who] : MAN.horses[e.coat]; if(!man) continue;
+      const fr = frameOf(man.seqs, e.acts, t); if(!fr) continue;
+      const im = IM[(e.type==='char'?'chars/':'horses/') + fr.f.replace('.webp','')]; if(!im) continue;
+      const s = e.h / man.H * tr.z;
+      const ox = tr.X(e.x), oy = tr.Y(e.y);
+      // soft contact shadow
+      c.save(); c.globalAlpha = 0.35; c.fillStyle = '#000';
+      c.beginPath(); c.ellipse(ox, oy, (e.type==='horse'? man.H*0.75 : man.H*0.16)*s, 9*s*man.H/600, 0, 0, Math.PI*2); c.fill(); c.restore();
+      let dx = fr.x*s, dy = fr.y*s; const dw = fr.w*s, dh = fr.h*s;
+      if(e.flip) dx = -(fr.x + fr.w)*s;
+      let fl = null, famt = 0;
+      if(e.light === 'fire' && fireScreen){ fl = fireScreen; famt = (0.24 + 0.22*boost) * flick(t); }
+      lit(c, im, ox+dx, oy+dy, dw, dh, e.flip, grade, fl, famt, e.light);
+    } else if(e.type === 'fire'){
+      drawFire(c, e, tr, t, boost);
+    } else if(e.type === 'dust'){
+      drawDust(c, e, tr, t);
+    }
+  }
+  // atmosphere: firelight bloom on the scene, haze, vignette
+  if(fireScreen){ const a = (0.10 + 0.10*boost) * flick(t*0.9);
+    const g = c.createRadialGradient(fireScreen.x, fireScreen.y, 0, fireScreen.x, fireScreen.y, fireScreen.r*0.9);
+    g.addColorStop(0, `rgba(255,150,70,${a})`); g.addColorStop(1, 'rgba(255,120,50,0)');
+    c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.fillRect(0,0,W,H); c.globalCompositeOperation = 'source-over'; }
+  if(S.grade === 'dawn'){ const k = Math.min(1, Math.max(0, (t - S.t0)/7));
+    const g = c.createLinearGradient(0, 300, 0, 1100); g.addColorStop(0, `rgba(255,190,120,${0.10+0.10*k})`); g.addColorStop(1,'rgba(255,190,120,0)');
+    c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.fillRect(0,0,W,H); c.globalCompositeOperation='source-over'; }
+  const v = c.createRadialGradient(540, 980, 520, 540, 980, 1250);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, S.grade==='night_calm' ? 'rgba(0,0,8,0.62)' : 'rgba(0,0,8,0.5)');
+  c.fillStyle = v; c.fillRect(0,0,W,H);
+  c.restore();
+}
+
+// grade a cel sprite to the shot's light: multiply by grade colour, add warm firelight / moon rim, clip to sprite alpha
+function lit(c, im, x, y, w, h, flip, grade, fire, famt, kind){
+  const pad = 2, ow = Math.max(1, Math.ceil(w)+pad*2), oh = Math.max(1, Math.ceil(h)+pad*2);
+  const o = off(ow, oh), oc = o.getContext('2d');
+  oc.setTransform(1,0,0,1,0,0); oc.globalCompositeOperation = 'source-over'; oc.globalAlpha = 1; oc.clearRect(0,0,ow,oh);
+  oc.save(); if(flip){ oc.translate(ow, 0); oc.scale(-1,1); } oc.drawImage(im, pad, pad, w, h); oc.restore();
+  oc.globalCompositeOperation = 'multiply';
+  oc.fillStyle = `rgb(${Math.round(grade[0]*255)},${Math.round(grade[1]*255)},${Math.round(grade[2]*255)})`; oc.fillRect(0,0,ow,oh);
+  if(fire && famt > 0){
+    oc.globalCompositeOperation = 'lighter';
+    const fx = fire.x - (x - pad), fy = fire.y - (y - pad);
+    const g = oc.createRadialGradient(fx, fy, 0, fx, fy, fire.r);
+    g.addColorStop(0, `rgba(255,150,70,${famt})`); g.addColorStop(0.55, `rgba(220,110,50,${famt*0.35})`); g.addColorStop(1, 'rgba(200,90,40,0)');
+    oc.fillStyle = g; oc.fillRect(0,0,ow,oh);
+  }
+  if(kind === 'moon_rim'){
+    oc.globalCompositeOperation = 'lighter';
+    const g = oc.createLinearGradient(0, 0, ow, oh*0.6); g.addColorStop(0, 'rgba(120,150,210,0.30)'); g.addColorStop(0.45, 'rgba(120,150,210,0)');
+    oc.fillStyle = g; oc.fillRect(0,0,ow,oh);
+    const g2 = oc.createLinearGradient(ow, oh, ow*0.55, oh*0.7); g2.addColorStop(0, 'rgba(255,140,70,0.12)'); g2.addColorStop(1,'rgba(255,140,70,0)');
+    oc.fillStyle = g2; oc.fillRect(0,0,ow,oh);
+  } else if(kind === 'dawn'){
+    oc.globalCompositeOperation = 'lighter';
+    const g = oc.createLinearGradient(ow, 0, 0, oh); g.addColorStop(0, 'rgba(255,190,130,0.22)'); g.addColorStop(0.6, 'rgba(255,190,130,0)');
+    oc.fillStyle = g; oc.fillRect(0,0,ow,oh);
+  }
+  oc.globalCompositeOperation = 'destination-in';
+  oc.save(); if(flip){ oc.translate(ow, 0); oc.scale(-1,1); } oc.drawImage(im, pad, pad, w, h); oc.restore();
+  oc.globalCompositeOperation = 'source-over';
+  c.drawImage(o, 0, 0, ow, oh, x - pad, y - pad, ow, oh);
+}
+
+function drawFire(c, e, tr, t, boost){
+  const s = e.s * tr.z, x = tr.X(e.x), y = tr.Y(e.y);
+  const base = IM['props/campfire'];
+  const bw = 365*s, bh = bw*base.height/base.width;
+  // warm ground pool
+  const gp = c.createRadialGradient(x, y-bh*0.3, 0, x, y-bh*0.3, 420*s*(1+0.4*boost));
+  gp.addColorStop(0, `rgba(255,150,60,${0.34*flick(t)})`); gp.addColorStop(1, 'rgba(255,120,40,0)');
+  c.save(); c.globalCompositeOperation='lighter'; c.fillStyle = gp; c.fillRect(x-500*s, y-500*s, 1000*s, 700*s); c.restore();
+  c.drawImage(base, x-bw/2, y-bh, bw, bh);
+  // smoke
+  const sm = IM['fx/smoke'];
+  for(let i=0;i<3;i++){ const ph = ((t*0.25 + i/3) % 1); const sy = y - bh*0.6 - ph*520*s; const sx = x + Math.sin(ph*3+i)*60*s + ph*80*s;
+    c.save(); c.globalAlpha = 0.22*(1-ph)*Math.min(1, ph*4); const ss = (120+ph*260)*s; c.drawImage(sm, sx-ss/2, sy-ss/2, ss, ss); c.restore(); }
+  // flames (12-drawing hand-painted loop at 12 drawings/s)
+  const fi = Math.floor(t*12) % 12; const fl = IM['fx/flame_' + String(fi).padStart(2,'0')];
+  const fw = 230*s*(1+0.15*boost), fh = fw*fl.height/fl.width;
+  c.save(); c.globalCompositeOperation='lighter'; c.globalAlpha = 0.95; c.drawImage(fl, x-fw/2, y-bh*0.55-fh*0.92, fw, fh); c.restore();
+  // embers
+  const em = IM['fx/ember'];
+  c.save(); c.globalCompositeOperation='lighter';
+  for(let i=0;i<14;i++){ const life = 1.6 + hash(i)*1.4; const ph = ((t + hash(i*3.1)*life) % life)/life;
+    const ex = x + (hash(i*7.7)-0.5)*90*s + Math.sin(t*2+i)*30*s*ph; const ey = y - bh*0.6 - ph*(420+hash(i)*300)*s;
+    c.globalAlpha = (1-ph)*0.9; const es = (6+hash(i*2)*6)*s*2.4; c.drawImage(em, ex-es/2, ey-es/2, es, es); }
+  c.restore();
+  // glow halo
+  const gl = c.createRadialGradient(x, y-bh*0.8, 0, x, y-bh*0.8, 260*s);
+  gl.addColorStop(0, `rgba(255,190,110,${0.45*flick(t+0.3)})`); gl.addColorStop(1, 'rgba(255,150,60,0)');
+  c.save(); c.globalCompositeOperation='lighter'; c.fillStyle = gl; c.fillRect(x-300*s, y-bh*0.8-300*s, 600*s, 600*s); c.restore();
+}
+
+function drawDust(c, e, tr, t){
+  const g = IM['fx/glow'];
+  c.save(); c.globalCompositeOperation = 'lighter';
+  for(let i=0;i<e.n;i++){
+    const sp = 0.4 + hash(i*1.3)*0.9;
+    const wx = ((hash(i*9.1)*1400 + t*e.wind*sp*3) % 1400) - 160;
+    const wy = e.y0 + hash(i*4.7)*(e.y1-e.y0) + Math.sin(t*0.8*sp + i)*12;
+    const r = (2.5 + hash(i*2.2)*5) * tr.z;
+    c.globalAlpha = e.a * (0.4 + 0.6*hash(i*6.6)) * (0.6 + 0.4*Math.sin(t*1.3 + i));
+    c.drawImage(g, tr.X(wx)-r*2, tr.Y(wy)-r*2, r*4, r*4);
+  }
+  c.restore();
+}
+
+// ---------------------------------------------------------------- subtitles + title
+let showSubs = true;
+const FONTS = ['600 64px NaskhS', '600 42px NaskhS', '400 68px AmiriQ'];
+const COLS = ['#f6efdf', '#d9b56a', '#ecd49a'];
+function drawSubs(c, t){
+  if(!showSubs) return;
+  let cue = null; for(const q of F.cues){ if(t >= q[0] && t < q[1]){ cue = q; break; } }
+  if(!cue) return;
+  const a = Math.min(1, (t-cue[0])/0.12, (cue[1]-t)/0.12);
+  const toks = []; for(const [txt, st] of cue[2]){ if(st === 1){ toks.push([txt.trim(), st]); continue; }
+    for(const wd of txt.split(' ')){ if(wd) toks.push([wd, st]); } }
+  c.save(); c.direction = 'rtl'; c.textBaseline = 'alphabetic';
+  const sp = 17, maxW = 960;
+  for(const tk of toks){ c.font = FONTS[tk[1]]; tk.push(c.measureText(tk[0]).width); }
+  const total = toks.reduce((a,tk,i)=>a + tk[2] + (i?sp:0), 0);
+  let lines = [];
+  if(total <= maxW){ lines = [[toks, total]]; }
+  else { let best = null;
+    for(let k=1;k<toks.length;k++){ const w1 = toks.slice(0,k).reduce((a,tk,i)=>a+tk[2]+(i?sp:0),0), w2 = toks.slice(k).reduce((a,tk,i)=>a+tk[2]+(i?sp:0),0);
+      const sc = Math.max(w1, w2); if(!best || sc < best[0]) best = [sc, k, w1, w2]; }
+    lines = [[toks.slice(0,best[1]), best[2]], [toks.slice(best[1]), best[3]]]; }
+  const lh = 98, baseY = 1705 - (lines.length-1)*lh;
+  const band = c.createLinearGradient(0, baseY-170, 0, H); band.addColorStop(0, 'rgba(0,0,0,0)'); band.addColorStop(0.45, `rgba(0,0,0,${0.42*a})`); band.addColorStop(1, `rgba(0,0,0,${0.55*a})`);
+  c.fillStyle = band; c.fillRect(0, baseY-170, W, H-baseY+170);
+  c.globalAlpha = a; c.shadowColor = 'rgba(0,0,0,0.85)'; c.shadowBlur = 14; c.shadowOffsetY = 2;
+  lines.forEach(([ln, lw], li) => { let x = 540 + lw/2; const y = baseY + li*lh;
+    for(const tk of ln){ c.font = FONTS[tk[1]]; c.fillStyle = COLS[tk[1]]; c.textAlign = 'right';
+      c.fillText(tk[0], x, tk[1]===1 ? y - 6 : y); x -= tk[2] + sp; } });
+  c.restore();
+}
+function drawTitle(c, t){
+  const T = F.title; if(t < T.t0) return;
+  const a = ease((t - T.t0)/1.3, 'out');
+  const rise = (1-a)*24;
+  c.save(); c.direction = 'rtl'; c.textAlign = 'center'; c.globalAlpha = a;
+  c.shadowColor = 'rgba(20,12,4,0.75)'; c.shadowBlur = 26;
+  c.font = '700 150px AmiriB'; c.fillStyle = '#f6ead0'; c.fillText(T.main, 540, 300 + rise);
+  c.shadowBlur = 16; c.font = '400 70px AmiriR'; c.fillStyle = '#e2c17a'; c.fillText(T.sub, 540, 415 + rise);
+  const lw = 300 * ease((t - T.t0 - 0.6)/1.2, 'inout');
+  c.shadowBlur = 0; c.strokeStyle = 'rgba(226,193,122,0.85)'; c.lineWidth = 2.5;
+  c.beginPath(); c.moveTo(540-lw, 467+rise); c.lineTo(540+lw, 467+rise); c.stroke();
+  c.fillStyle = '#e2c17a'; c.beginPath(); c.moveTo(540, 455+rise); c.lineTo(552, 467+rise); c.lineTo(540, 479+rise); c.lineTo(528, 467+rise); c.closePath(); c.fill();
+  c.restore();
+}
+
+// ---------------------------------------------------------------- frame composition (transitions)
+function render(tr){
+  const t = Math.floor(tr*FPS + 1e-6)/FPS;      // 24 fps master timeline
+  const act = F.shots.filter(s => t >= s.t0 && t < s.t1);
+  if(!act.length){ ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H); return; }
+  const cur = act[act.length-1];
+  if(act.length > 1 && cur.trans_in){
+    const prev = act[act.length-2];
+    const u = ease((t - cur.t0)/cur.trans_in.d, 'inout');
+    if(u >= 1){ drawShot(ctx, cur, t); }
+    else {
+      drawShot(ctx, prev, t);
+      drawShot(bctx, cur, t);
+      ctx.save(); ctx.globalAlpha = u; ctx.drawImage(buf, 0, 0); ctx.restore();
+      if(cur.trans_in.kind === 'dawn'){ const k = Math.sin(u*Math.PI);
+        const g = ctx.createLinearGradient(0, 200, 0, 1400); g.addColorStop(0, `rgba(255,200,140,${0.22*k})`); g.addColorStop(1, 'rgba(255,200,140,0)');
+        ctx.save(); ctx.globalCompositeOperation='lighter'; ctx.fillStyle = g; ctx.fillRect(0,0,W,H); ctx.restore(); }
+    }
+  } else drawShot(ctx, cur, t);
+  drawTitle(ctx, t);
+  drawSubs(ctx, t);
+  const fo = F.title.fade_out; if(t > fo[0]){ ctx.fillStyle = `rgba(0,0,0,${ease((t-fo[0])/(fo[1]-fo[0]),'in')})`; ctx.fillRect(0,0,W,H); }
+  if(t < 0.6){ ctx.fillStyle = `rgba(0,0,0,${1 - ease(t/0.6,'out')})`; ctx.fillRect(0,0,W,H); }
+}
+
+// ---------------------------------------------------------------- audio clock (narration = master)
+let ac = null, bNarr = null, bSfx = null, gNarr = null, gSfx = null, srcs = [];
+let playing = false, startAt = 0, offset = 0, sfxOn = true;
+function now(){ return playing ? Math.min(DUR, ac.currentTime - startAt) : offset; }
+async function decode(key){ const r = await fetch(A[key]); const ab = await r.arrayBuffer(); return await ac.decodeAudioData(ab); }
+async function ensureAudio(){
+  if(ac) return; ac = new (window.AudioContext || window.webkitAudioContext)();
+  gNarr = ac.createGain(); gSfx = ac.createGain(); gNarr.connect(ac.destination); gSfx.connect(ac.destination);
+  gNarr.gain.value = +document.getElementById('vol').value; gSfx.gain.value = sfxOn ? 1 : 0;
+  [bNarr, bSfx] = await Promise.all([decode('audio/narration'), decode('audio/sfx')]);
+}
+function startSources(at){
+  stopSources();
+  for(const [b, g] of [[bNarr, gNarr], [bSfx, gSfx]]){ if(!b) continue; const s = ac.createBufferSource(); s.buffer = b; s.connect(g);
+    if(at < b.duration) s.start(0, at); srcs.push(s); }
+}
+function stopSources(){ for(const s of srcs){ try{ s.stop(); }catch(e){} } srcs = []; }
+async function play(){ await ensureAudio(); if(ac.state === 'suspended') await ac.resume();
+  if(offset >= DUR - 0.05) offset = 0; startSources(offset); startAt = ac.currentTime - offset; playing = true; setIcon(); poke(); }
+function pause(){ if(!playing) return; offset = now(); playing = false; stopSources(); setIcon(); showUI(); }
+function seek(t){ offset = Math.max(0, Math.min(DUR, t)); if(playing){ startSources(offset); startAt = ac.currentTime - offset; } render(offset); updUI(offset); }
+
+// ---------------------------------------------------------------- UI
+const ui = document.getElementById('ui'), bar = document.getElementById('bar'), fi = bar.querySelector('.fi'), kn = bar.querySelector('.kn');
+const timeEl = document.getElementById('time'), pIcon = document.getElementById('pIcon');
+function fmt(s){ s = Math.max(0, s); return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
+function setIcon(){ pIcon.setAttribute('d', playing ? 'M6 4h4v16H6zM14 4h4v16h-4z' : 'M6 4l15 8-15 8z'); }
+function updUI(t){ const p = t/DUR*100; fi.style.width = p + '%'; kn.style.left = p + '%'; timeEl.textContent = fmt(t) + ' / ' + fmt(DUR); }
+let hideT = 0; function showUI(){ ui.classList.remove('hide'); clearTimeout(hideT); }
+function poke(){ showUI(); if(playing) hideT = setTimeout(()=>ui.classList.add('hide'), 2600); }
+document.getElementById('bPlay').onclick = () => playing ? pause() : play();
+document.getElementById('bReplay').onclick = () => { offset = 0; if(playing){ startSources(0); startAt = ac.currentTime; } else play(); };
+document.getElementById('bSub').onclick = (e) => { showSubs = !showSubs; e.currentTarget.classList.toggle('off', !showSubs); if(!playing) render(offset); };
+document.getElementById('bSfx').onclick = (e) => { sfxOn = !sfxOn; e.currentTarget.classList.toggle('off', !sfxOn); if(gSfx) gSfx.gain.value = sfxOn ? 1 : 0; };
+document.getElementById('vol').oninput = (e) => { if(gNarr) gNarr.gain.value = +e.target.value; };
+document.getElementById('bFs').onclick = () => { const el = document.getElementById('stage');
+  if(document.fullscreenElement || document.webkitFullscreenElement){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+  else (el.requestFullscreen || el.webkitRequestFullscreen).call(el); };
+function barSeek(ev){ const r = bar.getBoundingClientRect(); seek((ev.clientX - r.left)/r.width*DUR); }
+let drag = false;
+bar.addEventListener('pointerdown', e => { drag = true; bar.setPointerCapture(e.pointerId); barSeek(e); });
+bar.addEventListener('pointermove', e => { if(drag) barSeek(e); });
+bar.addEventListener('pointerup', () => { drag = false; });
+['mousemove','touchstart','pointerdown'].forEach(ev => document.addEventListener(ev, poke, {passive:true}));
+document.addEventListener('keydown', e => { if(e.code==='Space'){ e.preventDefault(); playing?pause():play(); }
+  else if(e.key==='f') document.getElementById('bFs').click(); else if(e.key==='c') document.getElementById('bSub').click();
+  else if(e.key==='m') document.getElementById('bSfx').click(); });
+
+// ---------------------------------------------------------------- loop
+let lastF = -1;
+function tick(){
+  const t = now();
+  const f = Math.floor(t*FPS);
+  if(f !== lastF){ lastF = f; render(t); updUI(t); }
+  if(playing && t >= DUR){ playing = false; offset = DUR; stopSources(); setIcon(); showUI(); }
+  requestAnimationFrame(tick);
+}
+
+// ---------------------------------------------------------------- boot
+async function boot(){
+  const keys = Object.keys(A).filter(k => !k.startsWith('audio/'));
+  let done = 0; const msg = document.getElementById('msg');
+  await Promise.all(keys.map(k => new Promise(res => { const im = new Image(); im.onload = im.onerror = () => { done++; msg.textContent = 'جارٍ التحميل… ' + Math.round(done/keys.length*100) + '%'; res(); };
+    im.src = A[k]; IM[k] = im; })));
+  try{ await document.fonts.load('600 60px NaskhS'); await document.fonts.load('700 150px AmiriB'); await document.fonts.load('400 64px AmiriQ'); await document.fonts.load('400 70px AmiriR'); }catch(e){}
+  render(0.8); updUI(0);
+  const cover = document.getElementById('cover'); cover.classList.remove('loading'); msg.textContent = 'اضغط للتشغيل';
+  cover.onclick = async () => { cover.classList.add('hidden'); offset = 0; await play(); };
+  window.__ready = true;
+  requestAnimationFrame(tick);
+}
+window.__renderAt = (t) => { render(t); };
+window.__setSubs = (v) => { showSubs = v; };
+boot();
+})();
+</script>
+</body>
+</html>

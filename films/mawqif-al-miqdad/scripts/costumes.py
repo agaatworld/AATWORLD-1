@@ -1,0 +1,57 @@
+"""Costume bible. Colours kept muted, natural dyes of 7th-century Hijaz (undyed wool,
+linen, indigo, madder, henna/katam beard dye). One entry per character; identical across every shot."""
+
+COSTUMES = {
+    # al-Miqdad ibn Amr: tall, brown complexion; cream turban with tail, deep-brown beard,
+    # sand robe, muted dark-olive/brown cloak.
+    'miqdad': dict(scale=1.04, build=1.04, head=1.0, skin='#8a5a3a', beard='#3a2216', beard_len=0.06, beard_shape='round',
+                   turban='#e9dfc6', turban_shade='#a8977a', turban_style='tail', turban_h=1.1,
+                   robe='#cdb68c', robe_shade='#7d6545', sleeve='#c4ab80', cloak='#4f4a2e', cloak_shade='#24200f',
+                   cloak_lining='#8c7c52', cloak_len=0.30, sash='#6b4a2c', sandal='#3a2416'),
+    # Abu Bakr as-Siddiq: slight, slender; white turban, henna/katam-dyed reddish beard, light robe, fawn cloak.
+    'abubakr': dict(scale=0.97, build=0.88, head=0.97, skin='#a77a55', beard='#8a3b1c', beard_len=0.05, beard_shape='pointed',
+                    turban='#f3efe4', turban_shade='#b5ad9b', turban_style='tail', turban_h=0.9,
+                    robe='#e6dcc6', robe_shade='#9a8d73', sleeve='#ddd2ba', cloak='#9b7b55', cloak_shade='#4d3a24',
+                    cloak_lining='#d8c6a0', cloak_len=0.26, sash=None, sandal='#3e2a1a'),
+    # Umar al-Faruq: very tall, strongly built; dark charcoal turban, dark beard, undyed wool robe, deep-brown cloak.
+    'umar': dict(scale=1.10, build=1.14, head=1.04, skin='#b0805a', beard='#2a1c14', beard_len=0.065, beard_shape='round',
+                 turban='#3b3833', turban_shade='#151412', turban_style='tail', turban_h=1.0,
+                 robe='#bfae90', robe_shade='#6f624c', sleeve='#b5a385', cloak='#5a3a24', cloak_shade='#26170d',
+                 cloak_lining='#93714d', cloak_len=0.32, sash='#3b2a1c', sandal='#2e1f14'),
+    # Abdullah ibn Mas'ud: short and very slender; small plain turban, short dark beard, plain robe, no cloak.
+    'ibnmasud': dict(scale=0.84, build=0.80, head=0.95, skin='#6f4a30', beard='#241811', beard_len=0.04, beard_shape='short',
+                     turban='#cfc3a6', turban_shade='#8d8268', turban_style='plain', turban_h=0.8,
+                     robe='#a99a7c', robe_shade='#5e5341', sleeve='#a19174', cloak=None, sash='#5b4632', sandal='#33231a'),
+    # Muhajirun extras
+    'muh1': dict(scale=1.0, build=1.0, head=1.0, skin='#946545', beard='#2e1e15', beard_len=0.055, beard_shape='round',
+                 turban='#d9cdb2', turban_shade='#958a70', turban_style='plain', turban_h=1.0,
+                 robe='#b9a382', robe_shade='#6d5b42', sleeve='#b09b79', cloak='#6e5a3c', cloak_shade='#2f2517', cloak_len=0.28, sandal='#3b2618'),
+    'muh2': dict(scale=0.98, build=0.95, head=1.0, skin='#7b5236', beard='#3b2a1d', beard_len=0.05, beard_shape='pointed',
+                 turban='#7c6a4c', turban_shade='#3e3325', turban_style='cloth',
+                 robe='#d2c4a6', robe_shade='#867a62', sleeve='#c8b99b', cloak=None, sash='#7a4b2a', sandal='#3b2618'),
+    'muh3': dict(scale=1.02, build=1.05, head=1.02, skin='#9c6c49', beard='#4a3322', beard_len=0.06, beard_shape='round',
+                 turban='#efe7d4', turban_shade='#a9a08c', turban_style='tail', turban_h=0.85,
+                 robe='#8f7e63', robe_shade='#4b4030', sleeve='#877659', cloak='#3f3b33', cloak_shade='#1a1814', cloak_len=0.25, sandal='#3b2618'),
+    # Ansar extras (Madinah: indigo and madder-dyed Yemeni cloth, striped mantles)
+    'ans1': dict(scale=1.0, build=1.02, head=1.0, skin='#8d6040', beard='#2b1c13', beard_len=0.055, beard_shape='round',
+                 turban='#3e4a63', turban_shade='#1a2030', turban_style='tail', turban_h=1.0,
+                 robe='#c9b894', robe_shade='#7a6b4f', sleeve='#c0ad89', cloak='#34435e', cloak_shade='#141b29', cloak_lining='#7d8aa3', cloak_len=0.28, sandal='#3b2618'),
+    'ans2': dict(scale=0.99, build=0.96, head=1.0, skin='#a27552', beard='#3d2a1c', beard_len=0.05, beard_shape='pointed',
+                 turban='#e3d8bf', turban_shade='#a09780', turban_style='plain', turban_h=0.95,
+                 robe='#b6c0c9', robe_shade='#5f6a75', sleeve='#aeb8c0', cloak='#7a3b2a', cloak_shade='#341710', cloak_lining='#c08a6b', cloak_len=0.27, sandal='#3b2618'),
+    'ans3': dict(scale=1.03, build=1.06, head=1.02, skin='#7a5034', beard='#231710', beard_len=0.065, beard_shape='round',
+                 turban='#6b3a2a', turban_shade='#2f160e', turban_style='tail', turban_h=1.05,
+                 robe='#d8ccb0', robe_shade='#8c806a', sleeve='#cfc2a5', cloak='#5b5f4a', cloak_shade='#24261c', cloak_len=0.30, sash='#3c4a63', sandal='#3b2618'),
+    'ans4': dict(scale=0.97, build=0.98, head=0.98, skin='#93674a', beard='#4b3524', beard_len=0.045, beard_shape='short',
+                 turban='#475468', turban_shade='#1d2431', turban_style='cloth',
+                 robe='#c7b593', robe_shade='#7a6a4f', sleeve='#beab88', cloak=None, sash='#7a3b2a', sandal='#3b2618'),
+    'ans5': dict(scale=1.01, build=1.0, head=1.0, skin='#835a3c', beard='#2f2017', beard_len=0.058, beard_shape='round',
+                 turban='#ddd3bc', turban_shade='#9b927c', turban_style='tail', turban_h=0.9,
+                 robe='#a8957a', robe_shade='#5c4f3c', sleeve='#9f8c70', cloak='#2f3a52', cloak_shade='#121725', cloak_lining='#6f7b94', cloak_len=0.29, sandal='#3b2618'),
+}
+
+NAMES = {
+    'miqdad': 'المقداد بن عمرو رضي الله عنه', 'abubakr': 'أبو بكر الصديق رضي الله عنه', 'umar': 'عمر بن الخطاب رضي الله عنه',
+    'ibnmasud': 'عبد الله بن مسعود رضي الله عنه', 'muh1': 'من المهاجرين', 'muh2': 'من المهاجرين', 'muh3': 'من المهاجرين',
+    'ans1': 'من الأنصار', 'ans2': 'من الأنصار', 'ans3': 'من الأنصار', 'ans4': 'من الأنصار', 'ans5': 'من الأنصار',
+}
