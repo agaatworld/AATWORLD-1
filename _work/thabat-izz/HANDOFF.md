@@ -138,6 +138,13 @@ E. Need the file for reel 1762821274824063.
 F. **«شاهد على العصر» transcript** (asked 21 Nov): PDF + TXT, easy to read, sectioned by question/answer, NO added titles except the episode title,
    clickable table of contents ("glossary"). Waiting for the owner to say WHICH episode (guest + episode number) or send the file/link.
 
+G. **«معركة ضاويله الليلية» animated short** (23 Nov, delivered `/home/user/final/dhawila/maarakat-dhawila-allayliya.mp4` + cover).
+   Source: owner's upload «01-raed-dars-akbar-min-alrutba-preview.mp4», narration 32.6–72.12 s (voice نائف الوافي), captions text = the video's own captions.
+   Owner rules for this style: characters FACELESS (no eyes/eyebrows/nose/mouth; keep hair, beard, head wraps); no women; no music; the 4 Qwen-Image scenes are the approved look.
+   Code `code/dhawila/`: `dhawila.py` (12 shots, depth-parallax camera, light effects, captions, closing), `faceless.py` (face polygons), `upscale.py` (Real-ESRGAN x4 → x2), `cover.py`.
+   Scene images came from HF Qwen-Image (free ZeroGPU quota ran out after 5 images; resets daily) — regenerate missing scenes (teamwork, rooftop solar, courtyard) when quota allows.
+   Background song https://m.youtube.com/watch?v=Y7F6BczCJNc — YouTube blocked the download (bot check, do NOT bypass): **owner must upload the file**; then add its vocals only, ducked under the narration.
+
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
 - `<scratch>/taiz/fonts/th/*.ttf` (Thmanyah), `<scratch>/sfx3/m<id>.wav` (sound effects; scripts also look in sfx/s and sfx2/m),
