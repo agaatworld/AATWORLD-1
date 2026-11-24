@@ -145,6 +145,15 @@ G. **«معركة ضاويله الليلية» animated short** (23 Nov, delive
    Scene images came from HF Qwen-Image (free ZeroGPU quota ran out after 5 images; resets daily) — regenerate missing scenes (teamwork, rooftop solar, courtyard) when quota allows.
    Background song https://m.youtube.com/watch?v=Y7F6BczCJNc — YouTube blocked the download (bot check, do NOT bypass): **owner must upload the file**; then add its vocals only, ducked under the narration.
 
+H. **Light-theme motion-graphics reels** (24 Nov) — `/home/user/final/reels-light/` + code `code/reels-light/` (engine `mg.py`).
+   01 «سجل يا تاريخ» (speaker, source page «نفحات جهادية», their frame cropped away), 02 «كيف يا قرآن ربيت الرجال» (Quran ceremony + nasheed, vocals only),
+   03 comparison «الحوثي يسب / السنة» (`v12.py`): the WHOLE Houthi compilation first, each clip pinned as a photo into a gallery strip, then a wall; then the ceremony + its wall; final both walls.
+   Owner rules learned: NO text on faces; NO titles invented by me — only real captions + the owner's labels («السنة», «الحوثي يسب»); every video starts with its cover for 0.2 s
+   (`with_cover.sh`) and covers must be designed and varied, with «كلنا مقاومة»; strong words + covers in **NT Panorama Naskh** (owner-supplied font, private — not in this repo;
+   path in `mg.py` = `<scratch>/fonts_user/NTPanoramaNaskh-Regular.ttf`), captions in Almarai; light theme (cream/amber/navy, a little dark); no music, synthesized SFX (`sfx.py`) allowed.
+   Captions studio has keys lt1, lt2, cmp (merged into the live studio, version 8). Source uploads: «1df57dd0…video.mp4», «f1c3803f/211390dd…video.mp4» (same ceremony file), «c19d005a…video_2.mp4».
+   Houthi compilation 1:28–1:35 is unintelligible — not captioned (owner may type it in the studio). Transcripts: `data/transcripts/reels-light-transcripts.txt`.
+
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
 - `<scratch>/taiz/fonts/th/*.ttf` (Thmanyah), `<scratch>/sfx3/m<id>.wav` (sound effects; scripts also look in sfx/s and sfx2/m),
