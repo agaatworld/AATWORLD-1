@@ -74,7 +74,7 @@ def dark_caps(c, t):
             c = put(c, fitw(img, 860), 510, 1420, 1.0, al)
     return c
 LRED = C('D2483E')
-LABEL_D = text([('الحوثي', IVORY), ('يسب', LRED)], 'naskh', 96, 3, BLACK)
+LABEL_D = fitw(text([('الحوثي', IVORY), ('يسب الصحابة', LRED)], 'naskh', 96, 3, BLACK), 760)
 LABEL_L = text([('السنة', NAVY)], 'naskh', 110)
 def houthi(t):
     a, b, k = clip_at(t); c = D.dark_bg(t)

@@ -68,7 +68,7 @@ c = top * (1 - m[..., None]) + bot * m[..., None]
 bot_m = m
 c = v12.thumb(c, v12.LSTILL[1], 530, 520, 760, 470, -3.0, 1.0, border=PAPER)                         # graduates, seated
 c = put(c, text([('السنة', NAVY)], 'naskh', 150), 520, 845, 1.0, 1.0, glow=0.5, glow_col=LG)
-c = put(c, text([('الحوثي', D.IVORY), ('يسب', C('D2483E'))], 'naskh', 125, 3, D.BLACK), 520, 1068, 1.0, 1.0)
+c = put(c, fitw(text([('الحوثي', D.IVORY), ('يسب الصحابة', C('D2483E'))], 'naskh', 120, 3, D.BLACK), 860), 520, 1068, 1.0, 1.0)
 c = v12.thumb(c, v12.STILL[13], 550, 1370, 760, 400, 3.0, 1.0, border=D.MRED)                        # poet, shouting
 ln = np.zeros((H, W), np.float32); cv2.polylines(ln, [(np.array(pts, np.float32) * 8).astype(np.int32)], False, 1.0, 6, cv2.LINE_AA, shift=3)
 c = c + (GOLD - c) * np.clip(ln + cv2.GaussianBlur(ln, (0, 0), 8) * 2.0, 0, 1)[..., None]

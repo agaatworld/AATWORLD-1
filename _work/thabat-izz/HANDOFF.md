@@ -152,6 +152,9 @@ H. **Light-theme motion-graphics reels** (24 Nov) — `/home/user/final/reels-li
    (`with_cover.sh`) and covers must be designed and varied, with «كلنا مقاومة»; strong words + covers in **NT Panorama Naskh** (owner-supplied font, private — not in this repo;
    path in `mg.py` = `<scratch>/fonts_user/NTPanoramaNaskh-Regular.ttf`), captions in Almarai; light theme (cream/amber/navy, a little dark); no music, synthesized SFX (`sfx.py`) allowed.
    Captions studio has keys lt1, lt2, cmp (merged into the live studio, version 8). Source uploads: «1df57dd0…video.mp4», «f1c3803f/211390dd…video.mp4» (same ceremony file), «c19d005a…video_2.mp4».
+   v3 of the comparison (`v13.py`, owner's latest brief): split screen — «السنة» top / «الحوثي يسب الصحابة» bottom with a divider; the speaking side plays big with its
+   words as kinetic typography (insults in big red with impact/shake/red rays; good words gold/glow) while the other side is frozen, greyed and «eclipsed» with a pause mark;
+   15 alternating turns (whole Houthi video in 8 parts, nasheed in 7), fierce strobe finale + the dark half shatters, light fills. Label must be «الحوثي يسب الصحابة» (not «يسب»).
    Houthi compilation 1:28–1:35 is unintelligible — not captioned (owner may type it in the studio). Transcripts: `data/transcripts/reels-light-transcripts.txt`.
 
 ## 8. Paths the scripts expect (setup.sh recreates them)
