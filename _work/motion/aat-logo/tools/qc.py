@@ -17,7 +17,7 @@ def ref(a, mark_only=False):
     return np.asarray(Image.open(f + '.png').convert('L')) < 128, (x0, y0, k)
 REF = {(a, mo): ref(a, mo) for a in SIZE for mo in (False, True)}   # ultra versions are the mark only (tagline too small)
 bad = 0; rows = []
-for f in sorted(glob.glob('out/c*/*-*-*-*.mp4')):
+for f in sorted(x for x in glob.glob('out/c*/*-*-*-*.mp4') if '-transition-' not in x):   # transitions end on footage, not on the logo
     if f.endswith('_sfx.mp4'): continue
     a = f.split('-')[-1][:-4]; png = SCR + '/last.png'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-sseof', '-0.05', '-i', f, '-frames:v', '1', '-update', '1', png], check=True)

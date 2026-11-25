@@ -89,7 +89,7 @@ export const C1: React.FC<Props> = (props) => {
             );
           })}
           {/* settle bloom: one soft breath of light over the whole mark as it locks */}
-          {(() => { const b = seg(t, T.m - 0.05, T.m + 0.35); return b > 0 && b < 1 ? <g opacity={Math.sin(b * Math.PI) * 0.18} style={{ mixBlendMode: 'screen' }}>{MARK.map((k) => <Glyph key={k} k={k} fill="#FF8F93" />)}</g> : null; })()}
+          {(() => { const b = seg(t, T.m - 0.05, Math.min(T.m + 0.35, T.D - 0.1)); return b > 0 && b < 1 ? <g opacity={Math.sin(b * Math.PI) * 0.18} style={{ mixBlendMode: 'screen' }}>{MARK.map((k) => <Glyph key={k} k={k} fill="#FF8F93" />)}</g> : null; })()}
           {!outro && T.a > 0 && t < T.a + 0.05 && (
             <LightHead x={mix(start.x - 260, start.x, ant)} y={mix(start.y + 40, start.y, E.outCubic(ant))} r={mix(6, 16, ant)} o={seg(t, 0.02, 0.2)} id={`${id}-ant`} />
           )}
