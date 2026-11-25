@@ -1,0 +1,66 @@
+/* AAT articles & news pages in the style of the July 2026 issue (owner, 3 Nov 2026) */
+:root { --red: #C4141C; --deep: #7A0A10; --ink: #111; --line: #E4C9C9; }
+html, body { margin: 0; padding: 0; background: #888; }
+.pg { position: relative; width: 794px; height: 1123px; background: #fff; overflow: hidden; margin: 0 0 20px; box-sizing: border-box; }
+.pg .bar { position: absolute; inset: 0 0 auto 0; height: 20px; background: linear-gradient(90deg, #7A0A10, #B3121A 45%, #D21F26); }
+.pg .wm { position: absolute; left: 50%; top: 52%; width: 600px; transform: translate(-50%, -50%); opacity: .045; pointer-events: none; }
+.pg .ft { position: absolute; left: 40px; right: 40px; bottom: 60px; height: 32px; background: #C00000; color: #fff; font: 700 17px/32px "Noto Kufi Arabic", sans-serif; text-align: center; direction: rtl; letter-spacing: 0; }   /* larger (owner, 3 Nov) */
+.pg .fb { position: absolute; left: 0; right: 0; bottom: 26px; height: 24px; background: #E6E7E8; }   /* grey strip as in the July issue */
+.pg .fb .st { position: absolute; top: 0; height: 24px; width: 30px; background: #F7B500; clip-path: polygon(14px 0, 30px 0, 16px 100%, 0 100%); }
+.pg .fb .ur { position: absolute; top: 0; height: 24px; width: 180px; background: #ED1C24; color: #fff; font: 700 15px/24px Arimo, Arial, sans-serif; text-align: center; letter-spacing: .4px; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); padding-right: 10px; box-sizing: border-box; }
+.pg .fb .no { position: absolute; top: 0; height: 24px; width: 64px; background: #ED1C24; }   /* page-number box, left empty for the number (owner) */
+.pg .fb .no::after { content: ""; position: absolute; top: 0; bottom: 0; width: 6px; background: #fff; }
+.pg.odd .fb .no { left: 0; } .pg.odd .fb .no::after { right: -6px; } .pg.odd .fb .ur { left: 70px; } .pg.odd .fb .st { left: 238px; }
+.pg.even .fb .no { right: 0; } .pg.even .fb .no::after { left: -6px; } .pg.even .fb .ur { right: 70px; transform: scaleX(-1); } .pg.even .fb .ur b { display: block; transform: scaleX(-1); } .pg.even .fb .st { right: 238px; transform: scaleX(-1); }
+.pg .body { position: absolute; left: 40px; right: 40px; top: 42px; bottom: 104px; column-count: 2; column-gap: 26px; column-rule: 1px solid #EBD3D3; column-fill: auto; }
+.pg.ar .body { direction: rtl; }
+.pg.en .body { direction: ltr; }
+/* text */
+.body p { margin: 0 0 var(--ps, 6px); text-align: justify; text-justify: inter-word; }
+.ar .body, .ar .hd { font: 700 18.67px/1.72 "Noto Naskh Arabic", "Tinos", serif; color: var(--ink); }
+.en .body, .en .hd { font: 700 17.33px/1.5 Arimo, Arial, sans-serif; color: var(--ink); }
+.body h3 { margin: .45em 0 .2em; color: var(--red); font-size: 1.04em; break-after: avoid; }
+.body .lt { font-family: Tinos, "Noto Naskh Arabic", serif; }
+.body .endp::after { content: " ■"; color: var(--red); }
+.body .by { color: var(--red); font-size: .9em; margin: 0 0 6px; }
+/* head of an article or news item: picture on one half, title (and the start of the text) on the other */
+.hd { column-span: all; display: grid; grid-template-columns: 1fr 1fr; column-gap: 26px; margin: 0 0 10px; }
+.hd .tt { min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.hd h1, .hd h2 { margin: 0 0 8px; color: var(--red); line-height: 1.38; -webkit-text-stroke: .4px #7A0A10; }
+.ar .hd h1 { font: 800 30px/1.4 "Noto Kufi Arabic", sans-serif; }
+.ar .hd h2 { font: 800 23px/1.45 "Noto Kufi Arabic", sans-serif; }
+.en .hd h1 { font: 800 30px/1.15 "Roboto Condensed", Arimo, sans-serif; }
+.en .hd h2 { font: 800 24px/1.15 "Roboto Condensed", Arimo, sans-serif; }
+.hd .fr { flex: 1; min-height: 0; overflow: hidden; }
+.hd .fr p { margin: 0 0 var(--ps, 6px); text-align: justify; }
+.hd .pic { border-radius: 12px; overflow: hidden; background: #F4EEEA; }
+.hd .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hd.wide { display: block; }
+.hd.wide .pic { width: 100%; margin-bottom: 8px; }
+/* the red news ribbon between items */
+.rb { column-span: all; height: 18px; margin: 6px 0 10px; background: var(--red); color: #fff; overflow: hidden; white-space: nowrap; font: 800 13px/18px Arimo, sans-serif; letter-spacing: .5px; direction: ltr; }
+.rb span { display: inline-block; padding: 0 12px; }
+.rb span b { font-family: "Noto Kufi Arabic", sans-serif; font-weight: 800; margin-inline-end: 6px; }
+.hd .pic.fx { position: relative; background: #2A2022; }
+.hd .pic.fx i { position: absolute; inset: -30px; background-size: cover; background-position: center; filter: blur(18px) brightness(.75); }
+.hd .pic.fx img { position: relative; z-index: 1; object-fit: contain !important; }
+
+.hd.nopic h2 { margin-bottom: 6px; }
+.hd.wide.news h2 { margin-top: 4px; }
+
+/* quote across both columns: the quote mark and the words on one light line (owner, 2 Nov) */
+.body .pq { column-span: all; margin: 10px 0 12px; padding: 8px 18px; border-top: 1px solid #E2BFBF; border-bottom: 1px solid #E2BFBF; text-align: center; color: var(--red); font-family: "Noto Kufi Arabic", sans-serif; font-weight: 800; line-height: 1.6; }
+.body .pq::before { content: "“"; font-family: Georgia, serif; font-size: 1.6em; line-height: 0; vertical-align: -.25em; margin-inline-end: .2em; }
+
+/* column pictures (news) */
+.body figure.cf { margin: 4px 0 12px; break-inside: avoid; }
+.body figure.cf .pic { border-radius: 12px; overflow: hidden; background: #F4EEEA; }
+.body figure.cf .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.body figure.cf .pic.fx { position: relative; background: #2A2022; }
+.body figure.cf .pic.fx i { position: absolute; inset: -30px; background-size: cover; background-position: center; filter: blur(18px) brightness(.75); }
+.body figure.cf.span { column-span: all; margin: 6px 0 12px; }
+.hd.vcol h2 { margin-bottom: 8px; }
+.hd.banner .pic { margin-bottom: 10px; }
+.body p.sp { text-align-last: justify; }
+.en .body p { hyphens: auto; }
+.pg .fb .ur b { font-weight: 700; }

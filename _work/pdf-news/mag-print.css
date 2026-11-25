@@ -1,0 +1,69 @@
+/* print overrides on top of the magazine's own styles */
+@page { size: 794px 1123px; margin: 0; }
+html, body.aatpdf { margin: 0; padding: 0; background: #fff; overflow: visible !important; height: auto !important; }
+body.aatpdf > :not(#book) { display: none !important; }
+#book { display: block; }
+#book .sheet { display: block !important; position: relative !important; transform: none !important; margin: 0; break-after: page; page-break-after: always; box-shadow: none !important; }
+/* news items: a line, the picture, the title, then the text (paragraphs may continue in the next column) */
+#book .nhead { break-inside: avoid; margin: 0 0 .5em; padding-top: .8em; border-top: 1px solid var(--line, #E6DCD7); }
+#book .nhead.first { border-top: 0; padding-top: 0; }
+#book .nhead b { display: block; font-family: var(--kufi); font-size: 1.12em; line-height: 1.6; color: var(--deep, #7A0A10); }
+#book .folio { font-size: 13px; }
+#book .runhd { font-size: 13px; }
+#book .L-briefs .ah.nh1 { display: block; }
+#book .L-briefs .ah.nh1 h1 { font-size: 34px; }
+#book .L-briefs .flow { column-fill: auto; }
+
+/* ---- 1 Nov (2): magazine rules ---- */
+/* picture boxes: .fig = real proportions (nothing cut); .fx = whole picture over a blurred copy of itself */
+#book .fig, #book .fx { position: relative; overflow: hidden; width: 100%; }
+#book .fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+#book .fx { background: #2A2022; }
+#book .fx i { position: absolute; inset: -40px; background-size: cover; background-position: center; filter: blur(22px) brightness(.78) saturate(1.15); }
+#book .fx img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain !important; display: block; }
+#book .L-feature .hero { position: absolute; inset: 0 0 auto 0; }
+#book .L-band .strip { margin: 16px -52px 0; width: auto; }
+#book .L-split .top { grid-template-columns: 1fr 1fr; }
+#book .L-split .top .im { height: 100%; }
+#book .L-split .top .tt { overflow: hidden; }
+/* writer's line under the title */
+#book .byl { font-family: var(--kufi); font-weight: 700; font-size: 17px; color: var(--red); margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+#book .byl::before { content: ""; width: 26px; height: 3px; background: currentColor; flex: none; }
+#book .L-split .byl { color: #FFE29A; }
+/* standfirst: the first paragraph, larger and bold, across both columns */
+#book .dek { column-span: all; font-weight: 700; font-size: 1.1em; line-height: 1.75; color: #2A2022; border-inline-start: 5px solid var(--red); padding-inline-start: 14px; margin: 0 0 .9em; text-align: justify; }
+/* pull quote across both columns */
+#book .pq { column-span: all; margin: .5em 0 .9em; padding: .6em 1.4em .7em; border-top: 3px solid var(--red); border-bottom: 1px solid #D9CFC7; font-family: var(--kufi); font-weight: 800; font-size: 1.2em; line-height: 1.7; color: var(--deep, #7A0A10); text-align: center; }
+#book .pq::before { content: "“"; display: block; font-family: Georgia, serif; font-size: 2.4em; line-height: .6; color: var(--red); margin-bottom: .1em; }
+/* the next article starting on the same page */
+#book .inhd { column-span: all; border-top: 6px solid var(--red); padding-top: 14px; margin: 1.1em 0 .8em; }
+#book .inhd h1 { font-family: var(--kufi); font-weight: 800; font-size: 28px; line-height: 1.5; color: var(--ink); margin: 0; }
+#book .inhd .inim { margin-top: 12px; border-radius: 3px; }
+/* end of an article */
+#book .endp::after { content: " ■"; color: var(--red); font-size: .8em; }
+/* news pictures */
+#book .nhead .fig, #book .nhead .fx { margin: 0 0 .5em; border-radius: 3px; }
+
+/* ---- 2 Nov: 13 pt text, tighter lines, small news items filling the end of a page ---- */
+#book .flow { line-height: 1.62 !important; }
+#book .dek { line-height: 1.55; font-size: 1.06em; }
+#book .pq { font-size: 1.12em; line-height: 1.55; margin: .3em 0 .6em; padding: .4em 1em .5em; }
+#book .flow p { margin-bottom: .45em !important; }
+#book .fnh { break-inside: avoid; margin: .9em 0 .4em; padding-top: .7em; border-top: 3px solid var(--red); }
+#book .fnh .fnk { display: inline-block; font-family: var(--kufi); font-weight: 800; font-size: .8em; color: #fff; background: var(--red); padding: 1px 10px; border-radius: 2px; margin-bottom: .45em; }
+#book .fnh .fig, #book .fnh .fx { border-radius: 3px; margin-bottom: .4em; }
+#book .fnh b { display: block; font-family: var(--kufi); font-weight: 800; font-size: 1.05em; line-height: 1.5; color: var(--deep, #7A0A10); }
+
+/* exactly 13 pt body text (owner, 2 Nov): the magazine scales paragraphs itself, so the size is set on the text */
+#book .flow p, #book .flow .bp { font-size: 17.33px !important; }
+#book .flow h3 { font-size: 19px !important; }
+#book .dek { font-size: 18.5px !important; }
+#book .titimg .ahb { background: none; border: 0; padding: 0; margin: 0 0 10px; }
+/* pull quote: one light line — the quote mark and the words together (owner, 2 Nov) */
+#book .pq { border-top: 1px solid #D9CFC7 !important; border-bottom: 1px solid #D9CFC7 !important; padding: .35em .6em !important; margin: .4em 0 .6em !important; font-size: 18.5px !important; font-weight: 700 !important; line-height: 1.6 !important; text-align: center; }
+#book .pq::before { display: inline !important; font-size: 1.5em !important; line-height: 0 !important; vertical-align: -.2em; margin: 0 0 0 .25em !important; }
+
+/* split opening: title box on the right half */
+#book .L-split .top .tt { padding: 26px 34px 22px 26px !important; justify-content: center; }
+#book .L-split h1 { font-size: 30px !important; line-height: 1.45 !important; margin-top: 0 !important; }
+#book .L-split .tdek { margin: 10px 0 0; color: #fff; font-family: var(--kufi); font-weight: 700; font-size: 20px; line-height: 1.6; }

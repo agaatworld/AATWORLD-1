@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAT Trade Floor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&family=Archivo:wdth,wght@75..125,500..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F2238; --navy:#1B3657; --signal:#D21F26; --deep:#9E1419; --paper:#FFFFFF; --floor:#EEF1F4; --rule:#C7CED6; --slate:#4A5868; --mark:#FFE873;
+  --ar:"Readex Pro", "Segoe UI", Tahoma, sans-serif; --lat:"Archivo", "Readex Pro", Arial, sans-serif;
+  --w:1760px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--floor)}
+body{font-family:var(--ar);color:var(--ink);background:var(--paper);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+bdi{unicode-bidi:isolate}
+.num{font-family:var(--lat);font-variant-numeric:tabular-nums;font-weight:700}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 32px}
+
+/* ---------- header: white top bar + navy rail ---------- */
+.top{background:var(--paper);border-bottom:1px solid var(--rule)}
+.top{position:sticky;top:0;z-index:7}
+.top .wrap{display:flex;align-items:center;gap:28px;min-height:96px}
+/* the tool-bar search is hidden while the big search of the opening board is on screen, so the search is never shown twice */
+.top .search{display:none}
+.top.with-search .search{display:flex}
+.top .logo{margin-inline-end:auto}
+.top.with-search .logo{margin-inline-end:0}
+.logo img{height:60px;width:auto}
+.search{flex:1;display:flex;border:2px solid var(--ink);border-radius:4px;background:var(--paper);min-height:60px;overflow:hidden}
+.search input{flex:1;border:0;font:500 20px/1.4 var(--ar);padding:0 20px;color:var(--ink);min-width:0;background:transparent}
+.search input::placeholder{color:var(--slate);opacity:1}
+.search button{border:0;background:var(--signal);color:#fff;font:700 20px var(--ar);padding:0 28px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.search button svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 24px;border-radius:4px;font:700 20px/1.2 var(--ar);border:2px solid var(--ink);color:var(--ink);background:var(--paper);white-space:nowrap;cursor:pointer}
+.btn.red{background:var(--signal);border-color:var(--signal);color:#fff}
+.btn.red:hover{background:var(--deep);border-color:var(--deep)}
+.btn.ink{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ghost{background:transparent;border-color:#fff;color:#fff}
+.btn .num{font-size:20px}
+.lang{display:flex;align-items:center;gap:10px}
+.lang .btn{min-height:52px}
+.globe{width:52px;height:52px;border:2px solid var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.globe svg{width:26px;height:26px;fill:none;stroke:var(--ink);stroke-width:2}
+.menuBtn{display:none}
+.rail{background:var(--navy)}
+.rail .wrap{display:flex;flex-wrap:wrap;gap:0 8px}
+.rail a{display:block;color:#fff;font:600 20px/1.2 var(--ar);padding:21px 18px 17px;border-bottom:5px solid transparent}
+.rail a.on{border-bottom-color:var(--signal)}
+.rail a:hover{background:rgba(255,255,255,.08)}
+[dir=ltr] .rail a{font-family:var(--lat);font-weight:700;font-stretch:95%;font-size:20px;letter-spacing:.01em}
+
+/* ---------- opening board ---------- */
+.open{background:var(--ink);color:#fff}
+.open .wrap{display:grid;grid-template-columns:1fr 420px;gap:48px;padding-top:40px;padding-bottom:40px;align-items:center}
+.open h1{font:700 48px/1.3 var(--ar);margin-bottom:8px}
+.open h1 span{display:block;color:#fff}
+.open h1 .b{font-size:34px;font-weight:600;line-height:1.4;margin-top:6px;opacity:.95}
+[dir=ltr] .open h1{font-family:var(--lat);font-weight:800;font-stretch:92%;font-size:56px;line-height:1.1}
+[dir=ltr] .open h1 .b{font-family:var(--ar);font-weight:500;font-size:30px;font-stretch:100%}
+.open p.lead{font-size:20px;line-height:1.75;max-width:1100px;margin:12px 0 24px;color:#E6ECF3}
+.bigsearch{display:flex;background:#fff;border-radius:4px;overflow:hidden;min-height:76px;max-width:980px;border:3px solid #fff}
+.bigsearch input{flex:1;border:0;font:500 22px var(--ar);padding:0 24px;color:var(--ink);min-width:0}
+.bigsearch input::placeholder{color:var(--slate);opacity:1}
+.bigsearch button{border:0;background:var(--signal);color:#fff;font:700 22px var(--ar);padding:0 36px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px;max-width:980px}
+.stat{background:#fff;color:var(--ink);border-radius:4px;padding:18px 20px 16px;border-top:6px solid var(--signal)}
+.stat .n{font:800 44px/1 var(--lat);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat .l{font:700 18px/1.3 var(--ar);margin-top:8px}
+.stat .s{font:400 16px/1.4 var(--ar);color:var(--slate);margin-top:2px}
+.issue{position:relative;background:#fff;border-radius:4px;padding:20px;color:var(--ink);display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center}
+.issue img{width:150px;border:1px solid var(--rule)}
+.stamp{display:inline-block;border:3px solid var(--signal);color:var(--signal);font:800 20px/1.1 var(--lat);text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;border-radius:3px;transform:rotate(-4deg);margin-bottom:12px}
+[dir=rtl] .stamp{font-family:var(--ar);font-weight:700;text-transform:none;letter-spacing:0;transform:rotate(4deg)}
+.issue .t{font:700 22px/1.35 var(--ar)}
+.issue .m{font:500 18px/1.4 var(--ar);color:var(--slate);margin:4px 0 14px}
+.issue .acts{display:flex;gap:10px;flex-wrap:wrap}
+.issue .btn{min-height:48px;font-size:18px;padding:0 18px}
+
+/* ---------- sections ---------- */
+.sec{padding:48px 0 56px}
+.sec.floor{background:var(--floor)}
+.sec-head{border-top:4px solid var(--ink);padding-top:22px;margin-bottom:26px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.sec-head h2{font:700 38px/1.25 var(--ar);display:flex;align-items:center;gap:16px}
+[dir=ltr] .sec-head h2{font-family:var(--lat);font-weight:800;font-stretch:92%;font-size:42px;line-height:1.1}
+.sec-head h2::before{content:"";width:18px;height:18px;background:var(--signal);flex:none}
+.sec-head .cnt{font:500 18px/1.4 var(--ar);color:var(--slate);margin-top:8px;padding-inline-start:34px}
+.sec-head .acts{display:flex;gap:12px;flex-wrap:wrap}
+
+/* countries strip */
+.ctys{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.cty{display:inline-flex;align-items:center;gap:10px;border:2px solid var(--rule);border-radius:4px;padding:8px 14px 8px 10px;background:#fff;min-height:52px}
+[dir=rtl] .cty{padding:8px 10px 8px 14px}
+.cty:hover{border-color:var(--ink)}
+.cty.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.cty-name{font:600 18px/1 var(--ar)}
+.cty-n{font-size:17px;color:var(--slate);background:var(--floor);border-radius:3px;padding:3px 7px}
+.cty.on .cty-n{color:#fff;background:rgba(255,255,255,.18)}
+.flag{width:30px;height:21px;object-fit:cover;border:1px solid var(--rule);border-radius:2px;flex:none}
+
+/* board (table of shows) */
+.board{border:2px solid var(--ink);border-radius:4px;overflow:hidden;background:#fff}
+.board .hd,.board .row{display:grid;grid-template-columns:230px minmax(0,1fr) 200px 220px 280px;gap:0 20px;align-items:center;padding:0 22px}
+.board .hd{background:var(--navy);color:#fff;font:700 18px/1.2 var(--ar);min-height:56px}
+.board .row{min-height:76px;padding-top:12px;padding-bottom:12px;border-top:1px solid var(--rule);font-size:19px;line-height:1.45}
+.board .row:nth-child(even){background:#F8FAFC}
+.board .row:hover{background:var(--floor)}
+.c-date{display:flex;flex-direction:column;gap:2px}
+.d-main{font:700 21px/1.25 var(--lat);font-variant-numeric:tabular-nums}
+[dir=rtl] .d-main{font-family:var(--ar)}
+.d-main.mark{display:inline-block;background:var(--mark);padding:2px 8px;border-radius:3px;align-self:flex-start;font-family:var(--ar)}
+.d-tail{font:500 17px/1.3 var(--ar);color:var(--slate)}
+.d-note{font:400 16px/1.3 var(--ar);color:var(--slate)}
+.c-name{font:700 20px/1.35 var(--lat);display:flex;flex-direction:column;gap:2px;min-width:0}
+.c-name .venue{font:400 16px/1.35 var(--ar);color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-city{font:500 18px/1.3 var(--ar);color:var(--slate)}
+.c-cty{display:flex;align-items:center;gap:10px;font:600 18px/1.2 var(--ar)}
+.chip{display:inline-block;border:2px solid var(--rule);border-radius:3px;padding:5px 10px;font:500 16px/1.25 var(--ar);color:var(--ink);background:#fff}
+.board-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:18px;font:500 18px var(--ar);color:var(--slate)}
+
+/* conveyor shelf */
+.belt{overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:#fff;padding:18px 0}
+.track{display:flex;gap:16px;width:max-content;animation:belt 70s linear infinite}
+[dir=rtl] .track{animation-name:belt-rtl}
+.belt:hover .track{animation-play-state:paused}
+@keyframes belt{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes belt-rtl{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.ptile{width:300px;flex:none;border:2px solid var(--rule);border-radius:4px;background:#fff;display:flex;flex-direction:column;overflow:hidden;direction:ltr;text-align:left}
+.ptile>*{min-width:0}
+.pco bdi{display:block;min-width:0}
+.ptile:hover{border-color:var(--ink)}
+.pimg{height:210px;display:flex;align-items:center;justify-content:center;background:#fff;border-bottom:1px solid var(--rule);padding:10px}
+.pimg img{max-height:100%;max-width:100%;object-fit:contain}
+.pname{font:700 18px/1.4 var(--lat);padding:0 14px;margin:12px 0 6px;max-height:50px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:start}
+.pco{display:flex;align-items:center;gap:10px;padding:4px 14px 14px;font:500 16px/1.3 var(--lat);color:var(--slate)}
+.pco img{height:34px;width:60px;object-fit:contain;border:1px solid var(--rule);border-radius:3px;padding:2px;background:#fff;flex:none}
+.pco bdi{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* supplier grid */
+.sgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.stile{border:2px solid var(--rule);border-radius:4px;background:#fff;padding:16px 16px 14px;display:flex;flex-direction:column;gap:4px;min-height:260px;min-width:0}
+.stile>*{min-width:0;max-width:100%}
+.s-en{display:block}
+.stile:hover{border-color:var(--ink)}
+.slogo{height:92px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.slogo img{max-height:84px;max-width:100%;object-fit:contain}
+.noLogo{font:800 24px/1.15 var(--lat);font-stretch:90%;color:var(--ink);text-align:center}
+.sname{font:700 18px/1.4 var(--ar);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+[dir=rtl] .sname[dir=ltr]{text-align:right}
+[dir=ltr] .sname{font-family:var(--lat)}
+.s-en{font:500 16px/1.3 var(--lat);color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:start}
+[dir=rtl] .s-en,[dir=rtl] .c-name .venue{text-align:right}
+.c-name .venue{direction:ltr}
+.smeta{font:400 16px/1.4 var(--ar);color:var(--slate);display:flex;flex-wrap:wrap;gap:0 8px;align-items:center;margin-top:auto;padding-top:8px}
+.dot{width:5px;height:5px;background:var(--rule);border-radius:50%;display:inline-block}
+.scount{font-size:16px;color:var(--ink);margin-top:4px;font-family:var(--ar)}
+
+/* magazine strip */
+.magstrip{display:grid;grid-template-columns:220px 1fr auto;gap:32px;align-items:start;border:2px solid var(--ink);border-radius:4px;padding:24px;background:#fff}
+.magstrip img{width:220px;border:1px solid var(--rule)}
+.magstrip h3{font:700 24px/1.3 var(--ar);margin-bottom:10px}
+.magstrip ol{list-style:none;columns:2;column-gap:32px}
+.magstrip li{display:flex;gap:12px;font:500 18px/1.5 var(--ar);padding:6px 0;border-bottom:1px solid var(--rule);break-inside:avoid}
+.magstrip .pg{color:var(--signal);min-width:34px;font-size:18px}
+.magstrip .acts{display:flex;flex-direction:column;gap:10px}
+
+/* assistant */
+.assist{position:fixed;bottom:24px;inset-inline-end:24px;background:var(--signal);color:#fff;border-radius:4px;padding:12px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 20px rgba(15,34,56,.25);z-index:5}
+.assist b{display:block;font:700 18px/1.2 var(--ar)}
+.assist span{font:400 16px/1.2 var(--ar)}
+.assist svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:2}
+
+/* footer */
+footer{background:var(--ink);color:#fff;padding:48px 0 0}
+footer .wrap.cols{display:grid;grid-template-columns:1.4fr 1fr 1.3fr;gap:48px;padding-bottom:40px}
+footer .flogo img{height:64px;width:auto;margin-bottom:16px}
+footer .names{font:700 20px/1.6 var(--ar)}
+footer .names .en{font-family:var(--lat);font-weight:700}
+footer .names .en bdi,footer .names .nw{white-space:nowrap}
+footer p{font-size:17px;line-height:1.7;color:#D5DEE8;margin-top:10px;max-width:520px}
+footer h4{font:700 20px/1.3 var(--ar);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid rgba(255,255,255,.25)}
+footer ul{list-style:none}
+footer li{font:500 18px/1.5 var(--ar);padding:5px 0}
+footer .cl{font:400 16px/1.4 var(--ar);color:#B9C6D4}
+footer .cv{font:600 19px/1.5 var(--ar);margin-bottom:12px;word-break:break-word}
+footer .cv .num{font-size:20px}
+footer .apps{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+footer .apps span{border:1px solid rgba(255,255,255,.4);border-radius:3px;padding:4px 10px;font:500 16px/1.3 var(--lat)}
+footer .bottom{border-top:1px solid rgba(255,255,255,.2);padding:18px 0;font:500 16px/1.5 var(--ar);color:#D5DEE8}
+footer .bottom .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tagline{font:700 17px var(--lat);color:#fff;letter-spacing:.02em}
+.tabbar{display:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1500px){.sgrid{grid-template-columns:repeat(4,minmax(0,1fr))}.open .wrap{grid-template-columns:1fr 380px}}
+@media (max-width:1180px){
+  .top .wrap{flex-wrap:wrap;min-height:0;padding-top:12px;padding-bottom:12px}
+  .search{order:3;flex-basis:100%}
+  .open .wrap{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .board .hd{display:none}
+  .board .row{grid-template-columns:1fr 1fr;gap:6px 16px;padding:14px 18px}
+  .board .row .c-date{grid-column:1/-1;flex-direction:row;align-items:baseline;gap:10px}
+  .board .row .c-name{grid-column:1/-1}
+  .board .row .c-field{grid-column:1/-1}
+  .magstrip{grid-template-columns:160px 1fr}
+  .magstrip .acts{grid-column:1/-1;flex-direction:row}
+  footer .wrap.cols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  body{padding-bottom:84px}
+  .wrap{padding:0 16px}
+  .top .wrap{gap:12px;flex-wrap:nowrap}
+  .logo img{height:44px}
+  .top .search{order:0;flex-basis:auto;min-height:52px}
+  .top .search input{font-size:18px;padding:0 12px}
+  .top .search button{padding:0 14px}
+  .top .search button span{display:none}
+  .top .contactBtn,.top .lang{display:none}
+  .menuBtn{display:flex;width:52px;height:52px;border:2px solid var(--ink);border-radius:4px;align-items:center;justify-content:center;flex:none}
+  .menuBtn svg{width:28px;height:28px;stroke:var(--ink);stroke-width:2.5;fill:none;stroke-linecap:round}
+  .rail{display:none}
+  .open .wrap{padding-top:32px;padding-bottom:32px;gap:24px}
+  .open h1{font-size:32px}
+  .open h1 .b{font-size:24px}
+  [dir=ltr] .open h1{font-size:38px}
+  [dir=ltr] .open h1 .b{font-size:22px}
+  .open p.lead{font-size:18px}
+  .bigsearch{min-height:62px}
+  .bigsearch input{font-size:19px;padding:0 14px}
+  .bigsearch button{font-size:19px;padding:0 20px}
+  .stats{gap:10px;margin-top:22px}
+  .stat{padding:14px 14px 12px}
+  .stat .n{font-size:34px}
+  .stat .l{font-size:17px}
+  .issue{grid-template-columns:110px 1fr;gap:14px;padding:14px}
+  .issue img{width:110px}
+  .issue .t{font-size:19px}
+  .sec{padding:32px 0 40px}
+  .sec-head h2{font-size:30px}
+  [dir=ltr] .sec-head h2{font-size:34px}
+  .sec-head .acts .btn{min-height:52px;font-size:18px;padding:0 18px}
+  .cty{min-height:48px;padding:6px 10px}
+  .cty-name{font-size:17px}
+  .board .row{grid-template-columns:1fr;gap:4px}
+  .board .row .c-date{grid-column:auto}
+  .board .row .c-name,.board .row .c-field{grid-column:auto}
+  .c-name .venue{white-space:normal}
+  .ptile{width:240px}
+  .pimg{height:170px}
+  .sgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stile{padding:12px;min-height:0}
+  .slogo{height:70px}
+  .slogo img{max-height:64px}
+  .noLogo{font-size:19px}
+  .sname{font-size:17px}
+  .magstrip{grid-template-columns:1fr;padding:16px}
+  .magstrip img{width:140px}
+  .magstrip ol{columns:1}
+  footer .wrap.cols{grid-template-columns:1fr;gap:28px}
+  .assist{bottom:96px;padding:10px 14px}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;background:var(--navy);border-top:3px solid var(--signal);z-index:6}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;font:700 16px/1.1 var(--ar);padding:9px 2px 8px;min-height:76px}
+  .tabbar a.on{background:var(--ink)}
+  .tabbar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
+  [dir=ltr] .tabbar a{font-family:var(--lat);font-stretch:88%;font-size:16px;letter-spacing:.01em}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#"><img src="../../img/brand/aat-logo-red.svg" alt="AAT · Ideas For Business"></a>
+    <form class="search" onsubmit="return false">
+      <input type="search" placeholder="Search a show, a factory or a product…" aria-label="Search">
+      <button type="submit"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Search</span></button>
+    </form>
+    <a class="btn red contactBtn" href="#"><span>Contact us</span><span class="num" dir="ltr">+886 966 404681</span></a>
+    <div class="lang"><a class="btn" href="tile-ar.html">العربية</a><a class="globe" href="#" aria-label="Languages"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></a></div>
+    <a class="menuBtn" href="#" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></a>
+  </div>
+</header>
+<nav class="rail"><div class="wrap"><a href="#" class="on">Home</a><a href="#" class="">International exhibitions</a><a href="#" class="">Factory directory</a><a href="#" class="">Products</a><a href="#" class="">Magazine</a><a href="#" class="">Business Club</a><a href="#" class="">News &amp; articles</a><a href="#" class="">About</a></div></nav>
+
+<section class="open">
+  <div class="wrap">
+    <div>
+      <h1><span>The Arab Asian trade floor</span><span class="b">Find a show, a factory or a product in seconds</span></h1>
+      <p class="lead">Arab Asian Trade magazine has carried Asia’s factories to Arab and African importers since 1982. Everything a buyer needs this week, on one board.</p>
+      <form class="bigsearch" onsubmit="return false"><input type="search" placeholder="Search a show, a factory or a product…" aria-label="Search"><button type="submit">Search</button></form>
+      <div class="stats">
+        <div class="stat"><div class="n">1,464</div><div class="l">international shows</div><div class="s">2027 – 2028</div></div>
+        <div class="stat"><div class="n">35</div><div class="l">advertising factories</div><div class="s">in issue 560</div></div>
+        <div class="stat"><div class="n">127</div><div class="l">products</div><div class="s">with pictures and maker data</div></div>
+        <div class="stat"><div class="n">2,831</div><div class="l">members</div><div class="s">of the AAT Business Club</div></div>
+      </div>
+    </div>
+    <div class="issue">
+      <img src="../../img/magazine-560.jpg" alt="">
+      <div>
+        <div class="stamp">Issue 560</div>
+        <div class="t">Arab Asian Trade</div>
+        <div class="m">October 2026 · 100 pages</div>
+        <div class="acts"><a class="btn red" href="#">Read the issue</a><a class="btn" href="#">PDF</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2>Nearest shows</h2><div class="cnt">1,464 shows from January 2027</div></div>
+      <div class="acts"><a class="btn ink" href="#">All international exhibitions</a></div>
+    </div>
+    <div class="ctys"><a href="#" class="cty on"><span class="cty-name">All countries</span><span class="cty-n num">1,464</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/id.svg" alt=""></span><span class="cty-name">Indonesia</span><span class="cty-n num">283</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/tr.svg" alt=""></span><span class="cty-name">Türkiye</span><span class="cty-n num">217</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/ae.svg" alt=""></span><span class="cty-name">UAE</span><span class="cty-n num">216</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/pk.svg" alt=""></span><span class="cty-name">Pakistan</span><span class="cty-n num">128</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/tw.svg" alt=""></span><span class="cty-name">Taiwan</span><span class="cty-n num">125</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/my.png" alt=""></span><span class="cty-name">Malaysia</span><span class="cty-n num">123</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/sa.svg" alt=""></span><span class="cty-name">Saudi Arabia</span><span class="cty-n num">105</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/eg.png" alt=""></span><span class="cty-name">Egypt</span><span class="cty-n num">80</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/dz.svg" alt=""></span><span class="cty-name">Algeria</span><span class="cty-n num">73</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/om.png" alt=""></span><span class="cty-name">Oman</span><span class="cty-n num">32</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/iq.svg" alt=""></span><span class="cty-name">Iraq</span><span class="cty-n num">29</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/sy.svg" alt=""></span><span class="cty-name">Syria</span><span class="cty-n num">27</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/qa.svg" alt=""></span><span class="cty-name">Qatar</span><span class="cty-n num">17</span></a><a href="#" class="cty"><span class="cty-flag"><img class="flag" src="../../img/flags/kw.svg" alt=""></span><span class="cty-name">Kuwait</span><span class="cty-n num">9</span></a></div>
+    <div class="board">
+      <div class="hd"><span>Date</span><span>Show</span><span>City</span><span>Country</span><span>Field</span></div>
+      <a href="#" class="row">
+      <span class="c-date"><span class="d-main mark">Jan 2027</span><span class="d-note">month only</span></span>
+      <span class="c-name"><bdi dir="ltr">Borneo International Consumer Expo</bdi><span class="venue"><bdi dir="ltr">SICC - Sabah International Convention Centre</bdi></span></span>
+      <span class="c-city"><bdi>Kota Kinabalu (Borneo)</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/my.png" alt=""><span>Malaysia</span></span>
+      <span class="c-field"><span class="chip">Consumer goods and services</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main mark">Jan 2027</span><span class="d-note">month only</span></span>
+      <span class="c-name"><bdi dir="ltr">Egypt Coatings Show</bdi><span class="venue"><bdi dir="ltr">Cairo International Convention &amp; Exhibition Centre</bdi></span></span>
+      <span class="c-city"><bdi>Cairo</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/eg.png" alt=""><span>Egypt</span></span>
+      <span class="c-field"><span class="chip">Industry and automation</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main mark">Jan 2027</span><span class="d-note">month only</span></span>
+      <span class="c-name"><bdi dir="ltr">Erbil Logistics Exhibition</bdi><span class="venue"><bdi dir="ltr">Erbil International Fairground</bdi></span></span>
+      <span class="c-city"><bdi>Erbil</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/iq.svg" alt=""><span>Iraq</span></span>
+      <span class="c-field"><span class="chip">Transport, vehicles and logistics</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">9–17</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Çukurova Book Fair</bdi><span class="venue"><bdi dir="ltr">Tüyap Adana International Exhibition and Congress Center</bdi></span></span>
+      <span class="c-city"><bdi>Adana</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/tr.svg" alt=""><span>Türkiye</span></span>
+      <span class="c-field"><span class="chip">Consumer goods and services</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">10–11</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">World Stadium And Arenas Summit</bdi><span class="venue"><bdi dir="ltr">Hilton Riyadh Hotel &amp; Residences</bdi></span></span>
+      <span class="c-city"><bdi>Riyadh</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/sa.svg" alt=""><span>Saudi Arabia</span></span>
+      <span class="c-field"><span class="chip">Consumer goods and services</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">11–13</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Idf Oman</bdi><span class="venue"><bdi dir="ltr">Oman Convention &amp; Exhibition Centre</bdi></span></span>
+      <span class="c-city"><bdi>Muscat</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/om.png" alt=""><span>Oman</span></span>
+      <span class="c-field"><span class="chip">Building, furniture and interiors</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">11–13</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Kbs Oman</bdi><span class="venue"><bdi dir="ltr">Oman Convention &amp; Exhibition Centre</bdi></span></span>
+      <span class="c-city"><bdi>Muscat</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/om.png" alt=""><span>Oman</span></span>
+      <span class="c-field"><span class="chip">Building, furniture and interiors</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">11–13</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Light Oman</bdi><span class="venue"><bdi dir="ltr">Oman Convention &amp; Exhibition Centre</bdi></span></span>
+      <span class="c-city"><bdi>Muscat</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/om.png" alt=""><span>Oman</span></span>
+      <span class="c-field"><span class="chip">Electronics and lighting</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">11–13</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Smart Living &amp; Worspaces</bdi><span class="venue"><bdi dir="ltr">Oman Convention &amp; Exhibition Centre</bdi></span></span>
+      <span class="c-city"><bdi>Muscat</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/om.png" alt=""><span>Oman</span></span>
+      <span class="c-field"><span class="chip">Technology and telecom</span></span>
+    </a><a href="#" class="row">
+      <span class="c-date"><span class="d-main num"><bdi dir="ltr">11–14</bdi></span><span class="d-tail">Jan 2027</span></span>
+      <span class="c-name"><bdi dir="ltr">Steelfab</bdi><span class="venue"><bdi dir="ltr">Expo Centre Sharjah</bdi></span></span>
+      <span class="c-city"><bdi>Sharjah</bdi></span>
+      <span class="c-cty"><img class="flag" src="../../img/flags/ae.svg" alt=""><span>UAE</span></span>
+      <span class="c-field"><span class="chip">Machinery, tools and metal</span></span>
+    </a>
+    </div>
+    <div class="board-foot"><span>Showing 10 of 1,464 shows</span><a class="btn" href="#">All international exhibitions</a></div>
+  </div>
+</section>
+
+<section class="sec floor">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2>Products of the advertising factories</h2><div class="cnt">127 products from 35 factories</div></div>
+      <div class="acts"><a class="btn ink" href="#">All products</a></div>
+    </div>
+  </div>
+  <div class="belt"><div class="track"><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p2_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Winner 3-in-1</bdi></span>
+      <span class="pco"><img src="../../img/logos/p2.png" alt=""><bdi dir="ltr">Shammout &amp; Kiddeh Food Company (SH&amp;KD)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p3_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">YDS Series</bdi></span>
+      <span class="pco"><img src="../../img/logos/p3.png" alt=""><bdi dir="ltr">YE I Machinery Factory Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p3_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">YE I-DL Series</bdi></span>
+      <span class="pco"><img src="../../img/logos/p3.png" alt=""><bdi dir="ltr">YE I Machinery Factory Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p4_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Twin head(A/B/A Layer) HDPE / LDPE / LLDPE plastic inflation machine KMTL-4545T</bdi></span>
+      <span class="pco"><img src="../../img/logos/p4.png" alt=""><bdi dir="ltr">Kang Chyau Industry Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p4_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">HDPE / LDPE / LLDPE (A/B/A) Two Layer KMTL-50S</bdi></span>
+      <span class="pco"><img src="../../img/logos/p4.png" alt=""><bdi dir="ltr">Kang Chyau Industry Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p5_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">BANDKNIFE SPLITTING MACHINE (VACUUM TABLE TYPE) SM-690C / SM-690G</bdi></span>
+      <span class="pco"><img src="../../img/logos/p5.png" alt=""><bdi dir="ltr">Ten Sheeg Machinery Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p5_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">PU BANDKNIFE LOOP VACUUM SPLITTING MACHINE SM-668</bdi></span>
+      <span class="pco"><img src="../../img/logos/p5.png" alt=""><bdi dir="ltr">Ten Sheeg Machinery Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p7_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">BALL JOINT</bdi></span>
+      <span class="pco"><img src="../../img/logos/p7.png" alt=""><bdi dir="ltr">Hwang Yu Automobile Parts Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p7_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">TIE ROD END</bdi></span>
+      <span class="pco"><img src="../../img/logos/p7.png" alt=""><bdi dir="ltr">Hwang Yu Automobile Parts Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p8_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">SSD15 Drilling Tapping Spindle Unit - Servo Feed</bdi></span>
+      <span class="pco"><img src="../../img/logos/p8.png" alt=""><bdi dir="ltr">Hann Kuen Machinery &amp; Hardware Co., Ltd. (HARDY)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p8_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">SM55 Built-in Motor Spindle Head</bdi></span>
+      <span class="pco"><img src="../../img/logos/p8.png" alt=""><bdi dir="ltr">Hann Kuen Machinery &amp; Hardware Co., Ltd. (HARDY)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p18_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Green Coffee Beans</bdi></span>
+      <span class="pco"><img src="../../img/logos/p18.png" alt=""><bdi dir="ltr">Tiara Farm</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p18_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Green Coffee Arabica Gayo</bdi></span>
+      <span class="pco"><img src="../../img/logos/p18.png" alt=""><bdi dir="ltr">Tiara Farm</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p22_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">AS-110 Black Dot Anti Slip Tape on Yellow</bdi></span>
+      <span class="pco"><img src="../../img/logos/p22.png" alt=""><bdi dir="ltr">Unipex Global Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p22_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">AS-101 Standard Anti Slip Tape</bdi></span>
+      <span class="pco"><img src="../../img/logos/p22.png" alt=""><bdi dir="ltr">Unipex Global Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p23_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">EZ-Stretch Chair</bdi></span>
+      <span class="pco"><img src="../../img/logos/p23.png" alt=""><bdi dir="ltr">Columbus Image Company Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p23_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">EZ-Stretch Chair (stretch mode)</bdi></span>
+      <span class="pco"><img src="../../img/logos/p23.png" alt=""><bdi dir="ltr">Columbus Image Company Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p26_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">HOSKJUICER</bdi></span>
+      <span class="pco"><img src="../../img/logos/p26.png" alt=""><bdi dir="ltr">Tekno Celik Sogutma Ve Kitchen Equipment Industry AS</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p2_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Winner 3-in-1</bdi></span>
+      <span class="pco"><img src="../../img/logos/p2.png" alt=""><bdi dir="ltr">Shammout &amp; Kiddeh Food Company (SH&amp;KD)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p3_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">YDS Series</bdi></span>
+      <span class="pco"><img src="../../img/logos/p3.png" alt=""><bdi dir="ltr">YE I Machinery Factory Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p3_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">YE I-DL Series</bdi></span>
+      <span class="pco"><img src="../../img/logos/p3.png" alt=""><bdi dir="ltr">YE I Machinery Factory Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p4_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Twin head(A/B/A Layer) HDPE / LDPE / LLDPE plastic inflation machine KMTL-4545T</bdi></span>
+      <span class="pco"><img src="../../img/logos/p4.png" alt=""><bdi dir="ltr">Kang Chyau Industry Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p4_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">HDPE / LDPE / LLDPE (A/B/A) Two Layer KMTL-50S</bdi></span>
+      <span class="pco"><img src="../../img/logos/p4.png" alt=""><bdi dir="ltr">Kang Chyau Industry Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p5_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">BANDKNIFE SPLITTING MACHINE (VACUUM TABLE TYPE) SM-690C / SM-690G</bdi></span>
+      <span class="pco"><img src="../../img/logos/p5.png" alt=""><bdi dir="ltr">Ten Sheeg Machinery Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p5_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">PU BANDKNIFE LOOP VACUUM SPLITTING MACHINE SM-668</bdi></span>
+      <span class="pco"><img src="../../img/logos/p5.png" alt=""><bdi dir="ltr">Ten Sheeg Machinery Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p7_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">BALL JOINT</bdi></span>
+      <span class="pco"><img src="../../img/logos/p7.png" alt=""><bdi dir="ltr">Hwang Yu Automobile Parts Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p7_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">TIE ROD END</bdi></span>
+      <span class="pco"><img src="../../img/logos/p7.png" alt=""><bdi dir="ltr">Hwang Yu Automobile Parts Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p8_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">SSD15 Drilling Tapping Spindle Unit - Servo Feed</bdi></span>
+      <span class="pco"><img src="../../img/logos/p8.png" alt=""><bdi dir="ltr">Hann Kuen Machinery &amp; Hardware Co., Ltd. (HARDY)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p8_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">SM55 Built-in Motor Spindle Head</bdi></span>
+      <span class="pco"><img src="../../img/logos/p8.png" alt=""><bdi dir="ltr">Hann Kuen Machinery &amp; Hardware Co., Ltd. (HARDY)</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p18_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Green Coffee Beans</bdi></span>
+      <span class="pco"><img src="../../img/logos/p18.png" alt=""><bdi dir="ltr">Tiara Farm</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p18_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">Green Coffee Arabica Gayo</bdi></span>
+      <span class="pco"><img src="../../img/logos/p18.png" alt=""><bdi dir="ltr">Tiara Farm</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p22_0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">AS-110 Black Dot Anti Slip Tape on Yellow</bdi></span>
+      <span class="pco"><img src="../../img/logos/p22.png" alt=""><bdi dir="ltr">Unipex Global Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p22_1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">AS-101 Standard Anti Slip Tape</bdi></span>
+      <span class="pco"><img src="../../img/logos/p22.png" alt=""><bdi dir="ltr">Unipex Global Co., Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p23_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">EZ-Stretch Chair</bdi></span>
+      <span class="pco"><img src="../../img/logos/p23.png" alt=""><bdi dir="ltr">Columbus Image Company Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p23_c1.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">EZ-Stretch Chair (stretch mode)</bdi></span>
+      <span class="pco"><img src="../../img/logos/p23.png" alt=""><bdi dir="ltr">Columbus Image Company Ltd.</bdi></span>
+    </a><a href="#" class="ptile">
+      <span class="pimg"><img src="../../img/prod/p26_c0.jpg" alt=""></span>
+      <span class="pname"><bdi dir="ltr">HOSKJUICER</bdi></span>
+      <span class="pco"><img src="../../img/logos/p26.png" alt=""><bdi dir="ltr">Tekno Celik Sogutma Ve Kitchen Equipment Industry AS</bdi></span>
+    </a></div></div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2>Factory directory</h2><div class="cnt">35 advertising factories in issue 560</div></div>
+      <div class="acts"><a class="btn ink" href="#">Full directory</a></div>
+    </div>
+    <div class="sgrid"><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p2.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Shammout &amp; Kiddeh Food Company (SH&amp;KD)</bdi></span>
+      <span class="smeta"><span>Syria</span><span class="dot"></span><span>Food &amp; beverage</span></span>
+      <span class="scount num">1 product</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p3.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>YE I Machinery Factory Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Tainan, Taiwan</span><span class="dot"></span><span>Plastics &amp; packaging</span></span>
+      <span class="scount num">11 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p4.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Kang Chyau Industry Co., Ltd.</bdi></span>
+      <span class="smeta"><span>New Taipei, Taiwan</span><span class="dot"></span><span>Plastics &amp; packaging</span></span>
+      <span class="scount num">6 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p5.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Ten Sheeg Machinery Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Tainan, Taiwan</span><span class="dot"></span><span>Industrial machinery</span></span>
+      <span class="scount num">5 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p7.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Hwang Yu Automobile Parts Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Taiwan</span><span class="dot"></span><span>Auto parts &amp; mobility</span></span>
+      <span class="scount num">6 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p8.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Hann Kuen Machinery &amp; Hardware Co., Ltd. (HARDY)</bdi></span>
+      <span class="smeta"><span>Taichung, Taiwan</span><span class="dot"></span><span>Industrial machinery</span></span>
+      <span class="scount num">5 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p9.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>ArabPlast 2027</bdi></span>
+      <span class="smeta"><span>Dubai, UAE</span><span class="dot"></span><span>Trade shows</span></span>
+      <span class="scount num">page 9</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><span class="noLogo"><bdi dir="ltr">HIWIN Technologies Corp.</bdi></span></span>
+      
+      <span class="smeta"><span>Taichung, Taiwan</span><span class="dot"></span><span>Industrial machinery</span></span>
+      <span class="scount num">page 10</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p18.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Tiara Farm</bdi></span>
+      <span class="smeta"><span>Tangerang Selatan, Banten, Indonesia</span><span class="dot"></span><span>Food &amp; beverage</span></span>
+      <span class="scount num">5 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><span class="noLogo"><bdi dir="ltr">JARRER Co., Ltd.</bdi></span></span>
+      
+      <span class="smeta"><span>Taichung, Taiwan</span><span class="dot"></span><span>Industrial machinery</span></span>
+      <span class="scount num">page 21</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p22.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Unipex Global Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Taiwan</span><span class="dot"></span><span>Hardware &amp; components</span></span>
+      <span class="scount num">6 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p23.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Columbus Image Company Ltd.</bdi></span>
+      <span class="smeta"><span>Taipei, Taiwan</span><span class="dot"></span><span>Fitness &amp; sport</span></span>
+      <span class="scount num">3 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p26.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Tekno Celik Sogutma Ve Kitchen Equipment Industry AS</bdi></span>
+      <span class="smeta"><span>Istanbul, Turkey</span><span class="dot"></span><span>Food &amp; beverage</span></span>
+      <span class="scount num">6 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p27.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Engineering and Environmental Solutions (E&amp;E)</bdi></span>
+      <span class="smeta"><span>India</span><span class="dot"></span><span>Instruments &amp; environment</span></span>
+      <span class="scount num">3 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p33.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Kanewell Industrial Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Taiwan</span><span class="dot"></span><span>Medical &amp; health</span></span>
+      <span class="scount num">4 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p36.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Kou Yi Iron Works Co., Ltd.</bdi></span>
+      <span class="smeta"><span>Taichung, Taiwan</span><span class="dot"></span><span>Industrial machinery</span></span>
+      <span class="scount num">4 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><img src="../../img/logos/p47.png" alt=""></span>
+      <span class="sname" dir="ltr"><bdi>Pin Link Industry Co., Ltd. (Yingliang)</bdi></span>
+      <span class="smeta"><span>Taiwan</span><span class="dot"></span><span>Fitness &amp; sport</span></span>
+      <span class="scount num">2 products</span>
+    </a><a href="#" class="stile">
+      <span class="slogo"><span class="noLogo"><bdi dir="ltr">Young Shang Plastic Industry Co., Ltd.</bdi></span></span>
+      
+      <span class="smeta"><span>Taoyuan, Taiwan</span><span class="dot"></span><span>Plastics &amp; packaging</span></span>
+      <span class="scount num">page 51</span>
+    </a></div>
+    <div class="board-foot"><span>Showing 18 of 35 factories</span><a class="btn" href="#">More factories</a></div>
+  </div>
+</section>
+
+<a class="assist" href="#"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><span><b>AAT Assistant</b><span>24-hour chat</span></span></a>
+
+<footer>
+  <div class="wrap cols">
+    <div class="flogo">
+      <img src="../../img/brand/aat-logo-white.svg" alt="AAT">
+      <div class="names"><div>Arab Asian Trade Group</div><div class="en"><bdi dir="rtl">مجموعة التجارة العربية الآسيوية</bdi> <span class="nw">· <bdi dir="ltr">中阿商業雜誌</bdi></span></div></div>
+      <p>A printed and online trade magazine since 1982 · carrying Asia’s factories to Arab and African importers.</p>
+    </div>
+    <div>
+      <h4>Browse</h4>
+      <ul><li><a href="#">International exhibitions</a></li><li><a href="#">Factory directory</a></li><li><a href="#">Products</a></li><li><a href="#">Magazine</a></li><li><a href="#">Business Club</a></li><li><a href="#">News &amp; articles</a></li><li><a href="#">About</a></li></ul>
+    </div>
+    <div>
+      <h4>Contact us</h4>
+      <div class="cl">Phone · WhatsApp</div><div class="cv"><span class="num" dir="ltr">+886 966 404681</span></div>
+      <div class="cl">Same number on</div><div class="apps"><span>WhatsApp</span><span>Viber</span><span>Botim</span><span>imo</span><span>BiP</span><span>LINE</span></div>
+      <div class="cl" style="margin-top:14px">Email</div><div class="cv"><bdi dir="ltr">info@aatworld.com</bdi></div>
+      <div class="cl">Address</div><div class="cv"><bdi dir="ltr">P.O. Box 568, Yonghe, New Taipei City 234964, Taiwan R.O.C.</bdi></div>
+    </div>
+  </div>
+  <div class="bottom"><div class="wrap"><span>© 2026 AAT (Arab Asian Trade) · All rights reserved</span><span class="tagline"><bdi dir="ltr">AAT · Ideas For Business · www.aatworld.com</bdi></span></div></div>
+</footer>
+
+<nav class="tabbar"><a href="#" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></a><a href="#" class=""><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Shows</span></a><a href="#" class=""><svg viewBox="0 0 24 24"><path d="M3 21V9l6 4V9l6 4V5h6v16z"/></svg><span>Factories</span></a><a href="#" class=""><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg><span>Products</span></a><a href="#" class=""><svg viewBox="0 0 24 24"><path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-7a3 3 0 00-3 3v13a2 2 0 012-2h8z"/></svg><span>Magazine</span></a></nav>
+<script>
+// phones: a short placeholder in the narrow top search field
+(function(){var top=document.querySelector('.top'),big=document.querySelector('.bigsearch');if(top&&big&&'IntersectionObserver' in window){new IntersectionObserver(function(e){top.classList.toggle('with-search',!e[0].isIntersecting)},{threshold:0}).observe(big)}else if(top){top.classList.add('with-search')}})();
+(function(){var i=document.querySelector('.top .search input');if(!i)return;var full=i.placeholder;function f(){i.placeholder=window.innerWidth<761?"Search":full;}f();window.addEventListener('resize',f);})();
+</script>
+</body>
+</html>

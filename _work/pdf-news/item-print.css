@@ -1,0 +1,2 @@
+/* one file per article / news item: no page numbers (owner, 2 Nov 2026) */
+#book .folio b { display: none !important; }

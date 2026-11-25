@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@700&display=block">
+<style>
+/* Issue 561 front cover: the owner's P1 (made on the July 558 cover) with the issue line, side strip and page reference updated.
+   Page = 2481 x 3508 css px rendered at scale 1 (300 dpi). Coordinates measured on P1. */
+@font-face { font-family: Jazeera; src: url(../../assets/fonts/aljazeera-bold.ttf); font-weight: 700; }
+html, body { margin: 0; }
+.cv { position: relative; width: 2481px; height: 3508px; background: url(src/P1.jpg) 0 0 / 2481px 3508px no-repeat; overflow: hidden; }
+.p { position: absolute; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.r { transform: rotate(-90deg); }
+.ar { font-family: Arimo, sans-serif; direction: rtl; }
+.ar .j { font-family: Jazeera, Arimo, sans-serif; }
+</style></head><body>
+<div class="cv" data-shot="cover">
+  <!-- bottom issue bar: white x 913-2299, y 3027-3113 -->
+  <div class="p" style="left:930px;top:3030px;width:1352px;height:80px;background:#fff;font:700 62px/1 Arimo;color:#111;gap:56px"><span>Issue No. 561</span><span>November 2026 (Since 1982)</span></div>
+  <!-- side pill: white x 2273-2371, y 934-2946 -->
+  <div class="p ar" style="transform:rotate(90deg);left:1347px;top:1898px;width:1950px;height:84px;background:#fff;font:700 54px/1 Arimo;color:#111;gap:90px">
+    <span><span class="j">العدد رقم</span> 561 <span class="j">نوفمبر (تشرين الثاني)</span> 2026</span>
+    <span><span class="j">السنة</span> 45 <span class="j">(تأسست عام</span> 1982<span class="j">)</span></span>
+  </div>
+  <!-- outer red box: x 2412-2481, y 647-1637 -->
+  <div class="p r" style="left:1951px;top:1110px;width:990px;height:64px;background:#E00614;color:#fff;font:700 50px/1 Arimo;letter-spacing:1px;gap:28px"><span>Issue No.</span><span>561 Nov. 2026</span></div>
+  <!-- "Year 44 السنة" on white: y 2185-2535 -->
+  <div class="p r ar" style="left:2265px;top:2327px;width:360px;height:66px;background:#fff;color:#111;font:700 50px/1 Arimo;gap:14px"><span class="j">السنة</span><span dir="ltr">Year 45</span></div>
+  <!-- page reference in the EZICARGO corner box: the ad starts on page 12 -->
+  <div class="p" style="left:290px;top:547px;width:66px;height:38px;font:700 40px/1 Arimo;color:#111">12</div>
+</div>
+</body></html>

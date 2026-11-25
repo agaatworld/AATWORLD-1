@@ -1,0 +1,14 @@
+{
+  "name": "aat-logo-motion",
+  "private": true,
+  "description": "AAT logo animation and motion identity (6 concepts, intro/outro, 4 durations, 3 formats)",
+  "dependencies": {
+    "@remotion/bundler": "4.0.536",
+    "@remotion/cli": "4.0.536",
+    "@remotion/renderer": "4.0.536",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.536"
+  },
+  "devDependencies": { "@types/react": "19.2.7", "typescript": "5.9.3" }
+}

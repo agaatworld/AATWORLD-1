@@ -1,0 +1,10 @@
+const { chromium } = require('/opt/node-tools/node_modules/playwright'); const D = __dirname;
+(async () => { const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+  const p = await b.newPage({ viewport: { width: 900, height: 400 }, deviceScaleFactor: 2 });
+  await p.goto('file://' + D + '/cover.html', { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready);
+  await (await p.$('#c')).screenshot({ path: D + '/AAT-facebook-cover-1640x720.png' });
+  await p.evaluate(() => document.getElementById('g').hidden = false);
+  await (await p.$('#c')).screenshot({ path: D + '/cover-guides.png' });
+  console.log(await p.evaluate(() => ['.names', '.tag', '.box'].map(s => { const r = document.querySelector(s).getBoundingClientRect(); return s + ' x' + Math.round(r.left) + '-' + Math.round(r.right) + ' y' + Math.round(r.top) + '-' + Math.round(r.bottom); }).join(' | ')));
+  await p.goto('file://' + D + '/profile.html'); await (await p.$('#c')).screenshot({ path: D + '/AAT-facebook-profile-720.png' });
+  await b.close(); })();
