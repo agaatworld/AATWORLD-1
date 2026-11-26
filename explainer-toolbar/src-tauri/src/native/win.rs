@@ -14,7 +14,7 @@ use windows::Win32::Foundation::{CloseHandle, HANDLE, HWND, LPARAM, LRESULT, POI
 use windows::Win32::System::Threading::{OpenProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE};
 use windows::Win32::UI::Shell::{DefSubclassProc, RemoveWindowSubclass, SetWindowSubclass};
 use windows::Win32::UI::WindowsAndMessaging::{
-    DisableProcessWindowsGhosting, GetAncestor, GetCursorPos, GetForegroundWindow, GetWindowLongPtrW, IsWindowVisible,
+    DisableProcessWindowsGhosting, GetAncestor, GetCursorPos, GetForegroundWindow, GetWindowLongPtrW, IsWindow, IsWindowVisible,
     SetForegroundWindow, SetPropW, SetWindowLongPtrW, SetWindowPos, WindowFromPoint, GA_ROOT, GWL_EXSTYLE, HWND_TOPMOST, MA_NOACTIVATE, STYLESTRUCT,
     SWP_FRAMECHANGED, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, WINDOWPOS, WM_DISPLAYCHANGE,
     WM_MOUSEACTIVATE, WM_NCDESTROY, WM_POWERBROADCAST, WM_SETTINGCHANGE, WM_STYLECHANGING, WM_WINDOWPOSCHANGING,
@@ -204,6 +204,11 @@ pub fn set_foreground(hwnd: isize) {
 
 pub fn foreground() -> isize {
     unsafe { GetForegroundWindow().0 as isize }
+}
+
+/// True while the handle refers to an existing window.
+pub fn is_window(hwnd: isize) -> bool {
+    hwnd != 0 && unsafe { IsWindow(Some(h(hwnd))).as_bool() }
 }
 
 pub fn is_visible(hwnd: isize) -> bool {

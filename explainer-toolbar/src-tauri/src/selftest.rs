@@ -90,7 +90,8 @@ impl T {
     }
 
     fn expect_clickthrough(&mut self, phase: &str) {
-        for (key, hwnd, r) in self.overlays() {
+        // Skip windows that are being destroyed/rebuilt at this instant.
+        for (key, hwnd, r) in self.overlays().into_iter().filter(|(_, h, _)| native::is_window(*h)) {
             let style = native::ex_style(hwnd);
             let flags = native::WS_EX_TRANSPARENT | native::WS_EX_LAYERED | native::WS_EX_NOACTIVATE;
             self.check(&format!("{phase}: {key} has click-through styles"), style & flags == flags, format!("exstyle=0x{style:08x}"));

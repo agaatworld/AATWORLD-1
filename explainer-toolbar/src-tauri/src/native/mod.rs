@@ -49,6 +49,9 @@ mod fallback {
     pub fn is_visible(_hwnd: isize) -> bool {
         false
     }
+    pub fn is_window(_hwnd: isize) -> bool {
+        false
+    }
     pub fn cursor_pos() -> Option<(i32, i32)> {
         None
     }
