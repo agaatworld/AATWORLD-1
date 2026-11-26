@@ -182,7 +182,37 @@ K. **Video 1 «الصوت والطريق والقصيدة»** (in-car qasida, 1:
    YuNet model: HF `opencv/face_detection_yunet` (cv2 5 has no CascadeClassifier).
 L. **Video 2 «القفل الحديدي»** (elderly Taizi woman, 10 s) — `/home/user/final/video2-iron-lock/` (video, 3 covers, report). Her 16:9 frame on top, word panel below,
    real Unsplash photo (Alex Gorin, id Bw3m7HqLsMc) of a padlock + bolt slides in on «قفلة حديد». Dialect words to confirm: كحران / أخوتي (أُخيّتي?) / مردحة. Voice only.
-M. Analysis texts of 4 videos for ChatGPT: `/home/user/final/video-analysis/Video_1..4_*.md` (line + word timings). Videos 3 and 4 briefs not received yet.
+M. Analysis texts of 4 videos for ChatGPT: `/home/user/final/video-analysis/Video_1..4_*.md` (line + word timings). Video 4 brief not received yet.
+N. **Video 1 redone twice after owner notes (26 Nov).**
+   - **Owner rules from this round, for every video:**
+     - ONE style through the whole video, with small variations inside it.
+     - Transcript first: he edits it in the studio, then I render.
+     - No rings or circles.
+     - **NO captions on faces, ever.**
+     - No box behind captions.
+     - Brighter, lighter, cinematic grade. He hated the dark navy grade and the dark bands.
+     - The videos are **for Facebook**: keep all text inside the 4:5 feed crop (y 285–1635) and the Reels safe zones.
+   - **Current Video 1 = `code/video1-qasida/q1d.py`** (imports q1c → q1b → q1).
+   - **Grade:** `bright()`, a local shadow lift.
+     - Shadows: chroma is neutralised before the lift (green camera noise).
+     - Flat dark areas: an edge-preserving blur, to hide the macroblocks.
+     - Highlights: filmic shoulder, then warm highlights, lifted blacks and a soft bloom.
+   - **Captions:** Panorama in ivory (first hemistich) and bronze (second), plus ember words.
+     - No box: a navy 9 px stroke plus a soft navy halo.
+     - Placement is tested against the YuNet face box in EVERY frame, with a 12 px margin. Order of tries:
+       1. Whole line (2 rows) at the bottom, top, or high-top.
+       2. The hemistichs one after another.
+       3. A hemistich split by time.
+       4. Smaller type: 96 → 80, then 72/64/56 as a last resort.
+     - The high-top zone is centred on 540 and 700 wide, so it never meets the logo.
+   - **Cover:** `cover1d.py` → `cover-v4-ya-dahru.jpg`.
+O. **Video 3 «أنا من تعزّ»** (44 s, Taiz drone montage, reciter Nasr Mansour, photographer Hossam Al-Qulaiah). Code: `code/video3-ana-min-taiz/q3.py`.
+   - **Look:** the footage top 1417 px with a slow continuous drift, melting into a navy band. Two Panorama rows, one gold word per line, a word-by-word wipe reveal, credits.
+   - **Source overlays:**
+     - The top band (credit, «تعز تقاوم», plum caption boxes) is cropped (TOPCUT 335).
+     - The photographer watermark is removed with fixed masks: `wmshot.py` builds per-shot temporal medians of the high-pass, then `wmbuild.py` makes the `wm_fixed.npz` masks. Then TELEA inpaint plus grain borrowed from just above.
+   - **Audio:** Demucs vocals (`--repo demrepo -n htdemucs`; the weights are local, the internet download is blocked), two-pass loudnorm to −14.
+   - **Studio:** tab q3 added (v13) for the owner's corrections. «ومكّةُ» is uncertain.
 
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
