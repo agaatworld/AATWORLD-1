@@ -219,9 +219,10 @@ class FakeBackend {
         return r(undefined);
       case "load_scene": {
         const key = this.label.replace(/^overlay-/, "");
-        return r(ls.get<string | null>(`scene.${this.workspaces().active}.${key}`, null));
+        return r({ json: ls.get<string | null>(`scene.${this.workspaces().active}.${key}`, null), generation: ls.get("generation", 1) });
       }
       case "save_scene": {
+        if (args.generation !== ls.get("generation", 1)) throw new Error("stale");
         const key = this.label.replace(/^overlay-/, "");
         ls.set(`scene.${this.workspaces().active}.${key}`, args.json);
         return r(undefined);
@@ -276,6 +277,7 @@ class FakeBackend {
         await new Promise((res) => setTimeout(res, 50));
         w.active = String(args.id);
         ls.set("workspaces", w);
+        ls.set("generation", ls.get("generation", 1) + 1);
         ls.set("history", { undo: [], redo: [] });
         this.emit("workspace://switched", w);
         this.emit("history://state", { canUndo: false, canRedo: false });

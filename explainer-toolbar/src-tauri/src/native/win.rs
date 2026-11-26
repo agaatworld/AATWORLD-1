@@ -11,10 +11,11 @@ use std::sync::atomic::{AtomicIsize, Ordering};
 use std::sync::{Mutex, OnceLock};
 use windows::core::w;
 use windows::Win32::Foundation::{CloseHandle, HANDLE, HWND, LPARAM, LRESULT, POINT, WPARAM};
-use windows::Win32::System::Threading::{OpenProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE};
+use windows::Win32::System::Threading::{GetCurrentProcess, OpenProcess, TerminateProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE};
+use windows::Win32::UI::Accessibility::{SetWinEventHook, HWINEVENTHOOK};
 use windows::Win32::UI::Shell::{DefSubclassProc, RemoveWindowSubclass, SetWindowSubclass};
 use windows::Win32::UI::WindowsAndMessaging::{
-    DisableProcessWindowsGhosting, GetAncestor, GetCursorPos, GetForegroundWindow, GetWindowLongPtrW, IsWindow, IsWindowVisible,
+    DisableProcessWindowsGhosting, GetAncestor, GetCursorPos, GetShellWindow, EVENT_SYSTEM_FOREGROUND, WINEVENT_OUTOFCONTEXT, WINEVENT_SKIPOWNPROCESS, GetForegroundWindow, GetWindowLongPtrW, IsWindow, IsWindowVisible,
     SetForegroundWindow, SetPropW, SetWindowLongPtrW, SetWindowPos, WindowFromPoint, GA_ROOT, GWL_EXSTYLE, HWND_TOPMOST, MA_NOACTIVATE, STYLESTRUCT,
     SWP_FRAMECHANGED, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, WINDOWPOS, WM_DISPLAYCHANGE,
     WM_MOUSEACTIVATE, WM_NCDESTROY, WM_POWERBROADCAST, WM_SETTINGCHANGE, WM_STYLECHANGING, WM_WINDOWPOSCHANGING,
@@ -35,6 +36,8 @@ const OVERLAY_SUBCLASS_ID: usize = 0xE7_0001;
 const TOOLBAR_SUBCLASS_ID: usize = 0xE7_0002;
 
 static TOOLBAR: AtomicIsize = AtomicIsize::new(0);
+/// Last foreground window that belongs to ANOTHER application.
+static LAST_EXTERNAL: AtomicIsize = AtomicIsize::new(0);
 static GUARDS: OnceLock<Mutex<HashMap<isize, bool>>> = OnceLock::new();
 static WATCH: OnceLock<fn(SystemEvent)> = OnceLock::new();
 
@@ -192,6 +195,39 @@ pub fn root_window_at(x: i32, y: i32) -> isize {
     }
 }
 
+unsafe extern "system" fn foreground_proc(_h: HWINEVENTHOOK, _event: u32, hwnd: HWND, _obj: i32, _child: i32, _thread: u32, _time: u32) {
+    if !hwnd.0.is_null() {
+        LAST_EXTERNAL.store(hwnd.0 as isize, Ordering::Relaxed);
+    }
+}
+
+/// Track the user's application: every time a window of ANOTHER process
+/// becomes the foreground window, remember it (out-of-context hook,
+/// delivered on the installing thread's message loop; our own windows are
+/// skipped). When drawing ends, focus goes back to it.
+pub fn install_foreground_tracker() {
+    unsafe {
+        let fg = GetForegroundWindow();
+        if !fg.0.is_null() {
+            LAST_EXTERNAL.store(fg.0 as isize, Ordering::Relaxed);
+        }
+        let hook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, None, Some(foreground_proc), 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+        if hook.0.is_null() {
+            log::warn!("could not track the foreground application");
+        }
+    }
+}
+
+/// The application to give focus back to: the last external foreground
+/// window if it still exists, otherwise the desktop.
+pub fn focus_target() -> isize {
+    let w = LAST_EXTERNAL.load(Ordering::Relaxed);
+    if is_window(w) && is_visible(w) {
+        return w;
+    }
+    unsafe { GetShellWindow().0 as isize }
+}
+
 /// Give focus back to a window (used if an overlay ever took it while it
 /// was meant to be click-through).
 pub fn set_foreground(hwnd: isize) {
@@ -228,6 +264,14 @@ pub fn wait_for_process_exit(pid: u32, timeout_ms: u32) {
             let _ = CloseHandle(hp);
         }
     }
+}
+
+/// End this process immediately (emergency path only).
+pub fn terminate_self(code: u32) -> ! {
+    unsafe {
+        let _ = TerminateProcess(GetCurrentProcess(), code);
+    }
+    std::process::exit(code as i32)
 }
 
 pub fn os_version() -> String {

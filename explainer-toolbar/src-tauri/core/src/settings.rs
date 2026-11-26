@@ -114,6 +114,13 @@ impl SettingsDoc {
     pub fn revision(&self) -> u64 {
         self.revision
     }
+    /// Replace the whole document (e.g. restored from a backup). The revision
+    /// keeps increasing so every window accepts the new document.
+    pub fn replace(&mut self, stored: Value) -> u64 {
+        self.doc = Self::from_stored(stored).doc;
+        self.revision += 1;
+        self.revision
+    }
     pub fn doc(&self) -> &Value {
         &self.doc
     }
@@ -230,6 +237,16 @@ mod tests {
         let big = "x".repeat(MAX_SETTINGS_BYTES + 10);
         assert!(matches!(s.apply(&json!({"ui": {"blob": big}})), Err(UpdateError::TooLarge(_))));
         assert_eq!(s.revision(), 0, "failed updates must not change the revision");
+    }
+
+    #[test]
+    fn replacing_the_document_never_lowers_the_revision() {
+        let mut s = SettingsDoc::default();
+        s.apply(&json!({"ui": {"a": 1}})).unwrap();
+        s.apply(&json!({"ui": {"a": 2}})).unwrap();
+        let r = s.replace(json!({"ui": {"a": 9}}));
+        assert_eq!(r, 3);
+        assert_eq!(s.doc()["ui"]["a"], 9);
     }
 
     #[test]

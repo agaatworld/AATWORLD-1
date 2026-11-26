@@ -13,13 +13,16 @@ Honest status of every safety- or quality-relevant behaviour. "Windows" means a 
 | Drawing engine: strokes, shapes, fill kept after edits, text, markers, images, erasers, select/move/resize/rotate, arrange, lock, duplicate, layered Escape, clear+undo, 2000-stroke stress, randomised undo/redo replay | unit tests | `npm test` |
 | Scene file validation (garbage, NaN, huge numbers, bad colours, path-like image names) | unit tests | `npm test` |
 | Toolbar panel geometry, adaptive tool capacity | unit + UI tests | `npm test`, `npm run test:e2e` |
+| Workspaces keep drawings separate; late saves refused after a switch | UI test + scene generation | `npm run test:e2e` |
 | Toolbar, panels, inspector, settings, Arabic RTL, dark/light, typing into text labels, Escape layering, two-step clear, toolbar fits small screens, transparent overlay in dark mode | UI tests in Chromium with the simulated backend + reviewed screenshots | `npm run test:e2e` |
 | **Overlay click-through is real** (extended styles + `WindowFromPoint` at a probe point reaches the window below) | `--self-test` on Windows | Windows CI |
 | Overlay captures clicks while drawing; toolbar stays above overlays | `--self-test` | Windows CI |
-| Overlays never take focus in desktop mode | `--self-test` (foreground window check) | Windows CI |
+| Overlays never take focus in desktop mode; focus handed back after drawing | `--self-test` (foreground window checks) | Windows CI |
+| Escape safety key registered only while drawing | `--self-test` | Windows CI |
+| A failure while drawings are hidden keeps them hidden | `--self-test` + core unit test | Windows CI |
 | 200 rapid toggles from 4 threads end consistent | `--self-test` | Windows CI |
 | Escape safety key leaves drawing mode | `--self-test` | Windows CI |
-| Frozen overlay page → input released → overlay rebuilt | `--self-test` (simulated freeze) | Windows CI |
+| Frozen overlay page → input released → overlay rebuilt as a new window | `--self-test` (simulated freeze) | Windows CI |
 | Hide/show drawings, global hotkeys registered | `--self-test` | Windows CI |
 | NSIS installer builds | CI artifact | Windows CI |
 
@@ -49,3 +52,7 @@ Headless Chromium in a Linux container **with software rendering (no GPU)** — 
 | Overlay JavaScript heap | ≈ 25 MB |
 
 Not yet measured on Windows: CPU/GPU cost of the transparent overlay windows themselves (WebView2 composition), memory of the native process, pen latency.
+
+## Independent review
+
+The native layer was reviewed by a separate reviewer (26 Nov 2026). All nine reported bugs were fixed: a possible deadlock in shortcut re-registration (could have left overlays capturing input), focus left on an overlay after drawing, recovery not rebuilding the frozen overlay, restoring the oldest backup deleting it, late saves landing in the wrong workspace, false emergency restart after sleep, restored settings ignored by open windows, hidden drawings reappearing after a recovery, hotkeys not re-registered after wake. Plausible risks addressed: emergency exit uses TerminateProcess, orphan overlay after unplug during recovery, image dialog unreachable while drawing, workspace list lost updates.

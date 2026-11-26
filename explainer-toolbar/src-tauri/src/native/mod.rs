@@ -46,6 +46,10 @@ mod fallback {
         0
     }
     pub fn set_foreground(_hwnd: isize) {}
+    pub fn install_foreground_tracker() {}
+    pub fn focus_target() -> isize {
+        0
+    }
     pub fn is_visible(_hwnd: isize) -> bool {
         false
     }
@@ -56,6 +60,9 @@ mod fallback {
         None
     }
     pub fn wait_for_process_exit(_pid: u32, _timeout_ms: u32) {}
+    pub fn terminate_self(code: u32) -> ! {
+        std::process::exit(code as i32)
+    }
     pub fn os_version() -> String {
         std::env::consts::OS.to_string()
     }

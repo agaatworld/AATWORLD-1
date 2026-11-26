@@ -66,7 +66,17 @@ pub fn run(app: &AppHandle, action: Action) {
 
 /// (Re)register the configured shortcuts. Safe to call repeatedly — after
 /// a settings change and after Windows resumes from sleep.
+///
+/// Always runs on the main thread: the plugin's `unregister_all` holds its
+/// internal lock while waiting for the main thread, so calling it from any
+/// other thread can deadlock against a hotkey press or an Escape
+/// registration happening at the same moment.
 pub fn register_all(app: &AppHandle) {
+    if !crate::modes::is_main_thread() {
+        let a = app.clone();
+        let _ = app.run_on_main_thread(move || register_all(&a));
+        return;
+    }
     let st = app.state::<AppState>();
     let sc = lock(&st.settings).shortcuts();
     let gs = app.global_shortcut();
@@ -116,7 +126,9 @@ pub fn register_all(app: &AppHandle) {
     }
 }
 
+/// Main thread only (called from the mode controller).
 pub fn set_escape_hotkey(app: &AppHandle, on: bool) {
+    debug_assert!(crate::modes::is_main_thread());
     let has = lock(&BINDINGS).iter().any(|(_, a)| *a == Action::Escape);
     if on == has {
         return;
@@ -135,6 +147,11 @@ pub fn set_escape_hotkey(app: &AppHandle, on: bool) {
         let _ = gs.unregister(esc);
         lock(&BINDINGS).retain(|(_, a)| *a != Action::Escape);
     }
+}
+
+/// True while the Escape safety key is registered.
+pub fn escape_active() -> bool {
+    lock(&BINDINGS).iter().any(|(_, a)| *a == Action::Escape)
 }
 
 pub fn unregister_everything(app: &AppHandle) {

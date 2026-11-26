@@ -260,7 +260,17 @@ pub fn read_asset(paths: &Paths, name: &str) -> Result<Vec<u8>, String> {
 // ───────────────────────── backups ─────────────────────────
 
 pub fn backup_now(paths: &Paths, stamp: &str) -> Result<String, String> {
-    store::make_backup(&[paths.settings(), paths.workspaces()], &paths.backups(), stamp, KEEP_BACKUPS)
+    backup_keeping(paths, stamp, KEEP_BACKUPS)
+}
+
+/// Safety copy taken before a restore: keeps one extra backup so the backup
+/// being restored (possibly the oldest) is never pruned by the copy itself.
+pub fn safety_backup(paths: &Paths, stamp: &str) -> Result<String, String> {
+    backup_keeping(paths, stamp, KEEP_BACKUPS + 1)
+}
+
+fn backup_keeping(paths: &Paths, stamp: &str, keep: usize) -> Result<String, String> {
+    store::make_backup(&[paths.settings(), paths.workspaces()], &paths.backups(), stamp, keep)
         .map(|p| p.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default())
         .map_err(|e| e.to_string())
 }
@@ -390,5 +400,13 @@ mod tests {
         assert!(restore_backup(&p, "../x").is_err());
         assert!(!auto_backup_due(&p, "20261126-235959"));
         assert!(auto_backup_due(&p, "20261127-000001"));
+        // Restoring the OLDEST of a full set must still work (regression).
+        for i in 0..KEEP_BACKUPS {
+            backup_now(&p, &format!("20261127-0000{i:02}")).unwrap();
+        }
+        let oldest = list_backups(&p).last().cloned().unwrap();
+        safety_backup(&p, "20261128-000000").unwrap();
+        assert!(list_backups(&p).contains(&oldest));
+        restore_backup(&p, &oldest).unwrap();
     }
 }

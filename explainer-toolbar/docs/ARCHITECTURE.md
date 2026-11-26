@@ -46,7 +46,7 @@ One overlay **per monitor** (instead of one window spanning the virtual screen) 
 * `Quit` is accepted from every state; `ShuttingDown` is terminal.
 * `FrontendLost` from any state goes to `Recovering`, which never captures input.
 * Repeated requests are idempotent (no revision bump, effects re-asserted).
-* All transitions execute on the main window thread, one at a time, so window changes from two transitions can never interleave.
+* All transitions execute on the main window thread, one at a time, so window changes from two transitions can never interleave. Global-shortcut plugin calls also run only on the main thread (the plugin holds an internal lock while waiting for the main thread, so calling it elsewhere could deadlock).
 
 Order of effects when leaving drawing mode: input capture is dropped **first**, then visibility changes.
 
@@ -54,13 +54,14 @@ Order of effects when leaving drawing mode: input capture is dropped **first**, 
 
 1. **Native click-through**: `WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_NOACTIVATE` (via tao's own flags, so its style refreshes agree).
 2. **Style guard** (`WM_STYLECHANGING` subclass): whenever anything rewrites the extended style while the overlay should be click-through, the click-through bits are put back; overlays always keep `WS_EX_TOOLWINDOW` (not in Alt+Tab; exempt from Chromium occlusion tracking).
-3. **Activation guard** (`WM_WINDOWPOSCHANGING`, `WM_MOUSEACTIVATE`): click-through overlays cannot take focus; overlays stay below the toolbar in z-order. If an overlay still ends up in the foreground, focus is handed back.
-4. **Escape safety key**: a global `Escape` hotkey is registered only while drawing. Pages may consume it (cancel a gesture, close a panel); if no page answers within 350 ms, drawing mode ends anyway.
-5. **Heartbeat watchdog**: each overlay page sends a heartbeat every second while drawing. 3.5 s of silence → `Recovering` (all click-through) → the overlay window is destroyed and rebuilt; drawings reload from disk.
-6. **Main-thread guard**: if the native window thread itself stops answering for 6 s while drawing, the process restarts itself (the new instance waits for the old one to exit).
-7. **Ghosting disabled** (`DisableProcessWindowsGhosting`): Windows' "not responding" ghost window would not keep the click-through style.
-8. **Crashed page**: an error boundary in the overlay reports the failure → recovery.
-9. **Tray menu and the start/stop hotkey** work even when the toolbar is hidden or off-screen. Last resort: `Ctrl + Shift + Esc` → Task Manager → End task (all drawings are autosaved).
+3. **Activation guard** (`WM_WINDOWPOSCHANGING`, `WM_MOUSEACTIVATE`): click-through overlays cannot take focus; overlays stay below the toolbar in z-order.
+4. **Focus hand-back**: a `SetWinEventHook(EVENT_SYSTEM_FOREGROUND)` tracker remembers the last window of *another* application; when drawing ends (or an overlay is ever foreground outside drawing mode) focus goes back to it, so the presenter's keys reach their slides immediately.
+5. **Escape safety key**: a global `Escape` hotkey is registered only while drawing. Pages may consume it (cancel a gesture, close a panel); if no page answers within 350 ms, drawing mode ends anyway.
+6. **Heartbeat watchdog**: each overlay page sends a heartbeat every second while drawing. 3.5 s of silence → `Recovering` (all click-through) → exactly the silent overlay is destroyed and rebuilt; drawings reload from disk. If drawings were hidden, they stay hidden.
+7. **Main-thread guard**: numbered pings to the native window thread while drawing; 8 unanswered in a row → the process terminates (`TerminateProcess`) and relaunches. Counting pings (not wall-clock time) means sleep/resume can never trigger it.
+8. **Ghosting disabled** (`DisableProcessWindowsGhosting`): Windows' "not responding" ghost window would not keep the click-through style.
+9. **Crashed page**: an error boundary in the overlay reports the failure → recovery.
+10. **Tray menu and the start/stop hotkey** work even when the toolbar is hidden or off-screen. Last resort: `Ctrl + Shift + Esc` → Task Manager → End task (all drawings are autosaved).
 
 ## Coordinate system
 
@@ -92,6 +93,7 @@ One rule: **scene coordinates are monitor-local physical pixels** ("device px"),
 `%LOCALAPPDATA%\com.explainertoolbar.desktop\` — `settings.json`, `workspaces/<id>/<monitor>.json`, `assets/` (images, content-addressed), `backups/<timestamp>/`, `logs/`.
 
 * Every write: temp file → flush → keep `.bak` → atomic rename. A torn file is moved aside (`.corrupt-<time>`) and the backup is used.
+* Scene saves carry a *scene generation* that changes on workspace switch and backup restore; a late save from before the switch is refused, so it can never land in the wrong workspace. Saves from one overlay run strictly one after another.
 * Settings: one writer thread, coalesced writes; updates are JSON merge patches, so two windows changing different settings never overwrite each other.
 * Scenes are validated object by object on load (`src/engine/validate.ts`): malformed items are dropped, numbers clamped, colours and image names checked — a damaged file can never crash the overlay.
 * Images are accepted by magic bytes (PNG, JPEG, GIF, WebP, BMP; no SVG), max 40 MB, decoded asynchronously and downscaled to 4096 px.

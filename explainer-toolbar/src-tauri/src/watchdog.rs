@@ -5,13 +5,16 @@
 //!    heartbeat every second. If one stops for 3.5 s (page frozen or crashed)
 //!    the app switches to `Recovering`: every overlay becomes click-through
 //!    at once and the frozen one is rebuilt.
-//! 2. Main-thread guard: if the native window thread itself stops answering
-//!    for 6 s while the overlays capture input, nothing inside the process
-//!    can release the desktop, so the process restarts itself (the new
-//!    instance waits for the old one to exit, then restores the drawings).
+//! 2. Main-thread guard: once a second (only while drawing) a numbered ping
+//!    is posted to the native window thread. If 8 pings in a row go
+//!    unanswered, nothing inside the process can release the desktop, so the
+//!    process terminates and relaunches itself (the new instance waits for
+//!    the old one to exit, then restores the drawings). Counting missed pings
+//!    instead of measuring wall-clock time means sleep/resume or a clock
+//!    change can never trigger a false restart.
 
 use crate::state::{lock, AppState};
-use explainer_core::mode::{Mode, ModeEvent};
+use explainer_core::mode::Mode;
 use std::sync::atomic::Ordering;
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
@@ -43,7 +46,7 @@ pub fn spawn(app: AppHandle) {
                 .collect();
             if !stale.is_empty() {
                 log::error!("no heartbeat from {stale:?}; releasing the desktop and rebuilding");
-                let _ = crate::modes::request(&a, ModeEvent::FrontendLost, "watchdog");
+                crate::modes::report_lost(&a, stale, "watchdog");
             }
         })
         .ok();
@@ -54,22 +57,28 @@ pub fn spawn(app: AppHandle) {
             let st = app.state::<AppState>();
             loop {
                 wait_armed(&st);
-                st.main_alive_ms.store(explainer_core::util::unix_ms(), Ordering::Relaxed);
-                let mut since_armed = 0u64;
+                let mut misses = 0u32;
                 loop {
-                    std::thread::sleep(Duration::from_millis(1000));
-                    since_armed += 1000;
                     if lock(&st.mode).mode() != Mode::Annotating {
                         break;
                     }
-                    let a2 = app.clone();
-                    let _ = app.run_on_main_thread(move || {
-                        a2.state::<AppState>().main_alive_ms.store(explainer_core::util::unix_ms(), Ordering::Relaxed);
-                    });
-                    let silent = explainer_core::util::unix_ms().saturating_sub(st.main_alive_ms.load(Ordering::Relaxed));
-                    if since_armed > 2000 && silent > 6000 {
+                    // Was the previous ping answered?
+                    let sent = st.ping_sent.load(Ordering::SeqCst);
+                    if st.ping_acked.load(Ordering::SeqCst) >= sent {
+                        misses = 0;
+                    } else {
+                        misses += 1;
+                    }
+                    if misses >= 8 {
                         emergency_restart();
                     }
+                    let n = sent + 1;
+                    st.ping_sent.store(n, Ordering::SeqCst);
+                    let a2 = app.clone();
+                    let _ = app.run_on_main_thread(move || {
+                        a2.state::<AppState>().ping_acked.fetch_max(n, Ordering::SeqCst);
+                    });
+                    std::thread::sleep(Duration::from_millis(1000));
                 }
             }
         })
@@ -81,5 +90,7 @@ fn emergency_restart() -> ! {
     if let Ok(exe) = std::env::current_exe() {
         let _ = std::process::Command::new(exe).args(["--recovered", "--wait-pid", &std::process::id().to_string()]).spawn();
     }
-    std::process::exit(3);
+    // TerminateProcess, not exit(): exit runs DLL detach and could hang on a
+    // lock held by the frozen thread, leaving the overlays in place.
+    crate::native::terminate_self(3)
 }

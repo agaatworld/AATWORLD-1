@@ -50,19 +50,28 @@ export function OverlayApp() {
 
   const assets = useMemo(() => new AssetCache((name) => editorRef.current?.invalidateAsset(name)), []);
 
-  const save = useCallback(async () => {
-    const ed = editorRef.current;
-    if (!ed || !dirty.current) return;
-    dirty.current = false;
-    const m = getApp().monitor;
-    const doc = ed.serialize(m ? { key: m.key, width: m.width, height: m.height, scale: m.scale } : undefined);
-    try {
-      await api.saveScene(JSON.stringify(doc));
-    } catch (e) {
-      dirty.current = true;
-      void log("error", `saving drawings failed: ${String(e)}`);
-      setToast(t("common.error", { e: String(e) }));
-    }
+  /** Scene generation from the last load; sent with every save. */
+  const generation = useRef(0);
+  /** Saves run strictly one after another (never two writes racing). */
+  const saveChain = useRef<Promise<void>>(Promise.resolve());
+
+  const save = useCallback((): Promise<void> => {
+    saveChain.current = saveChain.current.then(async () => {
+      const ed = editorRef.current;
+      if (!ed || !dirty.current) return;
+      dirty.current = false;
+      const m = getApp().monitor;
+      const doc = ed.serialize(m ? { key: m.key, width: m.width, height: m.height, scale: m.scale } : undefined);
+      try {
+        await api.saveScene(JSON.stringify(doc), generation.current);
+      } catch (e) {
+        if (String(e).includes("stale")) return; // belongs to a previous workspace
+        dirty.current = true;
+        void log("error", `saving drawings failed: ${String(e)}`);
+        setToast(t("common.error", { e: String(e) }));
+      }
+    });
+    return saveChain.current;
   }, []);
 
   const scheduleSave = useCallback(() => {
@@ -123,7 +132,9 @@ export function OverlayApp() {
     let cancelled = false;
     (async () => {
       try {
-        const { doc, dropped } = parseScene(await api.loadScene());
+        const loaded = await api.loadScene();
+        generation.current = loaded.generation;
+        const { doc, dropped } = parseScene(loaded.json);
         if (cancelled) return;
         resize();
         editor.load(doc);
@@ -246,7 +257,8 @@ export function OverlayApp() {
         },
         "app://flush": async (id) => {
           if (textRef.current && editorRef.current?.textEdit) commitText();
-          await save();
+          if (saveTimer.current) clearTimeout(saveTimer.current);
+          await save(); // waits for an in-flight save too (same chain)
           void api.flushDone(id);
         },
         "escape://request": (id) => {
@@ -268,7 +280,11 @@ export function OverlayApp() {
         "workspace://switched": async () => {
           const ed = editorRef.current;
           if (!ed) return;
-          const { doc } = parseScene(await api.loadScene());
+          await saveChain.current; // let any in-flight save finish first
+          dirty.current = false;
+          const loaded = await api.loadScene();
+          generation.current = loaded.generation;
+          const { doc } = parseScene(loaded.json);
           ed.load(doc);
           setBoardState(doc.background);
           reportContent();

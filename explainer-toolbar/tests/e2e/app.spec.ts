@@ -186,3 +186,25 @@ test("settings window: sections render and invalid shortcuts are refused", async
   await page.keyboard.press("Shift+D");
   await expect(page.getByText(/include Ctrl or Alt/)).toBeVisible();
 });
+
+test("workspaces keep their drawings separate", async ({ page }) => {
+  const tb = await open(page);
+  await tb.getByRole("button", { name: "Pen", exact: true }).click();
+  await stroke(page, [[500, 400], [600, 420]]);
+  await expect.poll(async () => (await scene(page)).objects.length).toBe(1);
+  await tb.getByRole("button", { name: "All tools" }).click();
+  await tb.getByRole("dialog", { name: "All tools" }).getByPlaceholder("Search tools…").fill("workspace");
+  await tb.getByRole("option", { name: /Workspaces/ }).click();
+  const ws = tb.getByRole("dialog", { name: "Workspaces" });
+  await ws.getByRole("button", { name: "New workspace" }).click();
+  await ws.getByText("Workspace 2").click();
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("fake.workspaces")!).active)).toBe("ws-2");
+  const ov = page.frameLocator("iframe[title=overlay]");
+  await expect(ov.locator(".ov-root")).toHaveAttribute("data-ready", "true");
+  await page.waitForTimeout(300);
+  // the second workspace starts empty and never received workspace 1's ink
+  expect(await page.evaluate(() => localStorage.getItem("fake.scene.ws-2.DISPLAY1"))).toBeNull();
+  await ws.getByText("Workspace 1").click();
+  await page.waitForTimeout(400);
+  expect((await scene(page)).objects).toHaveLength(1);
+});

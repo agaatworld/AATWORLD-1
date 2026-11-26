@@ -155,14 +155,19 @@ pub fn spawn(app: AppHandle, report: PathBuf) {
         t.mode(ModeEvent::EnterAnnotation);
         std::thread::sleep(Duration::from_millis(900));
         t.check("drawing mode entered", t.current() == Mode::Annotating, format!("{:?}", t.current()));
+        t.check("Escape safety key registered while drawing", crate::shortcuts::escape_active(), "");
         if windows {
             t.expect_capture("drawing");
         }
 
         t.mode(ModeEvent::ExitAnnotation);
         std::thread::sleep(Duration::from_millis(700));
+        t.check("Escape safety key released after drawing", !crate::shortcuts::escape_active(), "");
         if windows {
             t.expect_clickthrough("after exit");
+            let fg = native::foreground();
+            let tb = t.toolbar_center().map(|c| c.2).unwrap_or(0);
+            t.check("after exit: keyboard focus is not left on the toolbar", fg != tb || tb == 0, format!("foreground=0x{fg:x}"));
         }
 
         // Toggle storm from several threads: must end consistent.
@@ -198,6 +203,7 @@ pub fn spawn(app: AppHandle, report: PathBuf) {
         // A frozen overlay page: heartbeats stop → recovery → desktop.
         t.mode(ModeEvent::EnterAnnotation);
         std::thread::sleep(Duration::from_millis(600));
+        let labels_before: Vec<String> = lock(&st.overlays).values().map(|o| o.label.clone()).collect();
         let _ = app.emit("selftest://freeze", ());
         let left = t.wait_for(Duration::from_secs(8), |t| t.current() != Mode::Annotating);
         t.check("a frozen page is detected and input is released", left, format!("{:?}", t.current()));
@@ -209,6 +215,12 @@ pub fn spawn(app: AppHandle, report: PathBuf) {
             t.current() == Mode::Desktop && lock(&st.overlays).values().all(|o| o.ready)
         });
         t.check("the frozen overlay was rebuilt and desktop mode restored", back, format!("{:?}", t.current()));
+        let labels_after: Vec<String> = lock(&st.overlays).values().map(|o| o.label.clone()).collect();
+        t.check(
+            "the frozen overlay is a NEW window after recovery",
+            !labels_after.is_empty() && labels_after.iter().all(|l| !labels_before.contains(l)),
+            format!("before {labels_before:?}, after {labels_after:?}"),
+        );
         std::thread::sleep(Duration::from_millis(700));
         if windows {
             t.expect_clickthrough("after recovery");
@@ -221,6 +233,19 @@ pub fn spawn(app: AppHandle, report: PathBuf) {
         if windows {
             let all_hidden = t.overlays().iter().all(|(_, h, _)| !native::is_visible(*h));
             t.check("hide drawings hides every overlay", all_hidden, "");
+        }
+        // A page failure while drawings are hidden must keep them hidden.
+        let lbl: Vec<String> = lock(&st.overlays).values().map(|o| o.label.clone()).collect();
+        crate::modes::report_lost(&app, lbl, "self-test");
+        let hidden_again = t.wait_for(Duration::from_secs(25), |t| {
+            let st = t.app.state::<AppState>();
+            t.current() == Mode::Hidden && lock(&st.overlays).values().all(|o| o.ready)
+        });
+        t.check("a failure while drawings are hidden keeps them hidden", hidden_again, format!("{:?}", t.current()));
+        if windows {
+            std::thread::sleep(Duration::from_millis(400));
+            let all_hidden = t.overlays().iter().all(|(_, h, _)| !native::is_visible(*h));
+            t.check("no overlay became visible after that recovery", all_hidden, "");
         }
         t.mode(ModeEvent::ShowInk);
         std::thread::sleep(Duration::from_millis(300));

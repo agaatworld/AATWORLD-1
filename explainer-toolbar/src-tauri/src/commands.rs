@@ -186,7 +186,7 @@ pub async fn report_content(app: AppHandle, window: WebviewWindow, has_content: 
 pub async fn report_failure(app: AppHandle, window: WebviewWindow, message: String) -> R<()> {
     log::error!("{} reported a failure: {}", window.label(), message.chars().take(500).collect::<String>());
     if window.label().starts_with("overlay-") {
-        let _ = modes::request(&app, ModeEvent::FrontendLost, "frontend-error");
+        modes::report_lost(&app, vec![window.label().to_string()], "frontend-error");
     }
     Ok(())
 }
@@ -364,22 +364,38 @@ fn active_ws(st: &AppState) -> String {
     lock(&st.workspaces).active.clone()
 }
 
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LoadedScene {
+    pub json: Option<String>,
+    /// Must be sent back with every save of this scene.
+    pub generation: u64,
+}
+
 #[tauri::command]
-pub async fn load_scene(window: WebviewWindow, state: State<'_, AppState>) -> R<Option<String>> {
-    let Some(key) = monitor_of_label(&state, window.label()) else { return Ok(None) };
+pub async fn load_scene(window: WebviewWindow, state: State<'_, AppState>) -> R<LoadedScene> {
+    let generation = state.scene_generation.load(std::sync::atomic::Ordering::SeqCst);
+    let Some(key) = monitor_of_label(&state, window.label()) else { return Ok(LoadedScene { json: None, generation }) };
     // "Restore drawings at start-up" only affects the first load of each
     // monitor in this run; workspace switches and rebuilds always load.
     let first = lock(&state.loaded_once).insert(key.clone());
     let restore = lock(&state.settings).doc().pointer("/ui/restoreOnStart").and_then(Value::as_bool).unwrap_or(true);
     if first && !restore {
-        return Ok(None);
+        return Ok(LoadedScene { json: None, generation });
     }
-    Ok(storage::load_scene(&state.paths, &active_ws(&state), &key))
+    Ok(LoadedScene { json: storage::load_scene(&state.paths, &active_ws(&state), &key), generation })
 }
 
 #[tauri::command]
-pub async fn save_scene(window: WebviewWindow, state: State<'_, AppState>, json: String) -> R<()> {
+pub async fn save_scene(window: WebviewWindow, state: State<'_, AppState>, json: String, generation: u64) -> R<()> {
     let Some(key) = monitor_of_label(&state, window.label()) else { return Ok(()) };
+    // A save that belongs to a previous workspace (or to the state before a
+    // backup restore) must never overwrite the current one.
+    let current = state.scene_generation.load(std::sync::atomic::Ordering::SeqCst);
+    if generation != current {
+        log::warn!("ignored a late save from {} (generation {generation}, current {current})", window.label());
+        return Err("stale".into());
+    }
     let ws = active_ws(&state);
     storage::save_scene(&state.paths, &ws, &key, &json).inspect_err(|e| log::error!("saving the drawing failed: {e}"))
 }
@@ -403,9 +419,14 @@ pub async fn import_image_bytes(state: State<'_, AppState>, request: Request<'_>
 /// on the toolbar's monitor and enter drawing mode so it can be placed.
 #[tauri::command]
 pub async fn pick_image(app: AppHandle) -> R<Option<String>> {
-    let picked = app
-        .dialog()
-        .file()
+    // While drawing, the overlays cover the screen and take every click, so a
+    // dialog underneath them could not be used: leave drawing mode first.
+    let _ = modes::request(&app, ModeEvent::ExitAnnotation, "insert-image");
+    let mut dialog = app.dialog().file();
+    if let Some(tb) = app.get_webview_window(windows::TOOLBAR) {
+        dialog = dialog.set_parent(&tb);
+    }
+    let picked = dialog
         .set_title("Insert an image")
         .add_filter("Images", &["png", "jpg", "jpeg", "gif", "webp", "bmp"])
         .blocking_pick_file();
@@ -485,16 +506,24 @@ pub async fn delete_workspace(app: AppHandle, id: String) -> R<WorkspaceIndex> {
 #[tauri::command]
 pub async fn switch_workspace(app: AppHandle, id: String) -> R<WorkspaceIndex> {
     let st = app.state::<AppState>();
+    {
+        let idx = lock(&st.workspaces);
+        if !idx.list.iter().any(|w| w.id == id) {
+            return Err("workspace not found".into());
+        }
+        if idx.active == id {
+            return Ok(idx.clone());
+        }
+    }
+    flush_overlays(&app, Duration::from_millis(1500));
+    // Re-read after the flush so concurrent renames/creations are kept.
     let mut idx = lock(&st.workspaces).clone();
     if !idx.list.iter().any(|w| w.id == id) {
         return Err("workspace not found".into());
     }
-    if idx.active == id {
-        return Ok(idx);
-    }
-    flush_overlays(&app, Duration::from_millis(1500));
     idx.active = id;
     let idx = save_ws(&app, idx)?;
+    st.scene_generation.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
     lock(&st.history).clear();
     let _ = app.emit("workspace://switched", &idx);
     emit_history(&app);
@@ -521,11 +550,13 @@ pub async fn restore_backup(app: AppHandle, name: String) -> R<()> {
     let st = app.state::<AppState>();
     flush_overlays(&app, Duration::from_millis(1500));
     write_settings_now(&st);
-    // Safety copy of the current state first.
-    storage::backup_now(&st.paths, &format!("{}-0", explainer_core::util::utc_stamp()))?;
+    // Safety copy of the current state first (never prunes the chosen backup).
+    storage::safety_backup(&st.paths, &format!("{}-0", explainer_core::util::utc_stamp()))?;
     storage::restore_backup(&st.paths, &name)?;
-    *lock(&st.settings) = storage::load_settings(&st.paths);
+    let restored = storage::load_settings(&st.paths).doc().clone();
+    lock(&st.settings).replace(restored); // revision keeps increasing
     *lock(&st.workspaces) = storage::load_workspaces(&st.paths);
+    st.scene_generation.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
     lock(&st.history).clear();
     let snap = settings_snapshot(&st);
     let idx = lock(&st.workspaces).clone();

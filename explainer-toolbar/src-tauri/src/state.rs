@@ -70,13 +70,22 @@ pub struct AppState {
     pub flush: Mutex<(u64, Vec<String>)>,
     pub settings_dirty: (Mutex<bool>, Condvar),
     pub watchdog: (Mutex<bool>, Condvar),
-    pub main_alive_ms: AtomicU64,
     pub counter: AtomicU64,
     pub self_test: AtomicBool,
     pub force_overlays_visible: AtomicBool,
     pub pause_heartbeat_check: AtomicBool,
     pub last_toggle_ms: AtomicU64,
     pub loaded_once: Mutex<HashSet<String>>,
+    /// Overlays currently capturing input (drawing mode applied).
+    pub capturing: AtomicBool,
+    /// Overlay labels reported as failed, rebuilt by the next recovery.
+    pub pending_rebuild: Mutex<Vec<String>>,
+    /// Bumped on workspace switch / restore; saves from an older generation
+    /// are refused so a late save can never land in the wrong workspace.
+    pub scene_generation: AtomicU64,
+    /// Main-thread guard: last ping sent / answered.
+    pub ping_sent: AtomicU64,
+    pub ping_acked: AtomicU64,
 }
 
 impl AppState {
@@ -96,13 +105,17 @@ impl AppState {
             flush: Mutex::new((0, Vec::new())),
             settings_dirty: (Mutex::new(false), Condvar::new()),
             watchdog: (Mutex::new(false), Condvar::new()),
-            main_alive_ms: AtomicU64::new(explainer_core::util::unix_ms()),
             counter: AtomicU64::new(1),
             self_test: AtomicBool::new(false),
             force_overlays_visible: AtomicBool::new(false),
             pause_heartbeat_check: AtomicBool::new(false),
             last_toggle_ms: AtomicU64::new(0),
             loaded_once: Mutex::new(HashSet::new()),
+            capturing: AtomicBool::new(false),
+            pending_rebuild: Mutex::new(Vec::new()),
+            scene_generation: AtomicU64::new(1),
+            ping_sent: AtomicU64::new(0),
+            ping_acked: AtomicU64::new(0),
         }
     }
 

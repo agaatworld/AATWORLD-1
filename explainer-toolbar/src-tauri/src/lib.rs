@@ -18,7 +18,7 @@ use explainer_core::mode::ModeEvent;
 use explainer_core::{storage, util};
 use state::{lock, AppState};
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicU64, AtomicU8, Ordering};
 use std::sync::OnceLock;
 use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, RunEvent, WindowEvent};
@@ -26,22 +26,32 @@ use tauri_plugin_log::{RotationStrategy, Target, TargetKind};
 
 static APP: OnceLock<AppHandle> = OnceLock::new();
 static SYSTEM_EVENT_GEN: AtomicU64 = AtomicU64::new(0);
+/// Event kinds seen during the debounce window (bit per kind), so a
+/// "resumed" followed by a "display changed" still re-registers hotkeys.
+static SYSTEM_EVENT_KINDS: AtomicU8 = AtomicU8::new(0);
 
 /// Called from the toolbar window procedure (must not block): debounce,
 /// then reconcile monitors / re-register hotkeys on the main thread.
 pub(crate) fn on_system_event(ev: native::SystemEvent) {
     let Some(app) = APP.get().cloned() else { return };
+    let bit = match ev {
+        native::SystemEvent::DisplayChanged => 1,
+        native::SystemEvent::WorkAreaChanged => 2,
+        native::SystemEvent::Resumed => 4,
+    };
+    SYSTEM_EVENT_KINDS.fetch_or(bit, Ordering::SeqCst);
     let gen = SYSTEM_EVENT_GEN.fetch_add(1, Ordering::SeqCst) + 1;
     std::thread::spawn(move || {
         std::thread::sleep(Duration::from_millis(700));
         if SYSTEM_EVENT_GEN.load(Ordering::SeqCst) != gen {
             return; // a newer event will handle it
         }
-        log::info!("system event: {ev:?}");
+        let kinds = SYSTEM_EVENT_KINDS.swap(0, Ordering::SeqCst);
+        log::info!("system events (display=1, work area=2, resume=4): {kinds}");
         let a = app.clone();
         let _ = app.run_on_main_thread(move || {
             windows::reconcile_monitors(&a);
-            if ev == native::SystemEvent::Resumed {
+            if kinds & 4 != 0 {
                 shortcuts::register_all(&a);
             }
             modes::reapply(&a);
@@ -151,6 +161,7 @@ pub fn run() {
             log::info!("{} monitor(s): {:?}", monitors.len(), monitors.iter().map(|m| (&m.key, m.width, m.height, m.scale)).collect::<Vec<_>>());
             *lock(&app.state::<AppState>().monitors) = monitors.clone();
 
+            native::install_foreground_tracker();
             windows::create_toolbar(&handle)?;
             for m in &monitors {
                 if let Err(e) = windows::create_overlay(&handle, m, 0) {

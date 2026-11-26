@@ -147,16 +147,19 @@ fn reject(mode: Mode, event: ModeEvent, reason: &'static str) -> Outcome {
 }
 
 /// Stateful wrapper with a revision counter so frontends can ignore stale
-/// broadcasts that arrive out of order.
+/// broadcasts that arrive out of order. It also remembers whether the ink was
+/// hidden when a recovery started, so a page error while drawings are hidden
+/// (e.g. during screen sharing) never makes them reappear.
 #[derive(Debug, Clone)]
 pub struct ModeMachine {
     mode: Mode,
     revision: u64,
+    resume_hidden: bool,
 }
 
 impl Default for ModeMachine {
     fn default() -> Self {
-        Self { mode: Mode::Initializing, revision: 0 }
+        Self { mode: Mode::Initializing, revision: 0, resume_hidden: false }
     }
 }
 
@@ -168,12 +171,30 @@ impl ModeMachine {
         self.revision
     }
     pub fn apply(&mut self, event: ModeEvent) -> Outcome {
-        let out = next(self.mode, event);
+        let from = self.mode;
+        let mut out = next(from, event);
+        if from == Mode::Recovering && event == ModeEvent::RecoveryDone && self.resume_hidden {
+            out = Outcome::Changed { from, to: Mode::Hidden };
+        }
         if let Outcome::Changed { to, .. } = out {
+            if to == Mode::Recovering {
+                self.resume_hidden = from == Mode::Hidden;
+            } else if from == Mode::Recovering {
+                self.resume_hidden = false;
+            }
             self.mode = to;
             self.revision += 1;
         }
         out
+    }
+    /// Effects of the current state (see [`effects`]), taking a hidden-ink
+    /// recovery into account.
+    pub fn effects(&self) -> Effects {
+        let mut e = effects(self.mode);
+        if self.mode == Mode::Recovering && self.resume_hidden {
+            e.overlays_visible = OverlayVisibility::Hidden;
+        }
+        e
     }
 }
 
@@ -278,6 +299,22 @@ mod tests {
         let out = next(Mode::Annotating, ModeEvent::HideInk);
         assert_eq!(out.mode(), Mode::Hidden);
         assert!(!effects(Mode::Hidden).overlays_capture_input);
+    }
+
+    #[test]
+    fn recovery_from_hidden_keeps_ink_hidden() {
+        let mut mm = ModeMachine::default();
+        mm.apply(ModeEvent::Ready);
+        mm.apply(ModeEvent::HideInk);
+        mm.apply(ModeEvent::FrontendLost);
+        assert_eq!(mm.mode(), Mode::Recovering);
+        assert_eq!(mm.effects().overlays_visible, OverlayVisibility::Hidden);
+        assert_eq!(mm.apply(ModeEvent::RecoveryDone), Outcome::Changed { from: Mode::Recovering, to: Mode::Hidden });
+        // a later recovery that started visible returns to desktop again
+        mm.apply(ModeEvent::ShowInk);
+        mm.apply(ModeEvent::FrontendLost);
+        mm.apply(ModeEvent::RecoveryDone);
+        assert_eq!(mm.mode(), Mode::Desktop);
     }
 
     #[test]
