@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../bridge/api";
 import { listenAll } from "../bridge/ipc";
-import { Editor, type EditorEvent, type PointerSample, type TextEdit } from "../engine/editor";
+import { Editor, type EditorEvent, type PointerSample, type TextEdit, type ToolId } from "../engine/editor";
 import type { Board } from "../engine/model";
 import { parseScene } from "../engine/validate";
 import { selectTool, setDrawing } from "../shared/actions";
@@ -313,6 +313,7 @@ export function OverlayApp() {
   useEffect(() => {
     const canvas = liveRef.current!;
     let active: number | null = null;
+    let penEraserRestore: ToolId | null = null;
     const ratio = () => window.devicePixelRatio || 1;
     const sample = (e: PointerEvent): PointerSample => ({
       x: e.clientX * ratio(),
@@ -348,6 +349,11 @@ export function OverlayApp() {
       active = e.pointerId;
       canvas.setPointerCapture(e.pointerId);
       setBusy(true);
+      // The eraser end of a stylus erases whole strokes for this gesture only.
+      if (e.pointerType === "pen" && (e.buttons & 32) !== 0 && ed.activeTool !== "eraser") {
+        penEraserRestore = ed.activeTool;
+        ed.setTool("eraser", styleFor(getApp().ui, "eraser"));
+      }
       ed.pointerDown(sample(e));
     };
     const move = (e: PointerEvent) => {
@@ -364,6 +370,10 @@ export function OverlayApp() {
       if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
       if (cancel) ed.cancelGesture();
       else ed.pointerUp(sample(e));
+      if (penEraserRestore) {
+        ed.setTool(penEraserRestore, styleFor(getApp().ui, penEraserRestore));
+        penEraserRestore = null;
+      }
       setBusy(false);
       setRev((r) => r + 1);
     };

@@ -264,7 +264,26 @@ export function ToolbarApp() {
   const overflow = allPinned.length - pinned.length;
   return (
     <div className="tb-root" onPointerDown={background}>
-      <div ref={pillRef} className="pill surface entering" data-orient={ui.orientation} style={pillPos} role="toolbar" aria-label={t("appName")} aria-orientation={ui.orientation}>
+      <div
+        ref={pillRef}
+        className="pill surface entering"
+        data-orient={ui.orientation}
+        style={pillPos}
+        role="toolbar"
+        aria-label={t("appName")}
+        aria-orientation={ui.orientation}
+        onKeyDown={(e) => {
+          // Arrow keys move between buttons (ARIA toolbar pattern).
+          const next = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : ["ArrowUp", "ArrowLeft"].includes(e.key) ? -1 : 0;
+          if (!next) return;
+          const items = [...e.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")];
+          const i = items.indexOf(document.activeElement as HTMLButtonElement);
+          if (i < 0) return;
+          e.preventDefault();
+          const rtlFlip = document.documentElement.dir === "rtl" && (e.key === "ArrowLeft" || e.key === "ArrowRight") ? -1 : 1;
+          items[(i + next * rtlFlip + items.length) % items.length]?.focus();
+        }}
+      >
         <button type="button" className="grip" title={t("tb.drag")} aria-label={t("tb.drag")} onPointerDown={startDrag}>
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
             {[3, 7, 11].flatMap((a) => [4.5, 9.5].map((b) => <circle key={`${a}${b}`} cx={ui.orientation === "vertical" ? a : b} cy={ui.orientation === "vertical" ? b : a} r="1.15" fill="currentColor" />))}
