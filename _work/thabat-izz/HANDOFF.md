@@ -170,6 +170,20 @@ I. **«الكلمة مقاومة» (Kalima Muqawama) brand identity + motion sys
    Rules kept: never retype or redraw the logo words; original logo file always included unchanged; no music; no text on faces; only real captions/owner titles.
    Logo image is NOT in this repo (keep it in the private artifact if needed). Phase 6 list (after approval) is in the kit's `Deliverables/Brand_Guidelines/` doc.
 
+J. **Brand B «Imperial Archive» chosen (26 Nov)** — owner answered «B». Defaults told to him: B bronze metal (not the orange gold), «عز» stays orange, emblem crop only as an OPTION.
+   Final kit `/home/user/final/Kalima_Muqawama_Brand_Kit/Deliverables/` (owner's folder layout; exploration moved to `Exploration_Phase1-4_A_B_C/`), zips `KM_B_Final_part1-6.zip`.
+   Guide artifact (same link, v3): https://claude.ai/artifact/8WuVZZWzWA3WyC37uSZmbR + PDF in Brand_Guidelines. Code `code/brand-km/`: `km.py` (B tokens, archive grounds, cards, seals),
+   `vids.py` (outro 4 s, sting 1.5 s, caption demo, kinetic demo, 14 transitions + library), `tpl.py` (logo files, covers ×3, carousel ×4, X, FB, quote, story, profile, components).
+   **Owner's layout lesson (he was angry):** everything on ONE centre axis x=540; groups centred on their circle/card; equal gaps; no drifting text; balanced line breaks (no orphan word);
+   text never meets the corner logo (logo at 118,348 → keep text ≤680 px wide in the top band). Check every frame for this before delivering.
+K. **Video 1 «الصوت والطريق والقصيدة»** (in-car qasida, 1:58.9) — `/home/user/final/video1-qasida/` (full 1080×1920 voice-only + with-sfx, 122 MB each; SEND_* 29 MB versions were sent;
+   4 covers; REPORT_Video1.md). Code `code/video1-qasida/q1.py` (6 scenes, YuNet face tracking keeps text above/below the head, micro-jitter stabilisation, per-scene grades),
+   `covers1.py`, `sfx1.py`. Owner asked: no restrictions on the peak («أحرق… برصاصاتي») → typography/ember/streak treatment, no violence imagery. Uncertain words listed in the report.
+   YuNet model: HF `opencv/face_detection_yunet` (cv2 5 has no CascadeClassifier).
+L. **Video 2 «القفل الحديدي»** (elderly Taizi woman, 10 s) — `/home/user/final/video2-iron-lock/` (video, 3 covers, report). Her 16:9 frame on top, word panel below,
+   real Unsplash photo (Alex Gorin, id Bw3m7HqLsMc) of a padlock + bolt slides in on «قفلة حديد». Dialect words to confirm: كحران / أخوتي (أُخيّتي?) / مردحة. Voice only.
+M. Analysis texts of 4 videos for ChatGPT: `/home/user/final/video-analysis/Video_1..4_*.md` (line + word timings). Videos 3 and 4 briefs not received yet.
+
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
 - `<scratch>/taiz/fonts/th/*.ttf` (Thmanyah), `<scratch>/sfx3/m<id>.wav` (sound effects; scripts also look in sfx/s and sfx2/m),

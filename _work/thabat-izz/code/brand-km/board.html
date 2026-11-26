@@ -2,102 +2,100 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Amiri:wght@400;700&family=Readex+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap">
 <style>
-/* Layout: one seal-centred column; palettes side by side; a direction switcher swaps the styleframe strip. Single dark look by design (the brand is a night navy). */
+/* Layout: an archive ledger — one column of numbered chapters on black-navy, parchment index cards for rules. Single dark look by design (direction B). */
 :root{
-  --ground:#0D1520; --panel:#121C2A; --line:#25364A; --steel:#536D86;
-  --gold:#DDA653; --parch:#E9E1D4; --muted:#A7B1BD; --ember:#B85F46;
-  --display:"Readex Pro","Almarai",system-ui,sans-serif;
-  --body:"Almarai","Readex Pro",system-ui,sans-serif;
-  --verse:"Amiri","Almarai",serif;
-  --latin:"Readex Pro",system-ui,sans-serif;
+  --ground:#080D18; --panel:#0E1A33; --line:#23314F; --royal:#1E3A6E; --silver:#A3A9AF;
+  --bronze:#C9A46A; --bronze-d:#7E5F33; --parch:#EDE3CC; --ink:#080D18; --seal:#C0604E; --muted:#9AA3B0;
+  --display:"Amiri","Almarai",serif;
+  --body:"Almarai","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --data:"IBM Plex Sans Arabic","Almarai",system-ui,sans-serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{background:var(--ground);color:var(--parch);font-family:var(--body);font-size:18px;line-height:1.75;margin:0;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-main{max-width:1180px;margin:0 auto;padding-block:28px 64px;display:flex;flex-direction:column;gap:72px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
-h1{font-size:clamp(34px,6vw,58px);font-weight:700}
-h2{font-size:clamp(26px,3.6vw,36px);font-weight:700}
-h3{font-size:22px;font-weight:700}
+main{max-width:1180px;margin:0 auto;padding-block:28px 64px;display:flex;flex-direction:column;gap:76px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.3}
+h1{font-family:var(--display);font-size:clamp(38px,6.4vw,64px);font-weight:700}
+h2{font-family:var(--display);font-size:clamp(28px,3.8vw,40px);font-weight:700}
+h3{font-size:21px;font-weight:800}
 p{margin:0;max-width:65ch}
-.en{font-family:var(--latin);color:var(--muted);font-size:15px;letter-spacing:.04em;direction:ltr;unicode-bidi:isolate}
-.sec{display:flex;flex-direction:column;gap:22px}
-.sec-head{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:22px}
-.lead{color:var(--muted);font-size:19px}
 img,video{max-width:100%;display:block}
-
-/* hero */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:40px;align-items:center}
-.hero-copy{display:flex;flex-direction:column;gap:18px;min-width:0}
-.seal{position:relative;border-radius:50%;overflow:hidden;aspect-ratio:1;max-width:100%;box-shadow:0 0 0 1px var(--line),0 30px 80px rgba(0,0,0,.45)}
-.seal img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
-.facts{display:flex;flex-wrap:wrap;gap:10px}
-.fact{border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:16px;color:var(--muted)}
-.fact b{color:var(--parch);font-weight:700}
-
-/* palettes */
-.dirs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.dir{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.dir.rec{border-color:var(--gold)}
-.dir-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.badge{font-size:14px;font-weight:800;color:#1A1206;background:var(--gold);border-radius:999px;padding:2px 12px}
-.sw{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;align-items:center}
-.chip{width:44px;height:44px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-.sw-name{font-size:16px;line-height:1.4}
-.sw-name small{display:block;font-family:var(--latin);color:var(--muted);font-size:13px;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
-.grads{display:flex;flex-direction:column;gap:8px}
-.grad{height:22px;border-radius:6px}
-.dir .mini{border-radius:50%;width:120px;align-self:center;margin-top:6px}
-
-/* switcher */
-.switch{display:flex;gap:8px;flex-wrap:wrap}
-.switch button{font:inherit;font-size:17px;font-weight:700;color:var(--parch);background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 20px;cursor:pointer}
-.switch button[aria-selected="true"]{background:var(--parch);color:var(--ground);border-color:var(--parch)}
-.switch button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
-.frame{display:flex;flex-direction:column;gap:8px;min-width:0}
-.frame .media{border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 0 1px var(--line);aspect-ratio:9/16}
-.frame .media.wide{aspect-ratio:4/5}
-.frame .media > *{width:100%;height:100%;object-fit:cover}
-.frame figcaption{font-size:15px;color:var(--muted);line-height:1.5}
-.frame figcaption b{color:var(--parch);display:block;font-size:16px}
 figure{margin:0}
-.carousel-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;align-items:start}
-.note{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
-.note ul{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
-.sheet{border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
-.capspec{display:flex;flex-wrap:wrap;gap:10px}
-.capspec span{border-radius:8px;padding:4px 12px;font-weight:800}
+.en{font-family:var(--data);color:var(--muted);font-size:14px;letter-spacing:.05em;direction:ltr;unicode-bidi:isolate}
+.lead{color:var(--muted);font-size:19px}
+.sec{display:flex;flex-direction:column;gap:22px}
+.head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:baseline;border-top:1px solid var(--line);padding-top:22px}
+.num{font-family:var(--data);color:var(--bronze);font-size:15px;font-weight:600;border:1px solid var(--bronze);border-radius:999px;padding:2px 12px;font-variant-numeric:tabular-nums}
+.head-t{display:flex;flex-direction:column;gap:6px;min-width:0}
 
-/* table */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
-table{border-collapse:collapse;width:100%;min-width:520px;font-size:17px}
-th,td{padding:12px 16px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-th:first-child,td:first-child{text-align:right}
-thead th{color:var(--muted);font-weight:700;font-size:15px}
-tr.total td{font-weight:800;color:var(--gold);border-bottom:0}
-td.best{color:var(--gold);font-weight:800}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:40px;align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:18px;min-width:0}
+.seal{border-radius:50%;overflow:hidden;aspect-ratio:1;box-shadow:0 0 0 1px var(--line),0 0 0 10px var(--ground),0 0 0 11px var(--bronze-d),0 30px 80px rgba(0,0,0,.5)}
+.seal img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:16px;color:var(--muted)}
+.chip b{color:var(--parch)}
 
-.ask{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
-.q .n{font-family:var(--latin);color:var(--gold);font-weight:700;font-size:15px}
-.verse{font-family:var(--verse);font-size:22px}
+.card{background:var(--parch);color:var(--ink);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:10px;
+  box-shadow:inset 0 6px 0 0 var(--royal)}
+.card h3{color:var(--ink)}
+.card ul{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.card .k{color:var(--bronze-d);font-weight:800}
+.card .e{color:#8E3B2F;font-weight:800}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.panel ul{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.two.side{grid-template-columns:minmax(0,1fr) minmax(0,340px)}
+.grid{align-items:start}
+
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tile{display:flex;flex-direction:column;gap:8px;min-width:0}
+.tile .m{border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 0 1px var(--line)}
+.tile .m.sq{aspect-ratio:1}
+.tile .m.v{aspect-ratio:9/16}
+.tile .m.p{aspect-ratio:4/5}
+.tile .m > *{width:100%;height:100%;object-fit:cover}
+.tile .m.sq > img{object-fit:contain;background:#0B1119}
+.tile figcaption{font-size:15px;color:var(--muted);line-height:1.5}
+.tile figcaption b{display:block;color:var(--parch);font-size:16px}
+.wide{border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+
+.sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.s{display:flex;flex-direction:column;gap:8px;min-width:0}
+.s .c{aspect-ratio:1/1.1;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.s b{font-size:16px}
+.s small{font-family:var(--data);color:var(--muted);font-size:13px;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.grads{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.grads div{display:flex;flex-direction:column;gap:6px}
+.grads span{height:44px;border-radius:8px;display:block}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:17px}
+th,td{padding:12px 16px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{color:var(--muted);font-size:15px;font-weight:700}
+tr:last-child td{border-bottom:0}
+td.mono{font-family:var(--data);direction:ltr;text-align:left;color:var(--bronze);font-variant-numeric:tabular-nums}
+.cap-demo{display:flex;flex-wrap:wrap;gap:10px}
+.cap-demo span{background:#080D18;border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-weight:800}
+ol.list{margin:0;padding-inline-start:26px;columns:2;column-gap:32px}
+ol.list li{break-inside:avoid;padding-block:3px}
 footer{color:var(--muted);font-size:15px;border-top:1px solid var(--line);padding-top:18px}
+.verse{font-family:var(--display);font-size:24px}
 
 @media (max-width:980px){
-  .strip{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .dirs{grid-template-columns:minmax(0,1fr)}
-  .hero{grid-template-columns:minmax(0,1fr)}
-  .seal{max-width:380px;margin-inline:auto}
-  .carousel-row{grid-template-columns:minmax(0,1fr)}
+  .hero{grid-template-columns:minmax(0,1fr)} .seal{max-width:340px;margin-inline:auto;width:100%}
+  .g5{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sw{grid-template-columns:repeat(3,minmax(0,1fr))} .grads{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:560px){
-  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ask{grid-template-columns:minmax(0,1fr)}
-  body{font-size:17px}
+  .g3,.g5{grid-template-columns:repeat(2,minmax(0,1fr))} ol.list{columns:1} body{font-size:17px}
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 </style>
@@ -106,181 +104,195 @@ footer{color:var(--muted);font-size:15px;border-top:1px solid var(--line);paddin
 
   <section class="hero">
     <div class="hero-copy">
-      <span class="en">Kalima Muqawama · Brand identity and motion system · Phases 1–4</span>
-      <h1>هوية «الكلمة مقاومة»</h1>
-      <p class="lead">ثلاثة اتجاهات لونية مبنية على شعارك الأصلي، وكل اتجاه مطبّق على نماذج حقيقية من فيديوهات القناة. اختر اتجاهاً واحداً لنبدأ الإنتاج الكامل.</p>
-      <div class="facts">
-        <span class="fact">الشعار الأصلي <b>محفوظ كما هو</b></span>
-        <span class="fact">الكلمات والحروف <b>لم تُغيَّر</b></span>
-        <span class="fact">الصورة داخل الدائرة <b>لم تُلمس</b></span>
-        <span class="fact">الصوت <b>بدون موسيقى</b></span>
+      <span class="en">Kalima Muqawama · Brand system · Direction B «Imperial Archive» · Production v1 · 26 Nov 2026</span>
+      <h1>دليل هوية «الكلمة مقاومة»</h1>
+      <p class="lead">الاتجاه الذي اخترته: <b style="color:var(--parch)">الأرشيف الإمبراطوري</b>. أسود كحلي، أزرق ملكي، برونز معتّق، فضي حجري، ورق رق. كل ملفات الإنتاج هنا: الشعار، الحركة، الكابشن، الانتقالات، الصوت، والقوالب.</p>
+      <div class="chips">
+        <span class="chip">الشعار الأصلي <b>محفوظ كما هو</b></span>
+        <span class="chip">الكلمات والحروف <b>لم تُغيَّر</b></span>
+        <span class="chip">الصورة <b>لم تُلمس</b></span>
+        <span class="chip">الصوت <b>بدون موسيقى</b></span>
       </div>
     </div>
-    <figure class="seal"><img src="m/logo_original.jpg" alt="الشعار الأصلي: الكلمة مقاومة، وفي الوسط صورة المقاتل وكلمتا الثبات عز"></figure>
+    <figure class="seal"><img src="m2/logo_B.jpg" alt="الشعار بألوان الاتجاه B"></figure>
   </section>
 
   <section class="sec" aria-labelledby="s1">
-    <div class="sec-head"><span class="en">Phase 1 · Logo analysis</span><h2 id="s1">ماذا وجدنا في الشعار</h2></div>
-    <div class="carousel-row">
-      <div class="note">
-        <h3>نقاط القوة</h3>
+    <div class="head"><span class="num">01</span><div class="head-t"><span class="en">Logo</span><h2 id="s1">الشعار</h2></div></div>
+    <div class="grid g4">
+      <figure class="tile"><div class="m sq"><img src="m2/logo_original.jpg" alt="الأصل"></div><figcaption><b>الأصل</b>يبقى متاحاً دائماً ولا يُعدَّل.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/logo_B.jpg" alt="B"></div><figcaption><b>B الأساسي</b>للاستعمال اليومي.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/logo_B_dark.jpg" alt="داكن"></div><figcaption><b>داكن</b>فوق الفيديو الليلي.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/logo_B_light.jpg" alt="فاتح"></div><figcaption><b>فاتح</b>فوق الورق والخلفيات الفاتحة.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/logo_B_mono_bronze.jpg" alt="لون واحد برونزي"></div><figcaption><b>لون واحد: برونزي</b>للطباعة والختم.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/logo_B_mono_ink.jpg" alt="لون واحد حبر"></div><figcaption><b>لون واحد: حبر</b>على الورق الأبيض.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/avatar_B.png" alt="صورة الحساب"></div><figcaption><b>صورة الحساب</b>دائرة كاملة 1080.</figcaption></figure>
+      <figure class="tile"><div class="m sq"><img src="m2/emblem_B.png" alt="الشارة"></div><figcaption><b>الشارة الصغيرة (خيار)</b>قصّ الدائرة الداخلية فقط. تحتاج موافقتك.</figcaption></figure>
+    </div>
+    <div class="two side">
+      <div class="card">
+        <h3>قواعد الشعار</h3>
         <ul>
-          <li>ختم متماثل قوي يُعرف من بعيد.</li>
-          <li>صورة المقاتل على العكازين هي قلب الهوية: رمز الثبات.</li>
-          <li>الحلقات والخطوط الثمانية والمثلثان تعطينا لغة حركة جاهزة: رسم دوائر، دوران، فتح دائري.</li>
-          <li>حروف «الكلمة مقاومة» مرسومة بملمس حجر، ولا تشبه أي خط جاهز.</li>
+          <li>لا تُعاد كتابة «الكلمة مقاومة» بأي خط. نستعمل حروف الشعار نفسها.</li>
+          <li>لا تُغيَّر الصورة ولا كلمتا «الثبات عز». «عز» تبقى برتقالية كما في الأصل.</li>
+          <li>مساحة فارغة حول الشعار لا تقل عن ثُمن قطره.</li>
+          <li>أصغر حجم للشعار الكامل 96 بكسل. أصغر من ذلك: الشارة (بعد موافقتك).</li>
+          <li>العلامة في زاوية واحدة فقط من الفيديو: أعلى اليسار، 118 بكسل.</li>
         </ul>
       </div>
-      <div class="note">
-        <h3>ما يحتاج انتباهاً</h3>
-        <ul>
-          <li>تحت 96 بكسل تضيع الحروف وتفاصيل الصورة. لذلك أقترح «شارة صغيرة» للأحجام الصغيرة جداً.</li>
-          <li>لونان دافئان يتنافسان: برتقالي «عز» وذهبي الخطوط. الذهبي أسطع عنصر فيسحب العين عن المقاتل.</li>
-          <li>شكل مركز التصويب قد يُقرأ عسكرياً. في الحركة نعامله كبوصلة وأسطرلاب: اتجاه وثبات.</li>
-          <li>الألوان المقيسة: خلفية <span class="en">#0D1929</span>، حلقة <span class="en">#304C69</span>، ذهبي <span class="en">#F4B96B</span>، حروف <span class="en">#D7CDBE</span>، «عز» <span class="en">#FB9856</span>.</li>
-        </ul>
-      </div>
+      <figure class="wide"><img src="m2/watermark_guide.jpg" alt="مكان العلامة في الريلز"></figure>
     </div>
   </section>
 
   <section class="sec" aria-labelledby="s2">
-    <div class="sec-head"><span class="en">Phase 2 · Three directions</span><h2 id="s2">الاتجاهات الثلاثة</h2>
-      <p class="lead">الذهبي يبقى لوناً مميزاً قليل الاستعمال: كلمة مهمة، خط يُرسم، إطار. وليس خلفية.</p></div>
-    <div class="dirs" id="dirs"></div>
-    <figure class="sheet"><img src="m/palette.jpg" alt="لوحة الألوان والتدرجات للاتجاهات الثلاثة"></figure>
+    <div class="head"><span class="num">02</span><div class="head-t"><span class="en">Colour</span><h2 id="s2">الألوان</h2>
+      <p class="lead">البرونز توقيع قليل: كلمة مهمة، خط يُرسم، إطار. وليس خلفية.</p></div></div>
+    <div class="sw">
+      <div class="s"><span class="c" style="background:#080D18"></span><b>أسود كحلي</b><small>Black Navy #080D18</small><span class="lead" style="font-size:15px">الخلفية</span></div>
+      <div class="s"><span class="c" style="background:#1E3A6E"></span><b>أزرق ملكي</b><small>Royal Blue #1E3A6E</small><span class="lead" style="font-size:15px">الأسطح والحلقة</span></div>
+      <div class="s"><span class="c" style="background:#A3A9AF"></span><b>فضي حجري</b><small>Silver Stone #A3A9AF</small><span class="lead" style="font-size:15px">الخطوط والبيانات</span></div>
+      <div class="s"><span class="c" style="background:#A8844F"></span><b>برونز معتّق</b><small>Aged Bronze #A8844F</small><span class="lead" style="font-size:15px">التوقيع</span></div>
+      <div class="s"><span class="c" style="background:#EDE3CC"></span><b>رق</b><small>Parchment #EDE3CC</small><span class="lead" style="font-size:15px">النص والبطاقات</span></div>
+      <div class="s"><span class="c" style="background:#8E3B2F"></span><b>شمع الختم</b><small>Seal Wax #8E3B2F</small><span class="lead" style="font-size:15px">التمييز العاطفي</span></div>
+    </div>
+    <div class="grads">
+      <div><span style="background:linear-gradient(90deg,#04070E,#0E1A33,#1E3A6E)"></span><small class="en">Archive Depth</small></div>
+      <div><span style="background:linear-gradient(90deg,#5A4024,#9A7646,#D9BF8C,#84633A,#C4A06A)"></span><small class="en">Aged Bronze</small></div>
+      <div><span style="background:linear-gradient(90deg,#3A4048,#7D858D,#C9CDD1)"></span><small class="en">Silver Stone</small></div>
+      <div><span style="background:linear-gradient(90deg,#5E241C,#8E3B2F,#B5634C)"></span><small class="en">Seal Reveal</small></div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>الدور</th><th>على الخلفية الداكنة</th><th>على الورق الفاتح</th></tr></thead>
+      <tbody>
+        <tr><td>النص</td><td class="mono">#EDE3CC</td><td class="mono">#080D18</td></tr>
+        <tr><td>الكلمة المهمة</td><td class="mono">#C9A46A</td><td class="mono">#7E5F33</td></tr>
+        <tr><td>التمييز العاطفي (كلمة واحدة في السطر)</td><td class="mono">#C0604E</td><td class="mono">#8E3B2F</td></tr>
+        <tr><td>المصدر والبيانات</td><td class="mono">#A3A9AF</td><td class="mono">#5E6670</td></tr>
+      </tbody>
+    </table></div>
   </section>
 
   <section class="sec" aria-labelledby="s3">
-    <div class="sec-head"><span class="en">Phase 3 · Styleframes</span><h2 id="s3">النماذج على محتوى حقيقي</h2>
-      <p class="lead">اختر الاتجاه لتغيير النماذج. الافتتاحية فيديو 5 ثوانٍ بصوت: اضغط تشغيل.</p></div>
-    <div class="switch" role="tablist" aria-label="الاتجاه">
-      <button role="tab" id="t-A" aria-selected="true" data-k="A">A أطلس منتصف الليل</button>
-      <button role="tab" id="t-B" aria-selected="false" data-k="B">B الأرشيف الإمبراطوري</button>
-      <button role="tab" id="t-C" aria-selected="false" data-k="C">C الزيتون والبرونز</button>
+    <div class="head"><span class="num">03</span><div class="head-t"><span class="en">Typography</span><h2 id="s3">الخطوط</h2></div></div>
+    <div class="tbl"><table>
+      <thead><tr><th>الاستعمال</th><th>الخط</th><th>الحجم على عرض 1080</th></tr></thead>
+      <tbody>
+        <tr><td>العناوين، الكلمات القوية، الأغلفة</td><td>NT Panorama Naskh</td><td class="mono">130–250</td></tr>
+        <tr><td>الكابشن</td><td>Almarai ExtraBold</td><td class="mono">70 (≥ 60)</td></tr>
+        <tr><td>الشعر والاقتباس ونص الكاروسيل</td><td><span class="verse">Amiri</span></td><td class="mono">58–76</td></tr>
+        <tr><td>المصدر، الأرقام، التسميات</td><td>IBM Plex Sans Arabic</td><td class="mono">28–40</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" aria-labelledby="s4">
+    <div class="head"><span class="num">04</span><div class="head-t"><span class="en">Logo animation · intro · outro · sting</span><h2 id="s4">الافتتاحية والختام</h2>
+      <p class="lead">اضغط تشغيل للصوت. الصوت مؤثرات فقط: هبّة، لمعة، ضربة كبيرة عند استقرار الحروف، بريق.</p></div></div>
+    <div class="grid g3">
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/intro.jpg" src="m2/intro.mp4"></video></div><figcaption><b>الافتتاحية 5 ث</b>الدوائر تُرسم بشرارة، الحلقة تدور، الصورة تنفتح، الحروف تستقر.</figcaption></figure>
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/outro.jpg" src="m2/outro.mp4"></video></div><figcaption><b>الختام 4 ث</b>الحلقة تُرسم، الشعار يظهر، «كلنا مقاومة»، ثم تُغلق الدائرة.</figcaption></figure>
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/sting.jpg" src="m2/sting.mp4"></video></div><figcaption><b>فاصل قصير 1.5 ث</b>بين أجزاء الفيديو.</figcaption></figure>
     </div>
-    <div class="strip">
-      <figure class="frame"><div class="media"><video id="v-op" controls playsinline preload="none" poster="m/A_opener.jpg" src="m/A_opener.mp4"></video></div>
-        <figcaption><b>افتتاحية الشعار</b>الدوائر تُرسم بشرارة، الحلقة تدور، الصورة تنفتح، الحروف تظهر مع الضربة.</figcaption></figure>
-      <figure class="frame"><div class="media"><img data-n="logo" src="m/A_logo.jpg" alt="الشعار بألوان الاتجاه" style="object-fit:contain;background:#0B1119"></div>
-        <figcaption><b>الشعار بألوان الاتجاه</b>نفس الشعار، تغيّرت الألوان فقط.</figcaption></figure>
-      <figure class="frame"><div class="media"><img data-n="caption" src="m/A_caption.jpg" alt="نموذج الكابشن"></div>
-        <figcaption><b>الكابشن</b>«أمام رائد ورفاقه سؤال صعب» من قصة ضاويله.</figcaption></figure>
-      <figure class="frame"><div class="media"><img data-n="thumb" src="m/A_thumb.jpg" alt="غلاف ريلز"></div>
-        <figcaption><b>غلاف ريلز</b>عنوانك: «معركة ضاويله الليلية».</figcaption></figure>
-      <figure class="frame"><div class="media"><img data-n="motion" src="m/A_motion.jpg" alt="لقطة موشن"></div>
-        <figcaption><b>موشن</b>قناع دائري، حلقات بعلامات، خط ذهبي يُرسم.</figcaption></figure>
-      <figure class="frame"><div class="media"><img data-n="type3d" src="m/A_type3d.jpg" alt="خط ثلاثي الأبعاد"></div>
-        <figcaption><b>خط ثلاثي الأبعاد</b>حروف الشعار الأصلية نفسها، مجسّمة بجوانب ذهبية.</figcaption></figure>
-    </div>
-    <div class="carousel-row">
-      <figure class="frame"><div class="media wide"><img data-n="carousel" src="m/A_carousel.jpg" alt="كاروسيل 4:5"></div>
-        <figcaption><b>كاروسيل 4:5</b>كلام الخطيب نفسه، مع ذكر المصدر.</figcaption></figure>
-      <div class="note">
-        <h3>نظام الكابشن</h3>
-        <div class="capspec">
-          <span style="background:#101A2A;color:#E9E1D4;box-shadow:0 0 0 1px var(--line)">النص</span>
-          <span style="background:#101A2A;color:#DDA653;box-shadow:0 0 0 1px var(--line)">الكلمة المهمة</span>
-          <span style="background:#101A2A;color:#B85F46;box-shadow:0 0 0 1px var(--line)">التمييز العاطفي</span>
-        </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s5">
+    <div class="head"><span class="num">05</span><div class="head-t"><span class="en">Caption system · kinetic typography</span><h2 id="s5">الكابشن والكتابة الحركية</h2></div></div>
+    <div class="grid g3">
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/captions.jpg" src="m2/captions.mp4"></video></div><figcaption><b>نظام الكابشن</b>من قصة ضاويله: كلمة بكلمة مع الصوت.</figcaption></figure>
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/kinetic.jpg" src="m2/kinetic.mp4"></video></div><figcaption><b>الكتابة الحركية</b>«سجل يا تاريخ» بصوت الخطيب: ختم، بطاقة أرشيف، دائرة تُغلق عند «إغلاق».</figcaption></figure>
+      <div class="card">
+        <h3>مواصفات الكابشن</h3>
+        <div class="cap-demo"><span style="color:#EDE3CC">النص</span><span style="color:#C9A46A">الكلمة المهمة</span><span style="color:#C0604E">عاطفي</span></div>
         <ul>
-          <li>خط Almarai بحجم 70 على عرض 1080، ولا يقل عن 60.</li>
-          <li>خلفية كحلية بشفافية 84%، وخط ذهبي رفيع أعلاها.</li>
-          <li>الكلمات تظهر كلمة بكلمة مع الصوت، والكلمة النشطة تحتها خط.</li>
-          <li>التمييز العاطفي كلمة واحدة في السطر كحد أقصى.</li>
-          <li>أسفل الوجوه دائماً، وبعيداً عن أزرار ريلز (أعلى 270، أسفل 420، يمين 120).</li>
-        </ul>
-        <h3>الخطوط</h3>
-        <ul>
-          <li>العناوين والكلمات القوية والأغلفة: NT Panorama Naskh.</li>
-          <li>الكابشن: Almarai.</li>
-          <li>النص الثانوي: Readex Pro في A، و<span class="verse">Amiri</span> في B، و Noto Kufi في C.</li>
+          <li>Almarai بحجم 70 على عرض 1080.</li>
+          <li>خلفية أسود كحلي بشفافية 84%، وخط برونزي رفيع أعلاها.</li>
+          <li>الكلمة تظهر مع صوتها، والكلمة النشطة تحتها خط.</li>
+          <li>أسفل الوجوه دائماً. منطقة ريلز الآمنة: أعلى 270، أسفل 420، يمين 120.</li>
+          <li>الكلمات من الكلام الحقيقي فقط.</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="s4">
-    <div class="sec-head"><span class="en">Logo variations · small-scale · gold tests</span><h2 id="s4">تنويعات الشعار</h2>
-      <p class="lead">الأصل، ألوان محسّنة، داكن، فاتح، لون واحد، صورة الحساب، والشارة الصغيرة (مقترح).</p></div>
-    <figure class="sheet"><img data-n="variations" src="m/A_variations.jpg" alt="تنويعات الشعار للاتجاه المختار"></figure>
-    <figure class="sheet"><img data-n="small" src="m/A_small.jpg" alt="اختبار الأحجام الصغيرة"></figure>
-    <figure class="sheet"><img src="m/gold_test.jpg" alt="اختبار الذهبي والبرونزي"></figure>
-  </section>
-
-  <section class="sec" aria-labelledby="s5">
-    <div class="sec-head"><span class="en">Phase 4 · Comparison and recommendation</span><h2 id="s5">المقارنة والتوصية</h2></div>
-    <figure class="sheet"><img src="m/comparison.jpg" alt="مقارنة الاتجاهات الثلاثة في كل النماذج"></figure>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>المعيار (من 5)</th><th>A</th><th>B</th><th>C</th></tr></thead>
-        <tbody>
-          <tr><td>القرب من الشعار الأصلي</td><td class="best">5</td><td>4</td><td>3</td></tr>
-          <tr><td>الوضوح على الهاتف</td><td class="best">5</td><td>4</td><td>4</td></tr>
-          <tr><td>التميّز</td><td>4</td><td>4</td><td class="best">5</td></tr>
-          <tr><td>الإحساس المناسب للقناة</td><td class="best">5</td><td>4</td><td>4</td></tr>
-          <tr><td>المرونة: فاتح وداكن وكل أنواع المحتوى</td><td class="best">5</td><td>4</td><td>3</td></tr>
-          <tr class="total"><td>المجموع</td><td>24</td><td>20</td><td>19</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="note" style="border-color:var(--gold)">
-      <h3>توصيتي: A أطلس منتصف الليل</h3>
-      <p>هو امتداد طبيعي لشعارك: يحافظ على الكحلي والذهبي ويُقرأ جيداً في كل المقاسات. نأخذ من B فقط البطاقات الفضية للأرقام والتواريخ في الفيديوهات التوثيقية، وخط Amiri لأبيات الشعر. ويبقى C خياراً لسلسلة خاصة عن الأرض والجبل، وليس للهوية العامة.</p>
-    </div>
-  </section>
-
   <section class="sec" aria-labelledby="s6">
-    <div class="sec-head"><span class="en">Phase 5 · Your approval</span><h2 id="s6">أحتاج موافقتك على أربعة أشياء</h2>
-      <p class="lead">اكتب الأجوبة في المحادثة، وأبدأ الإنتاج الكامل مباشرة.</p></div>
-    <div class="ask">
-      <div class="q"><span class="n">1</span><h3>أي اتجاه؟</h3><p>A (أنصح به)، أو B، أو C.</p></div>
-      <div class="q"><span class="n">2</span><h3>أي ذهبي؟</h3><p>ذهبي الشعار الأصلي البرتقالي، أو «الذهب العتيق» الأهدأ. راجع اختبار الذهبي والبرونزي.</p></div>
-      <div class="q"><span class="n">3</span><h3>الشارة الصغيرة؟</h3><p>قصّ الدائرة الداخلية فقط (الصورة و«الثبات عز») للأحجام الصغيرة جداً. بدون أي رسم جديد.</p></div>
-      <div class="q"><span class="n">4</span><h3>«عز» برتقالية كما هي؟</h3><p>لم أغيّرها في أي نموذج. تبقى كما في الأصل إلا إذا طلبت غير ذلك.</p></div>
-    </div>
-    <div class="note">
-      <h3>بعد الموافقة أُنتج</h3>
-      <ul>
-        <li>افتتاحية نهائية 5 ث، وختام 4 ث، وفاصل قصير 1.5 ث، وعلامة مائية.</li>
-        <li>نظام كابشن كامل جاهز لكل فيديو، ومكتبة الانتقالات الأربعة عشر.</li>
-        <li>قوالب: غلاف ريلز وتيك توك، كاروسيل، منشور X، غلاف فيسبوك، اقتباس، ستوري، صورة الحساب.</li>
-        <li>الشعار الصوتي النهائي ومكتبة مؤثرات، ودليل الهوية النهائي.</li>
-      </ul>
+    <div class="head"><span class="num">06</span><div class="head-t"><span class="en">Transition library</span><h2 id="s6">مكتبة الانتقالات</h2>
+      <p class="lead">14 انتقالاً، كل واحد 1.2 ثانية بصوته. الفيديو يعرضها كلها بالترتيب، وكل انتقال موجود أيضاً كملف مستقل.</p></div></div>
+    <div class="two side">
+      <figure class="tile"><div class="m v"><video controls playsinline preload="none" poster="m2/trans.jpg" src="m2/transitions.mp4"></video></div></figure>
+      <div class="panel">
+        <ol class="list">
+          <li>مسح دائري</li><li>مسح بخط معدني</li><li>قناع معماري (قوس)</li><li>نفق منظوري</li><li>كشف فوتوغرافي بطبقات</li>
+          <li>انتقال بالكلمة (حروف «الكلمة»)</li><li>انتقال الشارة الدائرية</li><li>دوران هندسي (الاتجاهات الثمانية)</li><li>اندفاع الكاميرا</li>
+          <li>إزاحة محكومة</li><li>قطع مطابق (القمر ← الدائرة)</li><li>انتقال بالعمق</li><li>انتقال بجسم ثلاثي الأبعاد</li><li>رسم الخط البرونزي</li>
+        </ol>
+      </div>
     </div>
   </section>
 
-  <footer>الحزمة الكاملة بكل الملفات بالمقاسات الكاملة أُرسلت في المحادثة باسم Kalima_Muqawama_Brand_Kit. الخطوط الخاصة والصور لا تُنشر علناً.</footer>
-</main>
+  <section class="sec" aria-labelledby="s7">
+    <div class="head"><span class="num">07</span><div class="head-t"><span class="en">Social templates</span><h2 id="s7">القوالب</h2>
+      <p class="lead">لكل قالب نسخة مثال ونسخة فارغة لتضيف نصك. النصوص في الأمثلة من الفيديوهات الحقيقية.</p></div></div>
+    <div class="grid g5">
+      <figure class="tile"><div class="m v"><img src="m2/cover_a.jpg" alt="غلاف ريلز A"></div><figcaption><b>غلاف: صورة وشريط</b></figcaption></figure>
+      <figure class="tile"><div class="m v"><img src="m2/cover_b.jpg" alt="غلاف ريلز B"></div><figcaption><b>غلاف: دائرة وختم</b></figcaption></figure>
+      <figure class="tile"><div class="m v"><img src="m2/cover_c.jpg" alt="غلاف ريلز C"></div><figcaption><b>غلاف: صورة أرشيف فاتح</b></figcaption></figure>
+      <figure class="tile"><div class="m v"><img src="m2/story.jpg" alt="ستوري"></div><figcaption><b>ستوري</b></figcaption></figure>
+      <figure class="tile"><div class="m v"><img src="m2/safe.jpg" alt="المنطقة الآمنة"></div><figcaption><b>دليل المنطقة الآمنة</b></figcaption></figure>
+    </div>
+    <div class="grid g4">
+      <figure class="tile"><div class="m p"><img src="m2/car1.jpg" alt="كاروسيل 1"></div><figcaption><b>كاروسيل 1 / 4</b></figcaption></figure>
+      <figure class="tile"><div class="m p"><img src="m2/car2.jpg" alt="كاروسيل 2"></div><figcaption><b>2 / 4</b></figcaption></figure>
+      <figure class="tile"><div class="m p"><img src="m2/car3.jpg" alt="كاروسيل 3"></div><figcaption><b>3 / 4</b></figcaption></figure>
+      <figure class="tile"><div class="m p"><img src="m2/car4.jpg" alt="كاروسيل 4"></div><figcaption><b>4 / 4</b></figcaption></figure>
+    </div>
+    <figure class="wide"><img src="m2/fb.jpg" alt="غلاف فيسبوك"></figure>
+    <div class="two">
+      <figure class="wide"><img src="m2/x_post.jpg" alt="منشور X"></figure>
+      <figure class="wide"><img src="m2/x_header.jpg" alt="غلاف X"></figure>
+    </div>
+    <div class="two">
+      <figure class="wide"><img src="m2/quote.jpg" alt="منشور اقتباس"></figure>
+      <figure class="wide"><img src="m2/components.jpg" alt="عناصر الموشن"></figure>
+    </div>
+  </section>
 
-<script>
-const DIRS={
-  A:{ar:'أطلس منتصف الليل',en:'Midnight Atlas',rec:true,sw:[['101A2A','الخلفية','Midnight Navy'],['263C53','الأسطح','Atlas Slate'],['536D86','الحلقة والخطوط','Steel Blue'],['DDA653','التوقيع الذهبي','Antique Gold'],['E9E1D4','النص','Parchment'],['B85F46','تمييز عاطفي','Ember']],
-     gr:[['0B1422','1A2D43','526A82'],['825126','C88D43','F4D28A','A96F31','E8B86A'],['253A51','536F8B','A7B4C0'],['8A4939','B85F46','D99061']],
-     feel:'ليل هادئ، ثبات، كرامة. الأقرب إلى الشعار الأصلي.'},
-  B:{ar:'الأرشيف الإمبراطوري',en:'Imperial Archive',sw:[['080D18','الخلفية','Black Navy'],['1E3A6E','الأسطح والحلقة','Royal Blue'],['A3A9AF','الخطوط والبيانات','Silver Stone'],['A8844F','التوقيع','Aged Bronze'],['EDE3CC','النص','Parchment'],['8E3B2F','تمييز عاطفي','Seal Wax']],
-     gr:[['04070E','0E1A33','1E3A6E'],['5A4024','9A7646','D9BF8C','84633A','C4A06A'],['3A4048','7D858D','C9CDD1'],['5E241C','8E3B2F','B5634C']],
-     feel:'وثيقة تاريخية وأرشيف. قوي في المحتوى التوثيقي.'},
-  C:{ar:'الزيتون والبرونز',en:'Olive & Bronze',sw:[['13160F','الخلفية','Black Olive'],['272C23','الأسطح','Forest Charcoal'],['6B6F4A','الحلقة والخطوط','Muted Olive'],['A97A3C','التوقيع','Ancient Bronze'],['DCCBA6','النص','Sandstone'],['9A4F2E','تمييز عاطفي','Rust']],
-     gr:[['0D0F0A','20251B','4A4E33'],['6A4520','A97A3C','E3C48A','8E6230','CFA463'],['6B6F4A','A79F7C','DCCBA6'],['6A2F1C','9A4F2E','C9784E']],
-     feel:'الأرض والجبل. الأبعد عن الشعار: يحوّل الكحلي إلى زيتوني.'}
-};
-const host=document.getElementById('dirs');
-for(const [k,d] of Object.entries(DIRS)){
-  const el=document.createElement('article'); el.className='dir'+(d.rec?' rec':'');
-  el.innerHTML=`<div class="dir-top"><h3>${k} · ${d.ar}</h3>${d.rec?'<span class="badge">أنصح به</span>':''}</div>
-    <span class="en">${d.en}</span><p style="color:var(--muted);font-size:16px">${d.feel}</p>
-    ${d.sw.map(s=>`<div class="sw"><span class="chip" style="background:#${s[0]}"></span><span class="sw-name">${s[1]}<small>${s[2]} · #${s[0]}</small></span></div>`).join('')}
-    <div class="grads">${d.gr.map(g=>`<div class="grad" style="background:linear-gradient(90deg,${g.map(h=>'#'+h).join(',')})"></div>`).join('')}</div>
-    <img class="mini" src="m/${k}_logo.jpg" alt="الشعار بألوان ${d.ar}">`;
-  host.appendChild(el);
-}
-const tabs=[...document.querySelectorAll('.switch button')];
-function show(k){
-  tabs.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.k===k)));
-  document.querySelectorAll('img[data-n]').forEach(im=>{im.src=`m/${k}_${im.dataset.n}.jpg`});
-  const v=document.getElementById('v-op'); v.pause(); v.poster=`m/${k}_opener.jpg`; v.src=`m/${k}_opener.mp4`;
-  try{localStorage.setItem('km-dir',k)}catch(e){}
-}
-tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k)));
-try{const k=localStorage.getItem('km-dir'); if(k&&DIRS[k]&&k!=='A') show(k);}catch(e){}
-</script>
+  <section class="sec" aria-labelledby="s8">
+    <div class="head"><span class="num">08</span><div class="head-t"><span class="en">Motion, sound, naming</span><h2 id="s8">قواعد الحركة والصوت والتسمية</h2></div></div>
+    <div class="grid g3">
+      <div class="card">
+        <h3>الحركة</h3>
+        <ul>
+          <li>ثلاثة توقيعات: خط برونزي يُرسم بشرارة، حلقات بعلامات قياس، أقنعة دائرية.</li>
+          <li>الختم: الكلمة القوية تُختم مع حلقة، وارتجاج خفيف.</li>
+          <li>الدخول ease-out، من 12 إلى 18 إطاراً للحركة.</li>
+          <li>النص يظهر من اليمين لليسار.</li>
+          <li>الكاميرا: دفع بطيء من 3 إلى 4%، بدون اهتزاز عشوائي.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>الصوت</h3>
+        <ul>
+          <li>بدون موسيقى أبداً. الصوت الأصلي فقط مع مؤثرات.</li>
+          <li>الكلمات القوية: ضربة سينمائية أو رعد حقيقي، وليس صوت لعبة.</li>
+          <li>الانتقالات: هبّة هواء، والخط البرونزي له لمعة.</li>
+          <li>كل فيديو بمستوى −14 LUFS.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>تسمية الملفات</h3>
+        <ul>
+          <li><span class="en" style="color:var(--bronze-d)">KM_&lt;النوع&gt;_&lt;الاسم&gt;_&lt;المقاس&gt;_v&lt;رقم&gt;</span></li>
+          <li>مثال: <span class="en" style="color:var(--bronze-d)">KM_Cover_seal_circle_1080x1920_v1.jpg</span></li>
+          <li>EXAMPLE = مثال، BLANK = فارغ، OPTION = يحتاج موافقة.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s9">
+    <div class="head"><span class="num">09</span><div class="head-t"><span class="en">Exploration (phases 1–4)</span><h2 id="s9">من أين جاء الاتجاه B</h2></div></div>
+    <figure class="wide"><img src="m/comparison.jpg" alt="مقارنة الاتجاهات الثلاثة"></figure>
+  </section>
+
+  <footer>الحزمة الكاملة بالمقاسات الكاملة أُرسلت في المحادثة باسم Kalima_Muqawama_Brand_Kit. الخطوط الخاصة والصور لا تُنشر علناً.</footer>
+</main>
