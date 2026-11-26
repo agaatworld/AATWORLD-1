@@ -66,3 +66,8 @@ Then Playwright (Chromium is preinstalled; `npm i playwright` in a scratch folde
 - Brand data in the magazine is keyed by company (`brOf()`), not by page.
 - Shell `rm` with variables/globs can be blocked by the safety check; use explicit paths.
 - Zips over ~30 MB can't be sent in chat; split them.
+
+## Other project in this repo: `explainer-toolbar/` (NOT part of the website)
+- A separate Windows desktop app (Tauri 2 + React) built on branch `ccr-c9eb3146-t80tdj`. Read `explainer-toolbar/README.md` and `explainer-toolbar/docs/` before touching it.
+- Never include it in website release zips; it does not belong in `public_html`.
+- CI: `.github/workflows/explainer-toolbar.yml` (runs only for that folder on that branch) builds the Windows installer artifact and runs the app's `--self-test`.

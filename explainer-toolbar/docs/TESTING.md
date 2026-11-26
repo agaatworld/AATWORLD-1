@@ -26,6 +26,10 @@ Honest status of every safety- or quality-relevant behaviour. "Windows" means a 
 | Hide/show drawings, global hotkeys registered | `--self-test` | Windows CI |
 | NSIS installer builds | CI artifact | Windows CI |
 
+## Latest Windows CI result
+
+Run #4 (26 Nov 2026, `windows-latest`, one 1024×768 display, Windows Server with WebView2): clippy (warnings = errors), Rust tests, NSIS installer build and **all 36 native self-test checks passed** — click-through verified with `WindowFromPoint`, input capture while drawing, toolbar above overlays, no focus stealing and focus handed back, Escape safety key lifetime, 200 concurrent toggles (applied in 2.6 s, ending safely in desktop mode), frozen-page recovery with a rebuilt window, hidden-ink recovery, hotkeys. Linux job: TypeScript, 66 unit tests, 13 UI tests, 48 core Rust tests.
+
 ## Still needs a person on real Windows hardware
 
 The CI runner has one 1024×768 virtual display, no pen, no sleep/resume and no monitor hot-plug. Please test, in this order, with the emergency exit ready (**Esc**, or your start/stop shortcut, or the tray icon; last resort **Ctrl + Shift + Esc → Task Manager → Explainer Toolbar → End task**):
