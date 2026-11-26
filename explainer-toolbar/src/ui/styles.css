@@ -193,8 +193,7 @@ input, select, textarea { font: inherit; }
   border-radius: 50%;
   background: var(--faint);
 }
-.mode-btn[data-on="true"] .dot { background: #fff; animation: pulse 1.8s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: 0.35; } }
+.mode-btn[data-on="true"] .dot { background: #fff; } /* static: no endless animation, so idle stays idle */
 
 /* colour/size button */
 .swatch-btn { display: grid; place-items: center; }
