@@ -34,3 +34,18 @@ The CI runner has one 1024×768 virtual display, no pen, no sleep/resume and no 
 5. Sleep and resume: hotkeys still work.
 6. Pen/tablet: pressure, the eraser end of the pen (not specially handled yet).
 7. Taskbar and notifications while drawings are visible (the overlay is 1 px shorter than the screen and marked "non-rude" to avoid full-screen detection — unverified).
+
+## Measured performance (browser preview, 26 Nov 2026)
+
+Headless Chromium in a Linux container **with software rendering (no GPU)** — real Windows PCs with WebView2 and GPU compositing should be faster. Scene: 3 000 strokes × 40 points.
+
+| Measurement | Result |
+|---|---|
+| Overlay load + first full render | ≈ 1.1 s (includes page load) |
+| Animation frames requested while idle (2 s) | **0** — no work when nothing happens |
+| Drawing a 120-sample stroke over the full scene | no long tasks (> 50 ms) |
+| Undo (clipped region redraw) | no long tasks |
+| Clear all + undo (two full redraws) | one 73 ms task |
+| Overlay JavaScript heap | ≈ 25 MB |
+
+Not yet measured on Windows: CPU/GPU cost of the transparent overlay windows themselves (WebView2 composition), memory of the native process, pen latency.

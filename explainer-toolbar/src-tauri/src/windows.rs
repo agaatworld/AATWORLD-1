@@ -98,8 +98,15 @@ pub fn overlay_height(m: &MonitorInfo) -> u32 {
 
 pub fn create_overlay(app: &AppHandle, m: &MonitorInfo, generation: u32) -> tauri::Result<WebviewWindow> {
     let label = overlay_label(m, generation);
+    let st = app.state::<AppState>();
+    // Register BEFORE the page exists: a fast page must always be able to
+    // find its monitor (otherwise it could not load or save its drawings).
+    lock(&st.overlays).insert(
+        m.key.clone(),
+        OverlayState { label: label.clone(), ready: false, has_content: false, last_heartbeat_ms: explainer_core::util::unix_ms(), hwnd: 0, generation },
+    );
     let url = format!("index.html?view=overlay&monitor={}", m.key);
-    let w = WebviewWindowBuilder::new(app, &label, WebviewUrl::App(url.into()))
+    let built = WebviewWindowBuilder::new(app, &label, WebviewUrl::App(url.into()))
         .title("Explainer Overlay")
         .decorations(false)
         .transparent(true)
@@ -113,17 +120,22 @@ pub fn create_overlay(app: &AppHandle, m: &MonitorInfo, generation: u32) -> taur
         .focused(false)
         .visible(false)
         .disable_drag_drop_handler()
-        .build()?;
+        .build();
+    let w = match built {
+        Ok(w) => w,
+        Err(e) => {
+            lock(&st.overlays).remove(&m.key);
+            return Err(e);
+        }
+    };
     // Click-through from the very first moment, before the page loads.
     w.set_ignore_cursor_events(true)?;
     let hwnd = hwnd_of(&w);
     native::install_overlay_guard(hwnd);
     place_physical(&w, m.x, m.y, m.width, overlay_height(m));
-    let st = app.state::<AppState>();
-    lock(&st.overlays).insert(
-        m.key.clone(),
-        OverlayState { label, ready: false, has_content: false, last_heartbeat_ms: explainer_core::util::unix_ms(), hwnd, generation },
-    );
+    if let Some(o) = lock(&st.overlays).get_mut(&m.key) {
+        o.hwnd = hwnd;
+    }
     Ok(w)
 }
 

@@ -14,7 +14,8 @@ import { FIXED, LibraryPanel } from "./LibraryPanel";
 import { StylePanel } from "./StylePanel";
 import { WorkspacePanel } from "./WorkspacePanel";
 
-const MARGIN = 14;
+/** Transparent margin around the pill/panels; must contain the CSS shadow. */
+const MARGIN = 16;
 type PanelKind = "style" | "library" | "workspaces";
 const PANEL_WIDTH: Record<PanelKind, number> = { style: 268, library: 330, workspaces: 290 };
 
