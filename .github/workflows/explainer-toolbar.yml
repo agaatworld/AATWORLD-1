@@ -79,6 +79,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: explainer-toolbar/src-tauri -> target
+          cache-on-failure: true
       - run: npm ci
       - name: Build the pages (embedded into the Rust app at compile time)
         run: npm run build

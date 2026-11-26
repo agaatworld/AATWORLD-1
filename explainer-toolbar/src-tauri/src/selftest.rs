@@ -39,13 +39,17 @@ impl T {
     }
 
     fn on_main<R: Send + 'static>(&self, f: impl FnOnce(&AppHandle) -> R + Send + 'static) -> Option<R> {
+        self.on_main_within(Duration::from_secs(10), f)
+    }
+
+    fn on_main_within<R: Send + 'static>(&self, limit: Duration, f: impl FnOnce(&AppHandle) -> R + Send + 'static) -> Option<R> {
         let (tx, rx) = std::sync::mpsc::channel();
         let a = self.app.clone();
         self.app.run_on_main_thread(move || {
             let _ = tx.send(f(&a));
         })
         .ok()?;
-        rx.recv_timeout(Duration::from_secs(10)).ok()
+        rx.recv_timeout(limit).ok()
     }
 
     fn mode(&self, e: ModeEvent) {
@@ -187,8 +191,13 @@ pub fn spawn(app: AppHandle, report: PathBuf) {
         for h in handles {
             let _ = h.join();
         }
-        std::thread::sleep(Duration::from_millis(1500));
-        t.check("200 rapid toggles end in desktop mode", t.current() == Mode::Desktop, format!("{:?}", t.current()));
+        // Main-thread tasks run in order: once this marker has run, all 200
+        // toggles have been applied.
+        let start = std::time::Instant::now();
+        let drained = t.on_main_within(Duration::from_secs(60), |_| ()).is_some();
+        let took = start.elapsed().as_millis();
+        std::thread::sleep(Duration::from_millis(500));
+        t.check("200 rapid toggles end in desktop mode", drained && t.current() == Mode::Desktop, format!("{:?}, applied in {took} ms", t.current()));
         if windows {
             t.expect_clickthrough("after toggle storm");
         }
