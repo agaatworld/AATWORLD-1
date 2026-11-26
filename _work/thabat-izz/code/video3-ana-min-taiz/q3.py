@@ -16,11 +16,18 @@ ROW1, ROW2 = 1262, 1380                                          # the two hemis
 GOLD = BRONZE_L
 
 # ---------------------------------------------------------------- source + watermark removal
-cap = cv2.VideoCapture(Q + 'src.mp4'); SRC = []
-while True:
-    ok, f = cap.read()
-    if not ok: break
-    SRC.append(f)
+class _Src:
+    """sequential reader (the whole clip in memory is 3.7 GB per process): reads forward, re-opens from 0 only when asked to go back"""
+    def __init__(s): s.cap = None; s.k = -1; s.f = None
+    def __getitem__(s, k):
+        if k == s.k: return s.f
+        if s.cap is None or k < s.k: s.cap = cv2.VideoCapture(Q + 'src.mp4'); s.k = -1
+        while s.k < k:
+            ok, f = s.cap.read()
+            if not ok: break
+            s.k += 1; s.f = f
+        return s.f
+SRC = _Src()
 # the photographer's watermark sits still while the picture moves: exact masks were built once from per-shot temporal medians (wmbuild.py)
 _WM = np.load(Q + 'wm_fixed.npz'); WMASK = {int(k): _WM[k] for k in _WM.files}
 WSPAN = {1: [(0, 122), (736, 943)], 2: [(456, 554), (1116, 1321)], 3: [(554, 736)], 4: [(943, 1116)]}
@@ -43,7 +50,7 @@ def grade(f):
     x = np.where(x > 0.82, 0.82 + (x - 0.82) * 0.6, x)                                    # soft highlights
     return x * 255
 def footage(k):
-    kk = min(k, 1312); f = dewatermark(SRC[kk], kk)[TOPCUT:1280]                  # the source flashes white then black after 43.75 s: hold the castle instead
+    kk = min(k, 1304); f = dewatermark(SRC[kk], kk)[TOPCUT:1280]                  # the source fades to white then black after 43.5 s: hold the castle instead
     f = cv2.resize(f, (W, FH), interpolation=cv2.INTER_CUBIC)
     t = k / FPS                                                                           # the one camera: a slow continuous drift
     z = 1.045 + 0.025 * np.sin(2 * np.pi * t / 14.0); dx = 14 * np.sin(2 * np.pi * t / 19.0); dy = 10 * np.sin(2 * np.pi * t / 23.0 + 1.0)
@@ -90,11 +97,15 @@ def align(a, b, words):
     out = list(np.interp(range(len(words)), [k for k, _ in known], [s for _, s in known], left=a, right=b - 0.4))
     for i in range(1, len(out)): out[i] = max(out[i], out[i - 1] + 0.05)
     return out
+CUT_AFTER = {3: 'به', 6: 'البقاءَ'}
 LN = []
 for i, (a, b, s, keys) in enumerate(LINES):
     words = s.split(); n = len(words); ch = [len(norm(w)) for w in words]; tot = sum(ch)
     cands = [j + 1 for j, w in enumerate(words[:-1]) if w.endswith('،')] or list(range(1, n))
     cut = min(cands, key=lambda c_: abs(sum(ch[:c_]) - (tot - sum(ch[:c_]))))
+    if i + 1 in CUT_AFTER:                                                              # the real hemistich break (metre), not the comma
+        m_ = [j for j, w in enumerate(words) if norm(w) == norm(CUT_AFTER[i + 1])]
+        if m_: cut = m_[0] + 1
     LN.append(dict(a=a, b=b, words=words, st=align(a, b, words), cut=cut, keys=keys, last=(i == len(LINES) - 1)))
 
 def clean(w): return w.strip('،:!؟')
@@ -103,8 +114,8 @@ def wim(w, size, col):
     key = (w, size, tuple(col))
     if key not in _TI: _TI[key] = rtl_line([(clean(w), col)], 'naskh', size)
     return _TI[key]
-def row(words, keys, size, cy, maxw=960):
-    f = font('naskh', size); sp = size * 0.30; wl = [f.getlength(clean(w), direction='rtl', language='ar') for w in words]
+def row(words, keys, size, cy, maxw=860):                                   # 860: clear of Facebook's right-side buttons
+    f = font('naskh', size); sp = size * 0.38; wl = [f.getlength(clean(w), direction='rtl', language='ar') for w in words]
     tot = sum(wl) + sp * (len(wl) - 1)
     if tot > maxw: return row(words, keys, int(size * maxw / tot), cy, maxw)
     x = CX + tot / 2; out = []
