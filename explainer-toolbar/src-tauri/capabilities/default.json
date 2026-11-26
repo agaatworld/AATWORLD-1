@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Minimal permissions for the toolbar, overlays and settings windows. App commands are defined in src/commands.rs; file access happens only in Rust, never from the pages.",
+  "windows": ["toolbar", "overlay-*", "settings"],
+  "permissions": ["core:default", "log:default"]
+}
