@@ -157,6 +157,19 @@ H. **Light-theme motion-graphics reels** (24 Nov) — `/home/user/final/reels-li
    15 alternating turns (whole Houthi video in 8 parts, nasheed in 7), fierce strobe finale + the dark half shatters, light fills. Label must be «الحوثي يسب الصحابة» (not «يسب»).
    Houthi compilation 1:28–1:35 is unintelligible — not captioned (owner may type it in the studio). Transcripts: `data/transcripts/reels-light-transcripts.txt`.
 
+I. **«الكلمة مقاومة» (Kalima Muqawama) brand identity + motion system** (26 Nov). Owner's long brief (was titled "NAVY & GOLD CHANNEL"; owner said the correct
+   name is **Kalima Muqawama**) with the logo 80008.png (2048², navy seal: «الكلمة» / «مقاومة» stone lettering, fighter-on-crutches photo, «الثبات» + orange «عز»).
+   Done = Phases 1–4 only (analysis, 3 directions A Midnight Atlas / B Imperial Archive / C Olive & Bronze, styleframes, comparison). **Waiting for Phase 5 approval:**
+   1) direction (I recommended A), 2) original orange-gold or Antique Gold #DDA653, 3) emblem crop (inner circle only) for tiny sizes, 4) «عز» stays orange (unchanged so far).
+   Kit folder `/home/user/final/Kalima_Muqawama_Brand_Kit/` (owner's folder layout) + 3 zips `Kalima_Muqawama_Brand_Kit_part1-3.zip`. Board artifact
+   https://claude.ai/artifact/8WuVZZWzWA3WyC37uSZmbR (page source `code/brand-km/board.html`, media in `<scratch>/board/m/`).
+   Code `code/brand-km/`: `kit.py` (palettes, soft masks from the ORIGINAL pixels, class-aware RBF colour LUT that recolours only the frame — photo disc copied untouched,
+   grunge grounds, metal fill, bevel, extrusion), `mkcache.py A refined|dark|light|gold<HEX>` → `<scratch>/brand/cache/`, `opener.py` (5 s logo opener built from the logo's own
+   layers: gold circles drawn with spark heads, dashes grow, triangles slide, slate ring rotates in, photo iris, lettering RTL wipe, gold sheen, «كلنا مقاومة»; `op_all.sh` renders A/B/C),
+   `sonic.py` (sonic logo from Mixkit 1492/2350/788/2353/1296, no music), `frames.py` (caption, Reels cover, carousel 4:5, motion frame, 3D type from the logo's own letterforms), `sheets.py`.
+   Rules kept: never retype or redraw the logo words; original logo file always included unchanged; no music; no text on faces; only real captions/owner titles.
+   Logo image is NOT in this repo (keep it in the private artifact if needed). Phase 6 list (after approval) is in the kit's `Deliverables/Brand_Guidelines/` doc.
+
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
 - `<scratch>/taiz/fonts/th/*.ttf` (Thmanyah), `<scratch>/sfx3/m<id>.wav` (sound effects; scripts also look in sfx/s and sfx2/m),
