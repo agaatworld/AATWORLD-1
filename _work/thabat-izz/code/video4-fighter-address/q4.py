@@ -12,21 +12,33 @@ sys.argv = _a; A = _a
 import mg, subprocess
 from scipy.ndimage import gaussian_filter1d
 mg.FONTS['amiriq'] = '/home/user/final/kahlani/fonts/g_AmiriQuran-Regular.ttf'
+_PF = '/home/user/final/handoff/private/fonts/'
+mg.FONTS['thm_serif'] = _PF + 'thmanyahseriftext-Bold.ttf'; mg.FONTS['thm_sans'] = _PF + 'thmanyahsans-Bold.ttf'
+import glob as _g
+_ly = sorted(_g.glob('/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/fonts_user/*[Ll]yon*'))
+if _ly: mg.FONTS['lyon'] = next((f for f in _ly if 'Bold' in f or 'Semi' in f), _ly[0])
+mg.FONTS['hail'] = '/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/fonts_user/HailElastic-Light.ttf'   # owner's file (private)
+mg.FONTS['thm_disp'] = _PF + 'thmanyahserifdisplay-Black.ttf'
+ORD = os.environ.get('Q4_ORD') or 'hail'                                 # ordinary captions: the owner's Hail Elastic
+SPECIAL = 'thm_disp'                                                     # strong / special words and «لله درّكم»: Thmanyah (owner: «ثمانية» instead of Panorama)
+STRONG_K = 1.32                                                        # strong words a third larger than the caption
 Q = os.path.dirname(os.path.abspath(__file__)) + '/'
 sys.path.insert(0, Q); from lines4 import LINES, HOLD
+import fx4
 import glob
 OWN = {}
 for fn in glob.glob(Q + 'db/lines/*.json'):
     d_ = json.load(open(fn)); d_ = d_.get('data', d_); OWN[int(d_['n'])] = d_['text'].strip()
 def remark(t): return re.sub(r'^(ف?لله درّكم)', r'{\1}', t)
 LINES = [(a, b, remark(OWN[i + 1]) if (i + 1) in OWN else t) for i, (a, b, t) in enumerate(LINES)]
+LINES = [(a, b, t.replace('بواطل', 'بواطن')) for a, b, t in LINES]          # owner, 27 Nov: «بواطن» not «بواطل»
 # strong words chosen for the speech (line number → words); the owner can add more with [[ ]] in the studio
 STRONG = {3: ['بالآخرة'], 4: ['الصادقة'], 5: ['الشدائد'], 6: ['المغانم'], 7: ['استجابوا'], 9: ['بعقيدتهم'], 12: ['الخذلان', 'الجبال'],
           14: ['عقيدتكم'], 16: ['تترفّعون'], 18: ['ذراع', 'إيران'], 19: ['كسر', 'الله'], 20: ['ألف', 'عام'], 21: ['اليمن'],
           25: ['حبيبكم'], 34: ['يثبّتنا', 'ويثبّتكم']}
 W, H, FPS = 1080, 1920, 30; NF = 4087; DUR = NF / FPS; CX = 540
 SRCF = Q + '../an/src/v4.mp4'
-S0, FY0 = 1.5, 130.0                                   # source 720x1280 → 1080 wide; picture shifted down 130 px (sky extended above)
+S0, FY0 = 1.5, 300.0                                   # source 720x1280 → 1080 wide; picture lowered 300 px: a tall sky above his head for every caption
 
 class _Src:
     def __init__(s): s.cap = None; s.k = -1; s.f = None
@@ -139,9 +151,9 @@ def show(raw, role):
     return w
 
 # ---------------------------------------------------------------- caption geometry
-LOW_S, LOW_W, LOW_BOT = 78, 840, 1486          # Almarai ExtraBold rows in the lower band (bottom anchored)
-SKY_S, SKY_W, SKY_TOP = 74, 660, 300           # Panorama rows in the sky band (top anchored); 660 wide (x 210–870) so the corner logo stays clear
-DUR_S = 150
+LOW_S, LOW_W, LOW_BOT = 78, 840, 680           # his words: Almarai rows in the sky, bottom-anchored just above his head (owner: «captions go up»)
+SKY_S, SKY_W, SKY_TOP = 74, 660, 330           # Panorama rows in the sky band (top anchored); 660 wide (x 210–870) so the corner logo stays clear
+DUR_S = 110
 INK2 = C('080D18'); NAVYQ = C('16264A'); GOLDH = C('F0D49B'); EMBER = C('F08A4B')
 COLS = {'s': PARCH, 'h': GOLDH, 'k': EMBER}
 QS = 76
@@ -162,18 +174,20 @@ def wimg(w, fk, size, col):
         else: _IMG[key] = rtl_line([(w, col)], fk, size)
     return _IMG[key]
 _BK = {}
-def backing(img, kind):
+def backing(img, kind, cache=True):
+    """soft backing behind a word. Cached only for persistent word images, and the cache keeps the image itself so an id can never point to another word"""
     key = (id(img), kind)
-    if key not in _BK:
-        P = 36; a = np.pad(img[..., 3].astype(np.float32), P)
-        if kind == 'light':                                                     # sky text: a soft light glow behind dark letters
-            g = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))), (0, 0), 12) * 0.75
-            _BK[key] = np.dstack([np.ones(a.shape + (3,), np.float32) * C('FBF7EE'), np.clip(g, 0, 1)])
-        else:                                                                   # lower band: navy stroke + soft navy halo
-            st = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))), (0, 0), 1.2)
-            halo = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))), (0, 0), 13) * 0.62
-            _BK[key] = np.dstack([np.ones(a.shape + (3,), np.float32) * INK2, np.clip(np.maximum(st * 0.92, halo), 0, 1)])
-    return _BK[key]
+    if cache and key in _BK and _BK[key][0] is img: return _BK[key][1]
+    P = 36; a = np.pad(img[..., 3].astype(np.float32), P)
+    if kind == 'light':                                                         # sky text: a soft light glow behind dark letters
+        g = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))), (0, 0), 12) * 0.75
+        out = np.dstack([np.ones(a.shape + (3,), np.float32) * C('FBF7EE'), np.clip(g, 0, 1)])
+    else:                                                                       # navy stroke + soft navy halo
+        st = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))), (0, 0), 1.2)
+        halo = cv2.GaussianBlur(cv2.dilate(a, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))), (0, 0), 13) * 0.62
+        out = np.dstack([np.ones(a.shape + (3,), np.float32) * INK2, np.clip(np.maximum(st * 0.92, halo), 0, 1)])
+    if cache: _BK[key] = (img, out)
+    return out
 
 STOP = {'من', 'في', 'عن', 'إلى', 'على', 'أن', 'إن', 'ما', 'لا', 'ولا', 'بين', 'مع', 'صلى', 'قال', 'يا', 'بأن', 'الذي', 'التي', 'الذين', 'ثم', 'و', 'لكم', 'وبين'}
 def brk(a_last, b_first):
@@ -184,11 +198,20 @@ def brk(a_last, b_first):
     if a_last[-1] in '،:؟»﴾': c -= 160
     if a_last.count('«') > a_last.count('»'): c += 400                       # «… opened and not closed
     return c
+def item_font(it, fk, size):
+    if fk == 'almarai' and it.get('role') == 'k': return SPECIAL, int(round(size * STRONG_K))
+    if fk == 'almarai': return ORD, size
+    return fk, size
+def mk(it, size):
+    f_, s_ = item_font(it, 'almarai', size)
+    if it['role'] == 'k': return fx4.word_img(rtl_line, it['w'], f_, s_, it['eff'])
+    return wimg(it['w'], f_, s_, COLS[it['role']])
 def pack(items, fk, size, maxw, sp=0.34):
     """greedy rows; prefer breaking after punctuation"""
-    f = font(fk, size); rows = [[]]; wl = {}
+    rows = [[]]; wl = {}
     for it in items:
-        wl[id(it)] = f.getlength(it['w'], direction='rtl', language='ar')
+        ifk, ifs = item_font(it, fk, size)
+        wl[id(it)] = font(ifk, ifs).getlength(it['w'], direction='rtl', language='ar')
     def width(r): return sum(wl[id(i)] for i in r) + sp * size * (len(r) - 1)
     for it in items:
         if rows[-1] and width(rows[-1] + [it]) > maxw: rows.append([])
@@ -233,16 +256,16 @@ def split_chunks(items, fk, size, maxw, sp=0.34):
 LOW, SKY = [], []                       # display units: dict(t0, t1, items, kind)
 for li, (a, b, text) in enumerate(LINES):
     toks = tokens(text); st = align(a, b, [norm(w) for w, r in toks])
-    sw = {norm(x) for x in STRONG.get(li + 1, [])}
-    toks = [(w, 'k' if (r == 's' and norm(w) in sw) else r) for w, r in toks]
-    items = [dict(w=show(w, r), role=r, st=s0, line=li) for (w, r), s0 in zip(toks, st)]
+    effmap = {norm(k_): v for k_, v in fx4.EFFECTS.get(li + 1, {}).items()}
+    toks = [(w, 'k' if (r in ('s', 'k') and (norm(w) in effmap or r == 'k')) else r) for w, r in toks]
+    items = [dict(w=show(w, r), role=r, st=s0, line=li, eff=effmap.get(norm(w), 'slam')) for (w, r), s0 in zip(toks, st)]
     nxt_a = LINES[li + 1][0] if li + 1 < len(LINES) else DUR
     sky = [i for i in items if i['role'] in ('q', 'd')]; low = [i for i in items if i['role'] not in ('q', 'd')]
     if sky:
         end_li = HOLD.get(li, li); end = (LINES[end_li + 1][0] if end_li + 1 < len(LINES) else DUR) - 0.10
         if sky[0]['role'] == 'd':
-            for i in sky: i['img'] = wimg(i['w'], 'naskh', DUR_S, 'bronze')
-            rows, wl = pack(sky, 'naskh', DUR_S, SKY_W); y0, y1 = place_rows(rows, wl, 'naskh', DUR_S, SKY_TOP, 'top')
+            for i in sky: i['img'] = wimg(i['w'], SPECIAL, DUR_S, 'bronze')
+            rows, wl = pack(sky, SPECIAL, DUR_S, SKY_W); y0, y1 = place_rows(rows, wl, SPECIAL, DUR_S, 296, 'top')
             SKY.append(dict(t0=sky[0]['st'] - 0.08, t1=end, items=sky, kind='d', y0=y0, y1=y1))
         else:
             if SKY and SKY[-1]['kind'] == 'q' and SKY[-1].get('cont') and SKY[-1]['line'] == li - 1:   # the verse continues on the next line (35 → 36)
@@ -261,13 +284,13 @@ for li, (a, b, text) in enumerate(LINES):
                 rows, wl = pack(part, 'amiriq', QS, SKY_W, 0.30); U['y0'], U['y1'] = place_rows(rows, wl, 'amiriq', QS, SKY_TOP, 'top', 0.30)
                 SKY.append(U)
     if low:
-        for i in low: i['img'] = wimg(i['w'], 'almarai', LOW_S, COLS[i['role']])
+        for i in low: i['img'] = mk(i, LOW_S)
         chunks = split_chunks(low, 'almarai', LOW_S, LOW_W)
         for ci, its in enumerate(chunks):
             size = LOW_S; rows, wl = pack(its, 'almarai', size, LOW_W)
             if pack.cost >= 350:                                                   # a bad break: a slightly smaller size may allow a natural one
                 for s2 in (74, 70, 66):
-                    for i in its: i['img2'] = wimg(i['w'], 'almarai', s2, COLS[i['role']])
+                    for i in its: i['img2'] = mk(i, s2)
                     r2, w2 = pack(its, 'almarai', s2, LOW_W)
                     if pack.cost < 500:
                         size, rows, wl = s2, r2, w2
@@ -278,12 +301,27 @@ for li, (a, b, text) in enumerate(LINES):
             t1 = (chunks[ci + 1][0]['st'] - 0.12) if ci + 1 < len(chunks) else min(nxt_a - 0.06, b + 0.6)
             LOW.append(dict(t0=t0, t1=t1, items=its, kind='low', y0=y0, y1=y1, rows=[[i['w'] for i in r] for r in rows]))
 
+NEED = {'melt': 1.25, 'quake': 0.9, 'shatter': 0.8, 'sink': 1.0, 'twist': 0.8, 'shock': 0.8, 'gold': 0.8, 'trail': 0.8, 'warm': 0.9}
+for j, U in enumerate(LOW):                                                # an effect word at the end of a line gets a little more time (≤ 0.5 s)
+    eff_st = [i['st'] + NEED.get(i['eff'], 0.5) for i in U['items'] if i['role'] == 'k']
+    if eff_st:
+        ext = float(np.clip(max(eff_st) - U['t1'], 0, 0.5))
+        if ext > 0:
+            U['t1'] += ext
+            if j + 1 < len(LOW) and LOW[j + 1]['t0'] < U['t1'] + 0.02: LOW[j + 1]['t0'] = U['t1'] + 0.02
+for U in LOW:
+    for i in U['items']: i['avail'] = U['t1'] - i['st']
+for U in LOW:
+    for Vq in SKY:
+        if Vq['kind'] != 'q': continue
+        if U['t0'] < Vq['t0'] < U['t1']: U['t1'] = Vq['t0'] - 0.15
+        if Vq['t0'] <= U['t0'] < Vq['t1']: U['t0'] = Vq['t1'] + 0.05
 def check_faces():
     bad = 0; worst = 1e9
     for U in LOW + SKY:
         for k in range(max(0, int(U['t0'] * FPS)), min(NF, int(U['t1'] * FPS) + 8)):
             x0, y0, x1, y1 = face_box(k)
-            gap = (U['y0'] - y1) if U in LOW else (y0 - U['y1'])
+            gap = y0 - U['y1']
             worst = min(worst, gap)
             if gap < 10: bad += 1
     return bad, worst
@@ -308,7 +346,7 @@ def star(c, x, y, r, col, a):
     return c + (col - c) * (m * a)[..., None]
 
 def frame(k):
-    t = k / FPS
+    t = k / FPS; SHK[:] = [0.0, 0.0]
     c = plate(k)
     c = motes(c, t)
     B = 0.0
@@ -348,18 +386,28 @@ def frame(k):
                 c = star(c, CX, yo, 10 * min(1, p * 1.4), C('D9B56E'), 0.95 * fo)
     for U in LOW:
         if not (U['t0'] - 0.05 <= t < U['t1'] + 0.16): continue
+        for i in U['items']:
+            if i['role'] == 'k': c = fx4.pre(c, i, t - i['st'], face_box(k)[1] - 8, i.get('avail', 2.0))
+    for U in LOW:
+        if not (U['t0'] - 0.05 <= t < U['t1'] + 0.16): continue
         fo = 1 - ease(seg(t, U['t1'], U['t1'] + 0.16))
         for i in U['items']:
             q = t - i['st']
             if q < -0.04: continue
             p = ease(q / 0.18); a = min(1, q / 0.10 + 0.4) * fo if q >= 0 else 0.4 * fo * (1 + q / 0.04)
             if a <= 0.01: continue
-            dy = 12 * (1 - p); sc = 1.0 + (0.16 * (1 - ease(q / 0.22)) if i['role'] == 'k' and q >= 0 else 0)
-            c = mg.put(c, backing(i['img'], 'dark'), i['x'], i['y'] + dy, sc, a); c = mg.put(c, i['img'], i['x'], i['y'] + dy, sc, a)
+            if i['role'] == 'k':                                                   # strong word: its own meaning-driven effect
+                c, (sx_, sy_) = fx4.draw(c, i, q, fo, face_box(k)[1] - 8, backing, i.get('avail', 2.0)); SHK[0] += sx_; SHK[1] += sy_
+                continue
+            dy = 12 * (1 - p)
+            c = mg.put(c, backing(i['img'], 'dark'), i['x'], i['y'] + dy, 1.0, a); c = mg.put(c, i['img'], i['x'], i['y'] + dy, 1.0, a)
+    if abs(SHK[0]) + abs(SHK[1]) > 0.3:
+        c = cv2.warpAffine(c, np.float32([[1, 0, SHK[0]], [0, 1, SHK[1]]]), (W, H), borderMode=cv2.BORDER_REFLECT)
     c = mg.put(c, LOGO, 118, 348)
     g = np.random.default_rng(k).standard_normal((H, W, 1)).astype(np.float32) * 1.8
     return np.clip(c + g, 0, 255).astype(np.uint8)
 
+SHK = [0.0, 0.0]
 LOGO = logo_rgba(118)
 if __name__ == '__main__':
     if A[1] == 'still':
@@ -372,6 +420,12 @@ if __name__ == '__main__':
                                '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', Q + f'parts/p{part}.mp4'], stdin=subprocess.PIPE)
         for k in range(a, b): pr.stdin.write(frame(k).tobytes())
         pr.stdin.close(); pr.wait(); print('done', part)
+    elif A[1] == 'range':
+        a, b, out = int(float(A[2]) * FPS), int(float(A[3]) * FPS), A[4]
+        pr = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
+                               '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', out], stdin=subprocess.PIPE)
+        for k in range(a, b): pr.stdin.write(frame(k).tobytes())
+        pr.stdin.close(); pr.wait(); print('done', out)
     elif A[1] == 'dump':
         print('faces: frames too close =', *check_faces())
         for U in SKY: print('SKY', U['kind'], round(U['t0'], 2), round(U['t1'], 2), int(U['y0']), int(U['y1']), ' '.join(i['w'] for i in U['items']))

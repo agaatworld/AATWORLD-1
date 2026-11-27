@@ -236,6 +236,21 @@ Q. **Video 4 «خطاب المقاتل»** (2:16 speech in a frosty field). Code
      - **Lower band:** Almarai ExtraBold 78 (no tashkeel), ivory; hadith «» in gold; STRONG words in ember with a small pop. Each unit has two rows at most; row breaks avoid small words and broken quotes, and a smaller size is used if needed.
    - **Audio:** source voice, highpass 70, two-pass loudnorm to −14.
    - **Still open:** credit (source page and speaker name).
+R. **Video 4, owner's notes (27 Nov):**
+   - **All captions go up in the sky with the verses.** Picture lowered 300 px; his words sit right above his head, under «لله درّكم».
+   - **Fonts:**
+     - Ordinary captions use the owner's **Hail Elastic Light** (uploaded; private copy in `scratchpad/fonts_user/HailElastic-Light.ttf`; NEVER commit it).
+     - Strong/special words and «لله درّكم» use **Thmanyah Serif Display Black** (owner: «ثمانية» instead of Panorama).
+     - Lyon Arabic was requested first, but the file was not available.
+   - **Line 13 is «بواطن»** (owner).
+   - **«Make the whole video one time, no preview»:** never send partial previews; render and send the full video only.
+   - **Strong words get a MEANING effect** (`fx4.py` EFFECTS by line):
+     - melt (الجبان / الضعفاء / هان / والهزائم): a liquid wobble that greys and slumps into a puddle;
+     - quake (الجبال / الشدائد): a cracked-mud Voronoi patch spreads behind the word, plus shake and dust;
+     - shatter (الخذلان / كسر); twist (تلوون); shock rings (تصم / الآذان); rise (تترفعون / بالآخرة); gold sheen + sparkles;
+     - sink (القعود); wobble (الأغبياء); trail (ألف عام); heartbeat (حبيبكم); anchor (يثبتنا ويثبتكم); wound (القرح); slam.
+     - Effects are capped above his head and stretched by ≤0.5 s when the word ends a line.
+
 
 
 
