@@ -250,6 +250,16 @@ R. **Video 4, owner's notes (27 Nov):**
      - shatter (الخذلان / كسر); twist (تلوون); shock rings (تصم / الآذان); rise (تترفعون / بالآخرة); gold sheen + sparkles;
      - sink (القعود); wobble (الأغبياء); trail (ألف عام); heartbeat (حبيبكم); anchor (يثبتنا ويثبتكم); wound (القرح); slam.
      - Effects are capped above his head and stretched by ≤0.5 s when the word ends a line.
+S. **STYLE LIBRARY (27 Nov), read before any new video:** `styles/STYLES.md`.
+   - It holds the owner's verdicts and the 4 reusable styles:
+     - S1 one-take recitation with face;
+     - S2 «صوت القائد» short strong saying;
+     - S3 poem over footage montage;
+     - S4 locked-off speech with sky captions and spiritual verses.
+   - Each has its code path and "improve next time" notes.
+   - **The OUTRO plan:** the brand-kit intro `KM_Intro_Logo_Opener_5s.mp4` / `code/brand-km/opener.py` is used as the outro of every next video. Transition A (close → outro) or B (outro enters while the video is still open; background changes to the navy ground). Render it in the same frame loop.
+   - **Channel-director profile and learning log:** `styles/channel-director/kalima-muqawama/` (profile.md + learn/status.md, 9 BANNED, 5 TO CHANGE). Copy it into the channel-director kit `channels/` when a full kit session runs.
+
 
 
 

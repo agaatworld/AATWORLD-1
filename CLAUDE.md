@@ -2,7 +2,7 @@
 
 Read this whole file before doing anything. It replaces the long chat history.
 
-> **Second project in this repo — the «الثبات عز» channel (Taiz, Yemen; videos, captions, brand).**
+> **Second project in this repo — the «الكلمة مقاومة» channel (formerly «الثبات عز»; Taiz, Yemen; videos, captions, brand).** Its 4 approved video styles + owner rules: `_work/thabat-izz/styles/STYLES.md`.
 > If the user talks about الثبات عز, Facebook reels, martyrs, Taiz, captions studio or videos, it is THAT project, not AAT World:
 > read **`_work/thabat-izz/HANDOFF.md`** first (rules, brand, tools, every link and its status, open tasks).
 > Private files (fonts, photos, brand kit, sound effects) are in the private artifact https://claude.ai/artifact/GxcScwGz3SNA6y3e78vVs7 — never commit them here (this repo is public).
