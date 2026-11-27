@@ -213,6 +213,20 @@ O. **Video 3 «أنا من تعزّ»** (44 s, Taiz drone montage, reciter Nasr 
      - The photographer watermark is removed with fixed masks: `wmshot.py` builds per-shot temporal medians of the high-pass, then `wmbuild.py` makes the `wm_fixed.npz` masks. Then TELEA inpaint plus grain borrowed from just above.
    - **Audio:** Demucs vocals (`--repo demrepo -n htdemucs`; the weights are local, the internet download is blocked), two-pass loudnorm to −14.
    - **Studio:** tab q3 added (v13) for the owner's corrections. «ومكّةُ» is uncertain.
+P. **Video 2 redone «قافلة حديد» (27 Nov)**, after the owner wrote: "very distinctive, very strong, like a strong leader's voice".
+   - **Owner's text (studio db `lines` q2-001/002):** «كحلان [[عسير]]، مو [[مو طلعك يا حوثي]]؟» / «[[قافلة حديد ومندحة حناشة]]».
+   - **Code:** `code/video2-iron-lock/q2b.py` (+ `depth_all.py`, `audio2.py`).
+   - **Picture:**
+     - Depth-Anything-V2-Base (local HF cache) gives a subject mask. The background is darkened, cooled and blurred; she gets a warm key light.
+     - Footage ×2.5 with the face kept right of the spine (x 528). Words stack in a left column (centre 278, ≤440 wide).
+     - Each word has its own strike (slide / slam / drop / rise / pop), plus visual-echo ghosts, bronze lines shooting in and a growing spine.
+     - Sentence 2 is forged metal: steel, then bronze, with a sheen.
+     - A mirrored, blurred continuation hides the picture edges.
+     - The slam/echo scale is capped so words never cross the spine. `python3 q2b.py faces` prints the closest face-to-text gap (59 px).
+   - **Audio:** the voice gets a 5-tap hall echo whose send swells on the strong words. Mixkit hits: 2299 bass, 788 big impact on «قافلة», 1143 on «حناشة», 166/1474 swooshes. Two-pass loudnorm to −14.
+   - **Word onsets used:** 0.88 1.84 2.28 2.58 2.92 3.56 3.74 | 4.62 5.72 6.28 6.86.
+   - The old v1 is in `/home/user/final/video2-iron-lock/old-version-1/`.
+
 
 ## 8. Paths the scripts expect (setup.sh recreates them)
 - Old scratchpad prefix in code: `/tmp/claude-0/-home-user/8669a2c6-823d-5c8d-abc7-7cd4bd87201e/scratchpad/` → replace with the new scratchpad (setup.sh does it).
