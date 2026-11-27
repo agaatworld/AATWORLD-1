@@ -226,6 +226,17 @@ P. **Video 2 redone «قافلة حديد» (27 Nov)**, after the owner wrote: "
    - **Audio:** the voice gets a 5-tap hall echo whose send swells on the strong words. Mixkit hits: 2299 bass, 788 big impact on «قافلة», 1143 on «حناشة», 166/1474 swooshes. Two-pass loudnorm to −14.
    - **Word onsets used:** 0.88 1.84 2.28 2.58 2.92 3.56 3.74 | 4.62 5.72 6.28 6.86.
    - The old v1 is in `/home/user/final/video2-iron-lock/old-version-1/`.
+Q. **Video 4 «خطاب المقاتل»** (2:16 speech in a frosty field). Code: `code/video4-fighter-address/q4.py`, `lines4.py` (36 phrases), `cover4.py`.
+   - **Owner's studio edits** are read from `db/lines/q4-*.json`: lines 10 إخوتي, 11 الجبان, 13 بواطل, 33 فنسأل من الله.
+   - **Layout:** the picture is ×1.5 and moved down 130 px; the sky above it is extended with a soft mirror. A slow dolly-in on the face. Two caption zones are checked against the face plus turban in every frame:
+     - **Sky band (y 296–520, 660 wide, clear of the logo):** Quran verses and «لله درّكم».
+       - Verses are in Amiri Quran (`taiz/fonts/g_AmiriQuran-Regular.ttf`, also in `/home/user/final/kahlani/fonts/`): navy fill with a gold edge.
+       - Each word descends from −64 px with blur. A warm light beam, drifting shafts and falling gold motes appear while a verse is on screen, with an 8-point gold star ornament (the owner asked for a "spiritual" verse motion).
+       - «لله درّكم» uses forged bronze with a sheen, held while its sentence continues (HOLD).
+     - **Lower band:** Almarai ExtraBold 78 (no tashkeel), ivory; hadith «» in gold; STRONG words in ember with a small pop. Each unit has two rows at most; row breaks avoid small words and broken quotes, and a smaller size is used if needed.
+   - **Audio:** source voice, highpass 70, two-pass loudnorm to −14.
+   - **Still open:** credit (source page and speaker name).
+
 
 
 ## 8. Paths the scripts expect (setup.sh recreates them)
