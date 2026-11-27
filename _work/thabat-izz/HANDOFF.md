@@ -258,6 +258,7 @@ S. **STYLE LIBRARY (27 Nov), read before any new video:** `styles/STYLES.md`.
      - S4 locked-off speech with sky captions and spiritual verses.
    - Each has its code path and "improve next time" notes.
    - **The OUTRO plan:** the brand-kit intro `KM_Intro_Logo_Opener_5s.mp4` / `code/brand-km/opener.py` is used as the outro of every next video. Transition A (close → outro) or B (outro enters while the video is still open; background changes to the navy ground). Render it in the same frame loop.
+   - **Video 5 «أطفال تعز»** (27 Nov): Suhail TV report, edited from the owner's long brief → new style S5 «شهادة وثائقية» in STYLES.md. Code `code/video5-taiz-children/`. Deliverables `/home/user/final/video5-taiz-children/`. Uncertain words in studio tab q5.
    - **Channel-director profile and learning log:** `styles/channel-director/kalima-muqawama/` (profile.md + learn/status.md, 9 BANNED, 5 TO CHANGE). Copy it into the channel-director kit `channels/` when a full kit session runs.
 
 

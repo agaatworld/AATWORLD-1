@@ -1,7 +1,7 @@
 # «الكلمة مقاومة»: video style library (saved 27 Nov 2026)
 
 The owner asked: "Save each style of the 4 videos, so you use it for such and similar, but improving of course."
-Pick the style whose **material** matches the new video, then improve it. Never mix two styles inside one video (owner rule).
+Pick the style (S1–S5) whose **material** matches the new video, then improve it. Never mix two styles inside one video (owner rule).
 Code for each style is in `../code/<folder>/`; private fonts, logo and photos are NOT in this public repo (see HANDOFF §9).
 
 ---
@@ -163,6 +163,28 @@ Code for each style is in `../code/<folder>/`; private fonts, logo and photos ar
 - **Improve next time:**
   - Credit line (source page and speaker): still unknown for V4.
   - Outro (below).
+
+---
+
+## 6. Style S5 «شهادة وثائقية» (documentary testimony; Video 5, owner's brief 27 Nov)
+- **Source:** Video 5, «أطفال تعز», a Suhail TV report, 16:9 1920×1080 25 fps (`../code/video5-taiz-children/q5.py`).
+- **Use for:**
+  - Real reports or interviews from another channel, children's testimonies, anything where truth and dignity come first.
+  - Keep the source format: here 16:9.
+- **Picture:**
+  - The footage untouched: no zoom, no added shake, natural colours (light per-shot grade only).
+  - The broadcaster's lower third is cut away: source rows 0–800 kept, melting into a navy band.
+  - The broadcaster's corner logo is hidden under the channel badge, which also carries «المصدر: <channel>».
+  - Microphone flags stay (real objects).
+- **Two caption systems inside one style:**
+  - **Personal appeal:** word-by-word ivory Hail Elastic, centred in the band, a few gold Thmanyah words. The list words go on the empty wall beside the speaker.
+  - **Formal recital:** right-aligned phrase reveals on a gold rule. Repeated phrases build a structured stack on a left navy panel, with the repeated word in gold.
+- **Rules from the brief:**
+  - The hard cut between speakers stays.
+  - No SFX, no music, no emotional effects.
+  - Names only as the source wrote them.
+  - Uncertain words are flagged.
+- **Ending:** hold the last clean frame, soften it and sink it into navy, then the brand intro as a SILENT outro (horizontal layout via `opener_layer()`).
 
 ---
 
